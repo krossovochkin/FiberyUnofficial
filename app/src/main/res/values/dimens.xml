@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="base">4dp</dimen>
+    <dimen name="base_x2">8dp</dimen>
+    <dimen name="base_x3">12dp</dimen>
+    <dimen name="base_x4">16dp</dimen>
+
+    <dimen name="entity_type_badge_size">24dp</dimen>
+</resources>

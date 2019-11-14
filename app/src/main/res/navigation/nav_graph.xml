@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/appList">
+
+    <fragment
+        android:id="@+id/appList"
+        android:name="by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment"
+        android:label="fragment_apps"
+        tools:layout="@layout/fragment_app_list" >
+        <action
+            android:id="@+id/action_appList_to_entityTypeList"
+            app:destination="@id/entityTypeList" />
+    </fragment>
+    <fragment
+        android:id="@+id/entityTypeList"
+        android:name="by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment"
+        android:label="fragment_entity_type_list"
+        tools:layout="@layout/fragment_entity_type_list" >
+        <action
+            android:id="@+id/action_entityTypeList_to_entityList"
+            app:destination="@id/entityList" />
+        <argument
+            android:name="fiberyApp"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData" />
+    </fragment>
+    <fragment
+        android:id="@+id/entityList"
+        android:name="by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment"
+        android:label="fragment_entity_list"
+        tools:layout="@layout/fragment_entity_list" >
+        <action
+            android:id="@+id/action_entityList_to_entityDetails"
+            app:destination="@id/entityDetails" />
+        <argument
+            android:name="entityType"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
+    </fragment>
+    <fragment
+        android:id="@+id/entityDetails"
+        android:name="by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsFragment"
+        android:label="fragment_entity_details"
+        tools:layout="@layout/fragment_entity_details" >
+        <argument
+            android:name="entity"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />
+    </fragment>
+</navigation>
