@@ -3,7 +3,6 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListArgs
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListGlobalDependencies
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentListener

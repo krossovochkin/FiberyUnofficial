@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
+import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentListener
+import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import kotlinx.coroutines.launch
 
 class EntityTypeListViewModel(
