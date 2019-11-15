@@ -3,9 +3,10 @@ package by.krossovochkin.fiberyunofficial.applist
 import androidx.fragment.app.Fragment
 import by.krossovochkin.fiberyunofficial.applist.data.AppListDataModule
 import by.krossovochkin.fiberyunofficial.applist.domain.AppListDomainModule
-import by.krossovochkin.fiberyunofficial.applist.presentation.*
+import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
+import by.krossovochkin.fiberyunofficial.applist.presentation.AppListPresentationModule
+import by.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
 import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
