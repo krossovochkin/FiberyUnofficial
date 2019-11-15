@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">feature-app-list</string>
+    <string name="title_app_list">Apps</string>
+</resources>
