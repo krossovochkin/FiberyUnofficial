@@ -2,14 +2,12 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListArgs
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentListener
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 
 class EntityTypeListViewModelFactory(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
-    private val entityTypeListParentListener: EntityTypeListParentListener,
-    private val args: EntityTypeListArgs
+    private val entityTypeListParentListener: EntityTypeListViewModel.ParentListener,
+    private val args: EntityTypeListFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == EntityTypeListViewModel::class.java) {

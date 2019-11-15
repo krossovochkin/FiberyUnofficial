@@ -5,12 +5,13 @@ import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListComponentFactory
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListGlobalDependencies
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_type_list.*
@@ -23,7 +24,6 @@ class EntityTypeListFragment(
 
     @Inject
     lateinit var viewModel: EntityTypeListViewModel
-//    private val args: EntityTypeListFragmentArgs by navArgs()
     private val adapter = ListDelegationAdapter<List<ListItem>>(
         adapterDelegateLayoutContainer<EntityTypeListItem, ListItem>(
             layout = R.layout.item_entity_type
@@ -39,11 +39,10 @@ class EntityTypeListFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        EntityTypeListComponentFactory
-            .create(
-                fragment = this,
-                entityTypeListGlobalDependencies = entityTypeListGlobalDependencies
-            )
+        DaggerEntityTypeListComponent.builder()
+            .fragment(this)
+            .entityTypeListGlobalDependencies(entityTypeListGlobalDependencies)
+            .build()
             .inject(this)
 
         entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -63,6 +62,16 @@ class EntityTypeListFragment(
             bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary)
         )
     }
+
+    interface ArgsProvider {
+
+        fun getEntityTypeListArgs(arguments: Bundle): Args
+    }
+
+    data class Args(
+        val fiberyAppData: FiberyAppData
+    )
+
 }
 
 

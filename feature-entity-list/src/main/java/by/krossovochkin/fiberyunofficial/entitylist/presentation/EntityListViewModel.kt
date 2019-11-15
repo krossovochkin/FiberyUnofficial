@@ -4,17 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListArgs
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentListener
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import kotlinx.coroutines.launch
 
 class EntityListViewModel(
     private val getEntityListInteractor: GetEntityListInteractor,
-    private val entityListParentListener: EntityListParentListener,
-    private val entityListArgs: EntityListArgs
+    private val entityListParentListener: ParentListener,
+    private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
 
     private val mutableEntityTypeItems = MutableLiveData<List<ListItem>>()
@@ -45,5 +44,10 @@ class EntityListViewModel(
         } else {
             throw IllegalArgumentException()
         }
+    }
+
+    interface ParentListener {
+
+        fun onEntitySelected(entity: FiberyEntityData)
     }
 }

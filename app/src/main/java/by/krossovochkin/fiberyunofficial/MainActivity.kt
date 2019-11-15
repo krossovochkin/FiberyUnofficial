@@ -6,26 +6,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.navigation.fragment.findNavController
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListGlobalDependencies
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.applist.AppListGlobalDependencies
-import by.krossovochkin.fiberyunofficial.applist.AppListParentListener
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
+import by.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListArgs
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListArgsProvider
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListGlobalDependencies
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentListener
-import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
-import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentArgs
-import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListArgs
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListArgsProvider
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentListener
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.*
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.*
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,9 +44,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class MainActivityListener :
-        AppListParentListener,
-        EntityTypeListParentListener,
-        EntityListParentListener {
+        AppListViewModel.ParentListener,
+        EntityTypeListViewModel.ParentListener,
+        EntityListViewModel.ParentListener {
+
         override fun onAppSelected(fiberyAppData: FiberyAppData) {
             navHostFragment.findNavController().navigate(
                 AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData)
@@ -77,19 +68,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class MainActivityArgsProvider :
-        EntityTypeListArgsProvider,
-        EntityListArgsProvider {
+        EntityTypeListFragment.ArgsProvider,
+        EntityListFragment.ArgsProvider {
 
-        override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListArgs {
+        override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
             val args = EntityTypeListFragmentArgs.fromBundle(arguments)
-            return EntityTypeListArgs(
+            return EntityTypeListFragment.Args(
                 fiberyAppData = args.fiberyApp
             )
         }
 
-        override fun getEntityListArgs(arguments: Bundle): EntityListArgs {
+        override fun getEntityListArgs(arguments: Bundle): EntityListFragment.Args {
             val args = EntityListFragmentArgs.fromBundle(arguments)
-            return EntityListArgs(
+            return EntityListFragment.Args(
                 entityTypeSchema = args.entityType
             )
         }
@@ -107,7 +98,7 @@ annotation class MainActivityScope
 interface MainActivityComponent :
     AppListGlobalDependencies,
     EntityTypeListGlobalDependencies,
-    EntityListGlobalDependencies {
+    EntityListParentComponent {
 
     @Component.Builder
     interface Builder {
@@ -115,19 +106,19 @@ interface MainActivityComponent :
         fun applicationComponent(applicationComponent: ApplicationComponent): Builder
 
         @BindsInstance
-        fun appListParentListener(appListParentListener: AppListParentListener): Builder
+        fun appListParentListener(appListParentListener: AppListViewModel.ParentListener): Builder
 
         @BindsInstance
-        fun entityTypeListParentListener(entityTypeListParentListener: EntityTypeListParentListener): Builder
+        fun entityTypeListParentListener(entityTypeListParentListener: EntityTypeListViewModel.ParentListener): Builder
 
         @BindsInstance
-        fun entityTypeListArgsProvider(entityTypeListArgsProvider: EntityTypeListArgsProvider): Builder
+        fun entityTypeListArgsProvider(entityTypeListArgsProvider: EntityTypeListFragment.ArgsProvider): Builder
 
         @BindsInstance
-        fun entityListParentListener(entityListParentListener: EntityListParentListener): Builder
+        fun entityListParentListener(entityListParentListener: EntityListViewModel.ParentListener): Builder
 
         @BindsInstance
-        fun entityListArgsProvider(entityListArgsProvider: EntityListArgsProvider): Builder
+        fun entityListArgsProvider(entityListArgsProvider: EntityListFragment.ArgsProvider): Builder
 
         fun build(): MainActivityComponent
     }

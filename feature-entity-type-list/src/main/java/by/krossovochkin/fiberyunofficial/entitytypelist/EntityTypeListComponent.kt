@@ -1,79 +1,52 @@
 package by.krossovochkin.fiberyunofficial.entitytypelist
 
-import android.os.Bundle
+import androidx.fragment.app.Fragment
 import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.entitytypelist.data.EntityTypeListDataModule
+import by.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListDomainModule
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
-import by.krossovochkin.fiberyunofficial.entitytypelist.data.EntityTypeListDataComponent
-import by.krossovochkin.fiberyunofficial.entitytypelist.data.EntityTypeListDataComponentFactory
-import by.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListDomainComponentFactory
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListPresentationComponent
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListPresentationComponentFactory
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListPresentationModule
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModel
+import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Scope
 
 interface EntityTypeListGlobalDependencies : GlobalDependencies {
 
-    fun entityTypeListParentListener(): EntityTypeListParentListener
+    fun entityTypeListParentListener(): EntityTypeListViewModel.ParentListener
 
-    fun entityTypeListArgsProvider(): EntityTypeListArgsProvider
+    fun entityTypeListArgsProvider(): EntityTypeListFragment.ArgsProvider
 }
 
-interface EntityTypeListParentListener {
-
-    fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema)
-}
-
-interface EntityTypeListArgsProvider {
-
-    fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListArgs
-}
-
-data class EntityTypeListArgs(
-    val fiberyAppData: FiberyAppData
-)
-
+@EntityTypeList
 @Component(
+    modules = [
+        EntityTypeListDataModule::class,
+        EntityTypeListDomainModule::class,
+        EntityTypeListPresentationModule::class
+    ],
     dependencies = [
-        EntityTypeListDataComponent::class,
-        EntityTypeListPresentationComponent::class
+        EntityTypeListGlobalDependencies::class
     ]
 )
 interface EntityTypeListComponent {
-    
+
     fun entityTypeListViewModel(): EntityTypeListViewModel
-    
+
     fun inject(fragment: EntityTypeListFragment)
-}
 
-object EntityTypeListComponentFactory {
+    @Component.Builder
+    interface Builder {
 
-    fun create(
-        fragment: EntityTypeListFragment,
-        entityTypeListGlobalDependencies: EntityTypeListGlobalDependencies
-    ): EntityTypeListComponent {
-        val entityTypeListDataComponent = EntityTypeListDataComponentFactory
-            .create(
-                entityTypeListGlobalDependencies = entityTypeListGlobalDependencies
-            )
-        val entityTypeListDomainComponent = EntityTypeListDomainComponentFactory
-            .create(
-                dependencies = entityTypeListDataComponent
-            )
-        val args = entityTypeListGlobalDependencies
-            .entityTypeListArgsProvider()
-            .getEntityTypeListArgs(fragment.requireArguments())
-        val entityTypeListPresentationComponent = EntityTypeListPresentationComponentFactory
-            .create(
-                fragment = fragment,
-                args = args,
-                entityTypeListDomainComponent = entityTypeListDomainComponent,
-                entityTypeListGlobalDependencies = entityTypeListGlobalDependencies
-            )
-        return DaggerEntityTypeListComponent.builder()
-            .entityTypeListDataComponent(entityTypeListDataComponent)
-            .entityTypeListPresentationComponent(entityTypeListPresentationComponent)
-            .build()
+        @BindsInstance
+        fun fragment(fragment: Fragment): Builder
+
+        fun entityTypeListGlobalDependencies(entityTypeListGlobalDependencies: EntityTypeListGlobalDependencies): Builder
+
+        fun build(): EntityTypeListComponent
     }
 }
+
+@Scope
+@Retention
+annotation class EntityTypeList

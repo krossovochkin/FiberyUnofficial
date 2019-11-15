@@ -5,10 +5,11 @@ import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListComponentFactory
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListGlobalDependencies
+import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
+import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.item_entity.*
 import javax.inject.Inject
 
 class EntityListFragment(
-    private val entityListGlobalDependencies: EntityListGlobalDependencies
+    private val entityListParentComponent: EntityListParentComponent
 ) : BaseFragment(R.layout.fragment_entity_list) {
 
     @Inject
@@ -36,11 +37,10 @@ class EntityListFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        EntityListComponentFactory
-            .create(
-                fragment = this,
-                entityListGlobalDependencies = entityListGlobalDependencies
-            )
+        DaggerEntityListComponent.builder()
+            .fragment(this)
+            .entityListGlobalDependencies(entityListParentComponent)
+            .build()
             .inject(this)
 
         entityListRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -61,4 +61,13 @@ class EntityListFragment(
             )
         }
     }
+
+    interface ArgsProvider {
+
+        fun getEntityListArgs(arguments: Bundle): Args
+    }
+
+    data class Args(
+        val entityTypeSchema: FiberyEntityTypeSchema
+    )
 }

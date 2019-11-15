@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.krossovochkin.fiberyunofficial.applist.AppListParentListener
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import kotlinx.coroutines.launch
 
 class AppListViewModel(
     private val getAppListInteractor: GetAppListInteractor,
-    private val appListParentListener: AppListParentListener
+    private val appListParentListener: ParentListener
 ) : ViewModel() {
 
     private val mutableAppItems = MutableLiveData<List<ListItem>>()
@@ -32,13 +32,13 @@ class AppListViewModel(
     fun select(item: ListItem) {
         if (item is AppListItem) {
             appListParentListener.onAppSelected(item.appData)
-//            navController.navigate(
-//                AppListFragmentDirections.actionAppListToEntityTypeList(
-//                    item.appData
-//                )
-//            )
         } else {
             throw IllegalArgumentException()
         }
+    }
+
+    interface ParentListener {
+
+        fun onAppSelected(fiberyAppData: FiberyAppData)
     }
 }

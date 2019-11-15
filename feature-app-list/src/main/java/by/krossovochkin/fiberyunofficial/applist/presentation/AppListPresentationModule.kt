@@ -3,7 +3,6 @@ package by.krossovochkin.fiberyunofficial.applist.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
-import by.krossovochkin.fiberyunofficial.applist.AppListParentListener
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 import dagger.Module
 import dagger.Provides
@@ -27,7 +26,7 @@ object AppListPresentationModule {
     @Provides
     fun appListViewModelFactory(
         getAppListInteractor: GetAppListInteractor,
-        appListParentListener: AppListParentListener
+        appListParentListener: AppListViewModel.ParentListener
     ): AppListViewModelFactory {
         return AppListViewModelFactory(
             getAppListInteractor,

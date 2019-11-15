@@ -8,17 +8,14 @@ import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Scope
 
 interface AppListGlobalDependencies : GlobalDependencies {
 
-    fun appListParentListener(): AppListParentListener
+    fun appListParentListener(): AppListViewModel.ParentListener
 }
 
-interface AppListParentListener {
-
-    fun onAppSelected(fiberyAppData: FiberyAppData)
-}
-
+@AppList
 @Component(
     modules = [
         AppListDataModule::class,
@@ -45,18 +42,7 @@ interface AppListComponent {
     }
 }
 
-object AppListComponentFactory {
-
-    fun create(
-        fragment: AppListFragment,
-        appListGlobalDependencies: AppListGlobalDependencies
-    ): AppListComponent {
-        return DaggerAppListComponent.builder()
-            .fragment(fragment)
-            .appListGlobalDependencies(appListGlobalDependencies)
-            .build()
-    }
-}
-
-
+@Scope
+@Retention
+annotation class AppList
 

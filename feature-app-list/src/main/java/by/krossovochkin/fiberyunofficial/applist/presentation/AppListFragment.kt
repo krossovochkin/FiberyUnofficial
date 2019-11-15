@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.applist.AppListComponentFactory
 import by.krossovochkin.fiberyunofficial.applist.AppListGlobalDependencies
+import by.krossovochkin.fiberyunofficial.applist.DaggerAppListComponent
 import by.krossovochkin.fiberyunofficial.applist.R
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -38,11 +38,10 @@ class AppListFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        AppListComponentFactory
-            .create(
-                fragment = this,
-                appListGlobalDependencies = appListGlobalDependencies
-            )
+        DaggerAppListComponent.builder()
+            .fragment(this)
+            .appListGlobalDependencies(appListGlobalDependencies)
+            .build()
             .inject(this)
 
         appListRecyclerView.layoutManager = LinearLayoutManager(context)
