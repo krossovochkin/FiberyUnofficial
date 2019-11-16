@@ -2,11 +2,20 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import kotlinx.android.synthetic.main.fragment_entity_details.*
+import kotlinx.android.synthetic.main.item_field_text.*
 import javax.inject.Inject
 
 class EntityDetailsFragment(
@@ -16,6 +25,16 @@ class EntityDetailsFragment(
     @Inject
     lateinit var viewModel: EntityDetailsViewModel
 
+    private val adapter = ListDelegationAdapter<List<ListItem>>(
+        adapterDelegateLayoutContainer<FieldTextItem, ListItem>(
+            layout = R.layout.item_field_text
+        ) {
+            bind {
+                fieldTextView.text = item.text
+            }
+        }
+    )
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -24,6 +43,14 @@ class EntityDetailsFragment(
             .entityDetailsParentComponent(entityDetailsParentComponent)
             .build()
             .inject(this)
+
+        entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
+        entityDetailsRecyclerView.adapter = adapter
+
+        viewModel.items.observe(this, Observer {
+            adapter.items = it
+            adapter.notifyDataSetChanged()
+        })
     }
 
     interface ArgsProvider {
@@ -32,6 +59,7 @@ class EntityDetailsFragment(
     }
 
     data class Args(
-        val entityData: FiberyEntityData)
+        val entityData: FiberyEntityData
+    )
 
 }

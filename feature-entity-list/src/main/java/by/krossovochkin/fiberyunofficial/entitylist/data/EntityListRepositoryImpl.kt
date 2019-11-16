@@ -24,7 +24,7 @@ class EntityListRepositoryImpl(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityType.name,
                             select = entityType.fields
-                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.Field.COLLABORATION_DOCUMENT.value }
+                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
                                 .map { it.name },
                             limit = 100
                         )

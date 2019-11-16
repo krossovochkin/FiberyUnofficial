@@ -8,11 +8,17 @@ object FiberyApiConstants {
         USER("fibery/user")
     }
 
+    enum class FieldType(
+        val value: String
+    ) {
+        COLLABORATION_DOCUMENT("Collaboration~Documents/Document"),
+        TEXT("fibery/text")
+    }
+
     enum class Field(
         val value: String
     ) {
         ID("fibery/id"),
-        COLLABORATION_DOCUMENT("Collaboration~Documents/Document")
     }
 
     enum class Operator(

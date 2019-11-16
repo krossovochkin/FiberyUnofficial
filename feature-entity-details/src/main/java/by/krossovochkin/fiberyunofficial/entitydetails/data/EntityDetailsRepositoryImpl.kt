@@ -23,7 +23,7 @@ class EntityDetailsRepositoryImpl(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
                             select = entityData.schema.fields
-                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.Field.COLLABORATION_DOCUMENT.value }
+                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
                                 .map { it.name },
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
