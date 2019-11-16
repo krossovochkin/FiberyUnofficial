@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
-        android:name="by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsFragment"
+        android:name="by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment"
         android:label="fragment_entity_details"
         tools:layout="@layout/fragment_entity_details" >
         <argument

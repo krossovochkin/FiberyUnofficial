@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.navigation.fragment.findNavController
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListGlobalDependencies
-import by.krossovochkin.fiberyunofficial.applist.AppListGlobalDependencies
+import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
+import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.*
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.*
@@ -35,6 +39,8 @@ class MainActivity : AppCompatActivity() {
             .entityTypeListArgsProvider(argsProvider)
             .entityListParentListener(listener)
             .entityListArgsProvider(argsProvider)
+            .entityDetailsParentListener(listener)
+            .entityDetailsArgsProvider(argsProvider)
             .build()
 
         supportFragmentManager.fragmentFactory =
@@ -46,7 +52,8 @@ class MainActivity : AppCompatActivity() {
     inner class MainActivityListener :
         AppListViewModel.ParentListener,
         EntityTypeListViewModel.ParentListener,
-        EntityListViewModel.ParentListener {
+        EntityListViewModel.ParentListener,
+        EntityDetailsViewModel.ParentListener {
 
         override fun onAppSelected(fiberyAppData: FiberyAppData) {
             navHostFragment.findNavController().navigate(
@@ -69,7 +76,8 @@ class MainActivity : AppCompatActivity() {
 
     inner class MainActivityArgsProvider :
         EntityTypeListFragment.ArgsProvider,
-        EntityListFragment.ArgsProvider {
+        EntityListFragment.ArgsProvider,
+        EntityDetailsFragment.ArgsProvider {
 
         override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
             val args = EntityTypeListFragmentArgs.fromBundle(arguments)
@@ -84,6 +92,13 @@ class MainActivity : AppCompatActivity() {
                 entityTypeSchema = args.entityType
             )
         }
+
+        override fun getEntityDetailsArgs(arguments: Bundle): EntityDetailsFragment.Args {
+            val args = EntityDetailsFragmentArgs.fromBundle(arguments)
+            return EntityDetailsFragment.Args(
+                entityData = args.entity
+            )
+        }
     }
 }
 
@@ -96,9 +111,10 @@ annotation class MainActivityScope
     dependencies = [ApplicationComponent::class]
 )
 interface MainActivityComponent :
-    AppListGlobalDependencies,
-    EntityTypeListGlobalDependencies,
-    EntityListParentComponent {
+    AppListParentComponent,
+    EntityTypeListParentComponent,
+    EntityListParentComponent,
+    EntityDetailsParentComponent {
 
     @Component.Builder
     interface Builder {
@@ -120,6 +136,12 @@ interface MainActivityComponent :
         @BindsInstance
         fun entityListArgsProvider(entityListArgsProvider: EntityListFragment.ArgsProvider): Builder
 
+        @BindsInstance
+        fun entityDetailsParentListener(entityDetailsParentListener: EntityDetailsViewModel.ParentListener): Builder
+
+        @BindsInstance
+        fun entityDetailsArgsProvider(entityDetailsArgsProvider: EntityDetailsFragment.ArgsProvider): Builder
+
         fun build(): MainActivityComponent
     }
 }
@@ -135,6 +157,9 @@ private class MainActivityFragmentFactory(
                 mainActivityComponent
             )
             EntityListFragment::class.java.canonicalName -> EntityListFragment(mainActivityComponent)
+            EntityDetailsFragment::class.java.canonicalName -> EntityDetailsFragment(
+                mainActivityComponent
+            )
             else -> return super.instantiate(classLoader, className)
         }
     }

@@ -11,7 +11,7 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
 
-interface EntityTypeListGlobalDependencies : GlobalDependencies {
+interface EntityTypeListParentComponent : GlobalDependencies {
 
     fun entityTypeListParentListener(): EntityTypeListViewModel.ParentListener
 
@@ -26,7 +26,7 @@ interface EntityTypeListGlobalDependencies : GlobalDependencies {
         EntityTypeListPresentationModule::class
     ],
     dependencies = [
-        EntityTypeListGlobalDependencies::class
+        EntityTypeListParentComponent::class
     ]
 )
 interface EntityTypeListComponent {
@@ -41,7 +41,7 @@ interface EntityTypeListComponent {
         @BindsInstance
         fun fragment(fragment: Fragment): Builder
 
-        fun entityTypeListGlobalDependencies(entityTypeListGlobalDependencies: EntityTypeListGlobalDependencies): Builder
+        fun entityTypeListGlobalDependencies(entityTypeListParentComponent: EntityTypeListParentComponent): Builder
 
         fun build(): EntityTypeListComponent
     }

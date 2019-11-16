@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.entitylist.data
 
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
@@ -23,7 +24,7 @@ class EntityListRepositoryImpl(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityType.name,
                             select = entityType.fields
-                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != "Collaboration~Documents/Document" }
+                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.Field.COLLABORATION_DOCUMENT.value }
                                 .map { it.name },
                             limit = 100
                         )

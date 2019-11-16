@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListGlobalDependencies
+import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.item_entity_type.*
 import javax.inject.Inject
 
 class EntityTypeListFragment(
-    private val entityTypeListGlobalDependencies: EntityTypeListGlobalDependencies
+    private val entityTypeListParentComponent: EntityTypeListParentComponent
 ) : BaseFragment(R.layout.fragment_entity_type_list) {
 
     @Inject
@@ -41,7 +41,7 @@ class EntityTypeListFragment(
 
         DaggerEntityTypeListComponent.builder()
             .fragment(this)
-            .entityTypeListGlobalDependencies(entityTypeListGlobalDependencies)
+            .entityTypeListGlobalDependencies(entityTypeListParentComponent)
             .build()
             .inject(this)
 

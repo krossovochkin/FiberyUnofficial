@@ -45,8 +45,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.1.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.1.0"
 
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
-
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc02'
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:4.2.0'

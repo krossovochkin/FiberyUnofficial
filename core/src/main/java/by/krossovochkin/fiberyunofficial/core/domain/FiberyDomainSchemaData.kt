@@ -47,3 +47,9 @@ data class FiberyEntityData(
         data[fieldName] as String
     }
 }
+
+@Parcelize
+data class FiberyEntityDetailsData(
+    val data: Map<String, @RawValue Any>,
+    val schema: FiberyEntityTypeSchema
+) : Parcelable

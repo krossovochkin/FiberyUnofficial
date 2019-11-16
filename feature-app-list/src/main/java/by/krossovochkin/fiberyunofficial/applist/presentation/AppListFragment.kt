@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.applist.AppListGlobalDependencies
+import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
 import by.krossovochkin.fiberyunofficial.applist.DaggerAppListComponent
 import by.krossovochkin.fiberyunofficial.applist.R
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_app.*
 import javax.inject.Inject
 
 class AppListFragment(
-    private val appListGlobalDependencies: AppListGlobalDependencies
+    private val appListParentComponent: AppListParentComponent
 ) : BaseFragment(R.layout.fragment_app_list) {
 
     @Inject
@@ -40,7 +40,7 @@ class AppListFragment(
 
         DaggerAppListComponent.builder()
             .fragment(this)
-            .appListGlobalDependencies(appListGlobalDependencies)
+            .appListGlobalDependencies(appListParentComponent)
             .build()
             .inject(this)
 

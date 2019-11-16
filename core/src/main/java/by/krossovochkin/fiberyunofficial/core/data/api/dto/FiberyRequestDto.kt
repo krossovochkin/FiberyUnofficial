@@ -11,7 +11,8 @@ data class FiberyRequestCommandBody(
 
 @JsonClass(generateAdapter = true)
 data class FiberyRequestCommandArgsDto(
-    val query: FiberyRequestCommandArgsQueryDto
+    val query: FiberyRequestCommandArgsQueryDto,
+    val params: Map<String, Any>? = null
 )
 
 @JsonClass(generateAdapter = true)
@@ -20,6 +21,8 @@ data class FiberyRequestCommandArgsQueryDto(
     val from: String,
     @Json(name = "q/select")
     val select: List<String>,
+    @Json(name = "q/where")
+    val where: List<Any>? = null,
     @Json(name = "q/limit")
     val limit: Int
 )
