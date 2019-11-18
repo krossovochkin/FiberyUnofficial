@@ -32,13 +32,34 @@ class EntityDetailsRepositoryImpl(
                             ),
                             limit = 1
                         ),
-                        params = mapOf(PARAM_ID to entityData.data.getValue(FiberyApiConstants.Field.ID.value))
+                        params = mapOf(PARAM_ID to entityData.id)
                     )
                 )
             )
         ).first()
 
-        return dto.result.map { FiberyEntityDetailsData(it, entityData.schema) }.first()
+        return dto.result.map {
+            val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
+            val title = it[titleFieldName] as String
+            val id = it[FiberyApiConstants.Field.ID.value] as String
+            val publicId = it[FiberyApiConstants.Field.PUBLIC_IC.value] as String
+
+            val defaultFieldKeys = listOf(
+                titleFieldName,
+                FiberyApiConstants.Field.ID.value,
+                FiberyApiConstants.Field.PUBLIC_IC.value
+            )
+
+            val fields = it.filter { it.key !in defaultFieldKeys }
+
+            FiberyEntityDetailsData(
+                id = id,
+                publicId = publicId,
+                title = title,
+                fields = fields,
+                schema = entityData.schema
+            )
+        }.first()
     }
 
     companion object {

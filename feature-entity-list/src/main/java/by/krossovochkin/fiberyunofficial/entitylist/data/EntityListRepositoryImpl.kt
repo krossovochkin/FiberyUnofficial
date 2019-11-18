@@ -33,6 +33,16 @@ class EntityListRepositoryImpl(
             )
         ).first()
 
-        return dto.result.map { FiberyEntityData(it, entityType) }
+        return dto.result.map {
+            val title = it[entityType.fields.find { it.meta.isUiTitle }!!.name] as String
+            val id = it[FiberyApiConstants.Field.ID.value] as String
+            val publicId = it[FiberyApiConstants.Field.PUBLIC_IC.value] as String
+            FiberyEntityData(
+                id = id,
+                publicId = publicId,
+                title = title,
+                schema = entityType
+            )
+        }
     }
 }

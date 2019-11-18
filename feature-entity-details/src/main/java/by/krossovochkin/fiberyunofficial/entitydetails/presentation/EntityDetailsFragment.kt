@@ -15,6 +15,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.R
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_details.*
+import kotlinx.android.synthetic.main.item_field_header.*
 import kotlinx.android.synthetic.main.item_field_text.*
 import javax.inject.Inject
 
@@ -26,6 +27,14 @@ class EntityDetailsFragment(
     lateinit var viewModel: EntityDetailsViewModel
 
     private val adapter = ListDelegationAdapter<List<ListItem>>(
+        adapterDelegateLayoutContainer<FieldHeaderItem, ListItem>(
+            layout = R.layout.item_field_header
+        ) {
+            bind {
+                fieldHeaderPublicIdTextView.text = item.publicId
+                fieldHeaderTitleTextView.text = item.title
+            }
+        },
         adapterDelegateLayoutContainer<FieldTextItem, ListItem>(
             layout = R.layout.item_field_text
         ) {

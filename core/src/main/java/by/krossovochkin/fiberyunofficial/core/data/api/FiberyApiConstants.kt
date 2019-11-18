@@ -19,6 +19,7 @@ object FiberyApiConstants {
         val value: String
     ) {
         ID("fibery/id"),
+        PUBLIC_IC("fibery/public-id")
     }
 
     enum class Operator(

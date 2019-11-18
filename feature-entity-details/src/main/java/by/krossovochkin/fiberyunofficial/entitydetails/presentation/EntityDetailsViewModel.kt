@@ -29,7 +29,15 @@ class EntityDetailsViewModel(
     }
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
-        return entityData.schema.fields.flatMap { fieldSchema -> mapItem(fieldSchema, entityData) }
+        val fields = entityData.fields.flatMap { field ->
+            val fieldSchema = entityData.schema.fields.first { it.name == field.key }
+            mapItem(fieldSchema, entityData)
+        }
+
+        return listOf(FieldHeaderItem(
+            publicId = entityData.publicId,
+            title = entityData.title
+        )) + fields
     }
 
     private fun mapItem(
@@ -48,13 +56,18 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return listOf(
             FieldTextItem(
-                text = entityData.data[fieldSchema.name] as String
+                text = entityData.fields[fieldSchema.name] as String
             )
         )
     }
 
     interface ParentListener
 }
+
+data class FieldHeaderItem(
+    val publicId: String,
+    val title: String
+): ListItem
 
 data class FieldTextItem(
     val text: String

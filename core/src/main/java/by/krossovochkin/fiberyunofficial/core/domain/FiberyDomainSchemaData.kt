@@ -36,20 +36,18 @@ data class FiberyFieldMetaData(
 ) : Parcelable
 
 @Parcelize
-data class FiberyEntityData(
-    val data: Map<String, @RawValue Any>,
+class FiberyEntityData(
+    val id: String,
+    val publicId: String,
+    val title: String,
     val schema: FiberyEntityTypeSchema
-) : Parcelable {
-
-    @IgnoredOnParcel
-    val title: String by lazy {
-        val fieldName = schema.fields.find { it.meta.isUiTitle }!!.name
-        data[fieldName] as String
-    }
-}
+) : Parcelable
 
 @Parcelize
 data class FiberyEntityDetailsData(
-    val data: Map<String, @RawValue Any>,
+    val id: String,
+    val publicId: String,
+    val title: String,
+    val fields: Map<String, @RawValue Any>,
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
