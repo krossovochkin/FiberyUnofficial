@@ -23,8 +23,14 @@ class EntityListRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityType.name,
-                            select = entityType.fields
-                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
+                            select = entityType.fields //TODO: scan for primitive types
+                                .filter {
+                                    it.type in listOf(
+                                        FiberyApiConstants.FieldType.TEXT.value,
+                                        FiberyApiConstants.FieldType.UUID.value,
+                                        FiberyApiConstants.FieldType.DATE_TIME.value
+                                    )
+                                }
                                 .map { it.name },
                             limit = 100
                         )
@@ -36,7 +42,7 @@ class EntityListRepositoryImpl(
         return dto.result.map {
             val title = it[entityType.fields.find { it.meta.isUiTitle }!!.name] as String
             val id = it[FiberyApiConstants.Field.ID.value] as String
-            val publicId = it[FiberyApiConstants.Field.PUBLIC_IC.value] as String
+            val publicId = it[FiberyApiConstants.Field.PUBLIC_ID.value] as String
             FiberyEntityData(
                 id = id,
                 publicId = publicId,

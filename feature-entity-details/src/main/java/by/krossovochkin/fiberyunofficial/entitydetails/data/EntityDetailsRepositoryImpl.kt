@@ -22,8 +22,14 @@ class EntityDetailsRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
-                            select = entityData.schema.fields
-                                .filter { !it.meta.isCollection && !it.meta.isRelation && it.type != FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
+                            select = entityData.schema.fields  //TODO: scan for primitive types
+                                .filter {
+                                    it.type in listOf(
+                                        FiberyApiConstants.FieldType.TEXT.value,
+                                        FiberyApiConstants.FieldType.UUID.value,
+                                        FiberyApiConstants.FieldType.DATE_TIME.value
+                                    )
+                                }
                                 .map { it.name },
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
@@ -42,12 +48,12 @@ class EntityDetailsRepositoryImpl(
             val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
             val title = it[titleFieldName] as String
             val id = it[FiberyApiConstants.Field.ID.value] as String
-            val publicId = it[FiberyApiConstants.Field.PUBLIC_IC.value] as String
+            val publicId = it[FiberyApiConstants.Field.PUBLIC_ID.value] as String
 
             val defaultFieldKeys = listOf(
                 titleFieldName,
                 FiberyApiConstants.Field.ID.value,
-                FiberyApiConstants.Field.PUBLIC_IC.value
+                FiberyApiConstants.Field.PUBLIC_ID.value
             )
 
             val fields = it.filter { it.key !in defaultFieldKeys }

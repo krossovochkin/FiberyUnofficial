@@ -12,14 +12,16 @@ object FiberyApiConstants {
         val value: String
     ) {
         COLLABORATION_DOCUMENT("Collaboration~Documents/Document"),
-        TEXT("fibery/text")
+        TEXT("fibery/text"),
+        DATE_TIME("fibery/date-time"),
+        UUID("fibery/uuid")
     }
 
     enum class Field(
         val value: String
     ) {
         ID("fibery/id"),
-        PUBLIC_IC("fibery/public-id")
+        PUBLIC_ID("fibery/public-id")
     }
 
     enum class Operator(

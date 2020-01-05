@@ -30,9 +30,7 @@ data class FiberyFieldSchema(
 
 @Parcelize
 data class FiberyFieldMetaData(
-    val isUiTitle: Boolean,
-    val isCollection: Boolean,
-    val isRelation: Boolean
+    val isUiTitle: Boolean
 ) : Parcelable
 
 @Parcelize
