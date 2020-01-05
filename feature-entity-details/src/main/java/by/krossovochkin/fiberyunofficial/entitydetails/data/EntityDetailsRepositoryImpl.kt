@@ -15,6 +15,7 @@ class EntityDetailsRepositoryImpl(
 ) : EntityDetailsRepository {
 
     override suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData {
+        val typesSchema = fiberyServiceApi.getSchema().first().result.fiberyTypes
         val dto = fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
@@ -22,13 +23,12 @@ class EntityDetailsRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
-                            select = entityData.schema.fields  //TODO: scan for primitive types
-                                .filter {
-                                    it.type in listOf(
-                                        FiberyApiConstants.FieldType.TEXT.value,
-                                        FiberyApiConstants.FieldType.UUID.value,
-                                        FiberyApiConstants.FieldType.DATE_TIME.value
-                                    )
+                            select = entityData.schema.fields
+                                .filter { fieldSchema ->
+                                    val isPrimitive = typesSchema
+                                        .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                                        ?.meta?.isPrimitive ?: false
+                                    isPrimitive
                                 }
                                 .map { it.name },
                             where = listOf(

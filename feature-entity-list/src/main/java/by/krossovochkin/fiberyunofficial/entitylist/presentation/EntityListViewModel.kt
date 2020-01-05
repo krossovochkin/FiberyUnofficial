@@ -22,7 +22,7 @@ class EntityListViewModel(
     val toolbarViewState: EntityListToolbarViewState
         get() = EntityListToolbarViewState(
             title = entityListArgs.entityTypeSchema.displayName,
-            bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.uiColorHex)
+            bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex)
         )
 
     init {

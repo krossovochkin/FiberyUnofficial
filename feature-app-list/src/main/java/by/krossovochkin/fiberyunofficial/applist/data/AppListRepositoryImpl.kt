@@ -13,7 +13,7 @@ class AppListRepositoryImpl(
         val schema = fiberyServiceApi.getSchema()
         return schema.first()
             .result.fiberyTypes
-            .filter { it.meta.isDomain && it.name != FiberyApiConstants.Type.USER.value }
+            .filter { it.meta.isDomain == true && it.name != FiberyApiConstants.Type.USER.value }
             .map {
                 FiberyAppData(
                     name = it.name.substringBefore(FiberyApiConstants.DELIMITER_APP_TYPE)

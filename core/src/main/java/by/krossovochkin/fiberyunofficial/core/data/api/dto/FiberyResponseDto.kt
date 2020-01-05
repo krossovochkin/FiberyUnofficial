@@ -48,9 +48,11 @@ data class FiberyFieldMetaDto(
 @JsonClass(generateAdapter = true)
 data class FiberyTypeMetaDto(
     @Json(name = "fibery/domain?")
-    val isDomain: Boolean,
+    val isDomain: Boolean?,
     @Json(name = "ui/color")
-    val uiColorHex: String?
+    val uiColorHex: String?,
+    @Json(name = "fibery/primitive?")
+    val isPrimitive: Boolean?
 )
 
 @JsonClass(generateAdapter = true)

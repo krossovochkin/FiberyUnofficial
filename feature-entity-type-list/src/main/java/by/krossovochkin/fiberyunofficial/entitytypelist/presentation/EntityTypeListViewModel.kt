@@ -25,7 +25,7 @@ class EntityTypeListViewModel(
                 .map { entityType ->
                     EntityTypeListItem(
                         title = entityType.displayName,
-                        badgeBgColor = ColorUtils.getColor(entityType.uiColorHex),
+                        badgeBgColor = ColorUtils.getColor(entityType.meta.uiColorHex),
                         entityTypeData = entityType
                     )
                 }

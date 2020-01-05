@@ -14,12 +14,19 @@ data class FiberyAppData(
 data class FiberyEntityTypeSchema(
     val name: String,
     val fields: List<FiberyFieldSchema>,
-    val uiColorHex: String
+    val meta: FiberyEntityTypeMetaData
 ) : Parcelable {
 
     @IgnoredOnParcel
     val displayName: String = name.substringAfter("/")
 }
+
+@Parcelize
+data class FiberyEntityTypeMetaData(
+    val uiColorHex: String,
+    val isDomain: Boolean,
+    val isPrimitive: Boolean
+): Parcelable
 
 @Parcelize
 data class FiberyFieldSchema(
