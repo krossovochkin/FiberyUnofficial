@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants.DELIMITER_APP_TYPE
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
@@ -46,6 +48,7 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return when (fieldSchema.type) {
             FiberyApiConstants.FieldType.TEXT.value -> mapTextItem(fieldSchema, entityData)
+            FiberyApiConstants.FieldType.NUMBER.value -> mapNumberItem(fieldSchema, entityData)
             else -> emptyList()
         }
     }
@@ -56,7 +59,20 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return listOf(
             FieldTextItem(
+                title = fieldSchema.name.substringAfter(DELIMITER_APP_TYPE),
                 text = entityData.fields[fieldSchema.name] as String
+            )
+        )
+    }
+
+    private fun mapNumberItem(
+        fieldSchema: FiberyFieldSchema,
+        entityData: FiberyEntityDetailsData
+    ): List<ListItem> {
+        return listOf(
+            FieldNumberItem(
+                title = fieldSchema.name.substringAfter(DELIMITER_APP_TYPE),
+                value = entityData.fields[fieldSchema.name].toString().toBigDecimal()
             )
         )
     }
@@ -70,5 +86,11 @@ data class FieldHeaderItem(
 ): ListItem
 
 data class FieldTextItem(
+    val title: String,
     val text: String
+) : ListItem
+
+data class FieldNumberItem(
+    val title: String,
+    val value: BigDecimal
 ) : ListItem

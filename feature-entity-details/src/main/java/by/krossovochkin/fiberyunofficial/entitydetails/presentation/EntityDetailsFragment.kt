@@ -16,7 +16,9 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_details.*
 import kotlinx.android.synthetic.main.item_field_header.*
+import kotlinx.android.synthetic.main.item_field_number.*
 import kotlinx.android.synthetic.main.item_field_text.*
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 class EntityDetailsFragment(
@@ -39,7 +41,16 @@ class EntityDetailsFragment(
             layout = R.layout.item_field_text
         ) {
             bind {
+                fieldTextTitleView.text = item.title
                 fieldTextView.text = item.text
+            }
+        },
+        adapterDelegateLayoutContainer<FieldNumberItem, ListItem>(
+            layout = R.layout.item_field_number
+        ) {
+            bind {
+                fieldNumberTitleView.text = item.title
+                fieldNumberValueView.text = DecimalFormat.getInstance().format(item.value)
             }
         }
     )

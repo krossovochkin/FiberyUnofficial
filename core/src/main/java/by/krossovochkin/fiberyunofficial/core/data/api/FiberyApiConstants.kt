@@ -14,7 +14,8 @@ object FiberyApiConstants {
         COLLABORATION_DOCUMENT("Collaboration~Documents/Document"),
         TEXT("fibery/text"),
         DATE_TIME("fibery/date-time"),
-        UUID("fibery/uuid")
+        UUID("fibery/uuid"),
+        NUMBER("fibery/int")
     }
 
     enum class Field(
