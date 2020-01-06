@@ -50,6 +50,7 @@ class EntityDetailsViewModel(
             is FieldData.NumberFieldData -> mapNumberItem(field)
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
+            is FieldData.RichTextFieldData -> mapRichTextItem(field)
         }
     }
 
@@ -97,6 +98,17 @@ class EntityDetailsViewModel(
         )
     }
 
+    private fun mapRichTextItem(
+        field: FieldData.RichTextFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldRichTextItem(
+                title = field.title,
+                value = field.value
+            )
+        )
+    }
+
     interface ParentListener
 }
 
@@ -108,4 +120,9 @@ data class FieldHeaderItem(
 data class FieldTextItem(
     val title: String,
     val text: String
+) : ListItem
+
+data class FieldRichTextItem(
+    val title: String,
+    val value: String
 ) : ListItem

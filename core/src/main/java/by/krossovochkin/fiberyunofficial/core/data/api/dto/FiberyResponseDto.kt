@@ -62,3 +62,9 @@ data class FiberyResponseEntityDto(
     @Json(name = "result")
     val result: List<Map<String, Any>>
 )
+
+@JsonClass(generateAdapter = true)
+data class FiberyDocumentResponse(
+    @Json(name = "content")
+    val content: String
+)

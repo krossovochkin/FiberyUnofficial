@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +15,7 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_details.*
 import kotlinx.android.synthetic.main.item_field_header.*
+import kotlinx.android.synthetic.main.item_field_rich_text.*
 import kotlinx.android.synthetic.main.item_field_text.*
 import javax.inject.Inject
 
@@ -39,6 +41,16 @@ class EntityDetailsFragment(
             bind {
                 fieldTextTitleView.text = item.title
                 fieldTextView.text = item.text
+            }
+        },
+        adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(
+            layout = R.layout.item_field_rich_text
+        ) {
+            bind {
+                richTextTitleView.text = item.title
+
+                richTextWebView.setBackgroundColor(Color.TRANSPARENT)
+                richTextWebView.loadData(item.value, "text/html", "utf-8")
             }
         }
     )

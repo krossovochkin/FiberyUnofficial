@@ -90,6 +90,13 @@ sealed class FieldData : Parcelable {
         val value: String,
         override val schema: FiberyFieldSchema
     ): FieldData()
+
+    @Parcelize
+    data class RichTextFieldData(
+        val title: String,
+        val value: String,
+        override val schema: FiberyFieldSchema
+    ): FieldData()
 }
 
 

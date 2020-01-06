@@ -23,7 +23,8 @@ object FiberyApiConstants {
     ) {
         ID("fibery/id"),
         PUBLIC_ID("fibery/public-id"),
-        ENUM_NAME("enum/name")
+        ENUM_NAME("enum/name"),
+        DOCUMENT_SECRET("Collaboration~Documents/secret")
     }
 
     enum class Operator(

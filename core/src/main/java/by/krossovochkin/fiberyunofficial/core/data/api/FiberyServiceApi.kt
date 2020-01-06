@@ -1,11 +1,7 @@
 package by.krossovochkin.fiberyunofficial.core.data.api
 
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
-import retrofit2.http.Body
-import retrofit2.http.POST
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.*
+import retrofit2.http.*
 
 interface FiberyServiceApi {
 
@@ -23,4 +19,10 @@ interface FiberyServiceApi {
     suspend fun getEntities(
         @Body body: List<FiberyRequestCommandBody>
     ): List<FiberyResponseEntityDto>
+
+    @GET("api/documents/{secret}")
+    suspend fun getDocument(
+        @Path("secret") secret: String,
+        @Query("format") format: String = "html"
+    ): FiberyDocumentResponse
 }

@@ -62,6 +62,39 @@ class EntityDetailsRepositoryImpl(
             )
         ).first()
 
+        val documentSchema =
+            entityData.schema.fields.find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }!!
+        val documentResponse = fiberyServiceApi.getEntities(
+            listOf(
+                FiberyRequestCommandBody(
+                    command = FiberyCommand.QUERY_ENTITY.value,
+                    args = FiberyRequestCommandArgsDto(
+                        FiberyRequestCommandArgsQueryDto(
+                            from = entityData.schema.name,
+                            select = listOf(
+                                mapOf(documentSchema.name to listOf(FiberyApiConstants.Field.DOCUMENT_SECRET.value))
+                            ),
+                            where = listOf(
+                                FiberyApiConstants.Operator.EQUALS.value,
+                                listOf(FiberyApiConstants.Field.ID.value),
+                                PARAM_ID
+                            ),
+                            limit = 1
+                        ),
+                        params = mapOf(PARAM_ID to entityData.id)
+                    )
+                )
+            )
+        ).first().result.first()[documentSchema.name]
+        val documentSecret = (documentResponse as Map<String, Any>)[FiberyApiConstants.Field.DOCUMENT_SECRET.value] as String
+
+        val document = fiberyServiceApi.getDocument(documentSecret)
+        val documentData = FieldData.RichTextFieldData(
+            title = documentSchema.name.normalizeTitle(),
+            value = document.content.wrapInHtml(),
+            schema = documentSchema
+        )
+
         return dto.result.map {
             val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
             val title = it[titleFieldName] as String
@@ -121,7 +154,7 @@ class EntityDetailsRepositoryImpl(
                 id = id,
                 publicId = publicId,
                 title = title,
-                fields = fields,
+                fields = fields + documentData,
                 schema = entityData.schema
             )
         }.first()
@@ -131,6 +164,10 @@ class EntityDetailsRepositoryImpl(
         return this.substringAfter(FiberyApiConstants.DELIMITER_APP_TYPE)
             .split("-")
             .joinToString(separator = " ") { it.capitalize() }
+    }
+
+    private fun String.wrapInHtml(): String {
+        return "<html>$this</html>"
     }
 
     companion object {
