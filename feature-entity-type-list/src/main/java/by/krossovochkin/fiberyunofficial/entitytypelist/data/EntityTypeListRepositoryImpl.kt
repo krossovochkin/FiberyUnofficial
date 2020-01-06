@@ -35,7 +35,8 @@ class EntityTypeListRepositoryImpl(
                     meta = FiberyEntityTypeMetaData(
                         uiColorHex = typeDto.meta.uiColorHex ?: DEFAULT_UI_COLOR,
                         isDomain = typeDto.meta.isDomain ?: false,
-                        isPrimitive = typeDto.meta.isPrimitive ?: false
+                        isPrimitive = typeDto.meta.isPrimitive ?: false,
+                        isEnum = typeDto.meta.isEnum ?: false
                     )
 
                 )

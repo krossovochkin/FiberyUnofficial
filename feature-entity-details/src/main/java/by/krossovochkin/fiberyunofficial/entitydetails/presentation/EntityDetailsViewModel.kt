@@ -49,6 +49,7 @@ class EntityDetailsViewModel(
             is FieldData.TextFieldData -> mapTextItem(field)
             is FieldData.NumberFieldData -> mapNumberItem(field)
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
+            is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
         }
     }
 
@@ -81,6 +82,17 @@ class EntityDetailsViewModel(
             FieldTextItem(
                 title = field.title,
                 text = DecimalFormat.getInstance().format(field.value)
+            )
+        )
+    }
+
+    private fun mapSingleSelectItem(
+        field: FieldData.SingleSelectFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldTextItem(
+                title = field.title,
+                text = field.value
             )
         )
     }

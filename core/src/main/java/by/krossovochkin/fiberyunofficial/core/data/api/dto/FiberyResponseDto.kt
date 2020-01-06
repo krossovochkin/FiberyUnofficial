@@ -52,7 +52,9 @@ data class FiberyTypeMetaDto(
     @Json(name = "ui/color")
     val uiColorHex: String?,
     @Json(name = "fibery/primitive?")
-    val isPrimitive: Boolean?
+    val isPrimitive: Boolean?,
+    @Json(name = "fibery/enum?")
+    val isEnum: Boolean?
 )
 
 @JsonClass(generateAdapter = true)

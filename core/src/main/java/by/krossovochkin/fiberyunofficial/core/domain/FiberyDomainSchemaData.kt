@@ -26,7 +26,8 @@ data class FiberyEntityTypeSchema(
 data class FiberyEntityTypeMetaData(
     val uiColorHex: String,
     val isDomain: Boolean,
-    val isPrimitive: Boolean
+    val isPrimitive: Boolean,
+    val isEnum: Boolean
 ) : Parcelable
 
 @Parcelize
@@ -82,6 +83,13 @@ sealed class FieldData : Parcelable {
         val value: Date,
         override val schema: FiberyFieldSchema
     ) : FieldData()
+
+    @Parcelize
+    data class SingleSelectFieldData(
+        val title: String,
+        val value: String,
+        override val schema: FiberyFieldSchema
+    ): FieldData()
 }
 
 

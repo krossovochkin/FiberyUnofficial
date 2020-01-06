@@ -33,7 +33,22 @@ class EntityDetailsRepositoryImpl(
                                         ?.meta?.isPrimitive ?: false
                                     isPrimitive
                                 }
-                                .map { it.name },
+                                .map { it.name } +
+                                    entityData.schema.fields
+                                        .filter { fieldSchema ->
+                                            val isEnum = typesSchema
+                                                .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                                                ?.meta?.isEnum ?: false
+                                            isEnum
+                                        }
+                                        .map { fieldSchema ->
+                                            mapOf(
+                                                fieldSchema.name to listOf(
+                                                    FiberyApiConstants.Field.ID.value,
+                                                    FiberyApiConstants.Field.ENUM_NAME.value
+                                                )
+                                            )
+                                        },
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
                                 listOf(FiberyApiConstants.Field.ID.value),
@@ -86,7 +101,19 @@ class EntityDetailsRepositoryImpl(
                                 schema = fieldSchema
                             )
                         }
-                        else -> null
+                        else -> {
+                            val typeSchema = typesSchema
+                                .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                            if (typeSchema?.meta?.isEnum == true) {
+                                FieldData.SingleSelectFieldData(
+                                    title = fieldSchema.name.normalizeTitle(),
+                                    value = (it.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
+                                    schema = fieldSchema
+                                )
+                            } else {
+                                null
+                            }
+                        }
                     }
                 }
 

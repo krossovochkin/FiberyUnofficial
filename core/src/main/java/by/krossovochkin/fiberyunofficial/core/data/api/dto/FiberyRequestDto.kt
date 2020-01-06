@@ -20,7 +20,7 @@ data class FiberyRequestCommandArgsQueryDto(
     @Json(name = "q/from")
     val from: String,
     @Json(name = "q/select")
-    val select: List<String>,
+    val select: List<Any>,
     @Json(name = "q/where")
     val where: List<Any>? = null,
     @Json(name = "q/limit")

@@ -22,7 +22,8 @@ object FiberyApiConstants {
         val value: String
     ) {
         ID("fibery/id"),
-        PUBLIC_ID("fibery/public-id")
+        PUBLIC_ID("fibery/public-id"),
+        ENUM_NAME("enum/name")
     }
 
     enum class Operator(
