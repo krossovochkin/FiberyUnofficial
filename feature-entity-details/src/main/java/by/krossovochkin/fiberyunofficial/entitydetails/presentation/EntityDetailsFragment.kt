@@ -2,10 +2,8 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -16,9 +14,7 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_details.*
 import kotlinx.android.synthetic.main.item_field_header.*
-import kotlinx.android.synthetic.main.item_field_number.*
 import kotlinx.android.synthetic.main.item_field_text.*
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 class EntityDetailsFragment(
@@ -43,14 +39,6 @@ class EntityDetailsFragment(
             bind {
                 fieldTextTitleView.text = item.title
                 fieldTextView.text = item.text
-            }
-        },
-        adapterDelegateLayoutContainer<FieldNumberItem, ListItem>(
-            layout = R.layout.item_field_number
-        ) {
-            bind {
-                fieldNumberTitleView.text = item.title
-                fieldNumberValueView.text = DecimalFormat.getInstance().format(item.value)
             }
         }
     )

@@ -12,6 +12,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
@@ -36,10 +38,12 @@ class EntityDetailsViewModel(
             mapItem(fieldSchema, entityData)
         }
 
-        return listOf(FieldHeaderItem(
-            publicId = entityData.publicId,
-            title = entityData.title
-        )) + fields
+        return listOf(
+            FieldHeaderItem(
+                publicId = entityData.publicId,
+                title = entityData.title
+            )
+        ) + fields
     }
 
     private fun mapItem(
@@ -48,6 +52,7 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return when (fieldSchema.type) {
             FiberyApiConstants.FieldType.TEXT.value -> mapTextItem(fieldSchema, entityData)
+            FiberyApiConstants.FieldType.DATE_TIME.value -> mapDateTimeItem(fieldSchema, entityData)
             FiberyApiConstants.FieldType.NUMBER.value -> mapNumberItem(fieldSchema, entityData)
             else -> emptyList()
         }
@@ -59,8 +64,22 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return listOf(
             FieldTextItem(
-                title = fieldSchema.name.substringAfter(DELIMITER_APP_TYPE),
+                title = fieldSchema.name.normalizeTitle(),
                 text = entityData.fields[fieldSchema.name] as String
+            )
+        )
+    }
+
+    private fun mapDateTimeItem(
+        fieldSchema: FiberyFieldSchema,
+        entityData: FiberyEntityDetailsData
+    ): List<ListItem> {
+        return listOf(
+            FieldTextItem(
+                title = fieldSchema.name.normalizeTitle(),
+                text = SimpleDateFormat.getInstance().format(
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(entityData.fields[fieldSchema.name] as String)!!
+                )
             )
         )
     }
@@ -70,11 +89,17 @@ class EntityDetailsViewModel(
         entityData: FiberyEntityDetailsData
     ): List<ListItem> {
         return listOf(
-            FieldNumberItem(
-                title = fieldSchema.name.substringAfter(DELIMITER_APP_TYPE),
-                value = entityData.fields[fieldSchema.name].toString().toBigDecimal()
+            FieldTextItem(
+                title = fieldSchema.name.normalizeTitle(),
+                text = DecimalFormat.getInstance().format(entityData.fields[fieldSchema.name].toString().toBigDecimal())
             )
         )
+    }
+
+    private fun String.normalizeTitle(): String {
+        return this.substringAfter(DELIMITER_APP_TYPE)
+            .split("-")
+            .joinToString(separator = " ") { it.capitalize() }
     }
 
     interface ParentListener
@@ -83,14 +108,9 @@ class EntityDetailsViewModel(
 data class FieldHeaderItem(
     val publicId: String,
     val title: String
-): ListItem
+) : ListItem
 
 data class FieldTextItem(
     val title: String,
     val text: String
-) : ListItem
-
-data class FieldNumberItem(
-    val title: String,
-    val value: BigDecimal
 ) : ListItem
