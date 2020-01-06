@@ -8,7 +8,10 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandA
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
+import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi
@@ -56,7 +59,36 @@ class EntityDetailsRepositoryImpl(
                 FiberyApiConstants.Field.PUBLIC_ID.value
             )
 
-            val fields = it.filter { it.key !in defaultFieldKeys }
+            val fields = it
+                .filter { it.key !in defaultFieldKeys }
+                .mapNotNull {
+                    val fieldSchema = entityData.schema.fields
+                        .find { field: FiberyFieldSchema -> field.name == it.key }!!
+                    when (fieldSchema.type) {
+                        FiberyApiConstants.FieldType.TEXT.value -> {
+                            FieldData.TextFieldData(
+                                title = fieldSchema.name.normalizeTitle(),
+                                value = it.value as String,
+                                schema = fieldSchema
+                            )
+                        }
+                        FiberyApiConstants.FieldType.NUMBER.value -> {
+                            FieldData.NumberFieldData(
+                                title = fieldSchema.name.normalizeTitle(),
+                                value = it.value.toString().toBigDecimal(),
+                                schema = fieldSchema
+                            )
+                        }
+                        FiberyApiConstants.FieldType.DATE_TIME.value -> {
+                            FieldData.DateTimeFieldData(
+                                title = fieldSchema.name.normalizeTitle(),
+                                value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(it.value as String)!!,
+                                schema = fieldSchema
+                            )
+                        }
+                        else -> null
+                    }
+                }
 
             FiberyEntityDetailsData(
                 id = id,
@@ -66,6 +98,12 @@ class EntityDetailsRepositoryImpl(
                 schema = entityData.schema
             )
         }.first()
+    }
+
+    private fun String.normalizeTitle(): String {
+        return this.substringAfter(FiberyApiConstants.DELIMITER_APP_TYPE)
+            .split("-")
+            .joinToString(separator = " ") { it.capitalize() }
     }
 
     companion object {
