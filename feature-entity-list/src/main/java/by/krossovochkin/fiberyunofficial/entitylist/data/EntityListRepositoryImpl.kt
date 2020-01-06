@@ -16,7 +16,10 @@ class EntityListRepositoryImpl(
     override suspend fun getEntityList(
         entityType: FiberyEntityTypeSchema
     ): List<FiberyEntityData> {
-        val typesSchema = fiberyServiceApi.getSchema().first().result.fiberyTypes
+        val uiTitleType = entityType.fields.find { it.meta.isUiTitle }!!.name
+        val idType = FiberyApiConstants.Field.ID.value
+        val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
+
         val dto = fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
@@ -24,14 +27,11 @@ class EntityListRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityType.name,
-                            select = entityType.fields
-                                .filter { fieldSchema ->
-                                    val isPrimitive = typesSchema
-                                        .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                                        ?.meta?.isPrimitive ?: false
-                                    isPrimitive
-                                }
-                                .map { it.name },
+                            select = listOf(
+                                uiTitleType,
+                                idType,
+                                publicIdType
+                            ),
                             limit = 100
                         )
                     )
@@ -40,9 +40,9 @@ class EntityListRepositoryImpl(
         ).first()
 
         return dto.result.map {
-            val title = it[entityType.fields.find { it.meta.isUiTitle }!!.name] as String
-            val id = it[FiberyApiConstants.Field.ID.value] as String
-            val publicId = it[FiberyApiConstants.Field.PUBLIC_ID.value] as String
+            val title = it[uiTitleType] as String
+            val id = it[idType] as String
+            val publicId = it[publicIdType] as String
             FiberyEntityData(
                 id = id,
                 publicId = publicId,
