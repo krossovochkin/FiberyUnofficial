@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <WebView
-        android:id="@+id/richTextWebView"
+    <TextView
+        android:id="@+id/richTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

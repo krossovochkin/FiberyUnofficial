@@ -48,7 +48,7 @@ class AppListFragment(
         appListRecyclerView.adapter = adapter
         appListRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.appItems.observe(this, Observer {
+        viewModel.appItems.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
         })

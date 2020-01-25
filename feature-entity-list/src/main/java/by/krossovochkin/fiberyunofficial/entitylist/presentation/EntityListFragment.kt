@@ -48,7 +48,7 @@ class EntityListFragment(
         entityListRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.entityTypeItems.observe(this, Observer {
+        viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
         })

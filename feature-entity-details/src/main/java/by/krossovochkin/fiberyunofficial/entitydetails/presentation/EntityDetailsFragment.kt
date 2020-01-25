@@ -1,7 +1,6 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +12,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentCompon
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_entity_details.*
 import kotlinx.android.synthetic.main.item_field_header.*
 import kotlinx.android.synthetic.main.item_field_rich_text.*
@@ -49,8 +49,7 @@ class EntityDetailsFragment(
             bind {
                 richTextTitleView.text = item.title
 
-                richTextWebView.setBackgroundColor(Color.TRANSPARENT)
-                richTextWebView.loadData(item.value, "text/html", "utf-8")
+                Markwon.create(context).setMarkdown(richTextView, item.value)
             }
         }
     )
@@ -67,7 +66,7 @@ class EntityDetailsFragment(
         entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
         entityDetailsRecyclerView.adapter = adapter
 
-        viewModel.items.observe(this, Observer {
+        viewModel.items.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
         })

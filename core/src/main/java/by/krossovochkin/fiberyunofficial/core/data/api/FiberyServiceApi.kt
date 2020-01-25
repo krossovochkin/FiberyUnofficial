@@ -23,6 +23,6 @@ interface FiberyServiceApi {
     @GET("api/documents/{secret}")
     suspend fun getDocument(
         @Path("secret") secret: String,
-        @Query("format") format: String = "html"
+        @Query("format") format: String = "md"
     ): FiberyDocumentResponse
 }
