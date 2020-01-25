@@ -32,8 +32,11 @@ class EntityListRepositoryImpl(
                                 idType,
                                 publicIdType
                             ),
+                            where = EntityListFilters.filtersMap[entityType.name],
+                            orderBy = EntityListFilters.orderMap[entityType.name],
                             limit = 100
-                        )
+                        ),
+                        params = EntityListFilters.params[entityType.name]
                     )
                 )
             )
