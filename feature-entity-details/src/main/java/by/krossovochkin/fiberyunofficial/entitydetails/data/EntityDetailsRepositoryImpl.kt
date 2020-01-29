@@ -2,24 +2,45 @@ package by.krossovochkin.fiberyunofficial.entitydetails.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.*
+import by.krossovochkin.fiberyunofficial.core.domain.*
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
+import retrofit2.await
 import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi
 ) : EntityDetailsRepository {
 
+
     override suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData {
-        val typesSchema = fiberyServiceApi.getSchema().first().result.fiberyTypes
-        val dto = fiberyServiceApi.getEntities(
+        val typesSchema = getTypesSchema()
+        val dto = getEntityDetailsDto(typesSchema, entityData)
+
+        val documentSchema = getDocumentFieldSchema(entityData)
+        val documentData = FieldData.RichTextFieldData(
+            title = documentSchema.name.normalizeTitle(),
+            value = getDocumentDto(documentSchema, entityData)?.content ?: "",
+            schema = documentSchema
+        )
+
+        return mapEntityDetailsData(
+            dto = dto,
+            entityData = entityData,
+            typesSchema = typesSchema,
+            documentData = documentData
+        )
+    }
+
+    private suspend fun getTypesSchema(): List<FiberyTypeDto> {
+        return fiberyServiceApi.getSchema().first().result.fiberyTypes
+    }
+
+    private suspend fun getEntityDetailsDto(
+        typesSchema: List<FiberyTypeDto>,
+        entityData: FiberyEntityData
+    ): FiberyResponseEntityDto {
+        return fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
                     command = FiberyCommand.QUERY_ENTITY.value,
@@ -61,9 +82,19 @@ class EntityDetailsRepositoryImpl(
                 )
             )
         ).first()
+    }
 
-        val documentSchema =
-            entityData.schema.fields.find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }!!
+    private fun getDocumentFieldSchema(
+        entityData: FiberyEntityData
+    ): FiberyFieldSchema {
+        return entityData.schema.fields.find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }!!
+    }
+
+    private suspend fun getDocumentDto(
+        documentSchema: FiberyFieldSchema,
+        entityData: FiberyEntityData
+    ): FiberyDocumentResponse? {
+
         val documentResponse = fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
@@ -86,15 +117,18 @@ class EntityDetailsRepositoryImpl(
                 )
             )
         ).first().result.first()[documentSchema.name]
-        val documentSecret = (documentResponse as Map<String, Any>)[FiberyApiConstants.Field.DOCUMENT_SECRET.value] as String
+        val documentSecret =
+            (documentResponse as Map<String, Any>)[FiberyApiConstants.Field.DOCUMENT_SECRET.value] as String
 
-        val document = fiberyServiceApi.getDocument(documentSecret)
-        val documentData = FieldData.RichTextFieldData(
-            title = documentSchema.name.normalizeTitle(),
-            value = document.content.wrapInHtml(),
-            schema = documentSchema
-        )
+        return fiberyServiceApi.getDocument(documentSecret).await()
+    }
 
+    private fun mapEntityDetailsData(
+        dto: FiberyResponseEntityDto,
+        entityData: FiberyEntityData,
+        typesSchema: List<FiberyTypeDto>,
+        documentData: FieldData.RichTextFieldData
+    ): FiberyEntityDetailsData {
         return dto.result.map {
             val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
             val title = it[titleFieldName] as String
@@ -164,10 +198,6 @@ class EntityDetailsRepositoryImpl(
         return this.substringAfter(FiberyApiConstants.DELIMITER_APP_TYPE)
             .split("-")
             .joinToString(separator = " ") { it.capitalize() }
-    }
-
-    private fun String.wrapInHtml(): String {
-        return "<html>$this</html>"
     }
 
     companion object {
