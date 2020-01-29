@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import androidx.navigation.fragment.findNavController
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
+import androidx.navigation.findNavController
 import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
@@ -18,8 +17,15 @@ import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetail
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
-import by.krossovochkin.fiberyunofficial.entitylist.presentation.*
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.*
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentArgs
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListViewModel
+import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModel
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.android.synthetic.main.activity_main.*

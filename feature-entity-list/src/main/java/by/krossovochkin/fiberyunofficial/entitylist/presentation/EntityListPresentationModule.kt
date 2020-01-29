@@ -1,7 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import dagger.Module
@@ -25,9 +25,7 @@ object EntityListPresentationModule {
         fragment: Fragment,
         entityListViewModelFactory: EntityListViewModelFactory
     ): EntityListViewModel {
-        return ViewModelProviders
-            .of(fragment, entityListViewModelFactory)
-            .get()
+        return ViewModelProvider(fragment, entityListViewModelFactory).get()
     }
 
     @JvmStatic
