@@ -112,8 +112,9 @@ class EntityDetailsViewModel(
 
     private fun mapRelationItem(field: FieldData.RelationFieldData): List<ListItem> {
         return listOf(
-            FieldRelationItem(
-                title = field.title
+            FieldTextItem(
+                title = field.title,
+                text = field.value
             )
         )
     }

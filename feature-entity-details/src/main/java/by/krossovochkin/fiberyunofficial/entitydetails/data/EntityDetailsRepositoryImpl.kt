@@ -202,9 +202,10 @@ class EntityDetailsRepositoryImpl(
                                     typeSchema.name == fieldSchema.type
                                 }
                                 FieldData.RelationFieldData(
+                                    title = fieldSchema.name.normalizeTitle(),
                                     id = data[FiberyApiConstants.Field.ID.value] as String,
                                     publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
-                                    title = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
+                                    value = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
                                     schema = fieldSchema
                                 )
                             } else {
