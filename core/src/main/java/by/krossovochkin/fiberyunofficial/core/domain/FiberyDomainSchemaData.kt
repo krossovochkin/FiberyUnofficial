@@ -91,14 +91,14 @@ sealed class FieldData : Parcelable {
         val title: String,
         val value: String,
         override val schema: FiberyFieldSchema
-    ): FieldData()
+    ) : FieldData()
 
     @Parcelize
     data class RichTextFieldData(
         val title: String,
         val value: String,
         override val schema: FiberyFieldSchema
-    ): FieldData()
+    ) : FieldData()
 
     @Parcelize
     data class RelationFieldData(
@@ -108,7 +108,15 @@ sealed class FieldData : Parcelable {
         val publicId: String,
         val value: String,
         override val schema: FiberyFieldSchema
-    ): FieldData()
+    ) : FieldData()
+
+    @Parcelize
+    data class CollectionFieldData(
+        // TODO: add entity Type schema
+        val title: String,
+        val value: String,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
 }
 
 

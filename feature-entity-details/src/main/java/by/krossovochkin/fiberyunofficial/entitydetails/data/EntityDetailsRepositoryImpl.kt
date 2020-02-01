@@ -80,6 +80,17 @@ class EntityDetailsRepositoryImpl(
                     )
                 )
             }
+        val collections = entityData.schema.fields
+            .filter { fieldSchema ->
+                fieldSchema.meta.isRelation && fieldSchema.meta.isCollection
+            }
+            .map { fieldSchema ->
+                mapOf(
+                    fieldSchema.name.wrapCollectionCount() to listOf(
+                        "q/count", listOf(fieldSchema.name, FiberyApiConstants.Field.ID.value)
+                    )
+                )
+            }
 
         return fiberyServiceApi.getEntities(
             listOf(
@@ -88,7 +99,7 @@ class EntityDetailsRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
-                            select = primitives + enums + relations,
+                            select = primitives + enums + relations + collections,
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
                                 listOf(FiberyApiConstants.Field.ID.value),
@@ -164,7 +175,9 @@ class EntityDetailsRepositoryImpl(
                 .filter { it.key !in defaultFieldKeys }
                 .mapNotNull {
                     val fieldSchema = entityData.schema.fields
-                        .find { field: FiberyFieldSchema -> field.name == it.key }!!
+                        .find { field: FiberyFieldSchema ->
+                            field.name == it.key || field.name == it.key.unwrapCollectionCount()
+                        }!!
                     when (fieldSchema.type) {
                         FiberyApiConstants.FieldType.TEXT.value -> {
                             FieldData.TextFieldData(
@@ -190,26 +203,37 @@ class EntityDetailsRepositoryImpl(
                         else -> {
                             val typeSchema = typesSchema
                                 .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                            if (typeSchema?.meta?.isEnum == true) {
-                                FieldData.SingleSelectFieldData(
-                                    title = fieldSchema.name.normalizeTitle(),
-                                    value = (it.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
-                                    schema = fieldSchema
-                                )
-                            } else if (fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection) {
-                                val data = it.value as Map<String, Any>
-                                val typeSchema = typesSchema.find { typeSchema ->
-                                    typeSchema.name == fieldSchema.type
+                            when {
+                                typeSchema?.meta?.isEnum == true -> {
+                                    FieldData.SingleSelectFieldData(
+                                        title = fieldSchema.name.normalizeTitle(),
+                                        value = (it.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
+                                        schema = fieldSchema
+                                    )
                                 }
-                                FieldData.RelationFieldData(
-                                    title = fieldSchema.name.normalizeTitle(),
-                                    id = data[FiberyApiConstants.Field.ID.value] as String,
-                                    publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
-                                    value = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
-                                    schema = fieldSchema
-                                )
-                            } else {
-                                null
+                                fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection -> {
+                                    val data = it.value as Map<String, Any>
+                                    val typeSchema = typesSchema.find { typeSchema ->
+                                        typeSchema.name == fieldSchema.type
+                                    }
+                                    FieldData.RelationFieldData(
+                                        title = fieldSchema.name.normalizeTitle(),
+                                        id = data[FiberyApiConstants.Field.ID.value] as String,
+                                        publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
+                                        value = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
+                                        schema = fieldSchema
+                                    )
+                                }
+                                fieldSchema.meta.isRelation && fieldSchema.meta.isCollection -> {
+                                    FieldData.CollectionFieldData(
+                                        title = fieldSchema.name.normalizeTitle(),
+                                        value = (it.value as Number).toInt().toString(),
+                                        schema = fieldSchema
+                                    )
+                                }
+                                else -> {
+                                    null
+                                }
                             }
                         }
                     }
@@ -231,7 +255,16 @@ class EntityDetailsRepositoryImpl(
             .joinToString(separator = " ") { it.capitalize() }
     }
 
+    private fun String.wrapCollectionCount(): String {
+        return this + PREFIX_COLLECTION_COUNT
+    }
+
+    private fun String.unwrapCollectionCount(): String {
+        return this.substringBefore(PREFIX_COLLECTION_COUNT)
+    }
+
     companion object {
         private const val PARAM_ID = "\$id"
+        private const val PREFIX_COLLECTION_COUNT = "_collectionCount"
     }
 }

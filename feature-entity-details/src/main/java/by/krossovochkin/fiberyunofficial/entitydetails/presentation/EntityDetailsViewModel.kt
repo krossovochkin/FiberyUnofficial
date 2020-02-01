@@ -52,6 +52,7 @@ class EntityDetailsViewModel(
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
             is FieldData.RichTextFieldData -> mapRichTextItem(field)
             is FieldData.RelationFieldData -> mapRelationItem(field)
+            is FieldData.CollectionFieldData -> mapCollectionItem(field)
         }
     }
 
@@ -111,6 +112,15 @@ class EntityDetailsViewModel(
     }
 
     private fun mapRelationItem(field: FieldData.RelationFieldData): List<ListItem> {
+        return listOf(
+            FieldTextItem(
+                title = field.title,
+                text = field.value
+            )
+        )
+    }
+
+    private fun mapCollectionItem(field: FieldData.CollectionFieldData): List<ListItem> {
         return listOf(
             FieldTextItem(
                 title = field.title,
