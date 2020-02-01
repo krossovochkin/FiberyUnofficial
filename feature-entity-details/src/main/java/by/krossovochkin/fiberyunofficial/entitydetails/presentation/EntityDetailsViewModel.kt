@@ -51,6 +51,7 @@ class EntityDetailsViewModel(
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
             is FieldData.RichTextFieldData -> mapRichTextItem(field)
+            is FieldData.RelationFieldData -> mapRelationItem(field)
         }
     }
 
@@ -109,6 +110,14 @@ class EntityDetailsViewModel(
         )
     }
 
+    private fun mapRelationItem(field: FieldData.RelationFieldData): List<ListItem> {
+        return listOf(
+            FieldRelationItem(
+                title = field.title
+            )
+        )
+    }
+
     interface ParentListener
 }
 
@@ -125,4 +134,8 @@ data class FieldTextItem(
 data class FieldRichTextItem(
     val title: String,
     val value: String
+) : ListItem
+
+data class FieldRelationItem(
+    val title: String
 ) : ListItem

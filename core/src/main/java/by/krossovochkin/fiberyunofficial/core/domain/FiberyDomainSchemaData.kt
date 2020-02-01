@@ -39,7 +39,9 @@ data class FiberyFieldSchema(
 
 @Parcelize
 data class FiberyFieldMetaData(
-    val isUiTitle: Boolean
+    val isUiTitle: Boolean,
+    val isRelation: Boolean,
+    val isCollection: Boolean
 ) : Parcelable
 
 @Parcelize
@@ -95,6 +97,15 @@ sealed class FieldData : Parcelable {
     data class RichTextFieldData(
         val title: String,
         val value: String,
+        override val schema: FiberyFieldSchema
+    ): FieldData()
+
+    @Parcelize
+    data class RelationFieldData(
+        // TODO: replace with EntityData
+        val id: String,
+        val publicId: String,
+        val title: String,
         override val schema: FiberyFieldSchema
     ): FieldData()
 }

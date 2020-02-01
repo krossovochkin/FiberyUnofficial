@@ -28,7 +28,9 @@ class EntityTypeListRepositoryImpl(
                             fieldDto.name,
                             fieldDto.type,
                             FiberyFieldMetaData(
-                                isUiTitle = fieldDto.meta.isUiTitle ?: false
+                                isUiTitle = fieldDto.meta.isUiTitle ?: false,
+                                isRelation = fieldDto.meta.relationId != null,
+                                isCollection = fieldDto.meta.isCollection ?: false
                             )
                         )
                     },

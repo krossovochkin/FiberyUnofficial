@@ -15,6 +15,7 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_entity_details.*
 import kotlinx.android.synthetic.main.item_field_header.*
+import kotlinx.android.synthetic.main.item_field_relation.*
 import kotlinx.android.synthetic.main.item_field_rich_text.*
 import kotlinx.android.synthetic.main.item_field_text.*
 import javax.inject.Inject
@@ -50,6 +51,13 @@ class EntityDetailsFragment(
                 richTextTitleView.text = item.title
 
                 Markwon.create(context).setMarkdown(richTextView, item.value)
+            }
+        },
+        adapterDelegateLayoutContainer<FieldRelationItem, ListItem>(
+            layout = R.layout.item_field_relation
+        ) {
+            bind {
+                fieldRelationTitleView.text = item.title
             }
         }
     )

@@ -41,6 +41,46 @@ class EntityDetailsRepositoryImpl(
         typesSchema: List<FiberyTypeDto>,
         entityData: FiberyEntityData
     ): FiberyResponseEntityDto {
+        val primitives = entityData.schema.fields
+            .filter { fieldSchema ->
+                val isPrimitive = typesSchema
+                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                    ?.meta?.isPrimitive ?: false
+                isPrimitive
+            }
+            .map { it.name }
+        val enums = entityData.schema.fields
+            .filter { fieldSchema ->
+                val isEnum = typesSchema
+                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                    ?.meta?.isEnum ?: false
+                isEnum
+            }
+            .map { fieldSchema ->
+                mapOf(
+                    fieldSchema.name to listOf(
+                        FiberyApiConstants.Field.ID.value,
+                        FiberyApiConstants.Field.ENUM_NAME.value
+                    )
+                )
+            }
+        val relations = entityData.schema.fields
+            .filter { fieldSchema ->
+                fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection
+            }
+            .map { fieldSchema ->
+                val titleFieldName = typesSchema
+                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
+                    ?.fields?.find { it.meta.isUiTitle == true }!!.name
+                mapOf(
+                    fieldSchema.name to listOf(
+                        FiberyApiConstants.Field.ID.value,
+                        FiberyApiConstants.Field.PUBLIC_ID.value,
+                        titleFieldName
+                    )
+                )
+            }
+
         return fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
@@ -48,29 +88,7 @@ class EntityDetailsRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
-                            select = entityData.schema.fields
-                                .filter { fieldSchema ->
-                                    val isPrimitive = typesSchema
-                                        .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                                        ?.meta?.isPrimitive ?: false
-                                    isPrimitive
-                                }
-                                .map { it.name } +
-                                    entityData.schema.fields
-                                        .filter { fieldSchema ->
-                                            val isEnum = typesSchema
-                                                .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                                                ?.meta?.isEnum ?: false
-                                            isEnum
-                                        }
-                                        .map { fieldSchema ->
-                                            mapOf(
-                                                fieldSchema.name to listOf(
-                                                    FiberyApiConstants.Field.ID.value,
-                                                    FiberyApiConstants.Field.ENUM_NAME.value
-                                                )
-                                            )
-                                        },
+                            select = primitives + enums + relations,
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
                                 listOf(FiberyApiConstants.Field.ID.value),
@@ -176,6 +194,17 @@ class EntityDetailsRepositoryImpl(
                                 FieldData.SingleSelectFieldData(
                                     title = fieldSchema.name.normalizeTitle(),
                                     value = (it.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
+                                    schema = fieldSchema
+                                )
+                            } else if (fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection) {
+                                val data = it.value as Map<String, Any>
+                                val typeSchema = typesSchema.find { typeSchema ->
+                                    typeSchema.name == fieldSchema.type
+                                }
+                                FieldData.RelationFieldData(
+                                    id = data[FiberyApiConstants.Field.ID.value] as String,
+                                    publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
+                                    title = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
                                     schema = fieldSchema
                                 )
                             } else {
