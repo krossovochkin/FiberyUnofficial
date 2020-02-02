@@ -17,7 +17,7 @@ class FiberyEntityTypeMapper {
                     fieldDto.type,
                     FiberyFieldMetaData(
                         isUiTitle = fieldDto.meta.isUiTitle ?: false,
-                        isRelation = fieldDto.meta.relationId != null,
+                        relationId = fieldDto.meta.relationId,
                         isCollection = fieldDto.meta.isCollection ?: false
                     )
                 )

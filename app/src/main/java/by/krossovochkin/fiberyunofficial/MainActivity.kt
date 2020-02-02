@@ -12,6 +12,7 @@ import by.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
@@ -70,9 +71,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema) {
-            navHostFragment.findNavController().navigate(
-                EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(entityTypeSchema)
-            )
+            val navController = navHostFragment.findNavController()
+            val directions = when (val id = navController.currentDestination?.id) {
+                R.id.entityTypeList -> {
+                    EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
+                        entityType = entityTypeSchema,
+                        entity = null,
+                        field = null
+                    )
+                }
+                else -> throw IllegalStateException("Unknown current direction: $id")
+            }
+            navController.navigate(directions)
+        }
+
+        override fun onEntityTypeSelected(
+            entityTypeSchema: FiberyEntityTypeSchema,
+            entity: FiberyEntityData,
+            fieldSchema: FiberyFieldSchema
+        ) {
+            val navController = navHostFragment.findNavController()
+            val directions = when (val id = navController.currentDestination?.id) {
+                R.id.entityDetails -> {
+                    EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
+                        entityType = entityTypeSchema,
+                        entity = entity,
+                        field = fieldSchema
+                    )
+                }
+                else -> throw IllegalStateException("Unknown current direction: $id")
+            }
+            navController.navigate(directions)
         }
 
         override fun onEntitySelected(entity: FiberyEntityData) {
@@ -105,7 +134,12 @@ class MainActivity : AppCompatActivity() {
         override fun getEntityListArgs(arguments: Bundle): EntityListFragment.Args {
             val args = EntityListFragmentArgs.fromBundle(arguments)
             return EntityListFragment.Args(
-                entityTypeSchema = args.entityType
+                entityTypeSchema = args.entityType,
+                entityParams = if (args.field != null && args.entity != null) {
+                    args.field to args.entity
+                } else {
+                    null
+                }
             )
         }
 

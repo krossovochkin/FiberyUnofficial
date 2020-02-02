@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.*
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import kotlinx.coroutines.launch
@@ -128,16 +126,33 @@ class EntityDetailsViewModel(
 
     private fun mapCollectionItem(field: FieldData.CollectionFieldData): List<ListItem> {
         return listOf(
-            FieldTextItem(
+            FieldCollectionItem(
                 title = field.title,
-                text = field.value
+                countText = field.count.toString(),
+                entityData = field.entityData,
+                entityTypeSchema = field.entityTypeSchema,
+                fieldSchema = field.schema
             )
         )
+    }
+
+    fun selectCollection(
+        entityTypeSchema: FiberyEntityTypeSchema,
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema
+    ) {
+        entityDetailsParentListener.onEntityTypeSelected(entityTypeSchema, entityData, fieldSchema)
     }
 
     interface ParentListener {
 
         fun onEntitySelected(entity: FiberyEntityData)
+
+        fun onEntityTypeSelected(
+            entityTypeSchema: FiberyEntityTypeSchema,
+            entity: FiberyEntityData,
+            fieldSchema: FiberyFieldSchema
+        )
     }
 }
 
@@ -160,4 +175,12 @@ data class FieldRelationItem(
     val title: String,
     val entityName: String,
     val entityData: FiberyEntityData
+) : ListItem
+
+data class FieldCollectionItem(
+    val title: String,
+    val countText: String,
+    val entityTypeSchema: FiberyEntityTypeSchema,
+    val entityData: FiberyEntityData,
+    val fieldSchema: FiberyFieldSchema
 ) : ListItem

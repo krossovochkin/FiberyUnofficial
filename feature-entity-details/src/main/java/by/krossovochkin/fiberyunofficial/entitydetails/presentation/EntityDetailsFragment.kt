@@ -14,6 +14,7 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_entity_details.*
+import kotlinx.android.synthetic.main.item_field_collection.*
 import kotlinx.android.synthetic.main.item_field_header.*
 import kotlinx.android.synthetic.main.item_field_relation.*
 import kotlinx.android.synthetic.main.item_field_rich_text.*
@@ -61,6 +62,22 @@ class EntityDetailsFragment(
                 fieldRelationEntityNameTextView.text = item.entityName
 
                 itemView.setOnClickListener { viewModel.selectEntity(item.entityData) }
+            }
+        },
+        adapterDelegateLayoutContainer<FieldCollectionItem, ListItem>(
+            layout = R.layout.item_field_collection
+        ) {
+            bind {
+                fieldCollectionTitleView.text = item.title
+                fieldCollectionCountTextView.text = item.countText
+
+                itemView.setOnClickListener {
+                    viewModel.selectCollection(
+                        entityTypeSchema = item.entityTypeSchema,
+                        entityData = item.entityData,
+                        fieldSchema = item.fieldSchema
+                    )
+                }
             }
         }
     )

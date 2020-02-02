@@ -9,7 +9,7 @@
         android:id="@+id/appList"
         android:name="by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment"
         android:label="fragment_apps"
-        tools:layout="@layout/fragment_app_list" >
+        tools:layout="@layout/fragment_app_list">
         <action
             android:id="@+id/action_appList_to_entityTypeList"
             app:destination="@id/entityTypeList" />
@@ -18,7 +18,7 @@
         android:id="@+id/entityTypeList"
         android:name="by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment"
         android:label="fragment_entity_type_list"
-        tools:layout="@layout/fragment_entity_type_list" >
+        tools:layout="@layout/fragment_entity_type_list">
         <action
             android:id="@+id/action_entityTypeList_to_entityList"
             app:destination="@id/entityList" />
@@ -30,24 +30,35 @@
         android:id="@+id/entityList"
         android:name="by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment"
         android:label="fragment_entity_list"
-        tools:layout="@layout/fragment_entity_list" >
+        tools:layout="@layout/fragment_entity_list">
         <action
             android:id="@+id/action_entityList_to_entityDetails"
             app:destination="@id/entityDetails" />
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="entity"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData"
+            app:nullable="true" />
+        <argument
+            android:name="field"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
         android:name="by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment"
         android:label="fragment_entity_details"
-        tools:layout="@layout/fragment_entity_details" >
+        tools:layout="@layout/fragment_entity_details">
         <argument
             android:name="entity"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />
         <action
             android:id="@+id/action_entityDetails_self"
             app:destination="@id/entityDetails" />
+        <action
+            android:id="@+id/action_entityDetails_to_entityList"
+            app:destination="@id/entityList" />
     </fragment>
 </navigation>

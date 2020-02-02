@@ -40,9 +40,13 @@ data class FiberyFieldSchema(
 @Parcelize
 data class FiberyFieldMetaData(
     val isUiTitle: Boolean,
-    val isRelation: Boolean,
+    val relationId: String?,
     val isCollection: Boolean
-) : Parcelable
+) : Parcelable {
+
+    @IgnoredOnParcel
+    val isRelation: Boolean = relationId != null
+}
 
 @Parcelize
 class FiberyEntityData(
@@ -109,9 +113,10 @@ sealed class FieldData : Parcelable {
 
     @Parcelize
     data class CollectionFieldData(
-        // TODO: add entity Type schema
         val title: String,
-        val value: String,
+        val count: Int,
+        val entityTypeSchema: FiberyEntityTypeSchema,
+        val entityData: FiberyEntityData,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 }

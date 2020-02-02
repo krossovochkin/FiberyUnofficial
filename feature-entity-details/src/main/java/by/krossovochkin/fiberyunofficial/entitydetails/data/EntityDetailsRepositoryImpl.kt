@@ -232,7 +232,11 @@ class EntityDetailsRepositoryImpl(
                                 fieldSchema.meta.isRelation && fieldSchema.meta.isCollection -> {
                                     FieldData.CollectionFieldData(
                                         title = fieldSchema.name.normalizeTitle(),
-                                        value = (it.value as Number).toInt().toString(),
+                                        count = (it.value as Number).toInt(),
+                                        entityTypeSchema = entityTypeMapper.map(
+                                            typesSchema.find { it.name == fieldSchema.type }!!
+                                        ),
+                                        entityData = entityData,
                                         schema = fieldSchema
                                     )
                                 }

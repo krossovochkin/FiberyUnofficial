@@ -5,7 +5,9 @@ import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
@@ -68,6 +70,7 @@ class EntityListFragment(
     }
 
     data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema
+        val entityTypeSchema: FiberyEntityTypeSchema,
+        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     )
 }

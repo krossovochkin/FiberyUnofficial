@@ -14,7 +14,8 @@ class EntityListRepositoryImpl(
 ) : EntityListRepository {
 
     override suspend fun getEntityList(
-        entityType: FiberyEntityTypeSchema
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData> {
         val uiTitleType = entityType.fields.find { it.meta.isUiTitle }!!.name
         val idType = FiberyApiConstants.Field.ID.value
@@ -32,11 +33,36 @@ class EntityListRepositoryImpl(
                                 idType,
                                 publicIdType
                             ),
-                            where = EntityListFilters.filtersMap[entityType.name],
-                            orderBy = EntityListFilters.orderMap[entityType.name],
+                            where = entityParams
+                                ?.let { (field, _) ->
+                                    val fieldName =
+                                        fiberyServiceApi.getSchema().first().result.fiberyTypes
+                                            .find { typeSchema -> typeSchema.name == entityType.name }!!
+                                            .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }!!
+                                            .name
+
+                                    listOf(
+                                        FiberyApiConstants.Operator.EQUALS.value,
+                                        listOf(
+                                            fieldName,
+                                            FiberyApiConstants.Field.ID.value
+                                        ),
+                                        PARAM_ID
+                                    )
+                                }
+                                ?: EntityListFilters.filtersMap[entityType.name],
+                            orderBy = if (entityParams == null) {
+                                EntityListFilters.orderMap[entityType.name]
+                            } else {
+                                null
+                            },
                             limit = 100
                         ),
-                        params = EntityListFilters.params[entityType.name]
+                        params = entityParams
+                            ?.let { (_, entity) ->
+                                mapOf(PARAM_ID to entity.id)
+                            }
+                            ?: EntityListFilters.params[entityType.name]
                     )
                 )
             )
@@ -53,5 +79,9 @@ class EntityListRepositoryImpl(
                 schema = entityType
             )
         }
+    }
+
+    companion object {
+        private const val PARAM_ID = "\$id"
     }
 }
