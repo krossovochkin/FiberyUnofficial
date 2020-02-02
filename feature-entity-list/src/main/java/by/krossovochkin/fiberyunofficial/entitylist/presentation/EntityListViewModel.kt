@@ -28,7 +28,7 @@ class EntityListViewModel(
     init {
         viewModelScope.launch {
             mutableEntityTypeItems.value = getEntityListInteractor
-                .execute(entityListArgs.entityTypeSchema)
+                .execute(entityListArgs.entityTypeSchema, entityListArgs.entityParams)
                 .map { entity ->
                     EntityListItem(
                         title = entity.title,
