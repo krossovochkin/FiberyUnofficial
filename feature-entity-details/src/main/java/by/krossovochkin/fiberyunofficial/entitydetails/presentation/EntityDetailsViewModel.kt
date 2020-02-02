@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -27,6 +28,10 @@ class EntityDetailsViewModel(
 
             mutableEntityDetailsItems.value = mapItems(entityData)
         }
+    }
+
+    fun selectEntity(entityData: FiberyEntityData) {
+        entityDetailsParentListener.onEntitySelected(entityData)
     }
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
@@ -113,9 +118,10 @@ class EntityDetailsViewModel(
 
     private fun mapRelationItem(field: FieldData.RelationFieldData): List<ListItem> {
         return listOf(
-            FieldTextItem(
+            FieldRelationItem(
                 title = field.title,
-                text = field.value
+                entityName = field.fiberyEntityData.title,
+                entityData = field.fiberyEntityData
             )
         )
     }
@@ -129,7 +135,10 @@ class EntityDetailsViewModel(
         )
     }
 
-    interface ParentListener
+    interface ParentListener {
+
+        fun onEntitySelected(entity: FiberyEntityData)
+    }
 }
 
 data class FieldHeaderItem(
@@ -148,5 +157,7 @@ data class FieldRichTextItem(
 ) : ListItem
 
 data class FieldRelationItem(
-    val title: String
+    val title: String,
+    val entityName: String,
+    val entityData: FiberyEntityData
 ) : ListItem

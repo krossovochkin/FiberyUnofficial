@@ -15,6 +15,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
@@ -29,6 +30,7 @@ import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeL
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.IllegalStateException
 import javax.inject.Scope
 
 class MainActivity : AppCompatActivity() {
@@ -74,9 +76,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onEntitySelected(entity: FiberyEntityData) {
-            navHostFragment.findNavController().navigate(
-                EntityListFragmentDirections.actionEntityListToEntityDetails(entity)
-            )
+            val navController = navHostFragment.findNavController()
+            val directions = when (val id = navController.currentDestination?.id) {
+                R.id.entityList -> {
+                    EntityListFragmentDirections.actionEntityListToEntityDetails(entity)
+                }
+                R.id.entityDetails -> {
+                    EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity)
+                }
+                else -> throw IllegalStateException("Unknown current direction: $id")
+            }
+            navController.navigate(directions)
         }
     }
 

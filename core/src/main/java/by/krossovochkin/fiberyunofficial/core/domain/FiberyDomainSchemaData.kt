@@ -102,11 +102,8 @@ sealed class FieldData : Parcelable {
 
     @Parcelize
     data class RelationFieldData(
-        // TODO: replace with EntityData
         val title: String,
-        val id: String,
-        val publicId: String,
-        val value: String,
+        val fiberyEntityData: FiberyEntityData,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 

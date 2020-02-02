@@ -46,5 +46,8 @@
         <argument
             android:name="entity"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />
+        <action
+            android:id="@+id/action_entityDetails_self"
+            app:destination="@id/entityDetails" />
     </fragment>
 </navigation>

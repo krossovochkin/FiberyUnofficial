@@ -3,6 +3,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.data
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.*
+import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.*
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import retrofit2.await
@@ -10,7 +11,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class EntityDetailsRepositoryImpl(
-    private val fiberyServiceApi: FiberyServiceApi
+    private val fiberyServiceApi: FiberyServiceApi,
+    private val entityTypeMapper: FiberyEntityTypeMapper = FiberyEntityTypeMapper()
 ) : EntityDetailsRepository {
 
 
@@ -218,9 +220,12 @@ class EntityDetailsRepositoryImpl(
                                     }
                                     FieldData.RelationFieldData(
                                         title = fieldSchema.name.normalizeTitle(),
-                                        id = data[FiberyApiConstants.Field.ID.value] as String,
-                                        publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
-                                        value = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
+                                        fiberyEntityData = FiberyEntityData(
+                                            id = data[FiberyApiConstants.Field.ID.value] as String,
+                                            publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
+                                            title = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
+                                            schema = entityTypeMapper.map(typeSchema)
+                                        ),
                                         schema = fieldSchema
                                     )
                                 }

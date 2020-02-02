@@ -2,11 +2,13 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.*
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListRepository
 
 class EntityTypeListRepositoryImpl(
-    private val fiberyServiceApi: FiberyServiceApi
+    private val fiberyServiceApi: FiberyServiceApi,
+    private val entityTypeMapper: FiberyEntityTypeMapper = FiberyEntityTypeMapper()
 ) : EntityTypeListRepository {
 
     override suspend fun getEntityTypeList(appData: FiberyAppData): List<FiberyEntityTypeSchema> {
@@ -20,32 +22,6 @@ class EntityTypeListRepositoryImpl(
             .filter { typeDto ->
                 typeDto.name.startsWith(appData.name)
             }
-            .map { typeDto ->
-                FiberyEntityTypeSchema(
-                    name = typeDto.name,
-                    fields = typeDto.fields.map { fieldDto ->
-                        FiberyFieldSchema(
-                            fieldDto.name,
-                            fieldDto.type,
-                            FiberyFieldMetaData(
-                                isUiTitle = fieldDto.meta.isUiTitle ?: false,
-                                isRelation = fieldDto.meta.relationId != null,
-                                isCollection = fieldDto.meta.isCollection ?: false
-                            )
-                        )
-                    },
-                    meta = FiberyEntityTypeMetaData(
-                        uiColorHex = typeDto.meta.uiColorHex ?: DEFAULT_UI_COLOR,
-                        isDomain = typeDto.meta.isDomain ?: false,
-                        isPrimitive = typeDto.meta.isPrimitive ?: false,
-                        isEnum = typeDto.meta.isEnum ?: false
-                    )
-
-                )
-            }
-    }
-
-    companion object {
-        private const val DEFAULT_UI_COLOR = "#00FFFFFF"
+            .map(entityTypeMapper::map)
     }
 }
