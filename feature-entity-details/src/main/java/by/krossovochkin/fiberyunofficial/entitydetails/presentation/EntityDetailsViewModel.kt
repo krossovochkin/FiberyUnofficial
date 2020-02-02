@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.domain.*
+import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import kotlinx.coroutines.launch
@@ -19,6 +20,12 @@ class EntityDetailsViewModel(
 
     private val mutableEntityDetailsItems = MutableLiveData<List<ListItem>>()
     val items: LiveData<List<ListItem>> = mutableEntityDetailsItems
+
+    val toolbarViewState: EntityDetailsToolbarViewState
+        get() = EntityDetailsToolbarViewState(
+            title = entityDetailsArgs.entityData.schema.displayName,
+            bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex)
+        )
 
     init {
         viewModelScope.launch {

@@ -2,10 +2,10 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class EntityDetailsFragment(
     private val entityDetailsParentComponent: EntityDetailsParentComponent
-) : Fragment(R.layout.fragment_entity_details) {
+) : BaseFragment(R.layout.fragment_entity_details) {
 
     @Inject
     lateinit var viewModel: EntityDetailsViewModel
@@ -98,6 +98,14 @@ class EntityDetailsFragment(
             adapter.items = it
             adapter.notifyDataSetChanged()
         })
+
+        with(viewModel.toolbarViewState) {
+            initToolbar(
+                toolbar = entityDetailsToolbar,
+                title = title,
+                bgColorInt = bgColorInt
+            )
+        }
     }
 
     interface ArgsProvider {
