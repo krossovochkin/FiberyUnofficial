@@ -33,7 +33,6 @@ class EntityDetailsFragment(
             layout = R.layout.item_field_header
         ) {
             bind {
-                fieldHeaderPublicIdTextView.text = item.publicId
                 fieldHeaderTitleTextView.text = item.title
             }
         },

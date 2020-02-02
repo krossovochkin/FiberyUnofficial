@@ -23,7 +23,7 @@ class EntityDetailsViewModel(
 
     val toolbarViewState: EntityDetailsToolbarViewState
         get() = EntityDetailsToolbarViewState(
-            title = entityDetailsArgs.entityData.schema.displayName,
+            title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
             bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex)
         )
 
@@ -44,12 +44,7 @@ class EntityDetailsViewModel(
             mapItem(field)
         }
 
-        return listOf(
-            FieldHeaderItem(
-                publicId = entityData.publicId,
-                title = entityData.title
-            )
-        ) + fields
+        return listOf(FieldHeaderItem(title = entityData.title)) + fields
     }
 
     private fun mapItem(
@@ -164,7 +159,6 @@ class EntityDetailsViewModel(
 }
 
 data class FieldHeaderItem(
-    val publicId: String,
     val title: String
 ) : ListItem
 
