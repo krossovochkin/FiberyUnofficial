@@ -4,6 +4,7 @@ Fibery is a work management platform that adapts to companies and grows with the
 
 # Features
 - Application list
+![](https://github.com/krossovochkin/FiberyUnofficial/tree/master/docs/app_list.jpg)
 - Entity Types list
     - per application
 - Entity List
