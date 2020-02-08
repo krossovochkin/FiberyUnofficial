@@ -3,14 +3,20 @@ Android companion application for [Fibery](https://fibery.io).<br>
 Fibery is a work management platform that adapts to companies and grows with them.
 
 # Features
+<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_list.jpg?raw=true" width="200"/><br>
 - Application list
-![](https://github.com/krossovochkin/FiberyUnofficial/tree/master/docs/app_list.jpg)
+
+<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_type_list.jpg?raw=true" width="200"/><br>
 - Entity Types list
     - per application
-- Entity List
+    
+<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_list.jpg?raw=true" width="200"/><br>
+- Entity List 
     - per entity type
     - for particular entity (child entities)
-- Entity Details
+    
+<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/><br>
+- Entity Details 
     - Entity name
     - Description (markdown)
     - Text fields
