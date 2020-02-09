@@ -7,6 +7,8 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 
+private const val DARKEN_COLOR_RATIO = 0.8f
+private const val DARK_COLOR_LUMINANCE_THRESHOLD = 0.5
 
 object ColorUtils {
 
@@ -27,11 +29,11 @@ object ColorUtils {
     fun getDarkenColor(@ColorInt color: Int): Int {
         val result = FloatArray(size = 3)
         Color.colorToHSV(color, result)
-        result[2] *= 0.8f
+        result[2] *= DARKEN_COLOR_RATIO
         return Color.HSVToColor(result)
     }
 
     fun isDarkColor(@ColorInt color: Int): Boolean {
-        return ColorUtils.calculateLuminance(color) < 0.5
+        return ColorUtils.calculateLuminance(color) < DARK_COLOR_LUMINANCE_THRESHOLD
     }
 }

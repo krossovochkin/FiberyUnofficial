@@ -45,7 +45,7 @@ dependencies {
     implementation project(":core")
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
 
     kapt 'com.google.dagger:dagger-compiler:2.25.2'
 

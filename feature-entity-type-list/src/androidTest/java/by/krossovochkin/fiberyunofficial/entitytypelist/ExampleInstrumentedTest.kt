@@ -19,6 +19,9 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("by.krossovochkin.fiberyunofficial.entitytypelist.test", appContext.packageName)
+        assertEquals(
+            "by.krossovochkin.fiberyunofficial.entitytypelist.test",
+            appContext.packageName
+        )
     }
 }

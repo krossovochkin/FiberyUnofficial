@@ -1,2 +1,2 @@
 include ':app', ':core', ':feature-app-list', ':feature-entity-type-list', ':feature-entity-list', ':feature-entity-details'
-rootProject.name='FiberyUnofficial'
+rootProject.name = 'FiberyUnofficial'

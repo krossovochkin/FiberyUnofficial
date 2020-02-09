@@ -48,8 +48,9 @@ class EntityTypeListFragment(
         entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)
         entityTypeListRecyclerView.adapter = adapter
         entityTypeListRecyclerView
-            .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL)
-        )
+            .addItemDecoration(
+                DividerItemDecoration(context, LinearLayout.VERTICAL)
+            )
 
         viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
             adapter.items = it

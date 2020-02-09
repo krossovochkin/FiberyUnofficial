@@ -7,7 +7,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 
 class AppListRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi
-): AppListRepository {
+) : AppListRepository {
 
     override suspend fun getAppList(): List<FiberyAppData> {
         val schema = fiberyServiceApi.getSchema()

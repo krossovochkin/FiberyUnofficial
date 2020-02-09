@@ -6,7 +6,9 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
-import by.krossovochkin.fiberyunofficial.core.domain.*
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 
 class EntityListRepositoryImpl(
@@ -33,36 +35,20 @@ class EntityListRepositoryImpl(
                                 idType,
                                 publicIdType
                             ),
-                            where = entityParams
-                                ?.let { (field, _) ->
-                                    val fieldName =
-                                        fiberyServiceApi.getSchema().first().result.fiberyTypes
-                                            .find { typeSchema -> typeSchema.name == entityType.name }!!
-                                            .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }!!
-                                            .name
-
-                                    listOf(
-                                        FiberyApiConstants.Operator.EQUALS.value,
-                                        listOf(
-                                            fieldName,
-                                            FiberyApiConstants.Field.ID.value
-                                        ),
-                                        PARAM_ID
-                                    )
-                                }
-                                ?: EntityListFilters.filtersMap[entityType.name],
-                            orderBy = if (entityParams == null) {
-                                EntityListFilters.orderMap[entityType.name]
-                            } else {
-                                null
-                            },
+                            where = getQueryWhere(
+                                entityType = entityType,
+                                entityParams = entityParams
+                            ),
+                            orderBy = getQueryOrderBy(
+                                entityType = entityType,
+                                entityParams = entityParams
+                            ),
                             limit = 100
                         ),
-                        params = entityParams
-                            ?.let { (_, entity) ->
-                                mapOf(PARAM_ID to entity.id)
-                            }
-                            ?: EntityListFilters.params[entityType.name]
+                        params = getQueryParams(
+                            entityType = entityType,
+                            entityParams = entityParams
+                        )
                     )
                 )
             )
@@ -79,6 +65,52 @@ class EntityListRepositoryImpl(
                 schema = entityType
             )
         }
+    }
+
+    private suspend fun getQueryWhere(
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ): List<Any>? {
+        return entityParams
+            ?.let { (field, _) ->
+                val fieldName =
+                    fiberyServiceApi.getSchema().first().result.fiberyTypes
+                        .find { typeSchema -> typeSchema.name == entityType.name }!!
+                        .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }!!
+                        .name
+
+                listOf(
+                    FiberyApiConstants.Operator.EQUALS.value,
+                    listOf(
+                        fieldName,
+                        FiberyApiConstants.Field.ID.value
+                    ),
+                    PARAM_ID
+                )
+            }
+            ?: EntityListFilters.filtersMap[entityType.name]
+    }
+
+    private fun getQueryOrderBy(
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ): List<Any>? {
+        return if (entityParams == null) {
+            EntityListFilters.orderMap[entityType.name]
+        } else {
+            null
+        }
+    }
+
+    private fun getQueryParams(
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ): Map<String, Any>? {
+        return entityParams
+            ?.let { (_, entity) ->
+                mapOf(PARAM_ID to entity.id)
+            }
+            ?: EntityListFilters.params[entityType.name]
     }
 
     companion object {
