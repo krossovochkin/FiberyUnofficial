@@ -1,0 +1,2 @@
+apply from: "$rootDir/quality/detekt.gradle"
+apply from: "$rootDir/quality/lint.gradle"

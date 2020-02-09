@@ -1,0 +1,7 @@
+android {
+    lintOptions {
+        abortOnError true
+        warningsAsErrors = true
+        setLintConfig(file("$rootDir/quality/lint.xml"))
+    }
+}

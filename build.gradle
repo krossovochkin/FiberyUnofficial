@@ -20,7 +20,6 @@ allprojects {
         google()
         jcenter()
     }
-    apply from: "$rootDir/detekt.gradle"
 }
 
 task clean(type: Delete) {

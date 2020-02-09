@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.data
 
+import android.annotation.SuppressLint
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
@@ -342,7 +343,7 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.DateTimeFieldData {
-        val value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(data.value as String)!!
+        val value = SimpleDateFormat.getDateTimeInstance().parse(data.value as String)!!
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,
@@ -401,6 +402,7 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    @SuppressLint("DefaultLocale")
     private fun String.normalizeTitle(): String {
         return this.substringAfter(FiberyApiConstants.DELIMITER_APP_TYPE)
             .split("-")
