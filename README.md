@@ -1,5 +1,7 @@
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/>
 
+![](https://github.com/krossovochkin/FiberyUnofficial/workflows/.github/workflows/main.yml/badge.svg)
+
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
 Fibery is a work management platform that adapts to companies and grows with them.
