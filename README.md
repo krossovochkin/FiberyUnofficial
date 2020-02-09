@@ -1,3 +1,5 @@
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/>
+
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
 Fibery is a work management platform that adapts to companies and grows with them.
@@ -73,7 +75,7 @@ To build the application (and get .apk file) one need to install [Android Studio
 Open the project and run it.
 
 ## Development
-[API](https://api.fibery.io/)
+[Fibery API](https://api.fibery.io/)
 
 # License
 Fibery ©<br>
