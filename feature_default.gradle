@@ -1,27 +1,31 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
 apply from: '../quality/quality.gradle'
 
 android {
     compileSdkVersion v.android.compileSdkVersion
     buildToolsVersion v.android.buildToolsVersion
+
+
     defaultConfig {
-        applicationId "by.krossovochkin.fiberyunofficial"
         minSdkVersion v.android.minSdkVersion
         targetSdkVersion v.android.targetSdkVersion
         versionCode v.android.versionCode
         versionName v.android.versionName
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -31,20 +35,19 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation d.app.core
-    implementation d.app.feature_app_list
-    implementation d.app.feature_entity_type_list
-    implementation d.app.feature_entity_list
-    implementation d.app.feature_entity_details
 
     kapt d.core.dagger_compiler
 
-    implementation d.androidx.navigation_fragment
-    implementation d.androidx.navigation_ui
-
     implementation d.androidx.lifecycle_ext
     implementation d.androidx.lifecycle_viewmodel
+
+    implementation d.ui.adapter_delegates
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

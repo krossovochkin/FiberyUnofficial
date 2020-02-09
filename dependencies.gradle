@@ -1,4 +1,12 @@
 def v = [:]
+v.android = [:]
+v.android.compileSdkVersion = 29
+v.android.buildToolsVersion = "29.0.2"
+v.android.minSdkVersion = 23
+v.android.targetSdkVersion = 29
+v.android.versionCode = 1
+v.android.versionName = "1.0"
+
 v.plugin = [:]
 v.plugin.gradle_android = "3.5.3"
 
