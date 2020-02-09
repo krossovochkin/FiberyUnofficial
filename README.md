@@ -2,31 +2,34 @@
 Android companion application for [Fibery](https://fibery.io).<br>
 Fibery is a work management platform that adapts to companies and grows with them.
 
-# Features
-<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_list.jpg?raw=true" width="200"/><br>
-- Application list
+## Features
+### Application List
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_list.jpg?raw=true" width="200"/>
 
-<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_type_list.jpg?raw=true" width="200"/><br>
-- Entity Types list
-    - per application
-    
-<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_list.jpg?raw=true" width="200"/><br>
-- Entity List 
-    - per entity type
-    - for particular entity (child entities)
-    
-<br><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/><br>
-- Entity Details 
-    - Entity name
-    - Description (markdown)
-    - Text fields
-    - Number fields
-    - Date fields
-    - Single select fields
-    - Parent entity fields (relation, non-collection)
-    - Child entities fields (relation, collection)
+### Entity Type List
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_type_list.jpg?raw=true" width="200"/>
 
-# Missing Features
+ - per application
+ 
+ ### Entity List
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_list.jpg?raw=true" width="200"/>
+
+  - per entity type
+  - for particular entity (child entities)
+    
+### Entity Details
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/>
+
+  - Entity name
+  - Description (markdown)
+  - Text fields
+  - Number fields
+  - Date fields
+  - Single select fields
+  - Parent entity fields (relation, non-collection)
+  - Child entities fields (relation, collection)
+
+## Missing Features
 - Login
 - Updating information (all screens are read-only)
 - Views
@@ -48,7 +51,7 @@ Fibery is a work management platform that adapts to companies and grows with the
 - Sorting lists (stub sorting can be added at compile time)
 - Pagination
 
-# Setup
+## Setup
 Because of missing Login in order to use application it is needed to add your API token to the app at compile time.<br>
 Inside:
 ```
@@ -65,7 +68,11 @@ object Secrets {
 If your account url is `https://abc.fibery.io`, then you'll need to paste `"abc"`.<br>
 How to get Fibery API Token one can find following [these instructions](https://api.fibery.io/?shell#getting-started)
 
-# Development
+## Building application
+To build the application (and get .apk file) one need to install [Android Studio](https://developer.android.com/studio).
+Open the project and run it.
+
+## Development
 [API](https://api.fibery.io/)
 
 # License
