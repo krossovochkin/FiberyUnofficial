@@ -39,23 +39,17 @@ androidExtensions {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation d.app.core
 
-    implementation project(":core")
+    kapt d.core.dagger_compiler
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation d.androidx.lifecycle_ext
+    implementation d.androidx.lifecycle_viewmodel
 
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    implementation d.ui.adapter_delegates
+    implementation d.ui.markwon
 
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-
-    implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:4.2.0'
-    implementation "io.noties.markwon:core:4.2.0"
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation d.test.junit
+    androidTestImplementation d.test.android_junit
+    androidTestImplementation d.test.espresso
 }

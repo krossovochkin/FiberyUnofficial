@@ -33,26 +33,24 @@ androidExtensions {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api d.core.kotlin_stdlib
+    api d.core.dagger
+    kapt d.core.dagger_compiler
 
-    api 'com.google.android.material:material:1.1.0'
-    api 'androidx.core:core-ktx:1.2.0'
-    api 'androidx.core:core-ktx:1.2.0'
-    api "androidx.fragment:fragment:1.2.1"
-    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api d.androidx.core
+    api d.androidx.appcompat
+    api d.androidx.fragment
+    api d.androidx.constraint_layout
 
-    api 'com.squareup.retrofit2:retrofit:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.6.2'
-    implementation "com.squareup.moshi:moshi:1.9.1"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.1"
+    api d.network.retrofit
+    implementation d.network.retrofit_moshi
+    implementation d.network.moshi
+    kapt d.network.moshi_codegen
+    api d.network.stetho
 
-    api 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    api d.ui.material
 
-    api 'com.google.dagger:dagger:2.25.2'
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation d.test.junit
+    androidTestImplementation d.test.android_junit
+    androidTestImplementation d.test.espresso
 }

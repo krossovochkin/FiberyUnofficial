@@ -32,25 +32,21 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation d.app.core
+    implementation d.app.feature_app_list
+    implementation d.app.feature_entity_type_list
+    implementation d.app.feature_entity_list
+    implementation d.app.feature_entity_details
 
-    implementation project(":core")
-    implementation project(":feature-app-list")
-    implementation project(":feature-entity-type-list")
-    implementation project(":feature-entity-list")
-    implementation project(":feature-entity-details")
+    kapt d.core.dagger_compiler
 
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    implementation d.androidx.navigation_fragment
+    implementation d.androidx.navigation_ui
 
-    implementation "androidx.navigation:navigation-fragment-ktx:2.2.1"
-    implementation "androidx.navigation:navigation-ui-ktx:2.2.1"
+    implementation d.androidx.lifecycle_ext
+    implementation d.androidx.lifecycle_viewmodel
 
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:4.2.0'
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation d.test.junit
+    androidTestImplementation d.test.android_junit
+    androidTestImplementation d.test.espresso
 }
