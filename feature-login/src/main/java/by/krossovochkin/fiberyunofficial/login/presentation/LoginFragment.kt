@@ -1,13 +1,13 @@
-package by.krossovochkin.login.presentation
+package by.krossovochkin.fiberyunofficial.login.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
-import by.krossovochkin.login.DaggerLoginComponent
-import by.krossovochkin.login.LoginParentComponent
-import by.krossovochkin.login.R
+import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
+import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
+import by.krossovochkin.fiberyunofficial.login.R
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 

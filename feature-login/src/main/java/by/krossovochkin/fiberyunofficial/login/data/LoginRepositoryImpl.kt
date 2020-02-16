@@ -1,7 +1,7 @@
-package by.krossovochkin.login.data
+package by.krossovochkin.fiberyunofficial.login.data
 
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
-import by.krossovochkin.login.domain.LoginRepository
+import by.krossovochkin.fiberyunofficial.login.domain.LoginRepository
 
 class LoginRepositoryImpl(
     private val authStorage: AuthStorage

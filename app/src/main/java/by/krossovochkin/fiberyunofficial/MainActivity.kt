@@ -28,10 +28,10 @@ import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeL
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModel
-import by.krossovochkin.login.LoginParentComponent
-import by.krossovochkin.login.presentation.LoginFragment
-import by.krossovochkin.login.presentation.LoginFragmentDirections
-import by.krossovochkin.login.presentation.LoginViewModel
+import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginViewModel
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.android.synthetic.main.activity_main.*

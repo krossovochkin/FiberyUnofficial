@@ -1,9 +1,9 @@
-package by.krossovochkin.login.presentation
+package by.krossovochkin.fiberyunofficial.login.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
-import by.krossovochkin.login.domain.LoginInteractor
+import by.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 import dagger.Module
 import dagger.Provides
 

@@ -63,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="by.krossovochkin.login.presentation.LoginFragment"
+        android:name="by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_appList"

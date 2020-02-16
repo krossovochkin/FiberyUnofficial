@@ -1,4 +1,4 @@
-package by.krossovochkin.login
+package by.krossovochkin.fiberyunofficial.login
 
 import org.junit.Test
 

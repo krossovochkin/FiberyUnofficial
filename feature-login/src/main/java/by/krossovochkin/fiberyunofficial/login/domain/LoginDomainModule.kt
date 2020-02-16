@@ -1,4 +1,4 @@
-package by.krossovochkin.login.domain
+package by.krossovochkin.fiberyunofficial.login.domain
 
 import dagger.Module
 import dagger.Provides

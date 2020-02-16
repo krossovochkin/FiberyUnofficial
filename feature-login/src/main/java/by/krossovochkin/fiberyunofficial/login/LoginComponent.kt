@@ -1,13 +1,13 @@
-package by.krossovochkin.login
+package by.krossovochkin.fiberyunofficial.login
 
 import androidx.fragment.app.Fragment
 import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
-import by.krossovochkin.login.data.LoginDataModule
-import by.krossovochkin.login.domain.LoginDomainModule
-import by.krossovochkin.login.presentation.LoginFragment
-import by.krossovochkin.login.presentation.LoginPresentationModule
-import by.krossovochkin.login.presentation.LoginViewModel
+import by.krossovochkin.fiberyunofficial.login.data.LoginDataModule
+import by.krossovochkin.fiberyunofficial.login.domain.LoginDomainModule
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginPresentationModule
+import by.krossovochkin.fiberyunofficial.login.presentation.LoginViewModel
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope

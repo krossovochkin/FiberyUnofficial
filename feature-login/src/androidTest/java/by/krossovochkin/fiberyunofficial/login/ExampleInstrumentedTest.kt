@@ -1,4 +1,4 @@
-package by.krossovochkin.login
+package by.krossovochkin.fiberyunofficial.login
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

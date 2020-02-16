@@ -1,4 +1,4 @@
-package by.krossovochkin.login.domain
+package by.krossovochkin.fiberyunofficial.login.domain
 
 interface LoginInteractor {
 

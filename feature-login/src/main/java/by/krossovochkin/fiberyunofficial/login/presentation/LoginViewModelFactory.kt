@@ -1,8 +1,8 @@
-package by.krossovochkin.login.presentation
+package by.krossovochkin.fiberyunofficial.login.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import by.krossovochkin.login.domain.LoginInteractor
+import by.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 
 class LoginViewModelFactory(
     private val loginInteractor: LoginInteractor,
