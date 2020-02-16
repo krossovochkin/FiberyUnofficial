@@ -5,6 +5,9 @@ Android companion application for [Fibery](https://fibery.io).<br>
 Fibery is a work management platform that adapts to companies and grows with them.
 
 ## Features
+### Login
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/login.png?raw=true" width="200"/>
+
 ### Application List
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_list.jpg?raw=true" width="200"/>
 
@@ -33,7 +36,6 @@ Fibery is a work management platform that adapts to companies and grows with the
   - Child entities fields (relation, collection)
 
 ## Missing Features
-- Login
 - Updating information (all screens are read-only)
 - Views
     - Table
@@ -53,26 +55,17 @@ Fibery is a work management platform that adapts to companies and grows with the
 - Filtering lists (stub filter can be added at compile time)
 - Sorting lists (stub sorting can be added at compile time)
 
-## Setup
-Because of missing Login in order to use application it is needed to add your API token to the app at compile time.<br>
-Inside:
-```
-app/src/main/java/by/krossovochkin/fiberyunofficial/Secrets.kt
-```
-one need to add account name and Fibery API Token.
-```
-object Secrets {
-
-    const val API_ACCOUNT = "abc"
-    const val API_TOKEN = "xxx"
-}
-```
-If your account url is `https://abc.fibery.io`, then you'll need to paste `"abc"`.<br>
-How to get Fibery API Token one can find following [these instructions](https://api.fibery.io/?shell#getting-started)
-
 ## Building application
 To build the application (and get .apk file) one need to install [Android Studio](https://developer.android.com/studio).
 Open the project and run it.
+
+## Login
+In order to login one need do the following steps:
+- Open app (https://fibery.io will be loaded)
+- Login via fibery.io (e.g. login with Google account)
+- Wait till the fibery loaded (you should see your boards)
+- At the bottom click button "Connect" - it will run JS script to extract your API token, which will be used
+- Profit
 
 ## Development
 [Fibery API](https://api.fibery.io/)
