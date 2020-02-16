@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/appList">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/appList"
@@ -60,5 +60,15 @@
         <action
             android:id="@+id/action_entityDetails_to_entityList"
             app:destination="@id/entityList" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="by.krossovochkin.login.presentation.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_appList"
+            app:destination="@id/appList"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

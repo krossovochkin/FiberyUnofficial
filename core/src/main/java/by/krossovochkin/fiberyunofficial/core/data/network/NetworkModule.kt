@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.core.data.network
 
+import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
@@ -7,7 +8,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -17,11 +17,11 @@ object NetworkModule {
     @JvmStatic
     @Provides
     fun retrofit(
-        @ApiAccount apiAccount: String,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
+        authStorage: AuthStorage
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://$apiAccount.fibery.io/")
+            .baseUrl("https://${authStorage.getAccount()}.fibery.io/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
@@ -43,12 +43,12 @@ object NetworkModule {
     @JvmStatic
     @Provides
     fun authorizationInterceptor(
-        @ApiToken apiToken: String
+        authStorage: AuthStorage
     ): Interceptor {
         return Interceptor { chain ->
             val request = chain.request()
             val newRequest = request.newBuilder()
-                .addHeader("Authorization", "Token $apiToken")
+                .addHeader("Authorization", "Token ${authStorage.getToken()}")
                 .addHeader("Content-Type", "application/json")
                 .build()
             chain.proceed(newRequest)
@@ -56,10 +56,3 @@ object NetworkModule {
     }
 }
 
-@Qualifier
-@Retention
-annotation class ApiAccount
-
-@Qualifier
-@Retention
-annotation class ApiToken

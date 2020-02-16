@@ -28,10 +28,13 @@ import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeL
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModel
+import by.krossovochkin.login.LoginParentComponent
+import by.krossovochkin.login.presentation.LoginFragment
+import by.krossovochkin.login.presentation.LoginFragmentDirections
+import by.krossovochkin.login.presentation.LoginViewModel
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.IllegalStateException
 import javax.inject.Scope
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         mainActivityComponent = DaggerMainActivityComponent.builder()
             .applicationComponent((applicationContext as App).applicationComponent)
+            .loginParentListener(listener)
             .appListParentListener(listener)
             .entityTypeListParentListener(listener)
             .entityTypeListArgsProvider(argsProvider)
@@ -59,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class MainActivityListener :
+        LoginViewModel.ParentListener,
         AppListViewModel.ParentListener,
         EntityTypeListViewModel.ParentListener,
         EntityListViewModel.ParentListener,
@@ -117,6 +122,11 @@ class MainActivity : AppCompatActivity() {
             }
             navController.navigate(directions)
         }
+
+        override fun onLoginSuccess() {
+            navHostFragment.findNavController()
+                .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
+        }
     }
 
     inner class MainActivityArgsProvider :
@@ -161,6 +171,7 @@ annotation class MainActivityScope
     dependencies = [ApplicationComponent::class]
 )
 interface MainActivityComponent :
+    LoginParentComponent,
     AppListParentComponent,
     EntityTypeListParentComponent,
     EntityListParentComponent,
@@ -170,6 +181,9 @@ interface MainActivityComponent :
     interface Builder {
 
         fun applicationComponent(applicationComponent: ApplicationComponent): Builder
+
+        @BindsInstance
+        fun loginParentListener(loginParentListener: LoginViewModel.ParentListener): Builder
 
         @BindsInstance
         fun appListParentListener(appListParentListener: AppListViewModel.ParentListener): Builder
@@ -202,6 +216,7 @@ private class MainActivityFragmentFactory(
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
+            LoginFragment::class.java.canonicalName -> LoginFragment(mainActivityComponent)
             AppListFragment::class.java.canonicalName -> AppListFragment(mainActivityComponent)
             EntityTypeListFragment::class.java.canonicalName -> EntityTypeListFragment(
                 mainActivityComponent

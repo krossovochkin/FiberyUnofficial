@@ -13,7 +13,7 @@ class App : Application() {
         Stetho.initializeWithDefaults(this)
 
         applicationComponent = DaggerApplicationComponent.builder()
-
+            .context(this)
             .build()
     }
 }
