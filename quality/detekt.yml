@@ -1,3 +1,6 @@
 complexity:
   TooManyFunctions:
-    active: false
+    active: false;
+exceptions:
+  TooGenericExceptionCaught:
+    active: false;
