@@ -14,20 +14,20 @@ object LoginPresentationModule {
     @Provides
     fun loginViewModel(
         fragment: Fragment,
-        LoginViewModelFactory: LoginViewModelFactory
+        loginViewModelFactory: LoginViewModelFactory
     ): LoginViewModel {
-        return ViewModelProvider(fragment, LoginViewModelFactory).get()
+        return ViewModelProvider(fragment, loginViewModelFactory).get()
     }
 
     @JvmStatic
     @Provides
     fun loginViewModelFactory(
-        getLoginInteractor: LoginInteractor,
-        LoginParentListener: LoginViewModel.ParentListener
+        loginInteractor: LoginInteractor,
+        loginParentListener: LoginViewModel.ParentListener
     ): LoginViewModelFactory {
         return LoginViewModelFactory(
-            getLoginInteractor,
-            LoginParentListener
+             loginInteractor,
+            loginParentListener
         )
     }
 }

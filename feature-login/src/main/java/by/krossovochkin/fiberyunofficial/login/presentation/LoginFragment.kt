@@ -11,8 +11,8 @@ import by.krossovochkin.fiberyunofficial.login.R
 import kotlinx.android.synthetic.main.fragment_login.*
 import javax.inject.Inject
 
-private const val MOCK_USER_AGENT =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+private const val MOCK_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; " +
+        "Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
 private const val JS_INTERFACE_NAME = "FiberyUnofficial"
 private const val FIBERY_IO_WEBSITE = "https://fibery.io"
 private const val JS_EXTRACT_TOKEN =

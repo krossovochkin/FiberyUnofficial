@@ -42,7 +42,7 @@ interface LoginComponent {
         @BindsInstance
         fun fragment(fragment: Fragment): Builder
 
-        fun loginGlobalDependencies(LoginParentComponent: LoginParentComponent): Builder
+        fun loginGlobalDependencies(loginParentComponent: LoginParentComponent): Builder
 
         fun build(): LoginComponent
     }

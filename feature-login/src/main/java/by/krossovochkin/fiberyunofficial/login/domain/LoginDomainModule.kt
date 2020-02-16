@@ -9,10 +9,10 @@ object LoginDomainModule {
     @JvmStatic
     @Provides
     fun loginInteractor(
-        LoginRepository: LoginRepository
+        loginRepository: LoginRepository
     ): LoginInteractor {
         return LoginInteractorImpl(
-            LoginRepository
+            loginRepository
         )
     }
 }
