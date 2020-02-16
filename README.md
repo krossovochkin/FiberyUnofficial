@@ -18,6 +18,7 @@ Fibery is a work management platform that adapts to companies and grows with the
 
   - per entity type
   - for particular entity (child entities)
+  - pagination support
     
 ### Entity Details
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/>
@@ -51,13 +52,12 @@ Fibery is a work management platform that adapts to companies and grows with the
     - etc.
 - Filtering lists (stub filter can be added at compile time)
 - Sorting lists (stub sorting can be added at compile time)
-- Pagination
 
 ## Setup
 Because of missing Login in order to use application it is needed to add your API token to the app at compile time.<br>
 Inside:
 ```
-app/src/main/java/by/krossovochkinfiberyunofficial/Secrets.kt
+app/src/main/java/by/krossovochkin/fiberyunofficial/Secrets.kt
 ```
 one need to add account name and Fibery API Token.
 ```

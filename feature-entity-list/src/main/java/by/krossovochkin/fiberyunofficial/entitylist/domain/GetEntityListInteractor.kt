@@ -8,6 +8,8 @@ interface GetEntityListInteractor {
 
     suspend fun execute(
         entityType: FiberyEntityTypeSchema,
+        offset: Int,
+        pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData>
 }
@@ -18,8 +20,10 @@ class GetEntityListInteractorImpl(
 
     override suspend fun execute(
         entityType: FiberyEntityTypeSchema,
+        offset: Int,
+        pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData> {
-        return entityListRepository.getEntityList(entityType, entityParams)
+        return entityListRepository.getEntityList(entityType, offset, pageSize, entityParams)
     }
 }

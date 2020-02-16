@@ -33,5 +33,11 @@ object FiberyApiConstants {
         EQUALS("=")
     }
 
+    enum class Limit(
+        val value: String
+    ) {
+        NO_LIMIT("q/no-limit")
+    }
+
     const val DELIMITER_APP_TYPE = "/"
 }

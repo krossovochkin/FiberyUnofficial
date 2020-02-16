@@ -25,8 +25,10 @@ data class FiberyRequestCommandArgsQueryDto(
     val where: List<Any>? = null,
     @Json(name = "q/order-by")
     val orderBy: List<Any>? = null,
+    @Json(name = "q/offset")
+    val offset: Any? = null,
     @Json(name = "q/limit")
-    val limit: Int
+    val limit: Any? = null
 )
 
 enum class FiberyCommand(val value: String) {

@@ -3,6 +3,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
@@ -13,8 +14,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_entity_list.*
 import kotlinx.android.synthetic.main.item_entity.*
 import javax.inject.Inject
@@ -25,7 +26,21 @@ class EntityListFragment(
 
     @Inject
     lateinit var viewModel: EntityListViewModel
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
+    private val adapter = PagedListDelegationAdapter(
+        object : DiffUtil.ItemCallback<ListItem>() {
+            override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                return if (oldItem is EntityListItem && newItem is EntityListItem) {
+                    oldItem.entityData.id == newItem.entityData.id
+                } else {
+                    oldItem === newItem
+                }
+            }
+
+            override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                return oldItem.equals(newItem)
+            }
+
+        },
         adapterDelegateLayoutContainer<EntityListItem, ListItem>(
             layout = R.layout.item_entity
         ) {
@@ -51,8 +66,7 @@ class EntityListFragment(
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
         viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         })
 
         with(viewModel.toolbarViewState) {

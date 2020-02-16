@@ -17,6 +17,8 @@ class EntityListRepositoryImpl(
 
     override suspend fun getEntityList(
         entityType: FiberyEntityTypeSchema,
+        offset: Int,
+        pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData> {
         val uiTitleType = entityType.fields.find { it.meta.isUiTitle }!!.name
@@ -43,7 +45,8 @@ class EntityListRepositoryImpl(
                                 entityType = entityType,
                                 entityParams = entityParams
                             ),
-                            limit = 100
+                            offset = offset,
+                            limit = pageSize
                         ),
                         params = getQueryParams(
                             entityType = entityType,

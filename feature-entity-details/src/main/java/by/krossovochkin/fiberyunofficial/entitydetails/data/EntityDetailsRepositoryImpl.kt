@@ -339,11 +339,12 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun mapDateTimeFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.DateTimeFieldData {
-        val value = SimpleDateFormat.getDateTimeInstance().parse(data.value as String)!!
+        val value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(data.value as String)!!
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,

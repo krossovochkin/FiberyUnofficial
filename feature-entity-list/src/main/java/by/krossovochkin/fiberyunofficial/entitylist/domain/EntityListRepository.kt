@@ -8,6 +8,8 @@ interface EntityListRepository {
 
     suspend fun getEntityList(
         entityType: FiberyEntityTypeSchema,
+        offset: Int,
+        pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData>
 }
