@@ -10,6 +10,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
+import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import kotlinx.coroutines.launch
@@ -25,6 +26,12 @@ class EntityDetailsViewModel(
     private val mutableEntityDetailsItems = MutableLiveData<List<ListItem>>()
     val items: LiveData<List<ListItem>> = mutableEntityDetailsItems
 
+    private val mutableProgress = MutableLiveData<Boolean>()
+    val progress: LiveData<Boolean> = mutableProgress
+
+    private val mutableError = MutableLiveData<Event<Exception>>()
+    val error: LiveData<Event<Exception>> = mutableError
+
     val toolbarViewState: EntityDetailsToolbarViewState
         get() = EntityDetailsToolbarViewState(
             title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
@@ -33,9 +40,16 @@ class EntityDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            val entityData = getEntityDetailsInteractor.execute(entityDetailsArgs.entityData)
+            try {
+                mutableProgress.value = true
+                val entityData = getEntityDetailsInteractor.execute(entityDetailsArgs.entityData)
 
-            mutableEntityDetailsItems.value = mapItems(entityData)
+                mutableEntityDetailsItems.value = mapItems(entityData)
+            } catch (e: Exception) {
+                mutableError.value = Event(e)
+            } finally {
+                mutableProgress.value = false
+            }
         }
     }
 

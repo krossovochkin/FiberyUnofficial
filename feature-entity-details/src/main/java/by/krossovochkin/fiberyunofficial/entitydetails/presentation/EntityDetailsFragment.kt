@@ -2,6 +2,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
@@ -10,6 +11,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
+import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import io.noties.markwon.Markwon
@@ -96,6 +98,22 @@ class EntityDetailsFragment(
         viewModel.items.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
+        })
+
+        viewModel.progress.observe(viewLifecycleOwner, Observer {
+            progressBar.isVisible = it
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { error ->
+                Snackbar
+                    .make(
+                        requireView(),
+                        error.message ?: getString(R.string.unknown_error),
+                        Snackbar.LENGTH_SHORT
+                    )
+                    .show()
+            }
         })
 
         with(viewModel.toolbarViewState) {

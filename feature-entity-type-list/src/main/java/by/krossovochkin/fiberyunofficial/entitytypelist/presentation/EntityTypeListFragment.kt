@@ -2,6 +2,7 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
+import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import kotlinx.android.synthetic.main.fragment_entity_type_list.*
@@ -55,6 +57,22 @@ class EntityTypeListFragment(
         viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
+        })
+
+        viewModel.progress.observe(viewLifecycleOwner, Observer {
+            progressBar.isVisible = it
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { error ->
+                Snackbar
+                    .make(
+                        requireView(),
+                        error.message ?: getString(R.string.unknown_error),
+                        Snackbar.LENGTH_SHORT
+                    )
+                    .show()
+            }
         })
 
         initToolbar(

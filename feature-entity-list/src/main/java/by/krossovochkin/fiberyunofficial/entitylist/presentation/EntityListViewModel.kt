@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.DataSource
 import androidx.paging.PagedList
@@ -8,6 +9,7 @@ import androidx.paging.PositionalDataSource
 import androidx.paging.toLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
+import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import kotlinx.coroutines.runBlocking
@@ -34,6 +36,9 @@ class EntityListViewModel(
                     .setEnablePlaceholders(false)
                     .build()
             )
+
+    private val mutableError = MutableLiveData<Event<Exception>>()
+    val error: LiveData<Event<Exception>> = mutableError
 
     private val entityTypeItemsDatasource: DataSource.Factory<Int, FiberyEntityData>
         get() = object : DataSource.Factory<Int, FiberyEntityData>() {
@@ -62,14 +67,19 @@ class EntityListViewModel(
             }
 
             private fun loadPage(offset: Int, pageSize: Int): List<FiberyEntityData> {
-                return runBlocking {
-                    getEntityListInteractor
-                        .execute(
-                            entityListArgs.entityTypeSchema,
-                            offset,
-                            pageSize,
-                            entityListArgs.entityParams
-                        )
+                return try {
+                    runBlocking {
+                        getEntityListInteractor
+                            .execute(
+                                entityListArgs.entityTypeSchema,
+                                offset,
+                                pageSize,
+                                entityListArgs.entityParams
+                            )
+                    }
+                } catch (e: Exception) {
+                    mutableError.postValue(Event(e))
+                    emptyList()
                 }
             }
         }

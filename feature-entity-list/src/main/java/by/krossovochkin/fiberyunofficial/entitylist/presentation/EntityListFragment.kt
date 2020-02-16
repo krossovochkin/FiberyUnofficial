@@ -14,6 +14,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
+import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_entity_list.*
@@ -67,6 +68,18 @@ class EntityListFragment(
 
         viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { error ->
+                Snackbar
+                    .make(
+                        requireView(),
+                        error.message ?: getString(R.string.unknown_error),
+                        Snackbar.LENGTH_SHORT
+                    )
+                    .show()
+            }
         })
 
         with(viewModel.toolbarViewState) {
