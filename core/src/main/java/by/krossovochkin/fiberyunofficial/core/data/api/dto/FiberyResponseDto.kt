@@ -42,7 +42,9 @@ data class FiberyFieldMetaDto(
     @Json(name = "fibery/collection?")
     val isCollection: Boolean?,
     @Json(name = "fibery/relation")
-    val relationId: String?
+    val relationId: String?,
+    @Json(name = "ui/object-editor-order")
+    val uiOrder: Int?
 )
 
 @JsonClass(generateAdapter = true)

@@ -17,6 +17,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import retrofit2.await
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
@@ -226,7 +227,9 @@ class EntityDetailsRepositoryImpl(
                 id = id,
                 publicId = publicId,
                 title = title,
-                fields = fields + documentData,
+                fields = listOf(documentData) +
+                        fields
+                            .sortedBy { field: FieldData -> field.schema.meta.uiOrder },
                 schema = entityData.schema
             )
         }.first()
@@ -330,11 +333,15 @@ class EntityDetailsRepositoryImpl(
 
     private fun mapNumberFieldData(
         fieldSchema: FiberyFieldSchema,
-        data: Map.Entry<String, Any>
+        data: Map.Entry<String, Any?>
     ): FieldData.NumberFieldData {
         return FieldData.NumberFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = data.value.toString().toBigDecimal(),
+            value = if (data.value == null) {
+                BigDecimal.ZERO
+            } else {
+                data.value.toString().toBigDecimal()
+            },
             schema = fieldSchema
         )
     }

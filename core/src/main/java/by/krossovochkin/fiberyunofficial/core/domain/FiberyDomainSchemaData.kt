@@ -41,7 +41,8 @@ data class FiberyFieldSchema(
 data class FiberyFieldMetaData(
     val isUiTitle: Boolean,
     val relationId: String?,
-    val isCollection: Boolean
+    val isCollection: Boolean,
+    val uiOrder: Int
 ) : Parcelable {
 
     @IgnoredOnParcel
