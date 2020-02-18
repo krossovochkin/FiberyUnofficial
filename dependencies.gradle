@@ -25,8 +25,7 @@ v.androidx.paging = "2.1.1"
 
 v.network = [:]
 v.network.retrofit = "2.6.2"
-v.network.moshi = "1.9.1"
-v.network.stetho = "1.5.1"
+v.network.moshi = "1.9.2"
 
 v.ui = [:]
 v.ui.material = "1.1.0"
@@ -69,7 +68,6 @@ d.network.retrofit = "com.squareup.retrofit2:retrofit:${v.network.retrofit}"
 d.network.retrofit_moshi = "com.squareup.retrofit2:converter-moshi:${v.network.retrofit}"
 d.network.moshi = "com.squareup.moshi:moshi:${v.network.moshi}"
 d.network.moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:${v.network.moshi}"
-d.network.stetho = "com.facebook.stetho:stetho-okhttp3:${v.network.stetho}"
 
 d.ui = [:]
 d.ui.material = "com.google.android.material:material:${v.ui.material}"

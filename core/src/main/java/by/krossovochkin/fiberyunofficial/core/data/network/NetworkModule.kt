@@ -1,7 +1,6 @@
 package by.krossovochkin.fiberyunofficial.core.data.network
 
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -35,7 +34,6 @@ object NetworkModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authorizationInterceptor)
-            .addNetworkInterceptor(StethoInterceptor())
             .build()
     }
 

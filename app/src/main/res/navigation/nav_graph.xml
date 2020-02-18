@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_app_list">
         <action
             android:id="@+id/action_appList_to_entityTypeList"
-            app:destination="@id/entityTypeList" />
+            app:destination="@id/entityTypeList"
+            app:enterAnim="@anim/fragment_open_enter" />
     </fragment>
     <fragment
         android:id="@+id/entityTypeList"
@@ -21,7 +22,8 @@
         tools:layout="@layout/fragment_entity_type_list">
         <action
             android:id="@+id/action_entityTypeList_to_entityList"
-            app:destination="@id/entityList" />
+            app:destination="@id/entityList"
+            app:enterAnim="@anim/fragment_open_enter" />
         <argument
             android:name="fiberyApp"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData" />
@@ -33,7 +35,8 @@
         tools:layout="@layout/fragment_entity_list">
         <action
             android:id="@+id/action_entityList_to_entityDetails"
-            app:destination="@id/entityDetails" />
+            app:destination="@id/entityDetails"
+            app:enterAnim="@anim/fragment_open_enter" />
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
@@ -56,10 +59,12 @@
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />
         <action
             android:id="@+id/action_entityDetails_self"
-            app:destination="@id/entityDetails" />
+            app:destination="@id/entityDetails"
+            app:enterAnim="@anim/fragment_open_enter" />
         <action
             android:id="@+id/action_entityDetails_to_entityList"
-            app:destination="@id/entityList" />
+            app:destination="@id/entityList"
+            app:enterAnim="@anim/fragment_open_enter" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -68,7 +73,8 @@
         <action
             android:id="@+id/action_loginFragment_to_appList"
             app:destination="@id/appList"
+            app:enterAnim="@anim/fragment_open_enter"
             app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
