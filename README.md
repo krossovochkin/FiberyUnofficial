@@ -1,4 +1,4 @@
-<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg) ![](https://img.shields.io/badge/version-0.1.0-yellow)
 
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
