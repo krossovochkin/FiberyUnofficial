@@ -13,6 +13,8 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
+import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
@@ -34,7 +36,6 @@ import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirecti
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginViewModel
 import dagger.BindsInstance
 import dagger.Component
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Scope
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +43,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainActivityComponent: MainActivityComponent
     private val listener: MainActivityListener = MainActivityListener()
     private val argsProvider: MainActivityArgsProvider = MainActivityArgsProvider()
+
+    private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mainActivityComponent = DaggerMainActivityComponent.builder()
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.fragmentFactory =
             MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
     }
 
     inner class MainActivityListener :
@@ -70,13 +73,13 @@ class MainActivity : AppCompatActivity() {
         EntityDetailsViewModel.ParentListener {
 
         override fun onAppSelected(fiberyAppData: FiberyAppData) {
-            navHostFragment.findNavController().navigate(
+            binding.navHostFragment.findNavController().navigate(
                 AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData)
             )
         }
 
         override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema) {
-            val navController = navHostFragment.findNavController()
+            val navController = binding.navHostFragment.findNavController()
             val directions = when (val id = navController.currentDestination?.id) {
                 R.id.entityTypeList -> {
                     EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
@@ -95,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             entity: FiberyEntityData,
             fieldSchema: FiberyFieldSchema
         ) {
-            val navController = navHostFragment.findNavController()
+            val navController = binding.navHostFragment.findNavController()
             val directions = when (val id = navController.currentDestination?.id) {
                 R.id.entityDetails -> {
                     EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
@@ -110,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onEntitySelected(entity: FiberyEntityData) {
-            val navController = navHostFragment.findNavController()
+            val navController = binding.navHostFragment.findNavController()
             val directions = when (val id = navController.currentDestination?.id) {
                 R.id.entityList -> {
                     EntityListFragmentDirections.actionEntityListToEntityDetails(entity)
@@ -124,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onLoginSuccess() {
-            navHostFragment.findNavController()
+            binding.navHostFragment.findNavController()
                 .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
         }
     }

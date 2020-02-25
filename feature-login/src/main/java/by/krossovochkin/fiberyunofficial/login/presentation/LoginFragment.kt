@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
+import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
 import by.krossovochkin.fiberyunofficial.login.R
-import kotlinx.android.synthetic.main.fragment_login.*
+import by.krossovochkin.fiberyunofficial.login.databinding.FragmentLoginBinding
 import javax.inject.Inject
 
 private const val MOCK_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; " +
@@ -27,6 +28,8 @@ class LoginFragment(
     @Inject
     lateinit var viewModel: LoginViewModel
 
+    private val binding by viewBinding(FragmentLoginBinding::bind)
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -37,7 +40,7 @@ class LoginFragment(
             .build()
             .inject(this)
 
-        loginWebView.apply {
+        binding.loginWebView.apply {
             webViewClient = WebViewClient()
             settings.apply {
                 userAgentString = MOCK_USER_AGENT
@@ -47,14 +50,14 @@ class LoginFragment(
             addJavascriptInterface(TokenExtractor(callback), JS_INTERFACE_NAME)
             loadUrl(FIBERY_IO_WEBSITE)
         }
-        extractButton.setOnClickListener {
-            loginWebView.evaluateJavascript(JS_EXTRACT_TOKEN, null)
+        binding.extractButton.setOnClickListener {
+            binding.loginWebView.evaluateJavascript(JS_EXTRACT_TOKEN, null)
         }
     }
 
     private fun login(token: String) {
-        loginWebView.post {
-            viewModel.login(extractAccount(loginWebView.url), token)
+        binding.loginWebView.post {
+            viewModel.login(extractAccount(binding.loginWebView.url), token)
         }
     }
 

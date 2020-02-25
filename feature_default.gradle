@@ -33,10 +33,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    viewBinding {
+        enabled = true
+    }
 }
 
 androidExtensions {
-    experimental = true
+    features = ["parcelize"]
 }
 
 dependencies {

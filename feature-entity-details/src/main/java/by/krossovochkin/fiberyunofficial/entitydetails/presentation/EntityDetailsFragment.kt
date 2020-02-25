@@ -8,19 +8,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.FragmentEntityDetailsBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCollectionBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRichTextBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldTextBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import io.noties.markwon.Markwon
-import kotlinx.android.synthetic.main.fragment_entity_details.*
-import kotlinx.android.synthetic.main.item_field_collection.*
-import kotlinx.android.synthetic.main.item_field_header.*
-import kotlinx.android.synthetic.main.item_field_relation.*
-import kotlinx.android.synthetic.main.item_field_rich_text.*
-import kotlinx.android.synthetic.main.item_field_text.*
 import javax.inject.Inject
 
 class EntityDetailsFragment(
@@ -30,37 +31,43 @@ class EntityDetailsFragment(
     @Inject
     lateinit var viewModel: EntityDetailsViewModel
 
+    private val binding by viewBinding(FragmentEntityDetailsBinding::bind)
+
     private val adapter = ListDelegationAdapter<List<ListItem>>(
         adapterDelegateLayoutContainer<FieldHeaderItem, ListItem>(
             layout = R.layout.item_field_header
         ) {
+            val binding = ItemFieldHeaderBinding.bind(this.itemView)
             bind {
-                fieldHeaderTitleTextView.text = item.title
+                binding.fieldHeaderTitleTextView.text = item.title
             }
         },
         adapterDelegateLayoutContainer<FieldTextItem, ListItem>(
             layout = R.layout.item_field_text
         ) {
+            val binding = ItemFieldTextBinding.bind(this.itemView)
             bind {
-                fieldTextTitleView.text = item.title
-                fieldTextView.text = item.text
+                binding.fieldTextTitleView.text = item.title
+                binding.fieldTextView.text = item.text
             }
         },
         adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(
             layout = R.layout.item_field_rich_text
         ) {
+            val binding = ItemFieldRichTextBinding.bind(this.itemView)
             bind {
-                richTextTitleView.text = item.title
+                binding.richTextTitleView.text = item.title
 
-                Markwon.create(context).setMarkdown(richTextView, item.value)
+                Markwon.create(context).setMarkdown(binding.richTextView, item.value)
             }
         },
         adapterDelegateLayoutContainer<FieldRelationItem, ListItem>(
             layout = R.layout.item_field_relation
         ) {
+            val binding = ItemFieldRelationBinding.bind(this.itemView)
             bind {
-                fieldRelationTitleView.text = item.title
-                fieldRelationEntityNameTextView.text = item.entityName
+                binding.fieldRelationTitleView.text = item.title
+                binding.fieldRelationEntityNameTextView.text = item.entityName
 
                 itemView.setOnClickListener { viewModel.selectEntity(item.entityData) }
             }
@@ -69,8 +76,9 @@ class EntityDetailsFragment(
             layout = R.layout.item_field_collection
         ) {
             bind {
-                fieldCollectionTitleView.text = item.title
-                fieldCollectionCountTextView.text = item.countText
+                val binding = ItemFieldCollectionBinding.bind(this.itemView)
+                binding.fieldCollectionTitleView.text = item.title
+                binding.fieldCollectionCountTextView.text = item.countText
 
                 itemView.setOnClickListener {
                     viewModel.selectCollection(
@@ -92,8 +100,8 @@ class EntityDetailsFragment(
             .build()
             .inject(this)
 
-        entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
-        entityDetailsRecyclerView.adapter = adapter
+        binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.entityDetailsRecyclerView.adapter = adapter
 
         viewModel.items.observe(viewLifecycleOwner, Observer {
             adapter.items = it
@@ -101,7 +109,7 @@ class EntityDetailsFragment(
         })
 
         viewModel.progress.observe(viewLifecycleOwner, Observer {
-            progressBar.isVisible = it
+            binding.progressBar.isVisible = it
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { event ->
@@ -118,7 +126,7 @@ class EntityDetailsFragment(
 
         with(viewModel.toolbarViewState) {
             initToolbar(
-                toolbar = entityDetailsToolbar,
+                toolbar = binding.entityDetailsToolbar,
                 title = title,
                 bgColorInt = bgColorInt
             )

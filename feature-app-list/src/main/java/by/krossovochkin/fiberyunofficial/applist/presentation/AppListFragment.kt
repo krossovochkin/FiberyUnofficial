@@ -9,14 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
 import by.krossovochkin.fiberyunofficial.applist.DaggerAppListComponent
 import by.krossovochkin.fiberyunofficial.applist.R
+import by.krossovochkin.fiberyunofficial.applist.databinding.FragmentAppListBinding
+import by.krossovochkin.fiberyunofficial.applist.databinding.ItemAppBinding
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
-import kotlinx.android.synthetic.main.fragment_app_list.*
-import kotlinx.android.synthetic.main.item_app.*
 import javax.inject.Inject
 
 class AppListFragment(
@@ -26,13 +27,16 @@ class AppListFragment(
     @Inject
     lateinit var viewModel: AppListViewModel
 
+    private val binding by viewBinding(FragmentAppListBinding::bind)
+
     private val adapter = ListDelegationAdapter<List<ListItem>>(
         adapterDelegateLayoutContainer<AppListItem, ListItem>(
             layout = R.layout.item_app
         ) {
+            val binding = ItemAppBinding.bind(this.itemView)
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
-                appTitleTextView.text = item.title
+                binding.appTitleTextView.text = item.title
             }
         }
     )
@@ -46,9 +50,9 @@ class AppListFragment(
             .build()
             .inject(this)
 
-        appListRecyclerView.layoutManager = LinearLayoutManager(context)
-        appListRecyclerView.adapter = adapter
-        appListRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+        binding.appListRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.appListRecyclerView.adapter = adapter
+        binding.appListRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
         viewModel.appItems.observe(viewLifecycleOwner, Observer {
             adapter.items = it
@@ -56,7 +60,7 @@ class AppListFragment(
         })
 
         viewModel.progress.observe(viewLifecycleOwner, Observer {
-            progressBar.isVisible = it
+            binding.progressBar.isVisible = it
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { event ->
@@ -72,7 +76,7 @@ class AppListFragment(
         })
 
         initToolbar(
-            toolbar = appListToolbar,
+            toolbar = binding.appListToolbar,
             title = context!!.getString(R.string.title_app_list),
             bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary)
         )
