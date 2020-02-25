@@ -1,7 +1,7 @@
 def v = [:]
 v.android = [:]
 v.android.compileSdkVersion = 29
-v.android.buildToolsVersion = "29.0.3"
+v.android.buildToolsVersion = "29.0.2"
 v.android.minSdkVersion = 23
 v.android.targetSdkVersion = 29
 v.android.versionCode = 1
