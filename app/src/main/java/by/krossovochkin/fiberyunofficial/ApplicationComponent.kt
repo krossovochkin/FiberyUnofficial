@@ -25,7 +25,6 @@ interface ApplicationComponent : GlobalDependencies {
 
         fun build(): ApplicationComponent
     }
-
 }
 
 @Module

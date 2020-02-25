@@ -51,4 +51,3 @@ interface LoginComponent {
 @Scope
 @Retention
 annotation class Login
-

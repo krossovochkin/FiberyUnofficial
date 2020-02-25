@@ -1,6 +1,29 @@
 complexity:
   TooManyFunctions:
     active: false;
+
+comments:
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false
+
 exceptions:
   TooGenericExceptionCaught:
     active: false;
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: false
+
+formatting:
+  ImportOrdering:
+    active: false
+
+naming:
+  FunctionMaxLength:
+    active: false
+
+style:
+  ExpressionBodySyntax:
+    active: false

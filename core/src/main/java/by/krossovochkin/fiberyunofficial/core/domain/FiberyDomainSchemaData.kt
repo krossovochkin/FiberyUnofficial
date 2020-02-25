@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class FiberyAppData(
@@ -121,5 +121,3 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 }
-
-

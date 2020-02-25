@@ -46,4 +46,3 @@ interface AppListComponent {
 @Scope
 @Retention
 annotation class AppList
-

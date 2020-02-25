@@ -7,7 +7,6 @@ import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 object AppListPresentationModule {
 

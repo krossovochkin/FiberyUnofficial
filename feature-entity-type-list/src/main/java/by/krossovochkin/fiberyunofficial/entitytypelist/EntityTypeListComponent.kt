@@ -41,7 +41,9 @@ interface EntityTypeListComponent {
         @BindsInstance
         fun fragment(fragment: Fragment): Builder
 
-        fun entityTypeListGlobalDependencies(entityTypeListParentComponent: EntityTypeListParentComponent): Builder
+        fun entityTypeListGlobalDependencies(
+            entityTypeListParentComponent: EntityTypeListParentComponent
+        ): Builder
 
         fun build(): EntityTypeListComponent
     }

@@ -26,7 +26,7 @@ object LoginPresentationModule {
         loginParentListener: LoginViewModel.ParentListener
     ): LoginViewModelFactory {
         return LoginViewModelFactory(
-             loginInteractor,
+            loginInteractor,
             loginParentListener
         )
     }
