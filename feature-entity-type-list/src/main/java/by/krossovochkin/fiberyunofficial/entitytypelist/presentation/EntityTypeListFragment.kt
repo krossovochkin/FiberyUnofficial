@@ -83,7 +83,9 @@ class EntityTypeListFragment(
         initToolbar(
             toolbar = binding.entityTypeListToolbar,
             title = context!!.getString(R.string.title_entity_type_list),
-            bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary)
+            bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary),
+            hasBackButton = true,
+            onBackPressed = { viewModel.onBackPressed() }
         )
     }
 

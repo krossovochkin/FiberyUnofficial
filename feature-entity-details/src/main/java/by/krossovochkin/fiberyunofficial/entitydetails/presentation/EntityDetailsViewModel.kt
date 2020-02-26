@@ -164,6 +164,10 @@ class EntityDetailsViewModel(
         entityDetailsParentListener.onEntityTypeSelected(entityTypeSchema, entityData, fieldSchema)
     }
 
+    fun onBackPressed() {
+        entityDetailsParentListener.onBackPressed()
+    }
+
     interface ParentListener {
 
         fun onEntitySelected(entity: FiberyEntityData)
@@ -173,6 +177,8 @@ class EntityDetailsViewModel(
             entity: FiberyEntityData,
             fieldSchema: FiberyFieldSchema
         )
+
+        fun onBackPressed()
     }
 }
 

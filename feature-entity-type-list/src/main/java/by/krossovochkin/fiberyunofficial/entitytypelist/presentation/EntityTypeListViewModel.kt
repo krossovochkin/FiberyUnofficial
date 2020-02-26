@@ -55,8 +55,14 @@ class EntityTypeListViewModel(
         }
     }
 
+    fun onBackPressed() {
+        entityTypeListParentListener.onBackPressed()
+    }
+
     interface ParentListener {
 
         fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema)
+
+        fun onBackPressed()
     }
 }

@@ -126,6 +126,10 @@ class MainActivity : AppCompatActivity() {
             binding.navHostFragment.findNavController()
                 .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
         }
+
+        override fun onBackPressed() {
+            binding.navHostFragment.findNavController().popBackStack()
+        }
     }
 
     inner class MainActivityArgsProvider :

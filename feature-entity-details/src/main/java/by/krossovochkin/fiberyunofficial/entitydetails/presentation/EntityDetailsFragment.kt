@@ -128,7 +128,9 @@ class EntityDetailsFragment(
             initToolbar(
                 toolbar = binding.entityDetailsToolbar,
                 title = title,
-                bgColorInt = bgColorInt
+                bgColorInt = bgColorInt,
+                hasBackButton = true,
+                onBackPressed = { viewModel.onBackPressed() }
             )
         }
     }
