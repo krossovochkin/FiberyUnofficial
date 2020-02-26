@@ -22,6 +22,7 @@ v.androidx.constraint_layout = "1.1.3"
 v.androidx.navigation = "2.2.1"
 v.androidx.lifecycle = "2.2.0"
 v.androidx.paging = "2.1.1"
+v.androidx.security = "1.0.0-alpha02"
 
 v.network = [:]
 v.network.retrofit = "2.6.2"
@@ -62,6 +63,7 @@ d.androidx.navigation_ui = "androidx.navigation:navigation-ui-ktx:${v.androidx.n
 d.androidx.lifecycle_ext = "androidx.lifecycle:lifecycle-extensions:${v.androidx.lifecycle}"
 d.androidx.lifecycle_viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${v.androidx.lifecycle}"
 d.androidx.paging = "androidx.paging:paging-runtime-ktx:${v.androidx.paging}"
+d.androidx.security = "androidx.security:security-crypto:${v.androidx.security}"
 
 d.network = [:]
 d.network.retrofit = "com.squareup.retrofit2:retrofit:${v.network.retrofit}"

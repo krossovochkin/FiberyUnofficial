@@ -51,6 +51,7 @@ dependencies {
 
     implementation d.androidx.navigation_fragment
     implementation d.androidx.navigation_ui
+    implementation d.androidx.security
 
     implementation d.androidx.lifecycle_ext
     implementation d.androidx.lifecycle_viewmodel
