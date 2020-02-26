@@ -34,8 +34,10 @@ import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginViewModel
+import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Module
 import javax.inject.Scope
 
 class MainActivity : AppCompatActivity() {
@@ -49,14 +51,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         mainActivityComponent = DaggerMainActivityComponent.builder()
             .applicationComponent((applicationContext as App).applicationComponent)
-            .loginParentListener(listener)
-            .appListParentListener(listener)
-            .entityTypeListParentListener(listener)
-            .entityTypeListArgsProvider(argsProvider)
-            .entityListParentListener(listener)
-            .entityListArgsProvider(argsProvider)
-            .entityDetailsParentListener(listener)
-            .entityDetailsArgsProvider(argsProvider)
+            .mainActivityListener(listener)
+            .mainActivityArgsProvider(argsProvider)
             .build()
 
         supportFragmentManager.fragmentFactory =
@@ -171,6 +167,7 @@ annotation class MainActivityScope
 
 @MainActivityScope
 @Component(
+    modules = [MainActivityModule::class],
     dependencies = [ApplicationComponent::class]
 )
 interface MainActivityComponent :
@@ -186,31 +183,70 @@ interface MainActivityComponent :
         fun applicationComponent(applicationComponent: ApplicationComponent): Builder
 
         @BindsInstance
-        fun loginParentListener(loginParentListener: LoginViewModel.ParentListener): Builder
+        fun mainActivityListener(
+            mainActivityListener: MainActivity.MainActivityListener
+        ): Builder
 
         @BindsInstance
-        fun appListParentListener(appListParentListener: AppListViewModel.ParentListener): Builder
-
-        @BindsInstance
-        fun entityTypeListParentListener(entityTypeListParentListener: EntityTypeListViewModel.ParentListener): Builder
-
-        @BindsInstance
-        fun entityTypeListArgsProvider(entityTypeListArgsProvider: EntityTypeListFragment.ArgsProvider): Builder
-
-        @BindsInstance
-        fun entityListParentListener(entityListParentListener: EntityListViewModel.ParentListener): Builder
-
-        @BindsInstance
-        fun entityListArgsProvider(entityListArgsProvider: EntityListFragment.ArgsProvider): Builder
-
-        @BindsInstance
-        fun entityDetailsParentListener(entityDetailsParentListener: EntityDetailsViewModel.ParentListener): Builder
-
-        @BindsInstance
-        fun entityDetailsArgsProvider(entityDetailsArgsProvider: EntityDetailsFragment.ArgsProvider): Builder
+        fun mainActivityArgsProvider(
+            mainActivityArgsProvider: MainActivity.MainActivityArgsProvider
+        ): Builder
 
         fun build(): MainActivityComponent
     }
+}
+
+@Module
+abstract class MainActivityModule {
+
+    @MainActivityScope
+    @Binds
+    abstract fun loginParentListener(
+        mainActivityListener: MainActivity.MainActivityListener
+    ): LoginViewModel.ParentListener
+
+    @MainActivityScope
+    @Binds
+    abstract fun appListParentListener(
+        mainActivityListener: MainActivity.MainActivityListener
+    ): AppListViewModel.ParentListener
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityTypeListParentListener(
+        mainActivityListener: MainActivity.MainActivityListener
+    ): EntityTypeListViewModel.ParentListener
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityTypeListArgsProvider(
+        mainActivityArgsProvider: MainActivity.MainActivityArgsProvider
+    ): EntityTypeListFragment.ArgsProvider
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityListParentListener(
+        mainActivityListener: MainActivity.MainActivityListener
+    ): EntityListViewModel.ParentListener
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityListArgsProvider(
+        mainActivityArgsProvider: MainActivity.MainActivityArgsProvider
+    ): EntityListFragment.ArgsProvider
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityDetailsParentListener(
+        mainActivityListener: MainActivity.MainActivityListener
+    ): EntityDetailsViewModel.ParentListener
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityDetailsArgsProvider(
+        mainActivityArgsProvider: MainActivity.MainActivityArgsProvider
+    ): EntityDetailsFragment.ArgsProvider
+
 }
 
 private class MainActivityFragmentFactory(
