@@ -1,7 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +17,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldColl
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRichTextBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldSingleSelectBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldTextBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -49,6 +50,37 @@ class EntityDetailsFragment(
             bind {
                 binding.fieldTextTitleView.text = item.title
                 binding.fieldTextView.text = item.text
+            }
+        },
+        adapterDelegateLayoutContainer<FieldSingleSelect, ListItem>(
+            layout = R.layout.item_field_single_select
+        ) {
+            val binding = ItemFieldSingleSelectBinding.bind(this.itemView)
+            bind {
+                binding.fieldSingleSelectTitleView.text = item.title
+                binding.fieldSingleSelectView.text = item.text
+                binding.root.setOnClickListener {
+                    var selectedIndex: Int = item.values.map { it.title }.indexOf(item.text)
+                    AlertDialog.Builder(requireContext())
+                        .setSingleChoiceItems(
+                            item.values.map { it.title }.toTypedArray(),
+                            selectedIndex
+                        ) { _, index -> selectedIndex = index }
+                        .setTitle(item.title)
+                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            viewModel.updateSingleSelectValue(
+                                currentTitle = item.text,
+                                fieldSchema = item.fieldSchema,
+                                selectedValue = item.values[selectedIndex]
+                            )
+                        }
+                        .create()
+                        .show()
+                }
+            }
+            onViewRecycled {
+                binding.root.setOnClickListener(null)
             }
         },
         adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(
@@ -143,5 +175,4 @@ class EntityDetailsFragment(
     data class Args(
         val entityData: FiberyEntityData
     )
-
 }

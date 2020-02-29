@@ -1,6 +1,8 @@
 complexity:
   TooManyFunctions:
     active: false;
+  StringLiteralDuplication:
+    active: false
 
 comments:
   UndocumentedPublicClass:
@@ -19,6 +21,8 @@ exceptions:
 formatting:
   ImportOrdering:
     active: false
+  StringTemplate:
+    active: false
 
 naming:
   FunctionMaxLength:
@@ -27,3 +31,9 @@ naming:
 style:
   ExpressionBodySyntax:
     active: false
+  OptionalWhenBraces:
+    active: false
+
+potential-bugs:
+  LateinitUsage:
+    excludeAnnotatedProperties: "Inject"

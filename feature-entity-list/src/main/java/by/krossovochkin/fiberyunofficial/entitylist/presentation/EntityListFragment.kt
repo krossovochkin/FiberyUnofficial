@@ -44,7 +44,6 @@ class EntityListFragment(
             override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                 return oldItem.equals(newItem)
             }
-
         },
         adapterDelegateLayoutContainer<EntityListItem, ListItem>(
             layout = R.layout.item_entity

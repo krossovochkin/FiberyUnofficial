@@ -13,9 +13,7 @@ class EntityTypeListRepositoryImpl(
 ) : EntityTypeListRepository {
 
     override suspend fun getEntityTypeList(appData: FiberyAppData): List<FiberyEntityTypeSchema> {
-        val schema = fiberyServiceApi.getSchema(
-
-        )
+        val schema = fiberyServiceApi.getSchema()
         val typesDto = schema.first()
             .result.fiberyTypes
             .filter { it.meta.isDomain == true && it.name != FiberyApiConstants.Type.USER.value }

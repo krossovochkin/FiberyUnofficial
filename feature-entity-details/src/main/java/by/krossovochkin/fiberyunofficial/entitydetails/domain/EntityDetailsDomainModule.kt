@@ -13,4 +13,12 @@ object EntityDetailsDomainModule {
     ): GetEntityDetailsInteractor {
         return GetEntityDetailsInteractorImpl(entityDetailsRepository)
     }
+
+    @JvmStatic
+    @Provides
+    fun updateEntitySingleSelectInteractor(
+        entityDetailsRepository: EntityDetailsRepository
+    ): UpdateEntitySingleSelectInteractor {
+        return UpdateEntitySingleSelectInteractorImpl(entityDetailsRepository)
+    }
 }

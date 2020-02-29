@@ -10,6 +10,8 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandA
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyTypeDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
@@ -24,7 +26,6 @@ class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
     private val entityTypeMapper: FiberyEntityTypeMapper = FiberyEntityTypeMapper()
 ) : EntityDetailsRepository {
-
 
     override suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData {
         val typesSchema = getTypesSchema()
@@ -90,7 +91,6 @@ class EntityDetailsRepositoryImpl(
             )
         ).first()
     }
-
 
     private fun getEntityPrimitivesQuery(
         typesSchema: List<FiberyTypeDto>,
@@ -175,7 +175,6 @@ class EntityDetailsRepositoryImpl(
         documentSchema: FiberyFieldSchema,
         entityData: FiberyEntityData
     ): FiberyDocumentResponse? {
-
         val documentResponse = fiberyServiceApi.getEntities(
             listOf(
                 FiberyRequestCommandBody(
@@ -204,7 +203,7 @@ class EntityDetailsRepositoryImpl(
         return fiberyServiceApi.getDocument(documentSecret).await()
     }
 
-    private fun mapEntityDetailsData(
+    private suspend fun mapEntityDetailsData(
         dto: FiberyResponseEntityDto,
         entityData: FiberyEntityData,
         typesSchema: List<FiberyTypeDto>,
@@ -235,7 +234,7 @@ class EntityDetailsRepositoryImpl(
         }.first()
     }
 
-    private fun mapEntityDetailsFields(
+    private suspend fun mapEntityDetailsFields(
         result: Map<String, Any>,
         titleFieldName: String,
         entityData: FiberyEntityData,
@@ -284,7 +283,7 @@ class EntityDetailsRepositoryImpl(
             }
     }
 
-    private fun mapEntityDetailsEntityFields(
+    private suspend fun mapEntityDetailsEntityFields(
         data: Map.Entry<String, Any>,
         typesSchema: List<FiberyTypeDto>,
         fieldSchema: FiberyFieldSchema,
@@ -359,17 +358,51 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
-    private fun mapSingleSelectFieldData(
+    private suspend fun mapSingleSelectFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.SingleSelectFieldData {
         val value =
             (data.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String
+        val result = getSingleSelectDto(fieldSchema.type).result
+        val values = result
+            .map { it as Map<String, String> }
+            .map {
+                FieldData.SingleSelectItemData(
+                    id = it[FiberyApiConstants.Field.ID.value] as String,
+                    title = it[FiberyApiConstants.Field.ENUM_NAME.value] as String
+                )
+            }
         return FieldData.SingleSelectFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,
+            values = values,
             schema = fieldSchema
         )
+    }
+
+    private suspend fun getSingleSelectDto(
+        singleSelectType: String
+    ): FiberyResponseEntityDto {
+        return fiberyServiceApi
+            .getEntities(
+                listOf(
+                    FiberyRequestCommandBody(
+                        command = FiberyCommand.QUERY_ENTITY.value,
+                        args = FiberyRequestCommandArgsDto(
+                            query = FiberyRequestCommandArgsQueryDto(
+                                from = singleSelectType,
+                                select = listOf(
+                                    FiberyApiConstants.Field.ENUM_NAME.value,
+                                    FiberyApiConstants.Field.ID.value
+                                ),
+                                limit = FiberyApiConstants.Limit.NO_LIMIT.value
+                            )
+                        )
+                    )
+                )
+            )
+            .first()
     }
 
     private fun mapRelationFieldData(
@@ -423,6 +456,29 @@ class EntityDetailsRepositoryImpl(
 
     private fun String.unwrapCollectionCount(): String {
         return this.substringBefore(PREFIX_COLLECTION_COUNT)
+    }
+
+    override suspend fun updateSingleSelect(
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema,
+        singleSelectItem: FieldData.SingleSelectItemData
+    ) {
+        fiberyServiceApi.updateEntity(
+            body = listOf(
+                FiberyUpdateCommandBody(
+                    command = FiberyCommand.QUERY_UPDATE.value,
+                    args = FiberyUpdateCommandArgsDto(
+                        type = entityData.schema.name,
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to entityData.id,
+                            fieldSchema.name to mapOf(
+                                FiberyApiConstants.Field.ID.value to singleSelectItem.id
+                            )
+                        )
+                    )
+                )
+            )
+        )
     }
 
     companion object {

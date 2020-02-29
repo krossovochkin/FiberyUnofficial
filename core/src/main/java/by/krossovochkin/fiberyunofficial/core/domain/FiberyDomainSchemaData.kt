@@ -95,8 +95,15 @@ sealed class FieldData : Parcelable {
     data class SingleSelectFieldData(
         val title: String,
         val value: String,
+        val values: List<SingleSelectItemData>,
         override val schema: FiberyFieldSchema
     ) : FieldData()
+
+    @Parcelize
+    data class SingleSelectItemData(
+        val id: String,
+        val title: String
+    ) : Parcelable
 
     @Parcelize
     data class RichTextFieldData(

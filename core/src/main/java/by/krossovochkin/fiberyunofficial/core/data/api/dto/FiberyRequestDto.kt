@@ -31,7 +31,20 @@ data class FiberyRequestCommandArgsQueryDto(
     val limit: Any? = null
 )
 
+@JsonClass(generateAdapter = true)
+data class FiberyUpdateCommandBody(
+    val command: String,
+    val args: FiberyUpdateCommandArgsDto? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class FiberyUpdateCommandArgsDto(
+    val type: String,
+    val entity: Map<String, Any>? = null
+)
+
 enum class FiberyCommand(val value: String) {
     QUERY_SCHEMA("fibery.schema/query"),
-    QUERY_ENTITY("fibery.entity/query")
+    QUERY_ENTITY("fibery.entity/query"),
+    QUERY_UPDATE("fibery.entity/update")
 }

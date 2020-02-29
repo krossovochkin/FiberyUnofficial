@@ -42,21 +42,20 @@ import javax.inject.Scope
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainActivityComponent: MainActivityComponent
+    private val mainActivityComponent: MainActivityComponent by lazy {
+        DaggerMainActivityComponent.builder()
+            .applicationComponent((applicationContext as App).applicationComponent)
+            .mainActivityListener(listener)
+            .mainActivityArgsProvider(argsProvider)
+            .build()
+    }
     private val listener: MainActivityListener = MainActivityListener()
     private val argsProvider: MainActivityArgsProvider = MainActivityArgsProvider()
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mainActivityComponent = DaggerMainActivityComponent.builder()
-            .applicationComponent((applicationContext as App).applicationComponent)
-            .mainActivityListener(listener)
-            .mainActivityArgsProvider(argsProvider)
-            .build()
-
-        supportFragmentManager.fragmentFactory =
-            MainActivityFragmentFactory(mainActivityComponent)
+        supportFragmentManager.fragmentFactory = MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
     }
@@ -74,6 +73,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        @Suppress("UseIfInsteadOfWhen")
         override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema) {
             val navController = binding.navHostFragment.findNavController()
             val directions = when (val id = navController.currentDestination?.id) {
@@ -84,11 +84,12 @@ class MainActivity : AppCompatActivity() {
                         field = null
                     )
                 }
-                else -> throw IllegalStateException("Unknown current direction: $id")
+                else -> error("Unknown current direction: $id")
             }
             navController.navigate(directions)
         }
 
+        @Suppress("UseIfInsteadOfWhen")
         override fun onEntityTypeSelected(
             entityTypeSchema: FiberyEntityTypeSchema,
             entity: FiberyEntityData,
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                         field = fieldSchema
                     )
                 }
-                else -> throw IllegalStateException("Unknown current direction: $id")
+                else -> error("Unknown current direction: $id")
             }
             navController.navigate(directions)
         }
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.entityDetails -> {
                     EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity)
                 }
-                else -> throw IllegalStateException("Unknown current direction: $id")
+                else -> error("Unknown current direction: $id")
             }
             navController.navigate(directions)
         }
@@ -250,7 +251,6 @@ abstract class MainActivityModule {
     abstract fun entityDetailsArgsProvider(
         mainActivityArgsProvider: MainActivity.MainActivityArgsProvider
     ): EntityDetailsFragment.ArgsProvider
-
 }
 
 private class MainActivityFragmentFactory(

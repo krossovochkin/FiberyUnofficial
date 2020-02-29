@@ -97,10 +97,4 @@ class EntityTypeListFragment(
     data class Args(
         val fiberyAppData: FiberyAppData
     )
-
 }
-
-
-
-
-

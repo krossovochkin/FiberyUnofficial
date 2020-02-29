@@ -13,12 +13,14 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntitySingleSelectInteractor
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
+    private val updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
     private val entityDetailsParentListener: ParentListener,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModel() {
@@ -40,16 +42,20 @@ class EntityDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                val entityData = getEntityDetailsInteractor.execute(entityDetailsArgs.entityData)
+            load()
+        }
+    }
 
-                mutableEntityDetailsItems.value = mapItems(entityData)
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
+    private suspend fun load() {
+        try {
+            mutableProgress.value = true
+            val entityData = getEntityDetailsInteractor.execute(entityDetailsArgs.entityData)
+
+            mutableEntityDetailsItems.value = mapItems(entityData)
+        } catch (e: Exception) {
+            mutableError.value = Event(e)
+        } finally {
+            mutableProgress.value = false
         }
     }
 
@@ -116,9 +122,11 @@ class EntityDetailsViewModel(
         field: FieldData.SingleSelectFieldData
     ): List<ListItem> {
         return listOf(
-            FieldTextItem(
+            FieldSingleSelect(
                 title = field.title,
-                text = field.value
+                text = field.value,
+                values = field.values,
+                fieldSchema = field.schema
             )
         )
     }
@@ -168,6 +176,30 @@ class EntityDetailsViewModel(
         entityDetailsParentListener.onBackPressed()
     }
 
+    fun updateSingleSelectValue(
+        currentTitle: String,
+        fieldSchema: FiberyFieldSchema,
+        selectedValue: FieldData.SingleSelectItemData
+    ) {
+        if (selectedValue.title != currentTitle) {
+            viewModelScope.launch {
+                try {
+                    mutableProgress.value = true
+                    updateEntitySingleSelectInteractor.execute(
+                        entityData = entityDetailsArgs.entityData,
+                        fieldSchema = fieldSchema,
+                        singleSelectItem = selectedValue
+                    )
+                    load()
+                } catch (e: Exception) {
+                    mutableError.value = Event(e)
+                } finally {
+                    mutableProgress.value = false
+                }
+            }
+        }
+    }
+
     interface ParentListener {
 
         fun onEntitySelected(entity: FiberyEntityData)
@@ -189,6 +221,13 @@ data class FieldHeaderItem(
 data class FieldTextItem(
     val title: String,
     val text: String
+) : ListItem
+
+data class FieldSingleSelect(
+    val title: String,
+    val text: String,
+    val values: List<FieldData.SingleSelectItemData>,
+    val fieldSchema: FiberyFieldSchema
 ) : ListItem
 
 data class FieldRichTextItem(

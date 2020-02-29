@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntitySingleSelectInteractor
 import dagger.Module
 import dagger.Provides
 
@@ -23,11 +24,13 @@ object EntityDetailsPresentationModule {
     @Provides
     fun entityDetailsViewModelFactory(
         getEntityDetailsInteractor: GetEntityDetailsInteractor,
+        updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
         entityDetailsParentListener: EntityDetailsViewModel.ParentListener,
         entityDetailsArgs: EntityDetailsFragment.Args
     ): EntityDetailsViewModelFactory {
         return EntityDetailsViewModelFactory(
             getEntityDetailsInteractor,
+            updateEntitySingleSelectInteractor,
             entityDetailsParentListener,
             entityDetailsArgs
         )

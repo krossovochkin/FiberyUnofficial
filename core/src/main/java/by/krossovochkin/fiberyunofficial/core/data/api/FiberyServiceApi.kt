@@ -5,6 +5,7 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentRespons
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,6 +31,11 @@ interface FiberyServiceApi {
     suspend fun getEntities(
         @Body body: List<FiberyRequestCommandBody>
     ): List<FiberyResponseEntityDto>
+
+    @POST("api/commands")
+    suspend fun updateEntity(
+        @Body body: List<FiberyUpdateCommandBody>
+    ): Any
 
     @GET("api/documents/{secret}")
     fun getDocument(
