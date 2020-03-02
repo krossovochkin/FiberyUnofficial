@@ -18,9 +18,14 @@ private const val PAGE_SIZE = 5
 
 class EntityListViewModel(
     private val getEntityListInteractor: GetEntityListInteractor,
-    private val entityListParentListener: ParentListener,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
+
+    private val mutableError = MutableLiveData<Event<Exception>>()
+    val error: LiveData<Event<Exception>> = mutableError
+
+    private val mutableNavigation = MutableLiveData<Event<EntityListNavEvent>>()
+    val navigation: LiveData<Event<EntityListNavEvent>> = mutableNavigation
 
     val entityTypeItems: LiveData<PagedList<ListItem>>
         get() = entityTypeItemsDatasource
@@ -36,9 +41,6 @@ class EntityListViewModel(
                     .setEnablePlaceholders(false)
                     .build()
             )
-
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
 
     private val entityTypeItemsDatasource: DataSource.Factory<Int, FiberyEntityData>
         get() = object : DataSource.Factory<Int, FiberyEntityData>() {
@@ -92,20 +94,15 @@ class EntityListViewModel(
 
     fun select(item: ListItem) {
         if (item is EntityListItem) {
-            entityListParentListener.onEntitySelected(item.entityData)
+            mutableNavigation.value = Event(
+                EntityListNavEvent.OnEntitySelectedEvent(item.entityData)
+            )
         } else {
             throw IllegalArgumentException()
         }
     }
 
     fun onBackPressed() {
-        entityListParentListener.onBackPressed()
-    }
-
-    interface ParentListener {
-
-        fun onEntitySelected(entity: FiberyEntityData)
-
-        fun onBackPressed()
+        mutableNavigation.value = Event(EntityListNavEvent.BackEvent)
     }
 }

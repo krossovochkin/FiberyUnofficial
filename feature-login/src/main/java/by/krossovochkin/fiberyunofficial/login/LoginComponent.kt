@@ -15,8 +15,6 @@ import javax.inject.Scope
 interface LoginParentComponent : GlobalDependencies {
 
     fun authStorage(): AuthStorage
-
-    fun loginParentListener(): LoginViewModel.ParentListener
 }
 
 @Login

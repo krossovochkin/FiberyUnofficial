@@ -11,10 +11,7 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
 
-interface AppListParentComponent : GlobalDependencies {
-
-    fun appListParentListener(): AppListViewModel.ParentListener
-}
+interface AppListParentComponent : GlobalDependencies
 
 @AppList
 @Component(

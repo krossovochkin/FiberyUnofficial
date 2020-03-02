@@ -6,7 +6,6 @@ import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteract
 
 class EntityListViewModelFactory(
     private val getEntityListInteractor: GetEntityListInteractor,
-    private val entityListParentListener: EntityListViewModel.ParentListener,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -14,7 +13,6 @@ class EntityListViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             EntityListViewModel(
                 getEntityListInteractor,
-                entityListParentListener,
                 entityListArgs
             ) as T
         } else {

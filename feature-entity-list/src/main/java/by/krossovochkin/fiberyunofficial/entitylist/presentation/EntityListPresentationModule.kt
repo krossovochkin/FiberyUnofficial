@@ -32,12 +32,10 @@ object EntityListPresentationModule {
     @Provides
     fun entityListViewModelFactory(
         getEntityListInteractor: GetEntityListInteractor,
-        entityListParentListener: EntityListViewModel.ParentListener,
         entityListArgs: EntityListFragment.Args
     ): EntityListViewModelFactory {
         return EntityListViewModelFactory(
             getEntityListInteractor,
-            entityListParentListener,
             entityListArgs
         )
     }

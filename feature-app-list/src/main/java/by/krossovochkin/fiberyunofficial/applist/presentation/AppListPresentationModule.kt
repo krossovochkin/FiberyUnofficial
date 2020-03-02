@@ -22,12 +22,10 @@ object AppListPresentationModule {
     @JvmStatic
     @Provides
     fun appListViewModelFactory(
-        getAppListInteractor: GetAppListInteractor,
-        appListParentListener: AppListViewModel.ParentListener
+        getAppListInteractor: GetAppListInteractor
     ): AppListViewModelFactory {
         return AppListViewModelFactory(
-            getAppListInteractor,
-            appListParentListener
+            getAppListInteractor
         )
     }
 }

@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
@@ -30,6 +31,8 @@ class EntityListFragment(
     lateinit var viewModel: EntityListViewModel
 
     private val binding by viewBinding(FragmentEntityListBinding::bind)
+
+    private var parentListener: ParentListener? = null
 
     private val adapter = PagedListDelegationAdapter(
         object : DiffUtil.ItemCallback<ListItem>() {
@@ -86,6 +89,17 @@ class EntityListFragment(
             }
         })
 
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+            when (val navEvent = event.getContentIfNotHandled()) {
+                is EntityListNavEvent.OnEntitySelectedEvent -> {
+                    parentListener?.onEntitySelected(navEvent.entity)
+                }
+                is EntityListNavEvent.BackEvent -> {
+                    parentListener?.onBackPressed()
+                }
+            }
+        })
+
         with(viewModel.toolbarViewState) {
             initToolbar(
                 toolbar = binding.entityListToolbar,
@@ -97,13 +111,30 @@ class EntityListFragment(
         }
     }
 
-    interface ArgsProvider {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parentListener = context as ParentListener
+    }
 
-        fun getEntityListArgs(arguments: Bundle): Args
+    override fun onDetach() {
+        super.onDetach()
+        parentListener = null
     }
 
     data class Args(
         val entityTypeSchema: FiberyEntityTypeSchema,
         val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     )
+
+    interface ArgsProvider {
+
+        fun getEntityListArgs(arguments: Bundle): Args
+    }
+
+    interface ParentListener {
+
+        fun onEntitySelected(entity: FiberyEntityData)
+
+        fun onBackPressed()
+    }
 }

@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
-    private val entityDetailsParentListener: ParentListener,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModel() {
 
@@ -33,6 +32,9 @@ class EntityDetailsViewModel(
 
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
+
+    private val mutableNavigation = MutableLiveData<Event<EntityDetailsNavEvent>>()
+    val navigation: LiveData<Event<EntityDetailsNavEvent>> = mutableNavigation
 
     val toolbarViewState: EntityDetailsToolbarViewState
         get() = EntityDetailsToolbarViewState(
@@ -60,7 +62,9 @@ class EntityDetailsViewModel(
     }
 
     fun selectEntity(entityData: FiberyEntityData) {
-        entityDetailsParentListener.onEntitySelected(entityData)
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData)
+        )
     }
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
@@ -169,11 +173,17 @@ class EntityDetailsViewModel(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema
     ) {
-        entityDetailsParentListener.onEntityTypeSelected(entityTypeSchema, entityData, fieldSchema)
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
+                entityTypeSchema = entityTypeSchema,
+                entity = entityData,
+                fieldSchema = fieldSchema
+            )
+        )
     }
 
     fun onBackPressed() {
-        entityDetailsParentListener.onBackPressed()
+        mutableNavigation.value = Event(EntityDetailsNavEvent.BackEvent)
     }
 
     fun updateSingleSelectValue(
@@ -198,19 +208,6 @@ class EntityDetailsViewModel(
                 }
             }
         }
-    }
-
-    interface ParentListener {
-
-        fun onEntitySelected(entity: FiberyEntityData)
-
-        fun onEntityTypeSelected(
-            entityTypeSchema: FiberyEntityTypeSchema,
-            entity: FiberyEntityData,
-            fieldSchema: FiberyFieldSchema
-        )
-
-        fun onBackPressed()
     }
 }
 

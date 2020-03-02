@@ -5,15 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 
 class AppListViewModelFactory(
-    private val getAppListInteractor: GetAppListInteractor,
-    private val appListParentListener: AppListViewModel.ParentListener
+    private val getAppListInteractor: GetAppListInteractor
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == AppListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             AppListViewModel(
-                getAppListInteractor,
-                appListParentListener
+                getAppListInteractor
             ) as T
         } else {
             throw IllegalArgumentException()

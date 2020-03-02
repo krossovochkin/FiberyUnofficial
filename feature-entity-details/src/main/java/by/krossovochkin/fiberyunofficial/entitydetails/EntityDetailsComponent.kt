@@ -13,8 +13,6 @@ import javax.inject.Scope
 
 interface EntityDetailsParentComponent : GlobalDependencies {
 
-    fun entityDetailsParentListener(): EntityDetailsViewModel.ParentListener
-
     fun entityDetailsArgsProvider(): EntityDetailsFragment.ArgsProvider
 }
 

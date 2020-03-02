@@ -25,13 +25,11 @@ object EntityDetailsPresentationModule {
     fun entityDetailsViewModelFactory(
         getEntityDetailsInteractor: GetEntityDetailsInteractor,
         updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
-        entityDetailsParentListener: EntityDetailsViewModel.ParentListener,
         entityDetailsArgs: EntityDetailsFragment.Args
     ): EntityDetailsViewModelFactory {
         return EntityDetailsViewModelFactory(
             getEntityDetailsInteractor,
             updateEntitySingleSelectInteractor,
-            entityDetailsParentListener,
             entityDetailsArgs
         )
     }

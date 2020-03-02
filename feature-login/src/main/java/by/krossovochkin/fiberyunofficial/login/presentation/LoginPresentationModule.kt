@@ -22,12 +22,10 @@ object LoginPresentationModule {
     @JvmStatic
     @Provides
     fun loginViewModelFactory(
-        loginInteractor: LoginInteractor,
-        loginParentListener: LoginViewModel.ParentListener
+        loginInteractor: LoginInteractor
     ): LoginViewModelFactory {
         return LoginViewModelFactory(
-            loginInteractor,
-            loginParentListener
+            loginInteractor
         )
     }
 }

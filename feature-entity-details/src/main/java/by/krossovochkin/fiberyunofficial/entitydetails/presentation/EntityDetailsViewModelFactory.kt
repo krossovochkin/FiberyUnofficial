@@ -9,7 +9,6 @@ import java.lang.IllegalArgumentException
 class EntityDetailsViewModelFactory(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
-    private val entityDetailsParentListener: EntityDetailsViewModel.ParentListener,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -18,7 +17,6 @@ class EntityDetailsViewModelFactory(
             EntityDetailsViewModel(
                 getEntityDetailsInteractor,
                 updateEntitySingleSelectInteractor,
-                entityDetailsParentListener,
                 entityDetailsArgs
             ) as T
         } else {

@@ -1,11 +1,14 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -33,6 +36,8 @@ class EntityDetailsFragment(
     lateinit var viewModel: EntityDetailsViewModel
 
     private val binding by viewBinding(FragmentEntityDetailsBinding::bind)
+
+    private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter<List<ListItem>>(
         adapterDelegateLayoutContainer<FieldHeaderItem, ListItem>(
@@ -156,6 +161,24 @@ class EntityDetailsFragment(
             }
         })
 
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+            when (val navEvent = event.getContentIfNotHandled()) {
+                is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
+                    parentListener?.onEntitySelected(navEvent.entity)
+                }
+                is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
+                    parentListener?.onEntityTypeSelected(
+                        entityTypeSchema = navEvent.entityTypeSchema,
+                        entity = navEvent.entity,
+                        fieldSchema = navEvent.fieldSchema
+                    )
+                }
+                is EntityDetailsNavEvent.BackEvent -> {
+                    parentListener?.onBackPressed()
+                }
+            }
+        })
+
         with(viewModel.toolbarViewState) {
             initToolbar(
                 toolbar = binding.entityDetailsToolbar,
@@ -167,12 +190,35 @@ class EntityDetailsFragment(
         }
     }
 
-    interface ArgsProvider {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parentListener = context as ParentListener
+    }
 
-        fun getEntityDetailsArgs(arguments: Bundle): Args
+    override fun onDetach() {
+        super.onDetach()
+        parentListener = null
     }
 
     data class Args(
         val entityData: FiberyEntityData
     )
+
+    interface ArgsProvider {
+
+        fun getEntityDetailsArgs(arguments: Bundle): Args
+    }
+
+    interface ParentListener {
+
+        fun onEntitySelected(entity: FiberyEntityData)
+
+        fun onEntityTypeSelected(
+            entityTypeSchema: FiberyEntityTypeSchema,
+            entity: FiberyEntityData,
+            fieldSchema: FiberyFieldSchema
+        )
+
+        fun onBackPressed()
+    }
 }

@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
@@ -7,13 +8,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
-import by.krossovochkin.fiberyunofficial.entitytypelist.R
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
+import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
+import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.FragmentEntityTypeListBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.ItemEntityTypeBinding
 import com.google.android.material.snackbar.Snackbar
@@ -29,6 +31,8 @@ class EntityTypeListFragment(
     lateinit var viewModel: EntityTypeListViewModel
 
     private val binding by viewBinding(FragmentEntityTypeListBinding::bind)
+
+    private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter<List<ListItem>>(
         adapterDelegateLayoutContainer<EntityTypeListItem, ListItem>(
@@ -80,6 +84,17 @@ class EntityTypeListFragment(
             }
         })
 
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+            when (val navEvent = event.getContentIfNotHandled()) {
+                is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
+                    parentListener?.onEntityTypeSelected(navEvent.entityTypeSchema)
+                }
+                is EntityTypeListNavEvent.BackEvent -> {
+                    parentListener?.onBackPressed()
+                }
+            }
+        })
+
         initToolbar(
             toolbar = binding.entityTypeListToolbar,
             title = context!!.getString(R.string.title_entity_type_list),
@@ -89,12 +104,29 @@ class EntityTypeListFragment(
         )
     }
 
-    interface ArgsProvider {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parentListener = context as ParentListener
+    }
 
-        fun getEntityTypeListArgs(arguments: Bundle): Args
+    override fun onDetach() {
+        super.onDetach()
+        parentListener = null
     }
 
     data class Args(
         val fiberyAppData: FiberyAppData
     )
+
+    interface ArgsProvider {
+
+        fun getEntityTypeListArgs(arguments: Bundle): Args
+    }
+
+    interface ParentListener {
+
+        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema)
+
+        fun onBackPressed()
+    }
 }

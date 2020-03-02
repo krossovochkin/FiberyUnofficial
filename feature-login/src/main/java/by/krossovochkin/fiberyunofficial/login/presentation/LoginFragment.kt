@@ -1,9 +1,11 @@
 package by.krossovochkin.fiberyunofficial.login.presentation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
+import androidx.lifecycle.Observer
 import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
@@ -30,6 +32,8 @@ class LoginFragment(
 
     private val binding by viewBinding(FragmentLoginBinding::bind)
 
+    private var parentListener: ParentListener? = null
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -39,6 +43,14 @@ class LoginFragment(
             .loginGlobalDependencies(loginComponent)
             .build()
             .inject(this)
+
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+            when (event.getContentIfNotHandled()) {
+                is LoginNavEvent.OnLoginSuccessEvent -> {
+                    parentListener?.onLoginSuccess()
+                }
+            }
+        })
 
         binding.loginWebView.apply {
             webViewClient = WebViewClient()
@@ -67,6 +79,16 @@ class LoginFragment(
             .substringBefore(".fibery.io")
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parentListener = context as ParentListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        parentListener = null
+    }
+
     class TokenExtractor(
         private val callback: (String) -> Unit
     ) {
@@ -75,5 +97,10 @@ class LoginFragment(
         fun onTokenReceived(token: String) {
             callback(token)
         }
+    }
+
+    interface ParentListener {
+
+        fun onLoginSuccess()
     }
 }
