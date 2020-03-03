@@ -12,7 +12,8 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 
 class EntityListRepositoryImpl(
-    private val fiberyServiceApi: FiberyServiceApi
+    private val fiberyServiceApi: FiberyServiceApi,
+    private val entityListFiltersSortStorage: EntityListFiltersSortStorage
 ) : EntityListRepository {
 
     override suspend fun getEntityList(
@@ -91,6 +92,7 @@ class EntityListRepositoryImpl(
                     PARAM_ID
                 )
             }
+            ?: entityListFiltersSortStorage.getFilter(entityType.name)
             ?: EntityListFilters.filtersMap[entityType.name]
     }
 
@@ -99,7 +101,8 @@ class EntityListRepositoryImpl(
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<Any>? {
         return if (entityParams == null) {
-            EntityListFilters.orderMap[entityType.name]
+            entityListFiltersSortStorage.getSort(entityType.name)
+                ?: EntityListFilters.orderMap[entityType.name]
         } else {
             null
         }
@@ -113,7 +116,20 @@ class EntityListRepositoryImpl(
             ?.let { (_, entity) ->
                 mapOf(PARAM_ID to entity.id)
             }
+            ?: entityListFiltersSortStorage.getParams(entityType.name)
             ?: EntityListFilters.params[entityType.name]
+    }
+
+    override fun setEntityListFilter(
+        entityType: FiberyEntityTypeSchema,
+        filter: String,
+        params: String
+    ) {
+        entityListFiltersSortStorage.setFilter(entityType.name, filter, params)
+    }
+
+    override fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String) {
+        entityListFiltersSortStorage.setSort(entityType.name, sort)
     }
 
     companion object {

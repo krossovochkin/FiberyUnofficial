@@ -12,4 +12,8 @@ interface EntityListRepository {
         pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData>
+
+    fun setEntityListFilter(entityType: FiberyEntityTypeSchema, filter: String, params: String)
+
+    fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String)
 }

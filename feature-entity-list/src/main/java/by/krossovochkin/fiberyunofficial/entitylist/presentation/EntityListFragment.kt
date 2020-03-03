@@ -3,6 +3,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,6 +17,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
+import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogFilterBinding
+import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogSortBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityListBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
 import com.google.android.material.snackbar.Snackbar
@@ -106,9 +109,54 @@ class EntityListFragment(
                 title = title,
                 bgColorInt = bgColorInt,
                 hasBackButton = true,
-                onBackPressed = { viewModel.onBackPressed() }
+                onBackPressed = { viewModel.onBackPressed() },
+                menuResId = R.menu.menu_entity_list,
+                onMenuItemClicked = { item ->
+                    when (item.itemId) {
+                        R.id.action_filter -> {
+                            onFilterClicked()
+                            true
+                        }
+                        R.id.action_sort -> {
+                            onSortClicked()
+                            true
+                        }
+                        else -> error("Unknown menu item: $item")
+                    }
+                }
             )
         }
+    }
+
+    private fun onFilterClicked() {
+        val binding = DialogFilterBinding.inflate(layoutInflater)
+        AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setTitle(getString(R.string.dialog_filter_title))
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel.onFilterSelected(
+                    filter = binding.filterTextInput.text.toString(),
+                    params = binding.paramsTextInput.text.toString()
+                )
+            }
+            .create()
+            .show()
+    }
+
+    private fun onSortClicked() {
+        val binding = DialogSortBinding.inflate(layoutInflater)
+        AlertDialog.Builder(requireContext())
+            .setView(binding.root)
+            .setTitle(getString(R.string.dialog_sort_title))
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel.onSortSelected(
+                    sort = binding.sortTextInput.text.toString()
+                )
+            }
+            .create()
+            .show()
     }
 
     override fun onAttach(context: Context) {

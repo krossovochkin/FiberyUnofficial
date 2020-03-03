@@ -3,4 +3,6 @@ apply from: "../feature_default.gradle"
 dependencies {
     implementation d.androidx.paging
     implementation d.ui.adapter_delegates_paging
+
+    implementation d.network.moshi
 }

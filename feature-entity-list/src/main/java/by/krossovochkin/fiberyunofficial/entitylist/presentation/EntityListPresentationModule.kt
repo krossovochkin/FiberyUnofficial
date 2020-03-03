@@ -4,6 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
+import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
+import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import dagger.Module
 import dagger.Provides
 
@@ -32,10 +34,14 @@ object EntityListPresentationModule {
     @Provides
     fun entityListViewModelFactory(
         getEntityListInteractor: GetEntityListInteractor,
+        setEntityListFilterInteractor: SetEntityListFilterInteractor,
+        setEntityListSortInteractor: SetEntityListSortInteractor,
         entityListArgs: EntityListFragment.Args
     ): EntityListViewModelFactory {
         return EntityListViewModelFactory(
             getEntityListInteractor,
+            setEntityListFilterInteractor,
+            setEntityListSortInteractor,
             entityListArgs
         )
     }

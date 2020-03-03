@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">entity-list</string>
+    <string name="action_filter">Filter</string>
+    <string name="dialog_filter_title">Filter</string>
+    <string name="action_sort">Sort</string>
+    <string name="hint_filter">Filter</string>
+    <string name="hint_params">Params</string>
+    <string name="hint_sort">Sort</string>
+    <string name="dialog_sort_title">Sort</string>
 </resources>
