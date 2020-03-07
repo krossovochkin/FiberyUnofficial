@@ -85,6 +85,13 @@ sealed class FieldData : Parcelable {
     ) : FieldData()
 
     @Parcelize
+    data class CheckboxFieldData(
+        val title: String,
+        val value: Boolean,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
     data class DateTimeFieldData(
         val title: String,
         val value: Date,

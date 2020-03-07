@@ -265,6 +265,12 @@ class EntityDetailsRepositoryImpl(
                             data = it
                         )
                     }
+                    FiberyApiConstants.FieldType.CHECKBOX.value -> {
+                        mapCheckboxFieldData(
+                            fieldSchema = fieldSchema,
+                            data = it
+                        )
+                    }
                     FiberyApiConstants.FieldType.DATE_TIME.value -> {
                         mapDateTimeFieldData(
                             fieldSchema = fieldSchema,
@@ -341,6 +347,17 @@ class EntityDetailsRepositoryImpl(
             } else {
                 data.value.toString().toBigDecimal()
             },
+            schema = fieldSchema
+        )
+    }
+
+    private fun mapCheckboxFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any?>
+    ): FieldData.CheckboxFieldData {
+        return FieldData.CheckboxFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            value = data.value as? Boolean ?: false,
             schema = fieldSchema
         )
     }

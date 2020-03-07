@@ -16,6 +16,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsCompon
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.FragmentEntityDetailsBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCheckboxBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCollectionBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
@@ -124,6 +125,16 @@ class EntityDetailsFragment(
                         fieldSchema = item.fieldSchema
                     )
                 }
+            }
+        },
+        adapterDelegateLayoutContainer<FieldCheckboxItem, ListItem>(
+            layout = R.layout.item_field_checkbox
+        ) {
+            bind {
+                val binding = ItemFieldCheckboxBinding.bind(this.itemView)
+                binding.fieldCheckboxTitleView.text = item.title
+                binding.fieldCheckBox.isChecked = item.value
+                binding.fieldCheckBox.isEnabled = false
             }
         }
     )

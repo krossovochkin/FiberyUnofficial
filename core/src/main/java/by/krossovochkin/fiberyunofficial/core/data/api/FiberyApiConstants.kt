@@ -15,7 +15,8 @@ object FiberyApiConstants {
         TEXT("fibery/text"),
         DATE_TIME("fibery/date-time"),
         UUID("fibery/uuid"),
-        NUMBER("fibery/int")
+        NUMBER("fibery/int"),
+        CHECKBOX("fibery/bool")
     }
 
     enum class Field(

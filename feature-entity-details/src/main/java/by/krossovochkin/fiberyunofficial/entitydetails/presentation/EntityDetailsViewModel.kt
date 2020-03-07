@@ -86,6 +86,7 @@ class EntityDetailsViewModel(
             is FieldData.RichTextFieldData -> mapRichTextItem(field)
             is FieldData.RelationFieldData -> mapRelationItem(field)
             is FieldData.CollectionFieldData -> mapCollectionItem(field)
+            is FieldData.CheckboxFieldData -> mapCheckboxItem(field)
         }
     }
 
@@ -168,6 +169,15 @@ class EntityDetailsViewModel(
         )
     }
 
+    private fun mapCheckboxItem(field: FieldData.CheckboxFieldData): List<ListItem> {
+        return listOf(
+            FieldCheckboxItem(
+                title = field.title,
+                value = field.value
+            )
+        )
+    }
+
     fun selectCollection(
         entityTypeSchema: FiberyEntityTypeSchema,
         entityData: FiberyEntityData,
@@ -244,4 +254,9 @@ data class FieldCollectionItem(
     val entityTypeSchema: FiberyEntityTypeSchema,
     val entityData: FiberyEntityData,
     val fieldSchema: FiberyFieldSchema
+) : ListItem
+
+data class FieldCheckboxItem(
+    val title: String,
+    val value: Boolean
 ) : ListItem
