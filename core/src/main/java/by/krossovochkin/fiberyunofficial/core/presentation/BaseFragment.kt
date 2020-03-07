@@ -5,7 +5,6 @@ import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
