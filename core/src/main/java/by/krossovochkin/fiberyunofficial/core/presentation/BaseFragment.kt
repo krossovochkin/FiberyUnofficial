@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
@@ -27,19 +28,13 @@ abstract class BaseFragment(
         menuResId: Int? = null,
         crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false }
     ) {
-        val contrastColor = ContextCompat.getColor(
-            requireContext(),
-            if (ColorUtils.isDarkColor(bgColorInt)) {
-                android.R.color.white
-            } else {
-                android.R.color.black
-            }
-        )
+        val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(requireContext(), bgColorInt)
+        val contrastColor = ColorUtils.getContrastColor(requireContext(), backgroundColor)
 
-        requireActivity().window.statusBarColor = ColorUtils.getDarkenColor(bgColorInt)
+        requireActivity().window.statusBarColor = ColorUtils.getDarkenColor(backgroundColor)
         toolbar.title = title
         toolbar.setTitleTextColor(contrastColor)
-        toolbar.setBackgroundColor(bgColorInt)
+        toolbar.setBackgroundColor(backgroundColor)
 
         if (hasBackButton) {
             toolbar.navigationIcon = ContextCompat

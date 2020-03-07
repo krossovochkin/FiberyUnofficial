@@ -42,7 +42,9 @@ class EntityTypeListFragment(
                 val binding = ItemEntityTypeBinding.bind(this.itemView)
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTypeTitleTextView.text = item.title
-                binding.entityTypeBadgeView.setBackgroundColor(item.badgeBgColor)
+                binding.entityTypeBadgeView.setBackgroundColor(
+                    ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
+                )
             }
         }
     )
