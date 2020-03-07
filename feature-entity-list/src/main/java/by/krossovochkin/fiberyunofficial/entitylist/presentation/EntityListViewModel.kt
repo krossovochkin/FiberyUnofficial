@@ -12,6 +12,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
@@ -95,7 +96,12 @@ class EntityListViewModel(
     val toolbarViewState: EntityListToolbarViewState
         get() = EntityListToolbarViewState(
             title = entityListArgs.entityTypeSchema.displayName,
-            bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex)
+            bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
+            menuResId = if (entityListArgs.entityParams == null) {
+                R.menu.menu_entity_list
+            } else {
+                null
+            }
         )
 
     fun select(item: ListItem) {

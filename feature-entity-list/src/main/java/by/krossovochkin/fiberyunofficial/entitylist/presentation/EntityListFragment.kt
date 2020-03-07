@@ -110,7 +110,7 @@ class EntityListFragment(
                 bgColorInt = bgColorInt,
                 hasBackButton = true,
                 onBackPressed = { viewModel.onBackPressed() },
-                menuResId = R.menu.menu_entity_list,
+                menuResId = menuResId,
                 onMenuItemClicked = { item ->
                     when (item.itemId) {
                         R.id.action_filter -> {
