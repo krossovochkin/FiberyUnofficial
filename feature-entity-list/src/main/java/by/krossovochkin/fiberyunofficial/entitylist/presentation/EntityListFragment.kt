@@ -100,6 +100,12 @@ class EntityListFragment(
                 is EntityListNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
                 }
+                is EntityListNavEvent.OnFilterSelectedEvent -> {
+                    showUpdateFilterDialog()
+                }
+                is EntityListNavEvent.OnSortSelectedEvent -> {
+                    showUpdateSortDialog()
+                }
             }
         })
 
@@ -114,11 +120,11 @@ class EntityListFragment(
                 onMenuItemClicked = { item ->
                     when (item.itemId) {
                         R.id.action_filter -> {
-                            onFilterClicked()
+                            viewModel.onFilterClicked()
                             true
                         }
                         R.id.action_sort -> {
-                            onSortClicked()
+                            viewModel.onSortClicked()
                             true
                         }
                         else -> error("Unknown menu item: $item")
@@ -128,7 +134,7 @@ class EntityListFragment(
         }
     }
 
-    private fun onFilterClicked() {
+    private fun showUpdateFilterDialog() {
         val binding = DialogFilterBinding.inflate(layoutInflater)
         AlertDialog.Builder(requireContext())
             .setView(binding.root)
@@ -144,7 +150,7 @@ class EntityListFragment(
             .show()
     }
 
-    private fun onSortClicked() {
+    private fun showUpdateSortDialog() {
         val binding = DialogSortBinding.inflate(layoutInflater)
         AlertDialog.Builder(requireContext())
             .setView(binding.root)

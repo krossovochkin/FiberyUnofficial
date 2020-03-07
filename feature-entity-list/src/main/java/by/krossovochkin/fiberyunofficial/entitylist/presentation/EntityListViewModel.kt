@@ -129,4 +129,12 @@ class EntityListViewModel(
             setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
         }
     }
+
+    fun onFilterClicked() {
+        mutableNavigation.value = Event(EntityListNavEvent.OnFilterSelectedEvent)
+    }
+
+    fun onSortClicked() {
+        mutableNavigation.value = Event(EntityListNavEvent.OnSortSelectedEvent)
+    }
 }

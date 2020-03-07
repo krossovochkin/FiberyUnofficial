@@ -9,4 +9,8 @@ sealed class EntityListNavEvent {
     data class OnEntitySelectedEvent(
         val entity: FiberyEntityData
     ) : EntityListNavEvent()
+
+    object OnFilterSelectedEvent : EntityListNavEvent()
+
+    object OnSortSelectedEvent : EntityListNavEvent()
 }
