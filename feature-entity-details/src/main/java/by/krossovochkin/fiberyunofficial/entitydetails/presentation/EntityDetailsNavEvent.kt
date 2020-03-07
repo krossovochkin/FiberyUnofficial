@@ -17,4 +17,8 @@ sealed class EntityDetailsNavEvent {
         val entity: FiberyEntityData,
         val fieldSchema: FiberyFieldSchema
     ) : EntityDetailsNavEvent()
+
+    data class OnSingleSelectSelectedEvent(
+        val singleSelectItem: FieldSingleSelectItem
+    ) : EntityDetailsNavEvent()
 }

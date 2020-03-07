@@ -127,7 +127,7 @@ class EntityDetailsViewModel(
         field: FieldData.SingleSelectFieldData
     ): List<ListItem> {
         return listOf(
-            FieldSingleSelect(
+            FieldSingleSelectItem(
                 title = field.title,
                 text = field.value,
                 values = field.values,
@@ -219,6 +219,10 @@ class EntityDetailsViewModel(
             }
         }
     }
+
+    fun onSingleSelectSelected(item: FieldSingleSelectItem) {
+        mutableNavigation.value = Event(EntityDetailsNavEvent.OnSingleSelectSelectedEvent(item))
+    }
 }
 
 data class FieldHeaderItem(
@@ -230,7 +234,7 @@ data class FieldTextItem(
     val text: String
 ) : ListItem
 
-data class FieldSingleSelect(
+data class FieldSingleSelectItem(
     val title: String,
     val text: String,
     val values: List<FieldData.SingleSelectItemData>,

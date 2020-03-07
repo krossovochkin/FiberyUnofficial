@@ -58,7 +58,7 @@ class EntityDetailsFragment(
                 binding.fieldTextView.text = item.text
             }
         },
-        adapterDelegateLayoutContainer<FieldSingleSelect, ListItem>(
+        adapterDelegateLayoutContainer<FieldSingleSelectItem, ListItem>(
             layout = R.layout.item_field_single_select
         ) {
             val binding = ItemFieldSingleSelectBinding.bind(this.itemView)
@@ -66,23 +66,7 @@ class EntityDetailsFragment(
                 binding.fieldSingleSelectTitleView.text = item.title
                 binding.fieldSingleSelectView.text = item.text
                 binding.root.setOnClickListener {
-                    var selectedIndex: Int = item.values.map { it.title }.indexOf(item.text)
-                    AlertDialog.Builder(requireContext())
-                        .setSingleChoiceItems(
-                            item.values.map { it.title }.toTypedArray(),
-                            selectedIndex
-                        ) { _, index -> selectedIndex = index }
-                        .setTitle(item.title)
-                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            viewModel.updateSingleSelectValue(
-                                currentTitle = item.text,
-                                fieldSchema = item.fieldSchema,
-                                selectedValue = item.values[selectedIndex]
-                            )
-                        }
-                        .create()
-                        .show()
+                    viewModel.onSingleSelectSelected(item)
                 }
             }
             onViewRecycled {
@@ -187,6 +171,9 @@ class EntityDetailsFragment(
                 is EntityDetailsNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
                 }
+                is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
+                    showUpdateSingleSelectDialog(navEvent.singleSelectItem)
+                }
             }
         })
 
@@ -199,6 +186,28 @@ class EntityDetailsFragment(
                 onBackPressed = { viewModel.onBackPressed() }
             )
         }
+    }
+
+    private fun showUpdateSingleSelectDialog(
+        item: FieldSingleSelectItem
+    ) {
+        var selectedIndex: Int = item.values.map { it.title }.indexOf(item.text)
+        AlertDialog.Builder(requireContext())
+            .setSingleChoiceItems(
+                item.values.map { it.title }.toTypedArray(),
+                selectedIndex
+            ) { _, index -> selectedIndex = index }
+            .setTitle(item.title)
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel.updateSingleSelectValue(
+                    currentTitle = item.text,
+                    fieldSchema = item.fieldSchema,
+                    selectedValue = item.values[selectedIndex]
+                )
+            }
+            .create()
+            .show()
     }
 
     override fun onAttach(context: Context) {
