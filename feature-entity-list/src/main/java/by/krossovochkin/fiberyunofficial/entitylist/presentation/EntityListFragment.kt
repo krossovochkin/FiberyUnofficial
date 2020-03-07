@@ -71,6 +71,12 @@ class EntityListFragment(
             .build()
             .inject(this)
 
+        initList()
+        initNavigation()
+        initToolbar()
+    }
+
+    private fun initList() {
         binding.entityListRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityListRecyclerView.adapter = adapter
         binding.entityListRecyclerView
@@ -91,7 +97,9 @@ class EntityListFragment(
                     .show()
             }
         })
+    }
 
+    private fun initNavigation() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityListNavEvent.OnEntitySelectedEvent -> {
@@ -108,7 +116,9 @@ class EntityListFragment(
                 }
             }
         })
+    }
 
+    private fun initToolbar() {
         with(viewModel.toolbarViewState) {
             initToolbar(
                 toolbar = binding.entityListToolbar,
