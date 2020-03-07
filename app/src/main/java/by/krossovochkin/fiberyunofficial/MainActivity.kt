@@ -2,6 +2,8 @@ package by.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.navigation.findNavController
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
         supportFragmentManager.fragmentFactory = MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -92,9 +95,5 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onLoginSuccess() {
         binding.navHostFragment.findNavController()
             .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
-    }
-
-    override fun onBackPressed() {
-        binding.navHostFragment.findNavController().popBackStack()
     }
 }
