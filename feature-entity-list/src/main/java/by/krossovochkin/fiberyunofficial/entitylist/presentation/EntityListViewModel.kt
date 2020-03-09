@@ -34,8 +34,8 @@ class EntityListViewModel(
     private val mutableNavigation = MutableLiveData<Event<EntityListNavEvent>>()
     val navigation: LiveData<Event<EntityListNavEvent>> = mutableNavigation
 
-    val entityTypeItems: LiveData<PagedList<ListItem>>
-        get() = entityTypeItemsDatasource
+    val entityItems: LiveData<PagedList<ListItem>>
+        get() = entityItemsDatasourceFactory
             .map<ListItem> { entity ->
                 EntityListItem(
                     title = entity.title,
@@ -49,49 +49,8 @@ class EntityListViewModel(
                     .build()
             )
 
-    private val entityTypeItemsDatasource: DataSource.Factory<Int, FiberyEntityData>
-        get() = object : DataSource.Factory<Int, FiberyEntityData>() {
-            override fun create(): DataSource<Int, FiberyEntityData> {
-                return object : PositionalDataSource<FiberyEntityData>() {
-                    override fun loadRange(
-                        params: LoadRangeParams,
-                        callback: LoadRangeCallback<FiberyEntityData>
-                    ) {
-                        val offset = params.startPosition
-                        val size = params.loadSize
-
-                        callback.onResult(loadPage(offset, size))
-                    }
-
-                    override fun loadInitial(
-                        params: LoadInitialParams,
-                        callback: LoadInitialCallback<FiberyEntityData>
-                    ) {
-                        val offset = params.requestedStartPosition
-                        val size = params.requestedLoadSize
-
-                        callback.onResult(loadPage(offset, size), offset)
-                    }
-                }
-            }
-
-            private fun loadPage(offset: Int, pageSize: Int): List<FiberyEntityData> {
-                return try {
-                    runBlocking {
-                        getEntityListInteractor
-                            .execute(
-                                entityListArgs.entityTypeSchema,
-                                offset,
-                                pageSize,
-                                entityListArgs.entityParams
-                            )
-                    }
-                } catch (e: Exception) {
-                    mutableError.postValue(Event(e))
-                    emptyList()
-                }
-            }
-        }
+    private val entityItemsDatasourceFactory: EntityListDataSourceFactory =
+        EntityListDataSourceFactory(entityListArgs, getEntityListInteractor, mutableError)
 
     val toolbarViewState: EntityListToolbarViewState
         get() = EntityListToolbarViewState(
@@ -121,12 +80,14 @@ class EntityListViewModel(
     fun onFilterSelected(filter: String, params: String) {
         viewModelScope.launch {
             setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter, params)
+            entityItemsDatasourceFactory.dataSource?.invalidate()
         }
     }
 
     fun onSortSelected(sort: String) {
         viewModelScope.launch {
             setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
+            entityItemsDatasourceFactory.dataSource?.invalidate()
         }
     }
 
@@ -136,5 +97,65 @@ class EntityListViewModel(
 
     fun onSortClicked() {
         mutableNavigation.value = Event(EntityListNavEvent.OnSortSelectedEvent)
+    }
+}
+
+private class EntityListDataSourceFactory(
+    private val entityListArgs: EntityListFragment.Args,
+    private val getEntityListInteractor: GetEntityListInteractor,
+    private val mutableError: MutableLiveData<Event<Exception>>
+) : DataSource.Factory<Int, FiberyEntityData>() {
+
+    var dataSource: EntityListDataSource? = null
+        private set
+
+    override fun create(): DataSource<Int, FiberyEntityData> {
+        val new = EntityListDataSource(entityListArgs, getEntityListInteractor, mutableError)
+        dataSource = new
+        return new
+    }
+}
+
+private class EntityListDataSource(
+    private val entityListArgs: EntityListFragment.Args,
+    private val getEntityListInteractor: GetEntityListInteractor,
+    private val mutableError: MutableLiveData<Event<Exception>>
+) : PositionalDataSource<FiberyEntityData>() {
+
+    override fun loadRange(
+        params: LoadRangeParams,
+        callback: LoadRangeCallback<FiberyEntityData>
+    ) {
+        val offset = params.startPosition
+        val size = params.loadSize
+
+        callback.onResult(loadPage(offset, size))
+    }
+
+    override fun loadInitial(
+        params: LoadInitialParams,
+        callback: LoadInitialCallback<FiberyEntityData>
+    ) {
+        val offset = params.requestedStartPosition
+        val size = params.requestedLoadSize
+
+        callback.onResult(loadPage(offset, size), offset)
+    }
+
+    private fun loadPage(offset: Int, pageSize: Int): List<FiberyEntityData> {
+        return try {
+            runBlocking {
+                getEntityListInteractor
+                    .execute(
+                        entityListArgs.entityTypeSchema,
+                        offset,
+                        pageSize,
+                        entityListArgs.entityParams
+                    )
+            }
+        } catch (e: Exception) {
+            mutableError.postValue(Event(e))
+            emptyList()
+        }
     }
 }

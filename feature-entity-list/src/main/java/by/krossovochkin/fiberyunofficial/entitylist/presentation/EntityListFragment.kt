@@ -82,7 +82,7 @@ class EntityListFragment(
         binding.entityListRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
+        viewModel.entityItems.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
 
