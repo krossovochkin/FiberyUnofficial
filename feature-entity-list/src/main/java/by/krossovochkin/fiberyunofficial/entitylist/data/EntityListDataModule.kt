@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.data
 
 import android.content.Context
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 import com.squareup.moshi.Moshi
@@ -14,9 +15,14 @@ object EntityListDataModule {
     @Provides
     fun entityListRepository(
         fiberyServiceApi: FiberyServiceApi,
+        fiberyApiRepository: FiberyApiRepository,
         entityListFiltersSortStorage: EntityListFiltersSortStorage
     ): EntityListRepository {
-        return EntityListRepositoryImpl(fiberyServiceApi, entityListFiltersSortStorage)
+        return EntityListRepositoryImpl(
+            fiberyServiceApi,
+            fiberyApiRepository,
+            entityListFiltersSortStorage
+        )
     }
 
     @JvmStatic

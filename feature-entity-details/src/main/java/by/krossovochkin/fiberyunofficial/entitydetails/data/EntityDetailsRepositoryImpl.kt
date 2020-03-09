@@ -2,6 +2,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.data
 
 import android.annotation.SuppressLint
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentResponse
@@ -12,7 +13,6 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityD
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyTypeDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
@@ -24,12 +24,11 @@ import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
-    private val entityTypeMapper: FiberyEntityTypeMapper = FiberyEntityTypeMapper()
+    private val fiberyApiRepository: FiberyApiRepository
 ) : EntityDetailsRepository {
 
     override suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData {
-        val typesSchema = getTypesSchema()
-        val dto = getEntityDetailsDto(typesSchema, entityData)
+        val dto = getEntityDetailsDto(entityData)
 
         val documentSchema = getDocumentFieldSchema(entityData)
         val documentData = FieldData.RichTextFieldData(
@@ -41,29 +40,20 @@ class EntityDetailsRepositoryImpl(
         return mapEntityDetailsData(
             dto = dto,
             entityData = entityData,
-            typesSchema = typesSchema,
             documentData = documentData
         )
     }
 
-    private suspend fun getTypesSchema(): List<FiberyTypeDto> {
-        return fiberyServiceApi.getSchema().first().result.fiberyTypes
-    }
-
     private suspend fun getEntityDetailsDto(
-        typesSchema: List<FiberyTypeDto>,
         entityData: FiberyEntityData
     ): FiberyResponseEntityDto {
         val primitives = getEntityPrimitivesQuery(
-            typesSchema = typesSchema,
             entityData = entityData
         )
         val enums = getEntityEnumsQuery(
-            typesSchema = typesSchema,
             entityData = entityData
         )
         val relations = getEntityRelationsQuery(
-            typesSchema = typesSchema,
             entityData = entityData
         )
         val collections = getEntityCollectionsQuery(
@@ -92,30 +82,22 @@ class EntityDetailsRepositoryImpl(
         ).first()
     }
 
-    private fun getEntityPrimitivesQuery(
-        typesSchema: List<FiberyTypeDto>,
+    private suspend fun getEntityPrimitivesQuery(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
-                val isPrimitive = typesSchema
-                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                    ?.meta?.isPrimitive ?: false
-                isPrimitive
+                fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isPrimitive
             }
             .map { it.name }
     }
 
-    private fun getEntityEnumsQuery(
-        typesSchema: List<FiberyTypeDto>,
+    private suspend fun getEntityEnumsQuery(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
-                val isEnum = typesSchema
-                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                    ?.meta?.isEnum ?: false
-                isEnum
+                fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
             }
             .map { fieldSchema ->
                 mapOf(
@@ -127,8 +109,7 @@ class EntityDetailsRepositoryImpl(
             }
     }
 
-    private fun getEntityRelationsQuery(
-        typesSchema: List<FiberyTypeDto>,
+    private suspend fun getEntityRelationsQuery(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
@@ -136,9 +117,8 @@ class EntityDetailsRepositoryImpl(
                 fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection
             }
             .map { fieldSchema ->
-                val titleFieldName = typesSchema
-                    .find { typeSchema -> typeSchema.name == fieldSchema.type }
-                    ?.fields?.find { it.meta.isUiTitle == true }!!.name
+                val titleFieldName = fiberyApiRepository.getTypeSchema(fieldSchema.type)
+                    .fields.find { it.meta.isUiTitle }!!.name
                 mapOf(
                     fieldSchema.name to listOf(
                         FiberyApiConstants.Field.ID.value,
@@ -206,7 +186,6 @@ class EntityDetailsRepositoryImpl(
     private suspend fun mapEntityDetailsData(
         dto: FiberyResponseEntityDto,
         entityData: FiberyEntityData,
-        typesSchema: List<FiberyTypeDto>,
         documentData: FieldData.RichTextFieldData
     ): FiberyEntityDetailsData {
         return dto.result.map {
@@ -218,8 +197,7 @@ class EntityDetailsRepositoryImpl(
             val fields = mapEntityDetailsFields(
                 result = it,
                 titleFieldName = titleFieldName,
-                entityData = entityData,
-                typesSchema = typesSchema
+                entityData = entityData
             )
 
             FiberyEntityDetailsData(
@@ -237,8 +215,7 @@ class EntityDetailsRepositoryImpl(
     private suspend fun mapEntityDetailsFields(
         result: Map<String, Any>,
         titleFieldName: String,
-        entityData: FiberyEntityData,
-        typesSchema: List<FiberyTypeDto>
+        entityData: FiberyEntityData
     ): List<FieldData> {
         val defaultFieldKeys = listOf(
             titleFieldName,
@@ -281,8 +258,7 @@ class EntityDetailsRepositoryImpl(
                         mapEntityDetailsEntityFields(
                             data = it,
                             fieldSchema = fieldSchema,
-                            entityData = entityData,
-                            typesSchema = typesSchema
+                            entityData = entityData
                         )
                     }
                 }
@@ -291,14 +267,11 @@ class EntityDetailsRepositoryImpl(
 
     private suspend fun mapEntityDetailsEntityFields(
         data: Map.Entry<String, Any>,
-        typesSchema: List<FiberyTypeDto>,
         fieldSchema: FiberyFieldSchema,
         entityData: FiberyEntityData
     ): FieldData? {
-        val typeSchema = typesSchema
-            .find { typeSchema -> typeSchema.name == fieldSchema.type }
         return when {
-            typeSchema?.meta?.isEnum == true -> {
+            fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum-> {
                 mapSingleSelectFieldData(
                     fieldSchema = fieldSchema,
                     data = data
@@ -307,16 +280,14 @@ class EntityDetailsRepositoryImpl(
             fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection -> {
                 mapRelationFieldData(
                     fieldSchema = fieldSchema,
-                    dataEntry = data,
-                    typesSchema = typesSchema
+                    dataEntry = data
                 )
             }
             fieldSchema.meta.isRelation && fieldSchema.meta.isCollection -> {
                 mapCollectionFieldData(
                     fieldSchema = fieldSchema,
                     data = data,
-                    entityData = entityData,
-                    typesSchema = typesSchema
+                    entityData = entityData
                 )
             }
             else -> {
@@ -422,39 +393,33 @@ class EntityDetailsRepositoryImpl(
             .first()
     }
 
-    private fun mapRelationFieldData(
+    private suspend fun mapRelationFieldData(
         fieldSchema: FiberyFieldSchema,
-        dataEntry: Map.Entry<String, Any>,
-        typesSchema: List<FiberyTypeDto>
+        dataEntry: Map.Entry<String, Any>
     ): FieldData.RelationFieldData {
         val data = dataEntry.value as Map<String, Any>
-        val typeSchema = typesSchema.find { typeSchema ->
-            typeSchema.name == fieldSchema.type
-        }
+        val typeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type)
         return FieldData.RelationFieldData(
             title = fieldSchema.name.normalizeTitle(),
             fiberyEntityData = FiberyEntityData(
                 id = data[FiberyApiConstants.Field.ID.value] as String,
                 publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
-                title = data[typeSchema?.fields?.find { it.meta.isUiTitle == true }!!.name] as String,
-                schema = entityTypeMapper.map(typeSchema)
+                title = data[typeSchema.fields.find { it.meta.isUiTitle }!!.name] as String,
+                schema = typeSchema
             ),
             schema = fieldSchema
         )
     }
 
-    private fun mapCollectionFieldData(
+    private suspend fun mapCollectionFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>,
-        typesSchema: List<FiberyTypeDto>,
         entityData: FiberyEntityData
     ): FieldData.CollectionFieldData {
         return FieldData.CollectionFieldData(
             title = fieldSchema.name.normalizeTitle(),
             count = (data.value as Number).toInt(),
-            entityTypeSchema = entityTypeMapper.map(
-                typesSchema.find { it.name == fieldSchema.type }!!
-            ),
+            entityTypeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type),
             entityData = entityData,
             schema = fieldSchema
         )

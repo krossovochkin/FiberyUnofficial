@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.applist.data
 
 import by.krossovochkin.fiberyunofficial.applist.domain.AppListRepository
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import dagger.Module
 import dagger.Provides
@@ -11,10 +12,10 @@ object AppListDataModule {
     @JvmStatic
     @Provides
     fun appListRepository(
-        fiberyServiceApi: FiberyServiceApi
+        fiberyApiRepository: FiberyApiRepository
     ): AppListRepository {
         return AppListRepositoryImpl(
-            fiberyServiceApi
+            fiberyApiRepository
         )
     }
 }

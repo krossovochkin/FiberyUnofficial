@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
@@ -13,6 +14,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 
 class EntityListRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
+    private val fiberyApiRepository: FiberyApiRepository,
     private val entityListFiltersSortStorage: EntityListFiltersSortStorage
 ) : EntityListRepository {
 
@@ -78,8 +80,7 @@ class EntityListRepositoryImpl(
         return entityParams
             ?.let { (field, _) ->
                 val fieldName =
-                    fiberyServiceApi.getSchema().first().result.fiberyTypes
-                        .find { typeSchema -> typeSchema.name == entityType.name }!!
+                    fiberyApiRepository.getTypeSchema(entityType.name)
                         .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }!!
                         .name
 
