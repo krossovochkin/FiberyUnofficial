@@ -30,6 +30,7 @@ Fibery is a work management platform that adapts to companies and grows with the
   - Description (markdown, read-only)
   - Text fields (read-only)
   - Number fields (read-only)
+  - Checkbox fields (read-only)
   - Date fields (read-only)
   - Single select fields (update supported)
   - Parent entity fields (relation, non-collection, read-only)
