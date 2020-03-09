@@ -74,6 +74,10 @@ class EntityListFragment(
         initList()
         initNavigation()
         initToolbar()
+
+        binding.entityListCreateFab.setOnClickListener {
+            viewModel.onCreateEntityClicked()
+        }
     }
 
     private fun initList() {
@@ -113,6 +117,9 @@ class EntityListFragment(
                 }
                 is EntityListNavEvent.OnSortSelectedEvent -> {
                     showUpdateSortDialog()
+                }
+                is EntityListNavEvent.OnCreateEntityEvent -> {
+                    onCreateEntity(navEvent.entityType)
                 }
             }
         })
@@ -175,6 +182,10 @@ class EntityListFragment(
             .show()
     }
 
+    private fun onCreateEntity(entityType: FiberyEntityTypeSchema) {
+        parentListener?.onCreateEntity(entityType)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         parentListener = context as ParentListener
@@ -198,6 +209,8 @@ class EntityListFragment(
     interface ParentListener {
 
         fun onEntitySelected(entity: FiberyEntityData)
+
+        fun onCreateEntity(entityType: FiberyEntityTypeSchema)
 
         fun onBackPressed()
     }

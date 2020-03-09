@@ -98,6 +98,12 @@ class EntityListViewModel(
     fun onSortClicked() {
         mutableNavigation.value = Event(EntityListNavEvent.OnSortSelectedEvent)
     }
+
+    fun onCreateEntityClicked() {
+        mutableNavigation.value = Event(
+            EntityListNavEvent.OnCreateEntityEvent(entityListArgs.entityTypeSchema)
+        )
+    }
 }
 
 private class EntityListDataSourceFactory(

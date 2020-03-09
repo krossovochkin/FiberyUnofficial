@@ -24,6 +24,7 @@ object FiberyApiConstants {
     ) {
         ID("fibery/id"),
         PUBLIC_ID("fibery/public-id"),
+        NAME("fibery/name"),
         ENUM_NAME("enum/name"),
         DOCUMENT_SECRET("Collaboration~Documents/secret")
     }

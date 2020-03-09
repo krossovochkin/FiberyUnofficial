@@ -1,6 +1,8 @@
 package by.krossovochkin.fiberyunofficial
 
 import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
+import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
+import by.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
@@ -24,7 +26,8 @@ interface MainActivityComponent :
     AppListParentComponent,
     EntityTypeListParentComponent,
     EntityListParentComponent,
-    EntityDetailsParentComponent {
+    EntityDetailsParentComponent,
+    EntityCreateParentComponent {
 
     @Component.Builder
     interface Builder {
@@ -60,6 +63,12 @@ abstract class MainActivityModule {
     abstract fun entityDetailsArgsProvider(
         mainActivityArgsProvider: MainActivityArgsProvider
     ): EntityDetailsFragment.ArgsProvider
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityCreateArgsProvider(
+        mainActivityArgsProvider: MainActivityArgsProvider
+    ): EntityCreateFragment.ArgsProvider
 }
 
 @Scope

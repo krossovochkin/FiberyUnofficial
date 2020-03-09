@@ -96,4 +96,14 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         binding.navHostFragment.findNavController()
             .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
     }
+
+    override fun onCreateEntity(entityType: FiberyEntityTypeSchema) {
+        binding.navHostFragment.findNavController().navigate(
+            EntityListFragmentDirections.actionEntityListToEntityCreateFragment(entityType)
+        )
+    }
+
+    override fun onEntityCreateSuccess() {
+        onBackPressed()
+    }
 }

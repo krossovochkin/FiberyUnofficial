@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 
 sealed class EntityListNavEvent {
 
@@ -13,4 +14,8 @@ sealed class EntityListNavEvent {
     object OnFilterSelectedEvent : EntityListNavEvent()
 
     object OnSortSelectedEvent : EntityListNavEvent()
+
+    data class OnCreateEntityEvent(
+        val entityType: FiberyEntityTypeSchema
+    ) : EntityListNavEvent()
 }

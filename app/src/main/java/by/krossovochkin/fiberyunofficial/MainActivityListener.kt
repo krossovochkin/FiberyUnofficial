@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial
 
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
+import by.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
@@ -11,4 +12,5 @@ interface MainActivityListener :
     AppListFragment.ParentListener,
     EntityTypeListFragment.ParentListener,
     EntityListFragment.ParentListener,
-    EntityDetailsFragment.ParentListener
+    EntityDetailsFragment.ParentListener,
+    EntityCreateFragment.ParentListener

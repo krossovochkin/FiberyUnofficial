@@ -3,6 +3,7 @@ package by.krossovochkin.fiberyunofficial
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
+import by.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
@@ -21,6 +22,9 @@ class MainActivityFragmentFactory(
             )
             EntityListFragment::class.java.canonicalName -> EntityListFragment(mainActivityComponent)
             EntityDetailsFragment::class.java.canonicalName -> EntityDetailsFragment(
+                mainActivityComponent
+            )
+            EntityCreateFragment::class.java.canonicalName -> EntityCreateFragment(
                 mainActivityComponent
             )
             else -> return super.instantiate(classLoader, className)

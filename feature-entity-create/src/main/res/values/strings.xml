@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">fibery-entity-create</string>
+    <string name="create">Create</string>
+    <string name="entity_create_title">Create %1$s</string>
+    <string name="hint_name">Name</string>
+    <string name="toolbar_title_create">Create %1$s</string>
+</resources>

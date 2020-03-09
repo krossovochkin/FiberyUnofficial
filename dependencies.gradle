@@ -89,6 +89,7 @@ d.app.feature_entity_type_list = project(":feature-entity-type-list")
 d.app.feature_entity_list = project(":feature-entity-list")
 d.app.feature_entity_details = project(":feature-entity-details")
 d.app.feature_login = project(":feature-login")
+d.app.feature_entity_create = project(":feature-entity-create")
 
 ext.v = v
 ext.d = d
