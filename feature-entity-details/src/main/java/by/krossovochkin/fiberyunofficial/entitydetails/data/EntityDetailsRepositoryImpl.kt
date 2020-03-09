@@ -10,7 +10,6 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandA
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyTypeDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
@@ -271,7 +270,7 @@ class EntityDetailsRepositoryImpl(
         entityData: FiberyEntityData
     ): FieldData? {
         return when {
-            fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum-> {
+            fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
                 mapSingleSelectFieldData(
                     fieldSchema = fieldSchema,
                     data = data
@@ -350,47 +349,12 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.SingleSelectFieldData {
-        val value =
-            (data.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String
-        val result = getSingleSelectDto(fieldSchema.type).result
-        val values = result
-            .map { it as Map<String, String> }
-            .map {
-                FieldData.SingleSelectItemData(
-                    id = it[FiberyApiConstants.Field.ID.value] as String,
-                    title = it[FiberyApiConstants.Field.ENUM_NAME.value] as String
-                )
-            }
         return FieldData.SingleSelectFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = value,
-            values = values,
+            value = (data.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
+            values = fiberyApiRepository.getSingleSelectValues(fieldSchema.type),
             schema = fieldSchema
         )
-    }
-
-    private suspend fun getSingleSelectDto(
-        singleSelectType: String
-    ): FiberyResponseEntityDto {
-        return fiberyServiceApi
-            .getEntities(
-                listOf(
-                    FiberyRequestCommandBody(
-                        command = FiberyCommand.QUERY_ENTITY.value,
-                        args = FiberyRequestCommandArgsDto(
-                            query = FiberyRequestCommandArgsQueryDto(
-                                from = singleSelectType,
-                                select = listOf(
-                                    FiberyApiConstants.Field.ENUM_NAME.value,
-                                    FiberyApiConstants.Field.ID.value
-                                ),
-                                limit = FiberyApiConstants.Limit.NO_LIMIT.value
-                            )
-                        )
-                    )
-                )
-            )
-            .first()
     }
 
     private suspend fun mapRelationFieldData(
