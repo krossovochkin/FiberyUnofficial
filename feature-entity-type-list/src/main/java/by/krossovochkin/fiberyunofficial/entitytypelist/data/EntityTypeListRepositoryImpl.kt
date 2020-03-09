@@ -2,8 +2,6 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListRepository
