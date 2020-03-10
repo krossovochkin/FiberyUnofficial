@@ -133,6 +133,15 @@ class EntityListRepositoryImpl(
         entityListFiltersSortStorage.setSort(entityType.name, sort)
     }
 
+    override fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String> {
+        return entityListFiltersSortStorage.getRawFilter(entityType.name) to
+                entityListFiltersSortStorage.getRawParams(entityType.name)
+    }
+
+    override fun getEntityListSort(entityType: FiberyEntityTypeSchema): String {
+        return entityListFiltersSortStorage.getRawSort(entityType.name)
+    }
+
     companion object {
         private const val PARAM_ID = "\$id"
     }

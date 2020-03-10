@@ -16,4 +16,8 @@ interface EntityListRepository {
     fun setEntityListFilter(entityType: FiberyEntityTypeSchema, filter: String, params: String)
 
     fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String)
+
+    fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String>
+
+    fun getEntityListSort(entityType: FiberyEntityTypeSchema): String
 }

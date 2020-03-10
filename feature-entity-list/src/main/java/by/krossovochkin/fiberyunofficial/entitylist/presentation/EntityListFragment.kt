@@ -114,10 +114,10 @@ class EntityListFragment(
                     parentListener?.onBackPressed()
                 }
                 is EntityListNavEvent.OnFilterSelectedEvent -> {
-                    showUpdateFilterDialog()
+                    showUpdateFilterDialog(navEvent.filter, navEvent.params)
                 }
                 is EntityListNavEvent.OnSortSelectedEvent -> {
-                    showUpdateSortDialog()
+                    showUpdateSortDialog(navEvent.sort)
                 }
                 is EntityListNavEvent.OnCreateEntityEvent -> {
                     onCreateEntity(navEvent.entityType)
@@ -152,8 +152,14 @@ class EntityListFragment(
         }
     }
 
-    private fun showUpdateFilterDialog() {
+    private fun showUpdateFilterDialog(
+        filter: String,
+        params: String
+    ) {
         val binding = DialogFilterBinding.inflate(layoutInflater)
+        binding.filterTextInput.setText(filter)
+        binding.paramsTextInput.setText(params)
+
         AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .setTitle(getString(R.string.dialog_filter_title))
@@ -168,8 +174,12 @@ class EntityListFragment(
             .show()
     }
 
-    private fun showUpdateSortDialog() {
+    private fun showUpdateSortDialog(
+        sort: String
+    ) {
         val binding = DialogSortBinding.inflate(layoutInflater)
+        binding.sortTextInput.setText(sort)
+
         AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .setTitle(getString(R.string.dialog_sort_title))

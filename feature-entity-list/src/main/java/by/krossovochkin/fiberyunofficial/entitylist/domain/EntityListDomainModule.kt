@@ -29,4 +29,20 @@ object EntityListDomainModule {
     ): SetEntityListSortInteractor {
         return SetEntityListSortInteractorImpl(entityListRepository)
     }
+
+    @JvmStatic
+    @Provides
+    fun getEntityListFilterInteractor(
+        entityListRepository: EntityListRepository
+    ): GetEntityListFilterInteractor {
+        return GetEntityListFilterInteractorImpl(entityListRepository)
+    }
+
+    @JvmStatic
+    @Provides
+    fun getEntityListSortInteractor(
+        entityListRepository: EntityListRepository
+    ): GetEntityListSortInteractor {
+        return GetEntityListSortInteractorImpl(entityListRepository)
+    }
 }

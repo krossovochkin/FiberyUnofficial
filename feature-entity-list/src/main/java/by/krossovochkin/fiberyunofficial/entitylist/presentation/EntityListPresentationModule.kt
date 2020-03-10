@@ -3,7 +3,9 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
+import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import dagger.Module
@@ -36,12 +38,16 @@ object EntityListPresentationModule {
         getEntityListInteractor: GetEntityListInteractor,
         setEntityListFilterInteractor: SetEntityListFilterInteractor,
         setEntityListSortInteractor: SetEntityListSortInteractor,
+        getEntityListFilterInteractor: GetEntityListFilterInteractor,
+        getEntityListSortInteractor: GetEntityListSortInteractor,
         entityListArgs: EntityListFragment.Args
     ): EntityListViewModelFactory {
         return EntityListViewModelFactory(
             getEntityListInteractor,
             setEntityListFilterInteractor,
             setEntityListSortInteractor,
+            getEntityListFilterInteractor,
+            getEntityListSortInteractor,
             entityListArgs
         )
     }

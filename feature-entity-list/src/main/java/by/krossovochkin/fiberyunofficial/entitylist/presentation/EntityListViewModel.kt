@@ -13,7 +13,9 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitylist.R
+import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
+import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import kotlinx.coroutines.launch
@@ -22,9 +24,11 @@ import kotlinx.coroutines.runBlocking
 private const val PAGE_SIZE = 5
 
 class EntityListViewModel(
-    private val getEntityListInteractor: GetEntityListInteractor,
+    getEntityListInteractor: GetEntityListInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
+    private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
+    private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
 
@@ -92,11 +96,25 @@ class EntityListViewModel(
     }
 
     fun onFilterClicked() {
-        mutableNavigation.value = Event(EntityListNavEvent.OnFilterSelectedEvent)
+        viewModelScope.launch {
+            val (filter, params) = getEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema)
+            mutableNavigation.value = Event(
+                EntityListNavEvent.OnFilterSelectedEvent(
+                    filter = filter,
+                    params = params
+                )
+            )
+        }
     }
 
     fun onSortClicked() {
-        mutableNavigation.value = Event(EntityListNavEvent.OnSortSelectedEvent)
+        viewModelScope.launch {
+            mutableNavigation.value = Event(
+                EntityListNavEvent.OnSortSelectedEvent(
+                    sort = getEntityListSortInteractor.execute(entityListArgs.entityTypeSchema)
+                )
+            )
+        }
     }
 
     fun onCreateEntityClicked() {

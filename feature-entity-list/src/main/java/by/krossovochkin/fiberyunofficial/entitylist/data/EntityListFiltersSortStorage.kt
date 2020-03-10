@@ -16,6 +16,12 @@ interface EntityListFiltersSortStorage {
     fun getParams(entityType: String): Map<String, Any>?
 
     fun getSort(entityType: String): List<Any>?
+
+    fun getRawFilter(entityType: String): String
+
+    fun getRawParams(entityType: String): String
+
+    fun getRawSort(entityType: String): String
 }
 
 private const val KEY_PREFS_FILTERS = "ENTITY_LIST_FILTERS"
@@ -41,8 +47,8 @@ class EntityListFiltersSortStorageImpl(
     }
 
     override fun getFilter(entityType: String): List<Any>? {
-        val json = filterPrefs.getString(entityType, "")
-        return if (!json.isNullOrEmpty()) {
+        val json = getRawFilter(entityType)
+        return if (json.isNotEmpty()) {
             moshi
                 .adapter<List<Any>>(Types.newParameterizedType(List::class.java, Any::class.java))
                 .fromJson(json)
@@ -51,9 +57,13 @@ class EntityListFiltersSortStorageImpl(
         }
     }
 
+    override fun getRawFilter(entityType: String): String {
+        return filterPrefs.getString(entityType, "").orEmpty()
+    }
+
     override fun getParams(entityType: String): Map<String, Any>? {
-        val json = paramsPrefs.getString(entityType, "")
-        return if (!json.isNullOrEmpty()) {
+        val json = getRawParams(entityType)
+        return if (json.isNotEmpty()) {
             moshi
                 .adapter<Map<String, Any>>(
                     Types.newParameterizedType(
@@ -68,14 +78,22 @@ class EntityListFiltersSortStorageImpl(
         }
     }
 
+    override fun getRawParams(entityType: String): String {
+        return paramsPrefs.getString(entityType, "").orEmpty()
+    }
+
     override fun getSort(entityType: String): List<Any>? {
-        val json = sortPrefs.getString(entityType, "")
-        return if (!json.isNullOrEmpty()) {
+        val json = getRawSort(entityType)
+        return if (json.isNotEmpty()) {
             moshi
                 .adapter<List<Any>>(Types.newParameterizedType(List::class.java, Any::class.java))
                 .fromJson(json)
         } else {
             null
         }
+    }
+
+    override fun getRawSort(entityType: String): String {
+        return sortPrefs.getString(entityType, "").orEmpty()
     }
 }
