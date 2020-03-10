@@ -4,7 +4,6 @@ import android.content.res.ColorStateList
 import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.annotation.MenuRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat

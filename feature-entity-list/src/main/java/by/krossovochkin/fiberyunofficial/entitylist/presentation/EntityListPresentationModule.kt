@@ -32,6 +32,7 @@ object EntityListPresentationModule {
         return ViewModelProvider(fragment, entityListViewModelFactory).get()
     }
 
+    @Suppress("LongParameterList")
     @JvmStatic
     @Provides
     fun entityListViewModelFactory(
