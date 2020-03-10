@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +14,10 @@ import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.databinding.FragmentAppListBinding
 import by.krossovochkin.fiberyunofficial.applist.databinding.ItemAppBinding
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -25,7 +26,7 @@ import javax.inject.Inject
 
 class AppListFragment(
     private val appListParentComponent: AppListParentComponent
-) : BaseFragment(R.layout.fragment_app_list) {
+) : Fragment(R.layout.fragment_app_list) {
 
     @Inject
     lateinit var viewModel: AppListViewModel
@@ -93,10 +94,10 @@ class AppListFragment(
             }
         })
 
-        initToolbar(
-            toolbar = binding.appListToolbar,
+        binding.appListToolbar.initToolbar(
+            activity = requireActivity(),
             title = context!!.getString(R.string.title_app_list),
-            bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary)
+            bgColorInt = ColorUtils.getColor(requireContext(), R.attr.colorPrimary)
         )
     }
 

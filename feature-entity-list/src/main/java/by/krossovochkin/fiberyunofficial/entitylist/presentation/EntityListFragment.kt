@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
@@ -28,7 +29,7 @@ import javax.inject.Inject
 
 class EntityListFragment(
     private val entityListParentComponent: EntityListParentComponent
-) : BaseFragment(R.layout.fragment_entity_list) {
+) : Fragment(R.layout.fragment_entity_list) {
 
     @Inject
     lateinit var viewModel: EntityListViewModel
@@ -127,8 +128,8 @@ class EntityListFragment(
 
     private fun initToolbar() {
         with(viewModel.toolbarViewState) {
-            initToolbar(
-                toolbar = binding.entityListToolbar,
+            binding.entityListToolbar.initToolbar(
+                activity = requireActivity(),
                 title = title,
                 bgColorInt = bgColorInt,
                 hasBackButton = true,

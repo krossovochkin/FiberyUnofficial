@@ -3,9 +3,10 @@ package by.krossovochkin.fiberyunofficial.entitycreate.presentation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
+import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 class EntityCreateFragment(
     private val entityCreateComponent: EntityCreateParentComponent
-) : BaseFragment(R.layout.fragment_entity_create) {
+) : Fragment(R.layout.fragment_entity_create) {
 
     @Inject
     lateinit var viewModel: EntityCreateViewModel
@@ -60,8 +61,8 @@ class EntityCreateFragment(
         }
 
         with(viewModel.toolbarViewState) {
-            initToolbar(
-                toolbar = binding.entityCreateToolbar,
+            binding.entityCreateToolbar.initToolbar(
+                activity = requireActivity(),
                 title = getString(R.string.toolbar_title_create, title),
                 bgColorInt = bgColorInt,
                 hasBackButton = true,

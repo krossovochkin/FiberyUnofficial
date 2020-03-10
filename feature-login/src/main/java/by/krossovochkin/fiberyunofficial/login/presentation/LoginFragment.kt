@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
@@ -25,7 +25,7 @@ private const val JS_EXTRACT_TOKEN =
 
 class LoginFragment(
     private val loginComponent: LoginParentComponent
-) : BaseFragment(R.layout.fragment_login) {
+) : Fragment(R.layout.fragment_login) {
 
     @Inject
     lateinit var viewModel: LoginViewModel

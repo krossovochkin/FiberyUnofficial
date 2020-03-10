@@ -4,13 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
@@ -31,7 +32,7 @@ import javax.inject.Inject
 
 class EntityDetailsFragment(
     private val entityDetailsParentComponent: EntityDetailsParentComponent
-) : BaseFragment(R.layout.fragment_entity_details) {
+) : Fragment(R.layout.fragment_entity_details) {
 
     @Inject
     lateinit var viewModel: EntityDetailsViewModel
@@ -180,8 +181,8 @@ class EntityDetailsFragment(
         })
 
         with(viewModel.toolbarViewState) {
-            initToolbar(
-                toolbar = binding.entityDetailsToolbar,
+            binding.entityDetailsToolbar.initToolbar(
+                activity = requireActivity(),
                 title = title,
                 bgColorInt = bgColorInt,
                 hasBackButton = true,

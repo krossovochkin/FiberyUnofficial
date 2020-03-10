@@ -4,14 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.presentation.BaseFragment
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
@@ -25,7 +26,7 @@ import javax.inject.Inject
 
 class EntityTypeListFragment(
     private val entityTypeListParentComponent: EntityTypeListParentComponent
-) : BaseFragment(R.layout.fragment_entity_type_list) {
+) : Fragment(R.layout.fragment_entity_type_list) {
 
     @Inject
     lateinit var viewModel: EntityTypeListViewModel
@@ -97,10 +98,10 @@ class EntityTypeListFragment(
             }
         })
 
-        initToolbar(
-            toolbar = binding.entityTypeListToolbar,
-            title = context!!.getString(R.string.title_entity_type_list),
-            bgColorInt = ColorUtils.getColor(context!!, R.attr.colorPrimary),
+        binding.entityTypeListToolbar.initToolbar(
+            activity = requireActivity(),
+            title = requireContext().getString(R.string.title_entity_type_list),
+            bgColorInt = ColorUtils.getColor(requireContext(), R.attr.colorPrimary),
             hasBackButton = true,
             onBackPressed = { viewModel.onBackPressed() }
         )
