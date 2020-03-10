@@ -96,7 +96,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldTextItem(
                 title = field.title,
-                text = field.value
+                text = field.value.orEmpty()
             )
         )
     }
@@ -129,7 +129,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldSingleSelectItem(
                 title = field.title,
-                text = field.value,
+                text = field.value.orEmpty(),
                 values = field.values,
                 fieldSchema = field.schema
             )
@@ -142,7 +142,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldRichTextItem(
                 title = field.title,
-                value = field.value
+                value = field.value.orEmpty()
             )
         )
     }
@@ -151,7 +151,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldRelationItem(
                 title = field.title,
-                entityName = field.fiberyEntityData.title,
+                entityName = field.fiberyEntityData?.title.orEmpty(),
                 entityData = field.fiberyEntityData
             )
         )
@@ -173,7 +173,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldCheckboxItem(
                 title = field.title,
-                value = field.value
+                value = field.value ?: false
             )
         )
     }
@@ -249,7 +249,7 @@ data class FieldRichTextItem(
 data class FieldRelationItem(
     val title: String,
     val entityName: String,
-    val entityData: FiberyEntityData
+    val entityData: FiberyEntityData?
 ) : ListItem
 
 data class FieldCollectionItem(

@@ -73,35 +73,35 @@ sealed class FieldData : Parcelable {
     @Parcelize
     data class TextFieldData(
         val title: String,
-        val value: String,
+        val value: String?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
     data class NumberFieldData(
         val title: String,
-        val value: BigDecimal,
+        val value: BigDecimal?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
     data class CheckboxFieldData(
         val title: String,
-        val value: Boolean,
+        val value: Boolean?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
     data class DateTimeFieldData(
         val title: String,
-        val value: Date,
+        val value: Date?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
     data class SingleSelectFieldData(
         val title: String,
-        val value: String,
+        val value: String?,
         val values: List<SingleSelectItemData>,
         override val schema: FiberyFieldSchema
     ) : FieldData()
@@ -115,14 +115,14 @@ sealed class FieldData : Parcelable {
     @Parcelize
     data class RichTextFieldData(
         val title: String,
-        val value: String,
+        val value: String?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
     data class RelationFieldData(
         val title: String,
-        val fiberyEntityData: FiberyEntityData,
+        val fiberyEntityData: FiberyEntityData?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 

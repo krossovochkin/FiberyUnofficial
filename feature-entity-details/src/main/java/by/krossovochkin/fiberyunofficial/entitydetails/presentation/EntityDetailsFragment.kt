@@ -91,7 +91,9 @@ class EntityDetailsFragment(
                 binding.fieldRelationTitleView.text = item.title
                 binding.fieldRelationEntityNameTextView.text = item.entityName
 
-                itemView.setOnClickListener { viewModel.selectEntity(item.entityData) }
+                item.entityData?.let { entityData ->
+                    itemView.setOnClickListener { viewModel.selectEntity(entityData) }
+                }
             }
         },
         adapterDelegateLayoutContainer<FieldCollectionItem, ListItem>(

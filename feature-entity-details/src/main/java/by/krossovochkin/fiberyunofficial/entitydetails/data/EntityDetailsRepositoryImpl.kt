@@ -18,7 +18,6 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import retrofit2.await
-import java.math.BigDecimal
 import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
@@ -301,7 +300,7 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.TextFieldData {
         return FieldData.TextFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = data.value as String,
+            value = data.value as? String,
             schema = fieldSchema
         )
     }
@@ -312,11 +311,7 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.NumberFieldData {
         return FieldData.NumberFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = if (data.value == null) {
-                BigDecimal.ZERO
-            } else {
-                data.value.toString().toBigDecimal()
-            },
+            value = data.value?.toString()?.toBigDecimal(),
             schema = fieldSchema
         )
     }
@@ -327,7 +322,7 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.CheckboxFieldData {
         return FieldData.CheckboxFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = data.value as? Boolean ?: false,
+            value = data.value as? Boolean,
             schema = fieldSchema
         )
     }
@@ -337,7 +332,9 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.DateTimeFieldData {
-        val value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(data.value as String)!!
+        val value = (data.value as? String)?.let {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(it)
+        }
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,
@@ -351,7 +348,9 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.SingleSelectFieldData {
         return FieldData.SingleSelectFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = (data.value as Map<String, Any>)[FiberyApiConstants.Field.ENUM_NAME.value] as String,
+            value = (data.value as? Map<String, Any>)
+                ?.get(FiberyApiConstants.Field.ENUM_NAME.value)
+                    as? String,
             values = fiberyApiRepository.getSingleSelectValues(fieldSchema.type),
             schema = fieldSchema
         )
@@ -361,16 +360,26 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         dataEntry: Map.Entry<String, Any>
     ): FieldData.RelationFieldData {
-        val data = dataEntry.value as Map<String, Any>
+        val data = dataEntry.value as? Map<String, Any>
         val typeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type)
+        val id = data?.get(FiberyApiConstants.Field.ID.value) as? String
+        val publicId = data?.get(FiberyApiConstants.Field.PUBLIC_ID.value) as? String
+        val title = data?.get(typeSchema.fields.find { it.meta.isUiTitle }!!.name) as? String
+
+        val entityData = if (id != null && publicId != null && title != null) {
+            FiberyEntityData(
+                id = id,
+                publicId = publicId,
+                title = title,
+                schema = typeSchema
+            )
+        } else {
+            null
+        }
+
         return FieldData.RelationFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            fiberyEntityData = FiberyEntityData(
-                id = data[FiberyApiConstants.Field.ID.value] as String,
-                publicId = data[FiberyApiConstants.Field.PUBLIC_ID.value] as String,
-                title = data[typeSchema.fields.find { it.meta.isUiTitle }!!.name] as String,
-                schema = typeSchema
-            ),
+            fiberyEntityData = entityData,
             schema = fieldSchema
         )
     }
@@ -382,7 +391,7 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.CollectionFieldData {
         return FieldData.CollectionFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            count = (data.value as Number).toInt(),
+            count = (data.value as? Number)?.toInt() ?: 0,
             entityTypeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type),
             entityData = entityData,
             schema = fieldSchema
