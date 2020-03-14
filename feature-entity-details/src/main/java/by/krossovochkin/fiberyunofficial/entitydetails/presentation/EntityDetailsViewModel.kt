@@ -15,8 +15,9 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntitySingleSelectInteractor
 import kotlinx.coroutines.launch
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
@@ -107,7 +108,9 @@ class EntityDetailsViewModel(
         return listOf(
             FieldTextItem(
                 title = field.title,
-                text = SimpleDateFormat.getInstance().format(field.value)
+                text = field.value
+                    ?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    .orEmpty()
             )
         )
     }

@@ -17,8 +17,9 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.await
-import java.text.SimpleDateFormat
 
 class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
@@ -327,13 +328,15 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
-    @SuppressLint("SimpleDateFormat")
     private fun mapDateTimeFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.DateTimeFieldData {
         val value = (data.value as? String)?.let {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(it)
+            LocalDateTime.parse(
+                it,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            )
         }
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),

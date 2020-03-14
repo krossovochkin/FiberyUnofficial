@@ -44,6 +44,7 @@ androidExtensions {
 
 dependencies {
     api d.core.kotlin_stdlib
+    api d.core.date_time
     api d.core.dagger
     kapt d.core.dagger_compiler
 

@@ -3,8 +3,8 @@ package by.krossovochkin.fiberyunofficial.core.domain
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
-import java.util.Date
 
 @Parcelize
 data class FiberyAppData(
@@ -94,7 +94,7 @@ sealed class FieldData : Parcelable {
     @Parcelize
     data class DateTimeFieldData(
         val title: String,
-        val value: Date?,
+        val value: LocalDateTime?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
