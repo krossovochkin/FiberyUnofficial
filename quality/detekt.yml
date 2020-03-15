@@ -33,6 +33,8 @@ style:
     active: false
   OptionalWhenBraces:
     active: false
+  ReturnCount:
+    active: false
 
 potential-bugs:
   LateinitUsage:
