@@ -1,4 +1,4 @@
-<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.5.0" target="_blank">![](https://img.shields.io/badge/version-0.5.0-yellow)</a>
+<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.6.0" target="_blank">![](https://img.shields.io/badge/version-0.6.0-yellow)</a>
 
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
@@ -40,13 +40,18 @@ Fibery is a work management platform that adapts to companies and grows with the
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_create.png?raw=true" width="200"/>
 
   - Entity name
+  
+### Extensions
+
+  - Workflow (single-select like)
+  - Assignments (many-to-many relation with User entity)
 
 ### Miscellaneous
 
   - Dark THeme support
 
 ## Missing Features
-- Updating information (all screens are read-only)
+- Updating information (all screens are read-only by default)
 - Views
     - Table
     - Board
@@ -56,10 +61,7 @@ Fibery is a work management platform that adapts to companies and grows with the
     - etc.
 - Extensions
     - Files
-    - Assignments
     - Avatar
-    - Comments
-    - Workflow
     - Comments
     - etc.
 
