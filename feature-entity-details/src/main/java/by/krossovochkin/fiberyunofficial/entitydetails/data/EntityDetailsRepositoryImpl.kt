@@ -30,11 +30,13 @@ class EntityDetailsRepositoryImpl(
         val dto = getEntityDetailsDto(entityData)
 
         val documentSchema = getDocumentFieldSchema(entityData)
-        val documentData = FieldData.RichTextFieldData(
-            title = documentSchema.name.normalizeTitle(),
-            value = getDocumentDto(documentSchema, entityData)?.content ?: "",
-            schema = documentSchema
-        )
+        val documentData = documentSchema?.let {
+            FieldData.RichTextFieldData(
+                title = documentSchema.name.normalizeTitle(),
+                value = getDocumentDto(documentSchema, entityData)?.content ?: "",
+                schema = documentSchema
+            )
+        }
 
         return mapEntityDetailsData(
             dto = dto,
@@ -146,8 +148,9 @@ class EntityDetailsRepositoryImpl(
 
     private fun getDocumentFieldSchema(
         entityData: FiberyEntityData
-    ): FiberyFieldSchema {
-        return entityData.schema.fields.find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }!!
+    ): FiberyFieldSchema? {
+        return entityData.schema.fields
+            .find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
     }
 
     private suspend fun getDocumentDto(
@@ -185,7 +188,7 @@ class EntityDetailsRepositoryImpl(
     private suspend fun mapEntityDetailsData(
         dto: FiberyResponseEntityDto,
         entityData: FiberyEntityData,
-        documentData: FieldData.RichTextFieldData
+        documentData: FieldData.RichTextFieldData?
     ): FiberyEntityDetailsData {
         return dto.result.map {
             val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
@@ -203,7 +206,7 @@ class EntityDetailsRepositoryImpl(
                 id = id,
                 publicId = publicId,
                 title = title,
-                fields = listOf(documentData) +
+                fields = (documentData?.let(::listOf) ?: emptyList()) +
                         fields
                             .sortedBy { field: FieldData -> field.schema.meta.uiOrder },
                 schema = entityData.schema
