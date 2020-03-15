@@ -14,6 +14,7 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandAr
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
@@ -119,7 +120,7 @@ class EntityDetailsRepositoryImpl(
             }
             .map { fieldSchema ->
                 val titleFieldName = fiberyApiRepository.getTypeSchema(fieldSchema.type)
-                    .fields.find { it.meta.isUiTitle }!!.name
+                    .getUiTitle()
                 mapOf(
                     fieldSchema.name to listOf(
                         FiberyApiConstants.Field.ID.value,
@@ -191,10 +192,16 @@ class EntityDetailsRepositoryImpl(
         documentData: FieldData.RichTextFieldData?
     ): FiberyEntityDetailsData {
         return dto.result.map {
-            val titleFieldName = entityData.schema.fields.find { it.meta.isUiTitle }!!.name
-            val title = it[titleFieldName] as String
-            val id = it[FiberyApiConstants.Field.ID.value] as String
-            val publicId = it[FiberyApiConstants.Field.PUBLIC_ID.value] as String
+            val titleFieldName = entityData.schema.getUiTitle()
+            val title = requireNotNull(it[titleFieldName]) {
+                "title is missing"
+            } as String
+            val id = requireNotNull(it[FiberyApiConstants.Field.ID.value]) {
+                "id is missing"
+            } as String
+            val publicId = requireNotNull(it[FiberyApiConstants.Field.PUBLIC_ID.value]) {
+                "publicId is missing"
+            } as String
 
             val fields = mapEntityDetailsFields(
                 result = it,
@@ -227,10 +234,10 @@ class EntityDetailsRepositoryImpl(
         return result
             .filter { it.key !in defaultFieldKeys }
             .mapNotNull {
-                val fieldSchema = entityData.schema.fields
+                val fieldSchema = requireNotNull(entityData.schema.fields
                     .find { field: FiberyFieldSchema ->
                         field.name == it.key || field.name == it.key.unwrapCollectionCount()
-                    }!!
+                    }) { "fieldSchema for key ${it.key} is missing" }
                 when (fieldSchema.type) {
                     FiberyApiConstants.FieldType.TEXT.value -> {
                         mapTextFieldData(
@@ -370,7 +377,7 @@ class EntityDetailsRepositoryImpl(
         val typeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type)
         val id = data?.get(FiberyApiConstants.Field.ID.value) as? String
         val publicId = data?.get(FiberyApiConstants.Field.PUBLIC_ID.value) as? String
-        val title = data?.get(typeSchema.fields.find { it.meta.isUiTitle }!!.name) as? String
+        val title = data?.get(typeSchema.getUiTitle()) as? String
 
         val entityData = if (id != null && publicId != null && title != null) {
             FiberyEntityData(
@@ -440,6 +447,12 @@ class EntityDetailsRepositoryImpl(
                 )
             )
         )
+    }
+
+    private fun FiberyEntityTypeSchema.getUiTitle(): String {
+        return requireNotNull(
+            this.fields.find { it.meta.isUiTitle }
+        ) { "title field name is missing: $this" }.name
     }
 
     companion object {

@@ -24,7 +24,7 @@ class EntityListRepositoryImpl(
         pageSize: Int,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ): List<FiberyEntityData> {
-        val uiTitleType = entityType.fields.find { it.meta.isUiTitle }!!.name
+        val uiTitleType = entityType.getUiTitle()
         val idType = FiberyApiConstants.Field.ID.value
         val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
 
@@ -61,9 +61,9 @@ class EntityListRepositoryImpl(
         ).first()
 
         return dto.result.map {
-            val title = it[uiTitleType] as String
-            val id = it[idType] as String
-            val publicId = it[publicIdType] as String
+            val title = requireNotNull(it[uiTitleType]) { "title is missing" } as String
+            val id = requireNotNull(it[idType]) { "id is missing" } as String
+            val publicId = requireNotNull(it[publicIdType]) { "publicId is missing" } as String
             FiberyEntityData(
                 id = id,
                 publicId = publicId,
@@ -80,9 +80,9 @@ class EntityListRepositoryImpl(
         return entityParams
             ?.let { (field, _) ->
                 val fieldName =
-                    fiberyApiRepository.getTypeSchema(entityType.name)
-                        .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }!!
-                        .name
+                    requireNotNull(fiberyApiRepository.getTypeSchema(entityType.name)
+                        .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }
+                    ) { "relation wasn't found" }.name
 
                 listOf(
                     FiberyApiConstants.Operator.EQUALS.value,
@@ -140,6 +140,12 @@ class EntityListRepositoryImpl(
 
     override fun getEntityListSort(entityType: FiberyEntityTypeSchema): String {
         return entityListFiltersSortStorage.getRawSort(entityType.name)
+    }
+
+    private fun FiberyEntityTypeSchema.getUiTitle(): String {
+        return requireNotNull(
+            this.fields.find { it.meta.isUiTitle }
+        ) { "title field name is missing: $this" }.name
     }
 
     companion object {
