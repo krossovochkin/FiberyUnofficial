@@ -88,5 +88,13 @@
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="entity"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData"
+            app:nullable="true" />
+        <argument
+            android:name="fieldSchema"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema"
+            app:nullable="true" />
     </fragment>
 </navigation>

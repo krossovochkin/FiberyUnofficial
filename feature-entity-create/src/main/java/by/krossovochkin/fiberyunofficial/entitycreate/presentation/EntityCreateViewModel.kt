@@ -29,7 +29,8 @@ class EntityCreateViewModel(
     fun createEntity(name: String) {
         viewModelScope.launch {
             try {
-                entityCreateInteractor.execute(entityCreateArgs.entityTypeSchema, name)
+                entityCreateInteractor
+                    .execute(entityCreateArgs.entityTypeSchema, name, entityCreateArgs.entityParams)
                 mutableNavigation.postValue(
                     Event(EntityCreateNavEvent.OnEntityCreateSuccessEvent)
                 )

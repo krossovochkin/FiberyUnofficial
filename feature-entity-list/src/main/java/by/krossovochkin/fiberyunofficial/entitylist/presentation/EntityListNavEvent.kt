@@ -2,6 +2,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 
 sealed class EntityListNavEvent {
 
@@ -21,6 +22,7 @@ sealed class EntityListNavEvent {
     ) : EntityListNavEvent()
 
     data class OnCreateEntityEvent(
-        val entityType: FiberyEntityTypeSchema
+        val entityType: FiberyEntityTypeSchema,
+        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ) : EntityListNavEvent()
 }

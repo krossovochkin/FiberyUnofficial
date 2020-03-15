@@ -15,6 +15,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntitySingleSelectInteractor
 import kotlinx.coroutines.launch
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import java.text.DecimalFormat
@@ -109,7 +110,11 @@ class EntityDetailsViewModel(
             FieldTextItem(
                 title = field.title,
                 text = field.value
-                    ?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    ?.format(
+                        DateTimeFormatter
+                            .ofLocalizedDateTime(FormatStyle.LONG)
+                            .withZone(ZoneId.systemDefault())
+                    )
                     .orEmpty()
             )
         )

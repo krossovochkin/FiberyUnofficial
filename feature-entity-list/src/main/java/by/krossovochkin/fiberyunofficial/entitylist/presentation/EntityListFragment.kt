@@ -120,7 +120,7 @@ class EntityListFragment(
                     showUpdateSortDialog(navEvent.sort)
                 }
                 is EntityListNavEvent.OnCreateEntityEvent -> {
-                    onCreateEntity(navEvent.entityType)
+                    onCreateEntity(navEvent.entityType, navEvent.entityParams)
                 }
             }
         })
@@ -193,8 +193,11 @@ class EntityListFragment(
             .show()
     }
 
-    private fun onCreateEntity(entityType: FiberyEntityTypeSchema) {
-        parentListener?.onCreateEntity(entityType)
+    private fun onCreateEntity(
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ) {
+        parentListener?.onCreateEntity(entityType, entityParams)
     }
 
     override fun onAttach(context: Context) {
@@ -221,7 +224,10 @@ class EntityListFragment(
 
         fun onEntitySelected(entity: FiberyEntityData)
 
-        fun onCreateEntity(entityType: FiberyEntityTypeSchema)
+        fun onCreateEntity(
+            entityType: FiberyEntityTypeSchema,
+            entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        )
 
         fun onBackPressed()
     }

@@ -45,7 +45,12 @@ class MainActivityArgsProvider :
     override fun getEntityCreateArgs(arguments: Bundle): EntityCreateFragment.Args {
         val args = EntityCreateFragmentArgs.fromBundle(arguments)
         return EntityCreateFragment.Args(
-            entityTypeSchema = args.entityType
+            entityTypeSchema = args.entityType,
+            entityParams = if (args.entity != null && args.fieldSchema != null) {
+                args.fieldSchema to args.entity
+            } else {
+                null
+            }
         )
     }
 }

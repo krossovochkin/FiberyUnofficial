@@ -97,9 +97,17 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
     }
 
-    override fun onCreateEntity(entityType: FiberyEntityTypeSchema) {
+    override fun onCreateEntity(
+        entityType: FiberyEntityTypeSchema,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ) {
         binding.navHostFragment.findNavController().navigate(
-            EntityListFragmentDirections.actionEntityListToEntityCreateFragment(entityType)
+            EntityListFragmentDirections
+                .actionEntityListToEntityCreateFragment(
+                    entityType,
+                    entityParams?.second,
+                    entityParams?.first
+                )
         )
     }
 
