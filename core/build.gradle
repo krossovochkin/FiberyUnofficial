@@ -55,7 +55,7 @@ dependencies {
 
     api d.network.retrofit
     implementation d.network.retrofit_moshi
-    implementation d.network.moshi
+    api d.network.moshi
     kapt d.network.moshi_codegen
 
     api d.ui.material

@@ -1,6 +1,8 @@
 package by.krossovochkin.fiberyunofficial.core.data.api
 
+import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,12 +23,16 @@ object ApiModule {
     @JvmStatic
     @Provides
     fun fiberyApiRepository(
+        context: Context,
+        moshi: Moshi,
         fiberyServiceApi: FiberyServiceApi,
         fiberyEntityTypeMapper: FiberyEntityTypeMapper
     ): FiberyApiRepository {
         return FiberyApiRepositoryImpl(
             fiberyServiceApi = fiberyServiceApi,
-            fiberyEntityTypeMapper = fiberyEntityTypeMapper
+            fiberyEntityTypeMapper = fiberyEntityTypeMapper,
+            context = context,
+            moshi = moshi
         )
     }
 
@@ -35,5 +41,12 @@ object ApiModule {
     @Provides
     fun fiberyEntityTypeMapper(): FiberyEntityTypeMapper {
         return FiberyEntityTypeMapper()
+    }
+
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun moshi(): Moshi {
+        return Moshi.Builder().build()
     }
 }

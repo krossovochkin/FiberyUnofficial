@@ -1,5 +1,6 @@
 package by.krossovochkin.fiberyunofficial.core.data.api
 
+import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
@@ -7,6 +8,9 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandB
 import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import java.io.File
 
 interface FiberyApiRepository {
 
@@ -17,18 +21,36 @@ interface FiberyApiRepository {
     suspend fun getSingleSelectValues(typeName: String): List<FieldData.SingleSelectItemData>
 }
 
+private const val FILE_NAME_TYPE_SCHEMAS = "type_schemas.json"
+
 internal class FiberyApiRepositoryImpl(
+    private val context: Context,
+    private val moshi: Moshi,
     private val fiberyServiceApi: FiberyServiceApi,
     private val fiberyEntityTypeMapper: FiberyEntityTypeMapper
 ) : FiberyApiRepository {
 
     private var typeSchemas: List<FiberyEntityTypeSchema> = emptyList()
+    private val typeSchemasFile: File
+        get() = File(context.cacheDir, FILE_NAME_TYPE_SCHEMAS)
+
     private val singleSelectValues = mutableMapOf<String, List<FieldData.SingleSelectItemData>>()
 
     override suspend fun getTypeSchemas(): List<FiberyEntityTypeSchema> {
-        if (typeSchemas.isEmpty()) {
-            typeSchemas = loadTypeSchemas()
+        if (typeSchemas.isNotEmpty()) {
+            return typeSchemas
         }
+
+        val persistedTypeSchemas = readTypeSchemas()
+        if (persistedTypeSchemas.isNotEmpty()) {
+            typeSchemas = persistedTypeSchemas
+            return typeSchemas
+        }
+
+        val loadedTypeSchemas = loadTypeSchemas()
+        writeTypeSchemas(loadedTypeSchemas)
+        typeSchemas = loadedTypeSchemas
+
         return typeSchemas
     }
 
@@ -36,7 +58,8 @@ internal class FiberyApiRepositoryImpl(
         val type = findTypeSchema(typeName)
 
         if (type == null) {
-            typeSchemas = loadTypeSchemas()
+            invalidate()
+            typeSchemas = getTypeSchemas()
         }
 
         return findTypeSchema(typeName)!!
@@ -82,9 +105,39 @@ internal class FiberyApiRepositoryImpl(
             }
     }
 
+    private fun readTypeSchemas(): List<FiberyEntityTypeSchema> {
+        val json = if (typeSchemasFile.exists()) typeSchemasFile.readText() else null
+        return if (!json.isNullOrEmpty()) {
+            moshi
+                .adapter<List<FiberyEntityTypeSchema>>(
+                    Types.newParameterizedType(List::class.java, FiberyEntityTypeSchema::class.java)
+                )
+                .fromJson(json)
+                ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
+    private fun writeTypeSchemas(typeSchemas: List<FiberyEntityTypeSchema>) {
+        val json = moshi
+            .adapter<List<FiberyEntityTypeSchema>>(
+                Types.newParameterizedType(List::class.java, FiberyEntityTypeSchema::class.java)
+            )
+            .toJson(typeSchemas)
+        if (!json.isNullOrEmpty()) {
+            typeSchemasFile.writeText(json)
+        }
+    }
+
     private suspend fun loadTypeSchemas(): List<FiberyEntityTypeSchema> {
         return fiberyServiceApi.getSchema().first().result.fiberyTypes
             .map(fiberyEntityTypeMapper::map)
+    }
+
+    private fun invalidate() {
+        typeSchemas = emptyList()
+        typeSchemasFile.delete()
     }
 
     private fun findTypeSchema(typeName: String): FiberyEntityTypeSchema? {

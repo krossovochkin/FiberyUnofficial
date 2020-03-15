@@ -1,6 +1,7 @@
 package by.krossovochkin.fiberyunofficial.core.domain
 
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDateTime
@@ -11,6 +12,7 @@ data class FiberyAppData(
     val name: String
 ) : Parcelable
 
+@JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntityTypeSchema(
     val name: String,
@@ -22,6 +24,7 @@ data class FiberyEntityTypeSchema(
     val displayName: String = name.substringAfter("/")
 }
 
+@JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntityTypeMetaData(
     val uiColorHex: String,
@@ -30,6 +33,7 @@ data class FiberyEntityTypeMetaData(
     val isEnum: Boolean
 ) : Parcelable
 
+@JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyFieldSchema(
     val name: String,
@@ -37,6 +41,7 @@ data class FiberyFieldSchema(
     val meta: FiberyFieldMetaData
 ) : Parcelable
 
+@JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyFieldMetaData(
     val isUiTitle: Boolean,
