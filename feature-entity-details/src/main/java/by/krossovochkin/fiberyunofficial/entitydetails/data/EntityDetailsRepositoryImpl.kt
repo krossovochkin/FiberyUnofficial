@@ -5,7 +5,6 @@ import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentResponse
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
@@ -30,19 +29,9 @@ class EntityDetailsRepositoryImpl(
     override suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData {
         val dto = getEntityDetailsDto(entityData)
 
-        val documentSchema = getDocumentFieldSchema(entityData)
-        val documentData = documentSchema?.let {
-            FieldData.RichTextFieldData(
-                title = documentSchema.name.normalizeTitle(),
-                value = getDocumentDto(documentSchema, entityData)?.content ?: "",
-                schema = documentSchema
-            )
-        }
-
         return mapEntityDetailsData(
             dto = dto,
-            entityData = entityData,
-            documentData = documentData
+            entityData = entityData
         )
     }
 
@@ -61,6 +50,9 @@ class EntityDetailsRepositoryImpl(
         val collections = getEntityCollectionsQuery(
             entityData = entityData
         )
+        val richTexts = getEntityRichTextsQuery(
+            entityData = entityData
+        )
 
         return fiberyServiceApi.getEntities(
             listOf(
@@ -69,7 +61,7 @@ class EntityDetailsRepositoryImpl(
                     args = FiberyRequestCommandArgsDto(
                         FiberyRequestCommandArgsQueryDto(
                             from = entityData.schema.name,
-                            select = primitives + enums + relations + collections,
+                            select = primitives + enums + relations + collections + richTexts,
                             where = listOf(
                                 FiberyApiConstants.Operator.EQUALS.value,
                                 listOf(FiberyApiConstants.Field.ID.value),
@@ -147,49 +139,25 @@ class EntityDetailsRepositoryImpl(
             }
     }
 
-    private fun getDocumentFieldSchema(
+    private fun getEntityRichTextsQuery(
         entityData: FiberyEntityData
-    ): FiberyFieldSchema? {
+    ): List<Any> {
         return entityData.schema.fields
-            .find { it.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value }
-    }
-
-    private suspend fun getDocumentDto(
-        documentSchema: FiberyFieldSchema,
-        entityData: FiberyEntityData
-    ): FiberyDocumentResponse? {
-        val documentResponse = fiberyServiceApi.getEntities(
-            listOf(
-                FiberyRequestCommandBody(
-                    command = FiberyCommand.QUERY_ENTITY.value,
-                    args = FiberyRequestCommandArgsDto(
-                        FiberyRequestCommandArgsQueryDto(
-                            from = entityData.schema.name,
-                            select = listOf(
-                                mapOf(documentSchema.name to listOf(FiberyApiConstants.Field.DOCUMENT_SECRET.value))
-                            ),
-                            where = listOf(
-                                FiberyApiConstants.Operator.EQUALS.value,
-                                listOf(FiberyApiConstants.Field.ID.value),
-                                PARAM_ID
-                            ),
-                            limit = 1
-                        ),
-                        params = mapOf(PARAM_ID to entityData.id)
+            .filter { fieldSchema ->
+                fieldSchema.type == FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value
+            }
+            .map { fieldSchema ->
+                mapOf(
+                    fieldSchema.name to listOf(
+                        FiberyApiConstants.Field.DOCUMENT_SECRET.value
                     )
                 )
-            )
-        ).first().result.first()[documentSchema.name]
-        val documentSecret =
-            (documentResponse as Map<String, Any>)[FiberyApiConstants.Field.DOCUMENT_SECRET.value] as String
-
-        return fiberyServiceApi.getDocument(documentSecret).await()
+            }
     }
 
     private suspend fun mapEntityDetailsData(
         dto: FiberyResponseEntityDto,
-        entityData: FiberyEntityData,
-        documentData: FieldData.RichTextFieldData?
+        entityData: FiberyEntityData
     ): FiberyEntityDetailsData {
         return dto.result.map {
             val titleFieldName = entityData.schema.getUiTitle()
@@ -213,9 +181,7 @@ class EntityDetailsRepositoryImpl(
                 id = id,
                 publicId = publicId,
                 title = title,
-                fields = (documentData?.let(::listOf) ?: emptyList()) +
-                        fields
-                            .sortedBy { field: FieldData -> field.schema.meta.uiOrder },
+                fields = fields.sortedBy { field: FieldData -> field.schema.meta.uiOrder },
                 schema = entityData.schema
             )
         }.first()
@@ -259,6 +225,12 @@ class EntityDetailsRepositoryImpl(
                     }
                     FiberyApiConstants.FieldType.DATE_TIME.value -> {
                         mapDateTimeFieldData(
+                            fieldSchema = fieldSchema,
+                            data = it
+                        )
+                    }
+                    FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value -> {
+                        mapRichTextFieldData(
                             fieldSchema = fieldSchema,
                             data = it
                         )
@@ -351,6 +323,24 @@ class EntityDetailsRepositoryImpl(
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,
+            schema = fieldSchema
+        )
+    }
+
+    private suspend fun mapRichTextFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.RichTextFieldData {
+        val secret = requireNotNull(
+            (data.value as? Map<String, Any>)
+                ?.get(FiberyApiConstants.Field.DOCUMENT_SECRET.value)
+                    as? String
+        ) { "rich text secret is missing" }
+        val documentDto = fiberyServiceApi.getDocument(secret).await()
+
+        return FieldData.RichTextFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            value = documentDto?.content ?: "",
             schema = fieldSchema
         )
     }
