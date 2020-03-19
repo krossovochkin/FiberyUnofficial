@@ -112,7 +112,7 @@ class EntityDetailsViewModel(
                 text = field.value
                     ?.format(
                         DateTimeFormatter
-                            .ofLocalizedDateTime(FormatStyle.LONG)
+                            .ofLocalizedDateTime(FormatStyle.MEDIUM)
                             .withZone(ZoneId.systemDefault())
                     )
                     .orEmpty()
@@ -126,7 +126,7 @@ class EntityDetailsViewModel(
         return listOf(
             FieldTextItem(
                 title = field.title,
-                text = DecimalFormat.getInstance().format(field.value)
+                text = field.value?.let { DecimalFormat.getInstance().format(it) }.orEmpty()
             )
         )
     }
