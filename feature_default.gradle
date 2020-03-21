@@ -48,9 +48,6 @@ dependencies {
 
     kapt d.core.dagger_compiler
 
-    implementation d.androidx.lifecycle_ext
-    implementation d.androidx.lifecycle_viewmodel
-
     implementation d.ui.adapter_delegates
 
     testImplementation d.test.junit
