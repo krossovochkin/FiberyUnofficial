@@ -416,7 +416,7 @@ class EntityDetailsRepositoryImpl(
         return this.substringBefore(PREFIX_COLLECTION_COUNT)
     }
 
-    override suspend fun updateSingleSelect(
+    override suspend fun updateSingleSelectField(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
         singleSelectItem: FieldData.SingleSelectItemData
@@ -432,6 +432,27 @@ class EntityDetailsRepositoryImpl(
                             fieldSchema.name to mapOf(
                                 FiberyApiConstants.Field.ID.value to singleSelectItem.id
                             )
+                        )
+                    )
+                )
+            )
+        )
+    }
+
+    override suspend fun updateEntityField(
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema,
+        selectedEntity: FiberyEntityData?
+    ) {
+        fiberyServiceApi.updateEntity(
+            body = listOf(
+                FiberyUpdateCommandBody(
+                    command = FiberyCommand.QUERY_UPDATE.value,
+                    args = FiberyUpdateCommandArgsDto(
+                        type = entityData.schema.name,
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to entityData.id,
+                            fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
                         )
                     )
                 )

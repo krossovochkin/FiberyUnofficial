@@ -7,6 +7,8 @@ import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentCompon
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
+import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
+import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
@@ -27,7 +29,8 @@ interface MainActivityComponent :
     EntityTypeListParentComponent,
     EntityListParentComponent,
     EntityDetailsParentComponent,
-    EntityCreateParentComponent {
+    EntityCreateParentComponent,
+    EntityPickerParentComponent {
 
     @Component.Builder
     interface Builder {
@@ -69,6 +72,12 @@ abstract class MainActivityModule {
     abstract fun entityCreateArgsProvider(
         mainActivityArgsProvider: MainActivityArgsProvider
     ): EntityCreateFragment.ArgsProvider
+
+    @MainActivityScope
+    @Binds
+    abstract fun entityPickerArgsProvider(
+        mainActivityArgsProvider: MainActivityArgsProvider
+    ): EntityPickerFragment.ArgsProvider
 }
 
 @Scope

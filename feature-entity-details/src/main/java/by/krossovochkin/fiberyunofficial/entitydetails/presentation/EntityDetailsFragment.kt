@@ -1,15 +1,18 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -67,7 +70,7 @@ class EntityDetailsFragment(
                 binding.fieldSingleSelectTitleView.text = item.title
                 binding.fieldSingleSelectView.text = item.text
                 binding.root.setOnClickListener {
-                    viewModel.onSingleSelectSelected(item)
+                    viewModel.selectSingleSelectField(item)
                 }
             }
             onViewRecycled {
@@ -92,9 +95,23 @@ class EntityDetailsFragment(
                 binding.fieldRelationTitleView.text = item.title
                 binding.fieldRelationEntityNameTextView.text = item.entityName
 
-                item.entityData?.let { entityData ->
-                    itemView.setOnClickListener { viewModel.selectEntity(entityData) }
+                itemView.setOnClickListener {
+                    viewModel.selectEntityField(item.fieldSchema, item.entityData)
                 }
+
+                binding.fieldRelationOpenAction.imageTintList =
+                    ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
+                binding.fieldRelationOpenAction.setOnClickListener {
+                    item.entityData?.let(viewModel::openEntity)
+                }
+                binding.fieldRelationOpenAction.isVisible = item.isOpenAvailable
+
+                binding.fieldRelationDeleteAction.imageTintList =
+                    ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
+                binding.fieldRelationDeleteAction.setOnClickListener {
+                    item.entityData?.let { viewModel.updateEntityField(item.fieldSchema, null) }
+                }
+                binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
             }
         },
         adapterDelegateLayoutContainer<FieldCollectionItem, ListItem>(
@@ -106,7 +123,7 @@ class EntityDetailsFragment(
                 binding.fieldCollectionCountTextView.text = item.countText
 
                 itemView.setOnClickListener {
-                    viewModel.selectCollection(
+                    viewModel.selectCollectionField(
                         entityTypeSchema = item.entityTypeSchema,
                         entityData = item.entityData,
                         fieldSchema = item.fieldSchema
@@ -126,6 +143,8 @@ class EntityDetailsFragment(
         }
     )
 
+    private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -135,6 +154,21 @@ class EntityDetailsFragment(
             .build()
             .inject(this)
 
+        initList()
+        initNavigation()
+        initToolbar()
+
+        entityPickedViewModel.pickedEntity.observe(
+            viewLifecycleOwner,
+            Observer { event ->
+                event.getContentIfNotHandled()?.let { (fieldSchema, entity) ->
+                    viewModel.updateEntityField(fieldSchema, entity)
+                }
+            }
+        )
+    }
+
+    private fun initList() {
         binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityDetailsRecyclerView.adapter = adapter
 
@@ -158,7 +192,9 @@ class EntityDetailsFragment(
                     .show()
             }
         })
+    }
 
+    private fun initNavigation() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
@@ -177,9 +213,17 @@ class EntityDetailsFragment(
                 is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
                     showUpdateSingleSelectDialog(navEvent.singleSelectItem)
                 }
+                is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
+                    parentListener?.onEntityFieldEdit(
+                        fieldSchema = navEvent.fieldSchema,
+                        entity = navEvent.currentEntity
+                    )
+                }
             }
         })
+    }
 
+    private fun initToolbar() {
         with(viewModel.toolbarViewState) {
             binding.entityDetailsToolbar.initToolbar(
                 activity = requireActivity(),
@@ -203,7 +247,7 @@ class EntityDetailsFragment(
             .setTitle(item.title)
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel.updateSingleSelectValue(
+                viewModel.updateSingleSelectField(
                     currentTitle = item.text,
                     fieldSchema = item.fieldSchema,
                     selectedValue = item.values[selectedIndex]
@@ -240,6 +284,11 @@ class EntityDetailsFragment(
             entityTypeSchema: FiberyEntityTypeSchema,
             entity: FiberyEntityData,
             fieldSchema: FiberyFieldSchema
+        )
+
+        fun onEntityFieldEdit(
+            fieldSchema: FiberyFieldSchema,
+            entity: FiberyEntityData?
         )
 
         fun onBackPressed()

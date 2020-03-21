@@ -21,7 +21,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInte
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-private const val PAGE_SIZE = 5
+private const val PAGE_SIZE = 20
 
 class EntityListViewModel(
     getEntityListInteractor: GetEntityListInteractor,

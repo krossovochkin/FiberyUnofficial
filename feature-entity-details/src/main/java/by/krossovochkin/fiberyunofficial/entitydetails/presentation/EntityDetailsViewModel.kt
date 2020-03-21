@@ -13,7 +13,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
-import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntitySingleSelectInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -22,7 +23,8 @@ import java.text.DecimalFormat
 
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
-    private val updateEntitySingleSelectInteractor: UpdateEntitySingleSelectInteractor,
+    private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+    private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModel() {
 
@@ -61,12 +63,6 @@ class EntityDetailsViewModel(
         } finally {
             mutableProgress.value = false
         }
-    }
-
-    fun selectEntity(entityData: FiberyEntityData) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData)
-        )
     }
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
@@ -160,7 +156,8 @@ class EntityDetailsViewModel(
             FieldRelationItem(
                 title = field.title,
                 entityName = field.fiberyEntityData?.title.orEmpty(),
-                entityData = field.fiberyEntityData
+                entityData = field.fiberyEntityData,
+                fieldSchema = field.schema
             )
         )
     }
@@ -186,7 +183,65 @@ class EntityDetailsViewModel(
         )
     }
 
-    fun selectCollection(
+    fun selectSingleSelectField(item: FieldSingleSelectItem) {
+        mutableNavigation.value = Event(EntityDetailsNavEvent.OnSingleSelectSelectedEvent(item))
+    }
+
+    fun updateSingleSelectField(
+        currentTitle: String,
+        fieldSchema: FiberyFieldSchema,
+        selectedValue: FieldData.SingleSelectItemData
+    ) {
+        if (selectedValue.title != currentTitle) {
+            viewModelScope.launch {
+                try {
+                    mutableProgress.value = true
+                    updateSingleSelectFieldInteractor.execute(
+                        entityData = entityDetailsArgs.entityData,
+                        fieldSchema = fieldSchema,
+                        singleSelectItem = selectedValue
+                    )
+                    load()
+                } catch (e: Exception) {
+                    mutableError.value = Event(e)
+                } finally {
+                    mutableProgress.value = false
+                }
+            }
+        }
+    }
+
+    fun selectEntityField(fieldSchema: FiberyFieldSchema, entityData: FiberyEntityData?) {
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnEntityFieldEditEvent(fieldSchema, entityData)
+        )
+    }
+
+    fun openEntity(entityData: FiberyEntityData) {
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData)
+        )
+    }
+
+    fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
+        viewModelScope.launch {
+            try {
+                mutableProgress.value = true
+                updateEntityFieldInteractor.execute(
+                    entityData = entityDetailsArgs.entityData,
+                    fieldSchema = fieldSchema,
+                    selectedEntity = entity
+                )
+                load()
+            } catch (e: Exception) {
+                mutableError.value = Event(e)
+            } finally {
+                mutableProgress.value = false
+            }
+        }
+    }
+
+    fun selectCollectionField(
         entityTypeSchema: FiberyEntityTypeSchema,
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema
@@ -202,34 +257,6 @@ class EntityDetailsViewModel(
 
     fun onBackPressed() {
         mutableNavigation.value = Event(EntityDetailsNavEvent.BackEvent)
-    }
-
-    fun updateSingleSelectValue(
-        currentTitle: String,
-        fieldSchema: FiberyFieldSchema,
-        selectedValue: FieldData.SingleSelectItemData
-    ) {
-        if (selectedValue.title != currentTitle) {
-            viewModelScope.launch {
-                try {
-                    mutableProgress.value = true
-                    updateEntitySingleSelectInteractor.execute(
-                        entityData = entityDetailsArgs.entityData,
-                        fieldSchema = fieldSchema,
-                        singleSelectItem = selectedValue
-                    )
-                    load()
-                } catch (e: Exception) {
-                    mutableError.value = Event(e)
-                } finally {
-                    mutableProgress.value = false
-                }
-            }
-        }
-    }
-
-    fun onSingleSelectSelected(item: FieldSingleSelectItem) {
-        mutableNavigation.value = Event(EntityDetailsNavEvent.OnSingleSelectSelectedEvent(item))
     }
 }
 
@@ -257,8 +284,14 @@ data class FieldRichTextItem(
 data class FieldRelationItem(
     val title: String,
     val entityName: String,
-    val entityData: FiberyEntityData?
-) : ListItem
+    val entityData: FiberyEntityData?,
+    val fieldSchema: FiberyFieldSchema
+) : ListItem {
+
+    val isDeleteAvailable: Boolean = entityData != null
+
+    val isOpenAvailable: Boolean = entityData != null
+}
 
 data class FieldCollectionItem(
     val title: String,

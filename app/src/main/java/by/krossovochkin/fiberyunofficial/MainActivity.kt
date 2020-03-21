@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
@@ -13,6 +15,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
@@ -113,5 +116,23 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onEntityCreateSuccess() {
         onBackPressed()
+    }
+
+    override fun onEntityFieldEdit(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
+        binding.navHostFragment.findNavController().navigate(
+            EntityDetailsFragmentDirections
+                .actionEntityDetailsToEntityPickerFragment(
+                    fieldSchema = fieldSchema,
+                    entity = entity
+                )
+        )
+    }
+
+    override fun onEntityPicked(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
+        binding.navHostFragment.findNavController().apply {
+            ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
+                .pickEntity(fieldSchema, entity)
+            onBackPressed()
+        }
     }
 }

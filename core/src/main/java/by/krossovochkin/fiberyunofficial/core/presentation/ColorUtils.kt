@@ -61,6 +61,17 @@ object ColorUtils {
         }
     }
 
+    fun getDefaultContrastColor(context: Context): Int {
+        return ContextCompat.getColor(
+            context,
+            if (context.isDarkMode()) {
+                android.R.color.white
+            } else {
+                android.R.color.black
+            }
+        )
+    }
+
     fun getContrastColor(context: Context, @ColorInt color: Int): Int {
         return ContextCompat.getColor(
             context,

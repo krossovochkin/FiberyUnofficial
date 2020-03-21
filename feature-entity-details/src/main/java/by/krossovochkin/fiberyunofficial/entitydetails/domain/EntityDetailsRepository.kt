@@ -9,9 +9,15 @@ interface EntityDetailsRepository {
 
     suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData
 
-    suspend fun updateSingleSelect(
+    suspend fun updateSingleSelectField(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
         singleSelectItem: FieldData.SingleSelectItemData
+    )
+
+    suspend fun updateEntityField(
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema,
+        selectedEntity: FiberyEntityData?
     )
 }

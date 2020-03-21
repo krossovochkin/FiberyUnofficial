@@ -12,6 +12,11 @@ sealed class EntityDetailsNavEvent {
         val entity: FiberyEntityData
     ) : EntityDetailsNavEvent()
 
+    data class OnEntityFieldEditEvent(
+        val fieldSchema: FiberyFieldSchema,
+        val currentEntity: FiberyEntityData?
+    ) : EntityDetailsNavEvent()
+
     data class OnEntityTypeSelectedEvent(
         val entityTypeSchema: FiberyEntityTypeSchema,
         val entity: FiberyEntityData,

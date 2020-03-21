@@ -4,7 +4,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 
-interface UpdateEntitySingleSelectInteractor {
+interface UpdateSingleSelectFieldInteractor {
 
     suspend fun execute(
         entityData: FiberyEntityData,
@@ -13,15 +13,15 @@ interface UpdateEntitySingleSelectInteractor {
     )
 }
 
-class UpdateEntitySingleSelectInteractorImpl(
+class UpdateSingleSelectFieldInteractorImpl(
     private val entityDetailsRepository: EntityDetailsRepository
-) : UpdateEntitySingleSelectInteractor {
+) : UpdateSingleSelectFieldInteractor {
 
     override suspend fun execute(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
         singleSelectItem: FieldData.SingleSelectItemData
     ) {
-        return entityDetailsRepository.updateSingleSelect(entityData, fieldSchema, singleSelectItem)
+        return entityDetailsRepository.updateSingleSelectField(entityData, fieldSchema, singleSelectItem)
     }
 }

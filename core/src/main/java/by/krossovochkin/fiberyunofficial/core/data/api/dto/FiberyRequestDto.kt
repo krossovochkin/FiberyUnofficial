@@ -40,7 +40,7 @@ data class FiberyUpdateCommandBody(
 @JsonClass(generateAdapter = true)
 data class FiberyUpdateCommandArgsDto(
     val type: String,
-    val entity: Map<String, Any>? = null
+    val entity: Map<String, Any?>? = null
 )
 
 @JsonClass(generateAdapter = true)

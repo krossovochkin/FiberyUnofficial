@@ -1,2 +1,11 @@
-include ':app', ':core', ':feature-app-list', ':feature-entity-type-list', ':feature-entity-list', ':feature-entity-details', ':feature-login', ':feature-entity-create'
+include ':app',
+        ':core',
+        ':feature-app-list',
+        ':feature-entity-type-list',
+        ':feature-entity-list',
+        ':feature-entity-details',
+        ':feature-login',
+        ':feature-entity-create',
+        ':feature-entity-picker'
 rootProject.name = 'FiberyUnofficial'
+

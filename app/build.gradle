@@ -47,6 +47,7 @@ dependencies {
     implementation d.app.feature_entity_list
     implementation d.app.feature_entity_details
     implementation d.app.feature_entity_create
+    implementation d.app.feature_entity_picker
 
     kapt d.core.dagger_compiler
 

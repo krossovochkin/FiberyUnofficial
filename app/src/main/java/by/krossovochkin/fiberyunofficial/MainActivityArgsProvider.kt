@@ -7,6 +7,8 @@ import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetail
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentArgs
+import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
+import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
 
@@ -14,7 +16,8 @@ class MainActivityArgsProvider :
     EntityTypeListFragment.ArgsProvider,
     EntityListFragment.ArgsProvider,
     EntityDetailsFragment.ArgsProvider,
-    EntityCreateFragment.ArgsProvider {
+    EntityCreateFragment.ArgsProvider,
+    EntityPickerFragment.ArgsProvider {
 
     override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
         val args = EntityTypeListFragmentArgs.fromBundle(arguments)
@@ -51,6 +54,14 @@ class MainActivityArgsProvider :
             } else {
                 null
             }
+        )
+    }
+
+    override fun getEntityPickerArgs(arguments: Bundle): EntityPickerFragment.Args {
+        val args = EntityPickerFragmentArgs.fromBundle(arguments)
+        return EntityPickerFragment.Args(
+            fieldSchema = args.fieldSchema,
+            entity = args.entity
         )
     }
 }

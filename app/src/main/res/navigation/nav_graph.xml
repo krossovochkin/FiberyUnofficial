@@ -69,6 +69,9 @@
             android:id="@+id/action_entityDetails_to_entityList"
             app:destination="@id/entityList"
             app:enterAnim="@anim/fragment_open_enter" />
+        <action
+            android:id="@+id/action_entityDetails_to_entityPickerFragment"
+            app:destination="@id/entityPickerFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -95,6 +98,18 @@
         <argument
             android:name="fieldSchema"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/entityPickerFragment"
+        android:name="by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment"
+        android:label="EntityPickerFragment" >
+        <argument
+            android:name="fieldSchema"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema" />
+        <argument
+            android:name="entity"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData"
             app:nullable="true" />
     </fragment>
 </navigation>

@@ -22,7 +22,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl("https://${authStorage.getAccount()}.fibery.io/")
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create().withNullSerialization())
             .build()
     }
 

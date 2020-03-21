@@ -16,9 +16,17 @@ object EntityDetailsDomainModule {
 
     @JvmStatic
     @Provides
-    fun updateEntitySingleSelectInteractor(
+    fun updateSingleSelectFieldInteractor(
         entityDetailsRepository: EntityDetailsRepository
-    ): UpdateEntitySingleSelectInteractor {
-        return UpdateEntitySingleSelectInteractorImpl(entityDetailsRepository)
+    ): UpdateSingleSelectFieldInteractor {
+        return UpdateSingleSelectFieldInteractorImpl(entityDetailsRepository)
+    }
+
+    @JvmStatic
+    @Provides
+    fun updateEntityFieldInteractor(
+        entityDetailsRepository: EntityDetailsRepository
+    ): UpdateEntityFieldInteractor {
+        return UpdateEntityFieldInteractorImpl(entityDetailsRepository)
     }
 }
