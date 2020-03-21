@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">feature-entity-details</string>
+    <string name="content_description_open_relation">Open Relation</string>
+    <string name="content_description_delete_relation">Delete Relation</string>
 </resources>

@@ -13,7 +13,10 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.6.0"
+    id "io.gitlab.arturbosch.detekt" version "1.7.0-beta2"
+}
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.7.0-beta2"
 }
 task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     failFast = true
@@ -26,13 +29,10 @@ task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     config.from(files("$rootDir/quality/detekt.yml"))
     buildUponDefaultConfig = false
     reports {
-        html.enabled = true
+        html.enabled = false
         xml.enabled = false
         txt.enabled = false
     }
-}
-dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.6.0"
 }
 
 allprojects {

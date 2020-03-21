@@ -1,3 +1,19 @@
+/*
+   Copyright 2020 Vasya Drobushkov
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
 package by.krossovochkin.fiberyunofficial.entitydetails.data
 
 import android.annotation.SuppressLint
@@ -332,6 +348,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any>
     ): FieldData.RichTextFieldData {
         val secret = requireNotNull(
+            @Suppress("UNCHECKED_CAST")
             (data.value as? Map<String, Any>)
                 ?.get(FiberyApiConstants.Field.DOCUMENT_SECRET.value)
                     as? String
@@ -351,7 +368,9 @@ class EntityDetailsRepositoryImpl(
     ): FieldData.SingleSelectFieldData {
         return FieldData.SingleSelectFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value = (data.value as? Map<String, Any>)
+            value =
+            @Suppress("UNCHECKED_CAST")
+            (data.value as? Map<String, Any>)
                 ?.get(FiberyApiConstants.Field.ENUM_NAME.value)
                     as? String,
             values = fiberyApiRepository.getSingleSelectValues(fieldSchema.type),
@@ -363,6 +382,7 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         dataEntry: Map.Entry<String, Any>
     ): FieldData.RelationFieldData {
+        @Suppress("UNCHECKED_CAST")
         val data = dataEntry.value as? Map<String, Any>
         val typeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type)
         val id = data?.get(FiberyApiConstants.Field.ID.value) as? String
