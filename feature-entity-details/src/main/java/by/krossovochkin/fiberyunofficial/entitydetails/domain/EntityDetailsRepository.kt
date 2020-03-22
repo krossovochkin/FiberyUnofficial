@@ -28,7 +28,7 @@ interface EntityDetailsRepository {
     suspend fun updateSingleSelectField(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
-        singleSelectItem: FieldData.SingleSelectItemData
+        singleSelectItem: FieldData.EnumItemData
     )
 
     suspend fun updateEntityField(

@@ -139,12 +139,14 @@ class EntityDetailsRepositoryImpl(
             }
     }
 
-    private fun getEntityCollectionsQuery(
+    private suspend fun getEntityCollectionsQuery(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
                 fieldSchema.meta.isRelation && fieldSchema.meta.isCollection
+                        // filter out multi-select fields
+                        && !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
             }
             .map { fieldSchema ->
                 mapOf(
@@ -269,10 +271,17 @@ class EntityDetailsRepositoryImpl(
     ): FieldData? {
         return when {
             fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
-                mapSingleSelectFieldData(
-                    fieldSchema = fieldSchema,
-                    data = data
-                )
+                if (fieldSchema.meta.isCollection) {
+                    mapMultiSelectFieldData(
+                        fieldSchema = fieldSchema,
+                        data = data
+                    )
+                } else {
+                    mapSingleSelectFieldData(
+                        fieldSchema = fieldSchema,
+                        data = data
+                    )
+                }
             }
             fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection -> {
                 mapRelationFieldData(
@@ -366,14 +375,36 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
     ): FieldData.SingleSelectFieldData {
+        val values = fiberyApiRepository.getEnumValues(fieldSchema.type)
+
+        @Suppress("UNCHECKED_CAST")
+        val selectedValue = (data.value as? Map<String, String>)
+            ?.get(FiberyApiConstants.Field.ID.value)
+            ?.let { id -> values.find { value -> value.id == id } }
         return FieldData.SingleSelectFieldData(
             title = fieldSchema.name.normalizeTitle(),
-            value =
-            @Suppress("UNCHECKED_CAST")
-            (data.value as? Map<String, Any>)
-                ?.get(FiberyApiConstants.Field.ENUM_NAME.value)
-                    as? String,
-            values = fiberyApiRepository.getSingleSelectValues(fieldSchema.type),
+            selectedValue = selectedValue,
+            values = values,
+            schema = fieldSchema
+        )
+    }
+
+    private suspend fun mapMultiSelectFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.MultiSelectFieldData {
+        val values = fiberyApiRepository.getEnumValues(fieldSchema.type)
+
+        @Suppress("UNCHECKED_CAST")
+        val selectedValues = ((data.value as? Map<String, Any>)
+            ?.get(FiberyApiConstants.Field.ID.value) as? List<Map<String, String>>)
+            ?.map { it[FiberyApiConstants.Field.ID.value] }
+            ?.map { id -> values.first { value -> value.id == id } }
+            ?: emptyList()
+        return FieldData.MultiSelectFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            selectedValues = selectedValues,
+            values = values,
             schema = fieldSchema
         )
     }
@@ -439,7 +470,7 @@ class EntityDetailsRepositoryImpl(
     override suspend fun updateSingleSelectField(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
-        singleSelectItem: FieldData.SingleSelectItemData
+        singleSelectItem: FieldData.EnumItemData
     ) {
         fiberyServiceApi.updateEntity(
             body = listOf(

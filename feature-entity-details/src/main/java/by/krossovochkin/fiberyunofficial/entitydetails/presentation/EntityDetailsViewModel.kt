@@ -97,6 +97,7 @@ class EntityDetailsViewModel(
             is FieldData.NumberFieldData -> mapNumberItem(field)
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
+            is FieldData.MultiSelectFieldData -> mapMultiSelectItem(field)
             is FieldData.RichTextFieldData -> mapRichTextItem(field)
             is FieldData.RelationFieldData -> mapRelationItem(field)
             is FieldData.CollectionFieldData -> mapCollectionItem(field)
@@ -149,7 +150,20 @@ class EntityDetailsViewModel(
         return listOf(
             FieldSingleSelectItem(
                 title = field.title,
-                text = field.value.orEmpty(),
+                text = field.selectedValue?.title.orEmpty(),
+                values = field.values,
+                fieldSchema = field.schema
+            )
+        )
+    }
+
+    private fun mapMultiSelectItem(
+        field: FieldData.MultiSelectFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldMultiSelectItem(
+                title = field.title,
+                text = field.selectedValues.joinToString(separator = ", ") { it.title },
                 values = field.values,
                 fieldSchema = field.schema
             )
@@ -206,7 +220,7 @@ class EntityDetailsViewModel(
     fun updateSingleSelectField(
         currentTitle: String,
         fieldSchema: FiberyFieldSchema,
-        selectedValue: FieldData.SingleSelectItemData
+        selectedValue: FieldData.EnumItemData
     ) {
         if (selectedValue.title != currentTitle) {
             viewModelScope.launch {
@@ -288,7 +302,14 @@ data class FieldTextItem(
 data class FieldSingleSelectItem(
     val title: String,
     val text: String,
-    val values: List<FieldData.SingleSelectItemData>,
+    val values: List<FieldData.EnumItemData>,
+    val fieldSchema: FiberyFieldSchema
+) : ListItem
+
+data class FieldMultiSelectItem(
+    val title: String,
+    val text: String,
+    val values: List<FieldData.EnumItemData>,
     val fieldSchema: FiberyFieldSchema
 ) : ListItem
 

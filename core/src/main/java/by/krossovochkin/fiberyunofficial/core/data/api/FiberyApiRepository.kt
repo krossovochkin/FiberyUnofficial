@@ -34,7 +34,7 @@ interface FiberyApiRepository {
 
     suspend fun getTypeSchema(typeName: String): FiberyEntityTypeSchema
 
-    suspend fun getSingleSelectValues(typeName: String): List<FieldData.SingleSelectItemData>
+    suspend fun getEnumValues(typeName: String): List<FieldData.EnumItemData>
 }
 
 private const val FILE_NAME_TYPE_SCHEMAS = "type_schemas.json"
@@ -50,7 +50,7 @@ internal class FiberyApiRepositoryImpl(
     private val typeSchemasFile: File
         get() = File(context.cacheDir, FILE_NAME_TYPE_SCHEMAS)
 
-    private val singleSelectValues = mutableMapOf<String, List<FieldData.SingleSelectItemData>>()
+    private val singleSelectValues = mutableMapOf<String, List<FieldData.EnumItemData>>()
 
     override suspend fun getTypeSchemas(): List<FiberyEntityTypeSchema> {
         if (typeSchemas.isNotEmpty()) {
@@ -81,7 +81,7 @@ internal class FiberyApiRepositoryImpl(
         return findTypeSchema(typeName)!!
     }
 
-    override suspend fun getSingleSelectValues(typeName: String): List<FieldData.SingleSelectItemData> {
+    override suspend fun getEnumValues(typeName: String): List<FieldData.EnumItemData> {
         return if (typeName in singleSelectValues) {
             singleSelectValues[typeName]!!
         } else {
@@ -91,7 +91,7 @@ internal class FiberyApiRepositoryImpl(
         }
     }
 
-    private suspend fun loadSingleSelectValues(typeName: String): List<FieldData.SingleSelectItemData> {
+    private suspend fun loadSingleSelectValues(typeName: String): List<FieldData.EnumItemData> {
         return fiberyServiceApi
             .getEntities(
                 listOf(
@@ -117,7 +117,7 @@ internal class FiberyApiRepositoryImpl(
                 it as Map<String, String>
             }
             .map {
-                FieldData.SingleSelectItemData(
+                FieldData.EnumItemData(
                     id = it[FiberyApiConstants.Field.ID.value] as String,
                     title = it[FiberyApiConstants.Field.ENUM_NAME.value] as String
                 )

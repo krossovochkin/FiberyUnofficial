@@ -25,7 +25,7 @@ interface UpdateSingleSelectFieldInteractor {
     suspend fun execute(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
-        singleSelectItem: FieldData.SingleSelectItemData
+        singleSelectItem: FieldData.EnumItemData
     )
 }
 
@@ -36,7 +36,7 @@ class UpdateSingleSelectFieldInteractorImpl(
     override suspend fun execute(
         entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema,
-        singleSelectItem: FieldData.SingleSelectItemData
+        singleSelectItem: FieldData.EnumItemData
     ) {
         return entityDetailsRepository.updateSingleSelectField(entityData, fieldSchema, singleSelectItem)
     }

@@ -40,6 +40,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.databinding.FragmentEntit
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCheckboxBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCollectionBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldMultiSelectBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRichTextBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldSingleSelectBinding
@@ -92,6 +93,15 @@ class EntityDetailsFragment(
             }
             onViewRecycled {
                 binding.root.setOnClickListener(null)
+            }
+        },
+        adapterDelegateLayoutContainer<FieldMultiSelectItem, ListItem>(
+            layout = R.layout.item_field_multi_select
+        ) {
+            val binding = ItemFieldMultiSelectBinding.bind(this.itemView)
+            bind {
+                binding.fieldMultiSelectTitleView.text = item.title
+                binding.fieldMultiSelectView.text = item.text
             }
         },
         adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(

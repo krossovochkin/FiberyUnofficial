@@ -122,13 +122,21 @@ sealed class FieldData : Parcelable {
     @Parcelize
     data class SingleSelectFieldData(
         val title: String,
-        val value: String?,
-        val values: List<SingleSelectItemData>,
+        val selectedValue: EnumItemData?,
+        val values: List<EnumItemData>,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
     @Parcelize
-    data class SingleSelectItemData(
+    data class MultiSelectFieldData(
+        val title: String,
+        val selectedValues: List<EnumItemData>,
+        val values: List<EnumItemData>,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
+    data class EnumItemData(
         val id: String,
         val title: String
     ) : Parcelable
