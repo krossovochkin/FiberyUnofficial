@@ -3,6 +3,8 @@ complexity:
     active: false;
   StringLiteralDuplication:
     active: false
+  ComplexMethod:
+    ignoreSingleWhenExpression: true
 
 comments:
   UndocumentedPublicClass:
