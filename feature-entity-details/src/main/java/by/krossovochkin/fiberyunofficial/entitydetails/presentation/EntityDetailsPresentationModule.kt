@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
@@ -43,12 +44,14 @@ object EntityDetailsPresentationModule {
         getEntityDetailsInteractor: GetEntityDetailsInteractor,
         updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
         updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+        deleteEntityInteractor: DeleteEntityInteractor,
         entityDetailsArgs: EntityDetailsFragment.Args
     ): EntityDetailsViewModelFactory {
         return EntityDetailsViewModelFactory(
             getEntityDetailsInteractor,
             updateSingleSelectFieldInteractor,
             updateEntityFieldInteractor,
+            deleteEntityInteractor,
             entityDetailsArgs
         )
     }

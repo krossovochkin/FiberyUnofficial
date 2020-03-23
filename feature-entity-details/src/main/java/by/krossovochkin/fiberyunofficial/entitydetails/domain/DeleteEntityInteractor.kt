@@ -17,25 +17,17 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 
-interface EntityDetailsRepository {
+interface DeleteEntityInteractor {
 
-    suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData
+    suspend fun execute(entity: FiberyEntityData)
+}
 
-    suspend fun updateSingleSelectField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
-        singleSelectItem: FieldData.EnumItemData
-    )
+class DeleteEntityInteractorImpl(
+    private val entityDetailsRepository: EntityDetailsRepository
+) : DeleteEntityInteractor {
 
-    suspend fun updateEntityField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
-        selectedEntity: FiberyEntityData?
-    )
-
-    suspend fun deleteEntity(entity: FiberyEntityData)
+    override suspend fun execute(entity: FiberyEntityData) {
+        entityDetailsRepository.deleteEntity(entity)
+    }
 }

@@ -309,7 +309,16 @@ class EntityDetailsFragment(
                 title = title,
                 bgColorInt = bgColorInt,
                 hasBackButton = true,
-                onBackPressed = { viewModel.onBackPressed() }
+                onBackPressed = { viewModel.onBackPressed() },
+                menuResId = menuResId,
+                onMenuItemClicked = { menuId ->
+                    if (menuId.itemId == R.id.action_delete) {
+                        viewModel.deleteEntity()
+                        true
+                    } else {
+                        error("Unknown menu item")
+                    }
+                }
             )
         }
     }

@@ -21,6 +21,8 @@ import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
@@ -604,6 +606,22 @@ class EntityDetailsRepositoryImpl(
                         entity = mapOf(
                             FiberyApiConstants.Field.ID.value to entityData.id,
                             fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
+                        )
+                    )
+                )
+            )
+        )
+    }
+
+    override suspend fun deleteEntity(entity: FiberyEntityData) {
+        fiberyServiceApi.deleteEntity(
+            body = listOf(
+                FiberyDeleteCommandBody(
+                    command = FiberyCommand.QUERY_DELETE.value,
+                    args = FiberyDeleteCommandArgsDto(
+                        type = entity.schema.name,
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to entity.id
                         )
                     )
                 )

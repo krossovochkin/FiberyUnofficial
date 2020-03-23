@@ -18,6 +18,7 @@ package by.krossovochkin.fiberyunofficial.core.data.api
 
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCreateCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentResponse
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseDto
@@ -57,6 +58,11 @@ interface FiberyServiceApi {
     @POST("api/commands")
     suspend fun createEntity(
         @Body body: List<FiberyCreateCommandBody>
+    ): Any
+
+    @POST("api/commands")
+    suspend fun deleteEntity(
+        @Body body: List<FiberyDeleteCommandBody>
     ): Any
 
     @GET("api/documents/{secret}")

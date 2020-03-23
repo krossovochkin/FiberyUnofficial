@@ -18,6 +18,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
@@ -27,6 +28,7 @@ class EntityDetailsViewModelFactory(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+    private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -36,6 +38,7 @@ class EntityDetailsViewModelFactory(
                 getEntityDetailsInteractor,
                 updateSingleSelectFieldInteractor,
                 updateEntityFieldInteractor,
+                deleteEntityInteractor,
                 entityDetailsArgs
             ) as T
         } else {

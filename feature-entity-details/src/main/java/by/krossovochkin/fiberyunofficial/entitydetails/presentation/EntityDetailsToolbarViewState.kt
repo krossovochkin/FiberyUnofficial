@@ -17,9 +17,12 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import androidx.annotation.ColorInt
+import androidx.annotation.MenuRes
 
 data class EntityDetailsToolbarViewState(
     val title: String,
     @ColorInt
-    val bgColorInt: Int
+    val bgColorInt: Int,
+    @MenuRes
+    val menuResId: Int?
 )

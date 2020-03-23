@@ -28,6 +28,8 @@ import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.entitydetails.R
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
@@ -41,6 +43,7 @@ class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+    private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModel() {
 
@@ -59,7 +62,8 @@ class EntityDetailsViewModel(
     val toolbarViewState: EntityDetailsToolbarViewState
         get() = EntityDetailsToolbarViewState(
             title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
-            bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex)
+            bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex),
+            menuResId = R.menu.menu_entity_details
         )
 
     init {
@@ -391,6 +395,20 @@ class EntityDetailsViewModel(
 
     fun selectEmail(item: FieldEmailItem) {
         mutableNavigation.value = Event(EntityDetailsNavEvent.SendEmailEvent(email = item.email))
+    }
+
+    fun deleteEntity() {
+        viewModelScope.launch {
+            try {
+                mutableProgress.postValue(true)
+                deleteEntityInteractor.execute(entityDetailsArgs.entityData)
+                onBackPressed()
+            } catch (e: Exception) {
+                mutableError.postValue(Event(e))
+            } finally {
+                mutableProgress.postValue(false)
+            }
+        }
     }
 }
 

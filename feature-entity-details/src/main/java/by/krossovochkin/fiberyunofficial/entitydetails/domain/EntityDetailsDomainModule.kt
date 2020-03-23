@@ -45,4 +45,12 @@ object EntityDetailsDomainModule {
     ): UpdateEntityFieldInteractor {
         return UpdateEntityFieldInteractorImpl(entityDetailsRepository)
     }
+
+    @JvmStatic
+    @Provides
+    fun deleteEntityInteractor(
+        entityDetailsRepository: EntityDetailsRepository
+    ): DeleteEntityInteractor {
+        return DeleteEntityInteractorImpl(entityDetailsRepository)
+    }
 }

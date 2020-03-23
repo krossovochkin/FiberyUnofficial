@@ -71,9 +71,22 @@ data class FiberyCreateCommandArgsDto(
     val entity: Map<String, Any>? = null
 )
 
+@JsonClass(generateAdapter = true)
+data class FiberyDeleteCommandBody(
+    val command: String,
+    val args: FiberyDeleteCommandArgsDto? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class FiberyDeleteCommandArgsDto(
+    val type: String,
+    val entity: Map<String, Any>? = null
+)
+
 enum class FiberyCommand(val value: String) {
     QUERY_SCHEMA("fibery.schema/query"),
     QUERY_ENTITY("fibery.entity/query"),
     QUERY_UPDATE("fibery.entity/update"),
-    QUERY_CREATE("fibery.entity/create")
+    QUERY_CREATE("fibery.entity/create"),
+    QUERY_DELETE("fibery.entity/delete")
 }
