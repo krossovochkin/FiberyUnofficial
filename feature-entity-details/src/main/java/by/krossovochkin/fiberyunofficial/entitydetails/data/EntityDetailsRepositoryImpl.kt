@@ -144,9 +144,9 @@ class EntityDetailsRepositoryImpl(
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
-                fieldSchema.meta.isRelation && fieldSchema.meta.isCollection
+                fieldSchema.meta.isRelation && fieldSchema.meta.isCollection &&
                         // filter out multi-select fields
-                        && !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
+                        !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
             }
             .map { fieldSchema ->
                 mapOf(
@@ -224,47 +224,26 @@ class EntityDetailsRepositoryImpl(
                     }) { "fieldSchema for key ${it.key} is missing" }
                 when (fieldSchema.type) {
                     FiberyApiConstants.FieldType.TEXT.value -> {
-                        mapTextFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapTextFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.URL.value -> {
-                        mapUrlFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapUrlFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.EMAIL.value -> {
-                        mapEmailFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapEmailFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.NUMBER_INT.value,
                     FiberyApiConstants.FieldType.NUMBER_DECIMAL.value -> {
-                        mapNumberFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapNumberFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.CHECKBOX.value -> {
-                        mapCheckboxFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapCheckboxFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.DATE_TIME.value -> {
-                        mapDateTimeFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapDateTimeFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value -> {
-                        mapRichTextFieldData(
-                            fieldSchema = fieldSchema,
-                            data = it
-                        )
+                        mapRichTextFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     else -> {
                         mapEntityDetailsEntityFields(
