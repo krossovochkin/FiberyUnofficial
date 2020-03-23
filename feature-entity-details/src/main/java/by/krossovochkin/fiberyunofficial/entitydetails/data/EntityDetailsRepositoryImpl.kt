@@ -33,6 +33,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.await
@@ -239,8 +240,17 @@ class EntityDetailsRepositoryImpl(
                     FiberyApiConstants.FieldType.CHECKBOX.value -> {
                         mapCheckboxFieldData(fieldSchema = fieldSchema, data = it)
                     }
+                    FiberyApiConstants.FieldType.DATE.value -> {
+                        mapDateFieldData(fieldSchema = fieldSchema, data = it)
+                    }
                     FiberyApiConstants.FieldType.DATE_TIME.value -> {
                         mapDateTimeFieldData(fieldSchema = fieldSchema, data = it)
+                    }
+                    FiberyApiConstants.FieldType.DATE_RANGE.value -> {
+                        mapDateRangeFieldData(fieldSchema = fieldSchema, data = it)
+                    }
+                    FiberyApiConstants.FieldType.DATE_TIME_RANGE.value -> {
+                        mapDateTimeRangeFieldData(fieldSchema = fieldSchema, data = it)
                     }
                     FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value -> {
                         mapRichTextFieldData(fieldSchema = fieldSchema, data = it)
@@ -356,6 +366,23 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    private fun mapDateFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.DateFieldData {
+        val value = (data.value as? String)?.let {
+            LocalDate.parse(
+                it,
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE.value)
+            )
+        }
+        return FieldData.DateFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            value = value,
+            schema = fieldSchema
+        )
+    }
+
     private fun mapDateTimeFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
@@ -363,12 +390,64 @@ class EntityDetailsRepositoryImpl(
         val value = (data.value as? String)?.let {
             LocalDateTime.parse(
                 it,
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE_TIME.value)
             )
         }
         return FieldData.DateTimeFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = value,
+            schema = fieldSchema
+        )
+    }
+
+    private fun mapDateRangeFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.DateRangeFieldData {
+        @Suppress("UNCHECKED_CAST")
+        val rangeMap = data.value as? Map<String, String>
+        val start = rangeMap?.get(FiberyApiConstants.Field.START.value)?.let {
+            LocalDate.parse(
+                it,
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE.value)
+            )
+        }
+        val end = rangeMap?.get(FiberyApiConstants.Field.END.value)?.let {
+            LocalDate.parse(
+                it,
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE.value)
+            )
+        }
+        return FieldData.DateRangeFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            start = start,
+            end = end,
+            schema = fieldSchema
+        )
+    }
+
+    private fun mapDateTimeRangeFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.DateTimeRangeFieldData {
+        @Suppress("UNCHECKED_CAST")
+        val rangeMap = data.value as? Map<String, String>
+        val start = rangeMap?.get(FiberyApiConstants.Field.START.value)?.let {
+            LocalDateTime.parse(
+                it,
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE_TIME.value)
+            )
+        }
+        val end = rangeMap?.get(FiberyApiConstants.Field.END.value)?.let {
+            LocalDateTime.parse(
+                it,
+                DateTimeFormatter.ofPattern(FiberyApiConstants.Format.DATE_TIME.value)
+            )
+        }
+        return FieldData.DateTimeRangeFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            start = start,
+            end = end,
             schema = fieldSchema
         )
     }

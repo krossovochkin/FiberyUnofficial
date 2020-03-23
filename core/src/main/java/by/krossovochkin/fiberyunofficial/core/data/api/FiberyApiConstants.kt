@@ -29,7 +29,10 @@ object FiberyApiConstants {
     ) {
         COLLABORATION_DOCUMENT("Collaboration~Documents/Document"),
         TEXT("fibery/text"),
+        DATE("fibery/date"),
         DATE_TIME("fibery/date-time"),
+        DATE_RANGE("fibery/date-range"),
+        DATE_TIME_RANGE("fibery/date-time-range"),
         UUID("fibery/uuid"),
         NUMBER_INT("fibery/int"),
         NUMBER_DECIMAL("fibery/decimal"),
@@ -45,7 +48,16 @@ object FiberyApiConstants {
         PUBLIC_ID("fibery/public-id"),
         NAME("fibery/name"),
         ENUM_NAME("enum/name"),
-        DOCUMENT_SECRET("Collaboration~Documents/secret")
+        DOCUMENT_SECRET("Collaboration~Documents/secret"),
+        START("start"),
+        END("end")
+    }
+
+    enum class Format(
+        val value: String
+    ) {
+        DATE("yyyy-MM-dd"),
+        DATE_TIME("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     }
 
     enum class Operator(

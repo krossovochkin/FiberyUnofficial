@@ -97,7 +97,10 @@ class EntityDetailsViewModel(
             is FieldData.UrlFieldData -> mapUrlItem(field)
             is FieldData.EmailFieldData -> mapEmailItem(field)
             is FieldData.NumberFieldData -> mapNumberItem(field)
+            is FieldData.DateFieldData -> mapDateItem(field)
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
+            is FieldData.DateRangeFieldData -> mapDateRangeItem(field)
+            is FieldData.DateTimeRangeFieldData -> mapDateTimeRangeItem(field)
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
             is FieldData.MultiSelectFieldData -> mapMultiSelectItem(field)
             is FieldData.RichTextFieldData -> mapRichTextItem(field)
@@ -140,6 +143,23 @@ class EntityDetailsViewModel(
         )
     }
 
+    private fun mapDateItem(
+        field: FieldData.DateFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldTextItem(
+                title = field.title,
+                text = field.value
+                    ?.format(
+                        DateTimeFormatter
+                            .ofLocalizedDate(FormatStyle.MEDIUM)
+                            .withZone(ZoneId.systemDefault())
+                    )
+                    .orEmpty()
+            )
+        )
+    }
+
     private fun mapDateTimeItem(
         field: FieldData.DateTimeFieldData
     ): List<ListItem> {
@@ -153,6 +173,47 @@ class EntityDetailsViewModel(
                             .withZone(ZoneId.systemDefault())
                     )
                     .orEmpty()
+            )
+        )
+    }
+
+    private fun mapDateRangeItem(
+        field: FieldData.DateRangeFieldData
+    ): List<ListItem> {
+        val formatter = DateTimeFormatter
+            .ofLocalizedDate(FormatStyle.MEDIUM)
+            .withZone(ZoneId.systemDefault())
+        val formattedStart = field.start?.format(formatter).orEmpty()
+        val formattedEnd = field.end?.format(formatter).orEmpty()
+        return listOf(
+            FieldTextItem(
+                title = field.title,
+                text = if (field.start != null && field.end != null) {
+                    "$formattedStart — $formattedEnd"
+                } else {
+                    null
+                }.orEmpty()
+
+            )
+        )
+    }
+
+    private fun mapDateTimeRangeItem(
+        field: FieldData.DateTimeRangeFieldData
+    ): List<ListItem> {
+        val formatter = DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.MEDIUM)
+            .withZone(ZoneId.systemDefault())
+        val formattedStart = field.start?.format(formatter).orEmpty()
+        val formattedEnd = field.end?.format(formatter).orEmpty()
+        return listOf(
+            FieldTextItem(
+                title = field.title,
+                text = if (field.start != null && field.end != null) {
+                    "$formattedStart — $formattedEnd"
+                } else {
+                    null
+                }.orEmpty()
             )
         )
     }

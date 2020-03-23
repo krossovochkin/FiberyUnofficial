@@ -20,6 +20,7 @@ import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
 
@@ -131,9 +132,32 @@ sealed class FieldData : Parcelable {
     ) : FieldData()
 
     @Parcelize
+    data class DateFieldData(
+        val title: String,
+        val value: LocalDate?,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
     data class DateTimeFieldData(
         val title: String,
         val value: LocalDateTime?,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
+    data class DateRangeFieldData(
+        val title: String,
+        val start: LocalDate?,
+        val end: LocalDate?,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
+    data class DateTimeRangeFieldData(
+        val title: String,
+        val start: LocalDateTime?,
+        val end: LocalDateTime?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
