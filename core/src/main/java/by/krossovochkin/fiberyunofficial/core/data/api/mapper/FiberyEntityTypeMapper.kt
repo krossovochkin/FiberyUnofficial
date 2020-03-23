@@ -35,7 +35,9 @@ class FiberyEntityTypeMapper {
                         isUiTitle = fieldDto.meta.isUiTitle ?: false,
                         relationId = fieldDto.meta.relationId,
                         isCollection = fieldDto.meta.isCollection ?: false,
-                        uiOrder = fieldDto.meta.uiOrder ?: 0
+                        uiOrder = fieldDto.meta.uiOrder ?: 0,
+                        numberUnit = fieldDto.meta.numberUnit,
+                        numberPrecision = fieldDto.meta.numberPrecision ?: 0
                     )
                 )
             },

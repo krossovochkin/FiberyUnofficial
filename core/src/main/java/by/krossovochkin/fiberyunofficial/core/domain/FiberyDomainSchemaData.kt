@@ -63,7 +63,9 @@ data class FiberyFieldMetaData(
     val isUiTitle: Boolean,
     val relationId: String?,
     val isCollection: Boolean,
-    val uiOrder: Int
+    val uiOrder: Int,
+    val numberUnit: String?,
+    val numberPrecision: Int
 ) : Parcelable {
 
     @IgnoredOnParcel
@@ -99,9 +101,25 @@ sealed class FieldData : Parcelable {
     ) : FieldData()
 
     @Parcelize
+    data class UrlFieldData(
+        val title: String,
+        val value: String?,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
+    data class EmailFieldData(
+        val title: String,
+        val value: String?,
+        override val schema: FiberyFieldSchema
+    ) : FieldData()
+
+    @Parcelize
     data class NumberFieldData(
         val title: String,
         val value: BigDecimal?,
+        val unit: String?,
+        val precision: Int,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 

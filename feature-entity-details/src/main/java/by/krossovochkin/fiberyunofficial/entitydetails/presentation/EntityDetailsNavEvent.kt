@@ -42,4 +42,12 @@ sealed class EntityDetailsNavEvent {
     data class OnSingleSelectSelectedEvent(
         val singleSelectItem: FieldSingleSelectItem
     ) : EntityDetailsNavEvent()
+
+    data class OpenUrlEvent(
+        val url: String
+    ) : EntityDetailsNavEvent()
+
+    data class SendEmailEvent(
+        val email: String
+    ) : EntityDetailsNavEvent()
 }

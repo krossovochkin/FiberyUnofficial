@@ -60,7 +60,11 @@ data class FiberyFieldMetaDto(
     @Json(name = "fibery/relation")
     val relationId: String?,
     @Json(name = "ui/object-editor-order")
-    val uiOrder: Int?
+    val uiOrder: Int?,
+    @Json(name = "ui/number-unit")
+    val numberUnit: String?,
+    @Json(name = "ui/number-precision")
+    val numberPrecision: Int?
 )
 
 @JsonClass(generateAdapter = true)

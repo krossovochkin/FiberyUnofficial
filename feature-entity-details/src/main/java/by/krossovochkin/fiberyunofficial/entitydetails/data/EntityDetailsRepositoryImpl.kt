@@ -229,7 +229,20 @@ class EntityDetailsRepositoryImpl(
                             data = it
                         )
                     }
-                    FiberyApiConstants.FieldType.NUMBER.value -> {
+                    FiberyApiConstants.FieldType.URL.value -> {
+                        mapUrlFieldData(
+                            fieldSchema = fieldSchema,
+                            data = it
+                        )
+                    }
+                    FiberyApiConstants.FieldType.EMAIL.value -> {
+                        mapEmailFieldData(
+                            fieldSchema = fieldSchema,
+                            data = it
+                        )
+                    }
+                    FiberyApiConstants.FieldType.NUMBER_INT.value,
+                    FiberyApiConstants.FieldType.NUMBER_DECIMAL.value -> {
                         mapNumberFieldData(
                             fieldSchema = fieldSchema,
                             data = it
@@ -313,6 +326,28 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    private fun mapUrlFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.UrlFieldData {
+        return FieldData.UrlFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            value = data.value as? String,
+            schema = fieldSchema
+        )
+    }
+
+    private fun mapEmailFieldData(
+        fieldSchema: FiberyFieldSchema,
+        data: Map.Entry<String, Any>
+    ): FieldData.EmailFieldData {
+        return FieldData.EmailFieldData(
+            title = fieldSchema.name.normalizeTitle(),
+            value = data.value as? String,
+            schema = fieldSchema
+        )
+    }
+
     private fun mapNumberFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any?>
@@ -320,6 +355,13 @@ class EntityDetailsRepositoryImpl(
         return FieldData.NumberFieldData(
             title = fieldSchema.name.normalizeTitle(),
             value = data.value?.toString()?.toBigDecimal(),
+            unit = fieldSchema.meta.numberUnit,
+            precision = if (fieldSchema.type == FiberyApiConstants.FieldType.NUMBER_INT.value) {
+                // server responds with precision 1 for unknown reason
+                0
+            } else {
+                fieldSchema.meta.numberPrecision
+            },
             schema = fieldSchema
         )
     }

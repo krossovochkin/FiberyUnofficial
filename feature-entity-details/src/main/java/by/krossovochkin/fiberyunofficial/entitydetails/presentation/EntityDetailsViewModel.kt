@@ -94,6 +94,8 @@ class EntityDetailsViewModel(
     ): List<ListItem> {
         return when (field) {
             is FieldData.TextFieldData -> mapTextItem(field)
+            is FieldData.UrlFieldData -> mapUrlItem(field)
+            is FieldData.EmailFieldData -> mapEmailItem(field)
             is FieldData.NumberFieldData -> mapNumberItem(field)
             is FieldData.DateTimeFieldData -> mapDateTimeItem(field)
             is FieldData.SingleSelectFieldData -> mapSingleSelectItem(field)
@@ -112,6 +114,28 @@ class EntityDetailsViewModel(
             FieldTextItem(
                 title = field.title,
                 text = field.value.orEmpty()
+            )
+        )
+    }
+
+    private fun mapUrlItem(
+        field: FieldData.UrlFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldUrlItem(
+                title = field.title,
+                url = field.value.orEmpty()
+            )
+        )
+    }
+
+    private fun mapEmailItem(
+        field: FieldData.EmailFieldData
+    ): List<ListItem> {
+        return listOf(
+            FieldEmailItem(
+                title = field.title,
+                email = field.value.orEmpty()
             )
         )
     }
@@ -136,10 +160,21 @@ class EntityDetailsViewModel(
     private fun mapNumberItem(
         field: FieldData.NumberFieldData
     ): List<ListItem> {
+        val formattedValue = field.value
+            ?.let { value ->
+                val format = if (field.precision != 0) {
+                    ".".padEnd(field.precision + 1, '0')
+                } else {
+                    ""
+                }
+                DecimalFormat(format).format(value)
+            }
+            .orEmpty()
         return listOf(
             FieldTextItem(
                 title = field.title,
-                text = field.value?.let { DecimalFormat.getInstance().format(it) }.orEmpty()
+                text = field.unit?.let
+                { "$formattedValue $it" } ?: formattedValue
             )
         )
     }
@@ -288,6 +323,14 @@ class EntityDetailsViewModel(
     fun onBackPressed() {
         mutableNavigation.value = Event(EntityDetailsNavEvent.BackEvent)
     }
+
+    fun selectUrl(item: FieldUrlItem) {
+        mutableNavigation.value = Event(EntityDetailsNavEvent.OpenUrlEvent(url = item.url))
+    }
+
+    fun selectEmail(item: FieldEmailItem) {
+        mutableNavigation.value = Event(EntityDetailsNavEvent.SendEmailEvent(email = item.email))
+    }
 }
 
 data class FieldHeaderItem(
@@ -298,6 +341,22 @@ data class FieldTextItem(
     val title: String,
     val text: String
 ) : ListItem
+
+data class FieldUrlItem(
+    val title: String,
+    val url: String
+) : ListItem {
+
+    val isOpenAvailable: Boolean = url.isNotEmpty()
+}
+
+data class FieldEmailItem(
+    val title: String,
+    val email: String
+) : ListItem {
+
+    val isOpenAvailable: Boolean = email.isNotEmpty()
+}
 
 data class FieldSingleSelectItem(
     val title: String,

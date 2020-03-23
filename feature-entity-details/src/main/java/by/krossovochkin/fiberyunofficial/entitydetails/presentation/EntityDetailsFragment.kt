@@ -17,10 +17,14 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
+import android.text.util.Linkify
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -39,12 +43,14 @@ import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.FragmentEntityDetailsBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCheckboxBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCollectionBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldEmailBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldMultiSelectBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRichTextBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldSingleSelectBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldTextBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldUrlBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
@@ -62,7 +68,7 @@ class EntityDetailsFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
+    private val adapter = ListDelegationAdapter(
         adapterDelegateLayoutContainer<FieldHeaderItem, ListItem>(
             layout = R.layout.item_field_header
         ) {
@@ -78,6 +84,34 @@ class EntityDetailsFragment(
             bind {
                 binding.fieldTextTitleView.text = item.title
                 binding.fieldTextView.text = item.text
+            }
+        },
+        adapterDelegateLayoutContainer<FieldUrlItem, ListItem>(
+            layout = R.layout.item_field_url
+        ) {
+            val binding = ItemFieldUrlBinding.bind(this.itemView)
+            bind {
+                binding.fieldUrlTitleView.text = item.title
+                binding.fieldUrlView.text = item.url
+
+                if (item.isOpenAvailable) {
+                    LinkifyCompat.addLinks(binding.fieldUrlView, Linkify.WEB_URLS)
+                    itemView.setOnClickListener { viewModel.selectUrl(item) }
+                }
+            }
+        },
+        adapterDelegateLayoutContainer<FieldEmailItem, ListItem>(
+            layout = R.layout.item_field_email
+        ) {
+            val binding = ItemFieldEmailBinding.bind(this.itemView)
+            bind {
+                binding.fieldEmailTitleView.text = item.title
+                binding.fieldEmailView.text = item.email
+
+                if (item.isOpenAvailable) {
+                    LinkifyCompat.addLinks(binding.fieldEmailView, Linkify.EMAIL_ADDRESSES)
+                    itemView.setOnClickListener { viewModel.selectEmail(item) }
+                }
             }
         },
         adapterDelegateLayoutContainer<FieldSingleSelectItem, ListItem>(
@@ -245,6 +279,24 @@ class EntityDetailsFragment(
                         fieldSchema = navEvent.fieldSchema,
                         entity = navEvent.currentEntity
                     )
+                }
+                is EntityDetailsNavEvent.OpenUrlEvent -> {
+                    Intent(Intent.ACTION_VIEW).setData(Uri.parse(navEvent.url)).let { intent ->
+                        intent.resolveActivity(requireContext().packageManager)?.let {
+                            startActivity(intent)
+                        }
+                    }
+                }
+                is EntityDetailsNavEvent.SendEmailEvent -> {
+                    Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto://"))
+                        .apply {
+                            putExtra(Intent.EXTRA_EMAIL, navEvent.email)
+                        }
+                        .let { intent ->
+                            intent.resolveActivity(requireContext().packageManager)?.let {
+                                startActivity(intent)
+                            }
+                        }
                 }
             }
         })
