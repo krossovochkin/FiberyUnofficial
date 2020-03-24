@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 
 sealed class EntityDetailsNavEvent {
 
@@ -40,7 +41,8 @@ sealed class EntityDetailsNavEvent {
     ) : EntityDetailsNavEvent()
 
     data class OnSingleSelectSelectedEvent(
-        val singleSelectItem: FieldSingleSelectItem
+        val fieldSchema: FiberyFieldSchema,
+        val singleSelectItem: FieldData.SingleSelectFieldData
     ) : EntityDetailsNavEvent()
 
     data class OpenUrlEvent(

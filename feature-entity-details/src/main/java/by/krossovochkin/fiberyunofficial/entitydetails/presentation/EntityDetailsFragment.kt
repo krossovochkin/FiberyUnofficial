@@ -23,7 +23,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.util.Linkify
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -33,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
@@ -205,6 +205,7 @@ class EntityDetailsFragment(
     )
 
     private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
+    private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -224,6 +225,14 @@ class EntityDetailsFragment(
             Observer { event ->
                 event.getContentIfNotHandled()?.let { (fieldSchema, entity) ->
                     viewModel.updateEntityField(fieldSchema, entity)
+                }
+            }
+        )
+        singleSelectPickedViewModel.pickedSingleSelect.observe(
+            viewLifecycleOwner,
+            Observer { event ->
+                event.getContentIfNotHandled()?.let { (fieldSchema, item) ->
+                    viewModel.updateSingleSelectField(fieldSchema, item)
                 }
             }
         )
@@ -272,7 +281,7 @@ class EntityDetailsFragment(
                     parentListener?.onBackPressed()
                 }
                 is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
-                    showUpdateSingleSelectDialog(navEvent.singleSelectItem)
+                    showUpdateSingleSelectDialog(navEvent.fieldSchema, navEvent.singleSelectItem)
                 }
                 is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
                     parentListener?.onEntityFieldEdit(
@@ -324,25 +333,10 @@ class EntityDetailsFragment(
     }
 
     private fun showUpdateSingleSelectDialog(
-        item: FieldSingleSelectItem
+        fieldSchema: FiberyFieldSchema,
+        item: FieldData.SingleSelectFieldData
     ) {
-        var selectedIndex: Int = item.values.map { it.title }.indexOf(item.text)
-        AlertDialog.Builder(requireContext())
-            .setSingleChoiceItems(
-                item.values.map { it.title }.toTypedArray(),
-                selectedIndex
-            ) { _, index -> selectedIndex = index }
-            .setTitle(item.title)
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel.updateSingleSelectField(
-                    currentTitle = item.text,
-                    fieldSchema = item.fieldSchema,
-                    selectedValue = item.values[selectedIndex]
-                )
-            }
-            .create()
-            .show()
+        parentListener?.onSingleSelectFieldEdit(fieldSchema, item)
     }
 
     override fun onAttach(context: Context) {
@@ -377,6 +371,11 @@ class EntityDetailsFragment(
         fun onEntityFieldEdit(
             fieldSchema: FiberyFieldSchema,
             entity: FiberyEntityData?
+        )
+
+        fun onSingleSelectFieldEdit(
+            fieldSchema: FiberyFieldSchema,
+            item: FieldData.SingleSelectFieldData
         )
 
         fun onBackPressed()

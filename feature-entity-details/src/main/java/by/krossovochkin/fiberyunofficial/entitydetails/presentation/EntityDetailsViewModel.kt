@@ -252,6 +252,7 @@ class EntityDetailsViewModel(
                 title = field.title,
                 text = field.selectedValue?.title.orEmpty(),
                 values = field.values,
+                singleSelectData = field,
                 fieldSchema = field.schema
             )
         )
@@ -314,29 +315,34 @@ class EntityDetailsViewModel(
     }
 
     fun selectSingleSelectField(item: FieldSingleSelectItem) {
-        mutableNavigation.value = Event(EntityDetailsNavEvent.OnSingleSelectSelectedEvent(item))
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
+                fieldSchema = item.fieldSchema,
+                singleSelectItem = item.singleSelectData
+            )
+        )
     }
 
     fun updateSingleSelectField(
-        currentTitle: String,
         fieldSchema: FiberyFieldSchema,
-        selectedValue: FieldData.EnumItemData
+        selectedValue: FieldData.EnumItemData?
     ) {
-        if (selectedValue.title != currentTitle) {
-            viewModelScope.launch {
-                try {
-                    mutableProgress.value = true
-                    updateSingleSelectFieldInteractor.execute(
-                        entityData = entityDetailsArgs.entityData,
-                        fieldSchema = fieldSchema,
-                        singleSelectItem = selectedValue
-                    )
-                    load()
-                } catch (e: Exception) {
-                    mutableError.value = Event(e)
-                } finally {
-                    mutableProgress.value = false
-                }
+        if (selectedValue == null) {
+            return
+        }
+        viewModelScope.launch {
+            try {
+                mutableProgress.value = true
+                updateSingleSelectFieldInteractor.execute(
+                    entityData = entityDetailsArgs.entityData,
+                    fieldSchema = fieldSchema,
+                    singleSelectItem = selectedValue
+                )
+                load()
+            } catch (e: Exception) {
+                mutableError.value = Event(e)
+            } finally {
+                mutableProgress.value = false
             }
         }
     }
@@ -441,7 +447,8 @@ data class FieldSingleSelectItem(
     val title: String,
     val text: String,
     val values: List<FieldData.EnumItemData>,
-    val fieldSchema: FiberyFieldSchema
+    val fieldSchema: FiberyFieldSchema,
+    val singleSelectData: FieldData.SingleSelectFieldData
 ) : ListItem
 
 data class FieldMultiSelectItem(

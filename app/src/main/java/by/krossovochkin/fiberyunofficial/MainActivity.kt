@@ -28,10 +28,12 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
@@ -148,6 +150,27 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         binding.navHostFragment.findNavController().apply {
             ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
                 .pickEntity(fieldSchema, entity)
+            onBackPressed()
+        }
+    }
+
+    override fun onSingleSelectFieldEdit(
+        fieldSchema: FiberyFieldSchema,
+        item: FieldData.SingleSelectFieldData
+    ) {
+        binding.navHostFragment.findNavController().navigate(
+            EntityDetailsFragmentDirections
+                .actionEntityDetailsToPickerSingleSelectDialogFragment(item, fieldSchema)
+        )
+    }
+
+    override fun onSingleSelectPicked(
+        fieldSchema: FiberyFieldSchema,
+        item: FieldData.EnumItemData
+    ) {
+        binding.navHostFragment.findNavController().apply {
+            ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
+                .pickSingleSelect(fieldSchema, item)
             onBackPressed()
         }
     }

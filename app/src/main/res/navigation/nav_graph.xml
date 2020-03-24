@@ -72,6 +72,9 @@
         <action
             android:id="@+id/action_entityDetails_to_entityPickerFragment"
             app:destination="@id/entityPickerFragment" />
+        <action
+            android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
+            app:destination="@id/pickerSingleSelectDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -112,4 +115,15 @@
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData"
             app:nullable="true" />
     </fragment>
+    <dialog
+        android:id="@+id/pickerSingleSelectDialogFragment"
+        android:name="by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment"
+        android:label="PickerSingleSelectDialogFragment" >
+        <argument
+            android:name="item"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FieldData$SingleSelectFieldData" />
+        <argument
+            android:name="fieldSchema"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema" />
+    </dialog>
 </navigation>

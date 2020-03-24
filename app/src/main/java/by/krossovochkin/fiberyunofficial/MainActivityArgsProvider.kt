@@ -27,13 +27,16 @@ import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerF
 import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
+import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
+import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
 
 class MainActivityArgsProvider :
     EntityTypeListFragment.ArgsProvider,
     EntityListFragment.ArgsProvider,
     EntityDetailsFragment.ArgsProvider,
     EntityCreateFragment.ArgsProvider,
-    EntityPickerFragment.ArgsProvider {
+    EntityPickerFragment.ArgsProvider,
+    PickerSingleSelectDialogFragment.ArgsProvider {
 
     override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
         val args = EntityTypeListFragmentArgs.fromBundle(arguments)
@@ -78,6 +81,14 @@ class MainActivityArgsProvider :
         return EntityPickerFragment.Args(
             fieldSchema = args.fieldSchema,
             entity = args.entity
+        )
+    }
+
+    override fun getPickerSingleSelectArgs(arguments: Bundle): PickerSingleSelectDialogFragment.Args {
+        val args = PickerSingleSelectDialogFragmentArgs.fromBundle(arguments)
+        return PickerSingleSelectDialogFragment.Args(
+            item = args.item,
+            fieldSchema = args.fieldSchema
         )
     }
 }
