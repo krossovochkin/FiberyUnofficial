@@ -20,19 +20,23 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FiberyRequestCommandBody(
+data class FiberyCommandBody(
     val command: String,
-    val args: FiberyRequestCommandArgsDto? = null
+    val args: FiberyCommandArgsDto? = null
 )
 
 @JsonClass(generateAdapter = true)
-data class FiberyRequestCommandArgsDto(
-    val query: FiberyRequestCommandArgsQueryDto,
-    val params: Map<String, Any>? = null
+data class FiberyCommandArgsDto(
+    val query: FiberyCommandArgsQueryDto? = null,
+    val params: Map<String, Any>? = null,
+    val type: String? = null,
+    val entity: Map<String, Any?>? = null,
+    val field: String? = null,
+    val items: List<Any>? = null
 )
 
 @JsonClass(generateAdapter = true)
-data class FiberyRequestCommandArgsQueryDto(
+data class FiberyCommandArgsQueryDto(
     @Json(name = "q/from")
     val from: String,
     @Json(name = "q/select")
@@ -45,44 +49,6 @@ data class FiberyRequestCommandArgsQueryDto(
     val offset: Any? = null,
     @Json(name = "q/limit")
     val limit: Any? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyUpdateCommandBody(
-    val command: String,
-    val args: FiberyUpdateCommandArgsDto? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyUpdateCommandArgsDto(
-    val type: String,
-    val entity: Map<String, Any?>? = null,
-    val field: String? = null,
-    val items: List<Any>? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyCreateCommandBody(
-    val command: String,
-    val args: FiberyCreateCommandArgsDto? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyCreateCommandArgsDto(
-    val type: String,
-    val entity: Map<String, Any>? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyDeleteCommandBody(
-    val command: String,
-    val args: FiberyDeleteCommandArgsDto? = null
-)
-
-@JsonClass(generateAdapter = true)
-data class FiberyDeleteCommandArgsDto(
-    val type: String,
-    val entity: Map<String, Any>? = null
 )
 
 enum class FiberyCommand(val value: String) {

@@ -20,13 +20,15 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FiberyResponseDto(
+data class FiberySchemaResponseDto(
+    @Json(name = "success")
+    val isSuccess: Boolean,
     @Json(name = "result")
-    val result: FiberyResultDto
+    val result: FiberySchemaResultDto
 )
 
 @JsonClass(generateAdapter = true)
-data class FiberyResultDto(
+data class FiberySchemaResultDto(
     @Json(name = "fibery/types")
     val fiberyTypes: List<FiberyTypeDto>
 )
@@ -80,7 +82,9 @@ data class FiberyTypeMetaDto(
 )
 
 @JsonClass(generateAdapter = true)
-data class FiberyResponseEntityDto(
+data class FiberyEntityResponseDto(
+    @Json(name = "success")
+    val isSuccess: Boolean,
     @Json(name = "result")
     val result: List<Map<String, Any>>
 )
@@ -90,3 +94,15 @@ data class FiberyDocumentResponse(
     @Json(name = "content")
     val content: String
 )
+
+@JsonClass(generateAdapter = true)
+data class FiberyCommandResponseDto(
+    @Json(name = "success")
+    val isSuccess: Boolean
+)
+
+fun List<FiberyCommandResponseDto>.checkResultSuccess() {
+    if (this.any { !it.isSuccess }) {
+        throw RuntimeException()
+    }
+}

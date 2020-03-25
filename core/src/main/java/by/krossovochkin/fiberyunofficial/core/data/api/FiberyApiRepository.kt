@@ -18,9 +18,9 @@ package by.krossovochkin.fiberyunofficial.core.data.api
 
 import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
@@ -95,10 +95,10 @@ internal class FiberyApiRepositoryImpl(
         return fiberyServiceApi
             .getEntities(
                 listOf(
-                    FiberyRequestCommandBody(
+                    FiberyCommandBody(
                         command = FiberyCommand.QUERY_ENTITY.value,
-                        args = FiberyRequestCommandArgsDto(
-                            query = FiberyRequestCommandArgsQueryDto(
+                        args = FiberyCommandArgsDto(
+                            query = FiberyCommandArgsQueryDto(
                                 from = typeName,
                                 select = listOf(
                                     FiberyApiConstants.Field.ENUM_NAME.value,
@@ -150,7 +150,9 @@ internal class FiberyApiRepositoryImpl(
     }
 
     private suspend fun loadTypeSchemas(): List<FiberyEntityTypeSchema> {
-        return fiberyServiceApi.getSchema().first().result.fiberyTypes
+        return fiberyServiceApi
+            .getSchema(listOf(FiberyCommandBody(command = FiberyCommand.QUERY_SCHEMA.value)))
+            .first().result.fiberyTypes
             .map(fiberyEntityTypeMapper::map)
     }
 

@@ -20,9 +20,9 @@ import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
@@ -46,10 +46,10 @@ class EntityListRepositoryImpl(
 
         val dto = fiberyServiceApi.getEntities(
             listOf(
-                FiberyRequestCommandBody(
+                FiberyCommandBody(
                     command = FiberyCommand.QUERY_ENTITY.value,
-                    args = FiberyRequestCommandArgsDto(
-                        FiberyRequestCommandArgsQueryDto(
+                    args = FiberyCommandArgsDto(
+                        FiberyCommandArgsQueryDto(
                             from = entityType.name,
                             select = listOf(
                                 uiTitleType,

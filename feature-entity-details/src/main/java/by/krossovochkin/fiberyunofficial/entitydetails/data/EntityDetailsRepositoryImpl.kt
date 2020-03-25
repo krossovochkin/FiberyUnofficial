@@ -21,14 +21,11 @@ import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandArgsQueryDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyEntityResponseDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -56,7 +53,7 @@ class EntityDetailsRepositoryImpl(
 
     private suspend fun getEntityDetailsDto(
         entityData: FiberyEntityData
-    ): FiberyResponseEntityDto {
+    ): FiberyEntityResponseDto {
         val primitives = getEntityPrimitivesQuery(
             entityData = entityData
         )
@@ -75,10 +72,10 @@ class EntityDetailsRepositoryImpl(
 
         return fiberyServiceApi.getEntities(
             listOf(
-                FiberyRequestCommandBody(
+                FiberyCommandBody(
                     command = FiberyCommand.QUERY_ENTITY.value,
-                    args = FiberyRequestCommandArgsDto(
-                        FiberyRequestCommandArgsQueryDto(
+                    args = FiberyCommandArgsDto(
+                        FiberyCommandArgsQueryDto(
                             from = entityData.schema.name,
                             select = primitives + enums + relations + collections + richTexts,
                             where = listOf(
@@ -177,7 +174,7 @@ class EntityDetailsRepositoryImpl(
     }
 
     private suspend fun mapEntityDetailsData(
-        dto: FiberyResponseEntityDto,
+        dto: FiberyEntityResponseDto,
         entityData: FiberyEntityData
     ): FiberyEntityDetailsData {
         return dto.result.map {
@@ -574,23 +571,25 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         singleSelectItem: FieldData.EnumItemData
     ) {
-        fiberyServiceApi.updateEntity(
-            body = listOf(
-                FiberyUpdateCommandBody(
-                    command = FiberyCommand.QUERY_UPDATE.value,
-                    args = FiberyUpdateCommandArgsDto(
-                        type = entityData.schema.name,
-                        entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to entityData.id,
-                            fieldSchema.name to mapOf(
-                                FiberyApiConstants.Field.ID.value to singleSelectItem.id
-                            )
-                        ),
-                        field = fieldSchema.name
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_UPDATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entityData.schema.name,
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to entityData.id,
+                                fieldSchema.name to mapOf(
+                                    FiberyApiConstants.Field.ID.value to singleSelectItem.id
+                                )
+                            ),
+                            field = fieldSchema.name
+                        )
                     )
                 )
             )
-        )
+            .checkResultSuccess()
     }
 
     override suspend fun updateEntityField(
@@ -598,21 +597,23 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema,
         selectedEntity: FiberyEntityData?
     ) {
-        fiberyServiceApi.updateEntity(
-            body = listOf(
-                FiberyUpdateCommandBody(
-                    command = FiberyCommand.QUERY_UPDATE.value,
-                    args = FiberyUpdateCommandArgsDto(
-                        type = entityData.schema.name,
-                        entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to entityData.id,
-                            fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
-                        ),
-                        field = fieldSchema.name
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_UPDATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entityData.schema.name,
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to entityData.id,
+                                fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
+                            ),
+                            field = fieldSchema.name
+                        )
                     )
                 )
             )
-        )
+            .checkResultSuccess()
     }
 
     override suspend fun updateMultiSelectField(
@@ -621,12 +622,12 @@ class EntityDetailsRepositoryImpl(
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     ) {
-        val commands = mutableListOf<FiberyUpdateCommandBody>()
+        val commands = mutableListOf<FiberyCommandBody>()
         if (addedItems.isNotEmpty()) {
             commands.add(
-                FiberyUpdateCommandBody(
+                FiberyCommandBody(
                     command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
-                    args = FiberyUpdateCommandArgsDto(
+                    args = FiberyCommandArgsDto(
                         type = entityData.schema.name,
                         field = fieldSchema.name,
                         items = addedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
@@ -639,9 +640,9 @@ class EntityDetailsRepositoryImpl(
         }
         if (removedItems.isNotEmpty()) {
             commands.add(
-                FiberyUpdateCommandBody(
+                FiberyCommandBody(
                     command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
-                    args = FiberyUpdateCommandArgsDto(
+                    args = FiberyCommandArgsDto(
                         type = entityData.schema.name,
                         field = fieldSchema.name,
                         items = removedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
@@ -657,23 +658,25 @@ class EntityDetailsRepositoryImpl(
             return
         }
 
-        fiberyServiceApi.updateEntity(body = commands)
+        fiberyServiceApi.sendCommand(body = commands).checkResultSuccess()
     }
 
     override suspend fun deleteEntity(entity: FiberyEntityData) {
-        fiberyServiceApi.deleteEntity(
-            body = listOf(
-                FiberyDeleteCommandBody(
-                    command = FiberyCommand.QUERY_DELETE.value,
-                    args = FiberyDeleteCommandArgsDto(
-                        type = entity.schema.name,
-                        entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to entity.id
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_DELETE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entity.schema.name,
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to entity.id
+                            )
                         )
                     )
                 )
             )
-        )
+            .checkResultSuccess()
     }
 
     private fun FiberyEntityTypeSchema.getUiTitle(): String {

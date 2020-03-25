@@ -20,8 +20,9 @@ import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCreateCommandArgsDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCreateCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
@@ -54,16 +55,18 @@ class EntityCreateRepositoryImpl(
                 )
             }
         }
-        fiberyServiceApi.createEntity(
-            listOf(
-                FiberyCreateCommandBody(
-                    command = FiberyCommand.QUERY_CREATE.value,
-                    args = FiberyCreateCommandArgsDto(
-                        type = entityTypeSchema.name,
-                        entity = fields
+        fiberyServiceApi
+            .sendCommand(
+                listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_CREATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entityTypeSchema.name,
+                            entity = fields
+                        )
                     )
                 )
             )
-        )
+            .checkResultSuccess()
     }
 }

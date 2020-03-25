@@ -16,14 +16,11 @@
  */
 package by.krossovochkin.fiberyunofficial.core.data.api
 
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCreateCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDeleteCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandResponseDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentResponse
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyRequestCommandBody
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyResponseEntityDto
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyUpdateCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyEntityResponseDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberySchemaResponseDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -34,36 +31,19 @@ import retrofit2.http.Query
 interface FiberyServiceApi {
 
     @POST("api/commands")
-    suspend fun authenticate(
-        @Body body: Any = Any()
-    )
-
-    @POST("api/commands")
     suspend fun getSchema(
-        @Body body: List<FiberyRequestCommandBody> = listOf(
-            FiberyRequestCommandBody(command = FiberyCommand.QUERY_SCHEMA.value)
-        )
-    ): List<FiberyResponseDto>
+        @Body body: List<FiberyCommandBody>
+    ): List<FiberySchemaResponseDto>
 
     @POST("api/commands")
     suspend fun getEntities(
-        @Body body: List<FiberyRequestCommandBody>
-    ): List<FiberyResponseEntityDto>
+        @Body body: List<FiberyCommandBody>
+    ): List<FiberyEntityResponseDto>
 
     @POST("api/commands")
-    suspend fun updateEntity(
-        @Body body: List<FiberyUpdateCommandBody>
-    ): Any
-
-    @POST("api/commands")
-    suspend fun createEntity(
-        @Body body: List<FiberyCreateCommandBody>
-    ): Any
-
-    @POST("api/commands")
-    suspend fun deleteEntity(
-        @Body body: List<FiberyDeleteCommandBody>
-    ): Any
+    suspend fun sendCommand(
+        @Body body: List<FiberyCommandBody>
+    ): List<FiberyCommandResponseDto>
 
     @GET("api/documents/{secret}")
     fun getDocument(
