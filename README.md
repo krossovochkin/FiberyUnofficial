@@ -1,4 +1,4 @@
-<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.7.0" target="_blank">![](https://img.shields.io/badge/version-0.7.0-yellow)</a>
+<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.8.0" target="_blank">![](https://img.shields.io/badge/version-0.8.0-yellow)</a>
 
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
@@ -22,33 +22,40 @@ Fibery is a work management platform that adapts to companies and grows with the
   - per entity type
   - for particular entity (child entities)
   - pagination support
+  - raw filter/sort support
     
 ### Entity Details
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/>
 
   - Entity name (read-only)
   - Description (markdown, read-only)
+  - Rich Text field (markdown, read-only)
   - Text fields (read-only)
-  - Number fields (read-only)
+  - URL fields (read-only, openable)
+  - Email fields (read-only, openable)
+  - Number fields (read-only, int, decimal, unit support, precision support)
   - Checkbox fields (read-only)
-  - Date fields (read-only)
+  - Date-Time fields (read-only, date, date-time, date-range, date-time-range support)
   - Single select fields (update supported)
-  - Parent entity fields (relation, non-collection, update supported)
-  - Child entities fields (relation, collection, read-only)
+  - Multi select fields (update supported)
+  - One-to-one relation fields (update supported)
+  - One-to-many relation fields (parent update supported, adding child supported)
+  - Many-to-many relation fields (adding child supported)
   
 ### Create Entity
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_create.png?raw=true" width="200"/>
 
   - Entity name
+  - Auto-attach parent entity (if created from inner list)
   
 ### Extensions
 
   - Workflow (single-select like)
-  - Assignments (many-to-many relation with User entity)
+  - Assignments (many-to-many relation with User entity like)
 
 ### Miscellaneous
 
-  - Dark THeme support
+  - Dark Theme support
 
 ## Missing Features
 - Updating information (all screens are read-only by default)
