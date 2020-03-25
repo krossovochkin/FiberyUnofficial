@@ -1,3 +1,19 @@
+/*
+   Copyright 2020 Vasya Drobushkov
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
 package by.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
 import android.app.Dialog
@@ -47,7 +63,6 @@ class PickerMultiSelectDialogFragment(
             .setTitle(item.title)
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                // TODO: pass via viewmodel
                 val selectedItems = item.values.filterIndexed { index, _ -> selectedItemIds[index] }
                 val addedItems = selectedItems.filter { value -> value !in item.selectedValues }
                 val removedItems = item.selectedValues.filter { value -> value !in selectedItems }

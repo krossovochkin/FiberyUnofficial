@@ -5,6 +5,10 @@ complexity:
     active: false
   ComplexMethod:
     ignoreSingleWhenExpression: true
+  LargeClass:
+    active: false
+  LongParameterList:
+    active: false
 
 comments:
   UndocumentedPublicClass:
@@ -15,6 +19,8 @@ comments:
     active: false
 
 exceptions:
+  TooGenericExceptionThrown:
+    active: false
   TooGenericExceptionCaught:
     active: false;
   ThrowingExceptionsWithoutMessageOrCause:
