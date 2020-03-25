@@ -25,6 +25,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragm
 import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
+import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 
 class MainActivityFragmentFactory(
@@ -49,6 +50,9 @@ class MainActivityFragmentFactory(
                 mainActivityComponent
             )
             PickerSingleSelectDialogFragment::class.java.canonicalName -> PickerSingleSelectDialogFragment(
+                mainActivityComponent
+            )
+            PickerMultiSelectDialogFragment::class.java.canonicalName -> PickerMultiSelectDialogFragment(
                 mainActivityComponent
             )
             else -> return super.instantiate(classLoader, className)

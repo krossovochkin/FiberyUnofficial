@@ -49,6 +49,7 @@ dependencies {
     implementation d.app.feature_entity_create
     implementation d.app.feature_entity_picker
     implementation d.app.feature_picker_single_select
+    implementation d.app.feature_picker_multi_select
 
     kapt d.core.dagger_compiler
 

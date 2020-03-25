@@ -45,6 +45,11 @@ sealed class EntityDetailsNavEvent {
         val singleSelectItem: FieldData.SingleSelectFieldData
     ) : EntityDetailsNavEvent()
 
+    data class OnMultiSelectSelectedEvent(
+        val fieldSchema: FiberyFieldSchema,
+        val multiSelectItem: FieldData.MultiSelectFieldData
+    ) : EntityDetailsNavEvent()
+
     data class OpenUrlEvent(
         val url: String
     ) : EntityDetailsNavEvent()

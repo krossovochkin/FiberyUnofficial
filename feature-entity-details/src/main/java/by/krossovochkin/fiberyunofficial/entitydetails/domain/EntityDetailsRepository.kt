@@ -37,5 +37,12 @@ interface EntityDetailsRepository {
         selectedEntity: FiberyEntityData?
     )
 
+    suspend fun updateMultiSelectField(
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema,
+        addedItems: List<FieldData.EnumItemData>,
+        removedItems: List<FieldData.EnumItemData>
+    )
+
     suspend fun deleteEntity(entity: FiberyEntityData)
 }

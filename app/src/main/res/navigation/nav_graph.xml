@@ -75,6 +75,9 @@
         <action
             android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
             app:destination="@id/pickerSingleSelectDialogFragment" />
+        <action
+            android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
+            app:destination="@id/pickerMultiSelectDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -125,5 +128,16 @@
         <argument
             android:name="fieldSchema"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema" />
+    </dialog>
+    <dialog
+        android:id="@+id/pickerMultiSelectDialogFragment"
+        android:name="by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment"
+        android:label="PickerMultiSelectDialogFragment" >
+        <argument
+            android:name="fieldSchema"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema" />
+        <argument
+            android:name="item"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FieldData$MultiSelectFieldData" />
     </dialog>
 </navigation>

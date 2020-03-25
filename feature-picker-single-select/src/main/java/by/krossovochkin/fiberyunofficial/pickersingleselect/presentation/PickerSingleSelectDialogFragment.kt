@@ -12,7 +12,7 @@ import by.krossovochkin.fiberyunofficial.pickersingleselect.PickerSingleSelectPa
 import javax.inject.Inject
 
 class PickerSingleSelectDialogFragment(
-    private val pickerSingleSelecParentComponent: PickerSingleSelectParentComponent
+    private val pickerSingleSelectParentComponent: PickerSingleSelectParentComponent
 ) : DialogFragment() {
 
     @Inject
@@ -25,7 +25,7 @@ class PickerSingleSelectDialogFragment(
 
         DaggerPickerSingleSelectComponent.builder()
             .fragment(this)
-            .pickerSingleSelectParentComponent(pickerSingleSelecParentComponent)
+            .pickerSingleSelectParentComponent(pickerSingleSelectParentComponent)
             .build()
             .inject(this)
 

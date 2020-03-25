@@ -585,7 +585,8 @@ class EntityDetailsRepositoryImpl(
                             fieldSchema.name to mapOf(
                                 FiberyApiConstants.Field.ID.value to singleSelectItem.id
                             )
-                        )
+                        ),
+                        field = fieldSchema.name
                     )
                 )
             )
@@ -606,11 +607,57 @@ class EntityDetailsRepositoryImpl(
                         entity = mapOf(
                             FiberyApiConstants.Field.ID.value to entityData.id,
                             fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
-                        )
+                        ),
+                        field = fieldSchema.name
                     )
                 )
             )
         )
+    }
+
+    override suspend fun updateMultiSelectField(
+        entityData: FiberyEntityData,
+        fieldSchema: FiberyFieldSchema,
+        addedItems: List<FieldData.EnumItemData>,
+        removedItems: List<FieldData.EnumItemData>
+    ) {
+        val commands = mutableListOf<FiberyUpdateCommandBody>()
+        if (addedItems.isNotEmpty()) {
+            commands.add(
+                FiberyUpdateCommandBody(
+                    command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
+                    args = FiberyUpdateCommandArgsDto(
+                        type = entityData.schema.name,
+                        field = fieldSchema.name,
+                        items = addedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to entityData.id
+                        )
+                    )
+                )
+            )
+        }
+        if (removedItems.isNotEmpty()) {
+            commands.add(
+                FiberyUpdateCommandBody(
+                    command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
+                    args = FiberyUpdateCommandArgsDto(
+                        type = entityData.schema.name,
+                        field = fieldSchema.name,
+                        items = removedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to entityData.id
+                        )
+                    )
+                )
+            )
+        }
+
+        if (commands.isEmpty()) {
+            return
+        }
+
+        fiberyServiceApi.updateEntity(body = commands)
     }
 
     override suspend fun deleteEntity(entity: FiberyEntityData) {

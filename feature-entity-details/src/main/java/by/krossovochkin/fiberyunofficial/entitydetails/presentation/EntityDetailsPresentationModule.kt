@@ -22,6 +22,7 @@ import androidx.lifecycle.get
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
 import dagger.Module
 import dagger.Provides
@@ -43,6 +44,7 @@ object EntityDetailsPresentationModule {
     fun entityDetailsViewModelFactory(
         getEntityDetailsInteractor: GetEntityDetailsInteractor,
         updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+        updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
         updateEntityFieldInteractor: UpdateEntityFieldInteractor,
         deleteEntityInteractor: DeleteEntityInteractor,
         entityDetailsArgs: EntityDetailsFragment.Args
@@ -50,6 +52,7 @@ object EntityDetailsPresentationModule {
         return EntityDetailsViewModelFactory(
             getEntityDetailsInteractor,
             updateSingleSelectFieldInteractor,
+            updateMultiSelectFieldInteractor,
             updateEntityFieldInteractor,
             deleteEntityInteractor,
             entityDetailsArgs

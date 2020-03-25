@@ -23,6 +23,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragm
 import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
+import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 
 interface MainActivityListener :
@@ -33,4 +34,5 @@ interface MainActivityListener :
     EntityDetailsFragment.ParentListener,
     EntityCreateFragment.ParentListener,
     EntityPickerFragment.ParentListener,
-    PickerSingleSelectDialogFragment.ParentListener
+    PickerSingleSelectDialogFragment.ParentListener,
+    PickerMultiSelectDialogFragment.ParentListener

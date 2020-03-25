@@ -27,6 +27,8 @@ import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerF
 import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragmentArgs
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentArgs
+import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
+import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragmentArgs
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
 
@@ -36,7 +38,8 @@ class MainActivityArgsProvider :
     EntityDetailsFragment.ArgsProvider,
     EntityCreateFragment.ArgsProvider,
     EntityPickerFragment.ArgsProvider,
-    PickerSingleSelectDialogFragment.ArgsProvider {
+    PickerSingleSelectDialogFragment.ArgsProvider,
+    PickerMultiSelectDialogFragment.ArgsProvider {
 
     override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
         val args = EntityTypeListFragmentArgs.fromBundle(arguments)
@@ -87,6 +90,14 @@ class MainActivityArgsProvider :
     override fun getPickerSingleSelectArgs(arguments: Bundle): PickerSingleSelectDialogFragment.Args {
         val args = PickerSingleSelectDialogFragmentArgs.fromBundle(arguments)
         return PickerSingleSelectDialogFragment.Args(
+            item = args.item,
+            fieldSchema = args.fieldSchema
+        )
+    }
+
+    override fun getPickerMultiSelectArgs(arguments: Bundle): PickerMultiSelectDialogFragment.Args {
+        val args = PickerMultiSelectDialogFragmentArgs.fromBundle(arguments)
+        return PickerMultiSelectDialogFragment.Args(
             item = args.item,
             fieldSchema = args.fieldSchema
         )

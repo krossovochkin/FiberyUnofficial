@@ -28,6 +28,8 @@ import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerF
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
+import by.krossovochkin.fiberyunofficial.pickermultiselect.PickerMultiSelectParentComponent
+import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.PickerSingleSelectParentComponent
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import dagger.Binds
@@ -49,7 +51,8 @@ interface MainActivityComponent :
     EntityDetailsParentComponent,
     EntityCreateParentComponent,
     EntityPickerParentComponent,
-    PickerSingleSelectParentComponent {
+    PickerSingleSelectParentComponent,
+    PickerMultiSelectParentComponent {
 
     @Component.Builder
     interface Builder {
@@ -103,6 +106,12 @@ abstract class MainActivityModule {
     abstract fun pickerSingleSelectArgsProvider(
         mainActivityArgsProvider: MainActivityArgsProvider
     ): PickerSingleSelectDialogFragment.ArgsProvider
+
+    @MainActivityScope
+    @Binds
+    abstract fun pickerMultiSelectArgsProvider(
+        mainActivityArgsProvider: MainActivityArgsProvider
+    ): PickerMultiSelectDialogFragment.ArgsProvider
 }
 
 @Scope

@@ -94,6 +94,7 @@ d.app.feature_login = project(":feature-login")
 d.app.feature_entity_create = project(":feature-entity-create")
 d.app.feature_entity_picker = project(":feature-entity-picker")
 d.app.feature_picker_single_select = project(":feature-picker-single-select")
+d.app.feature_picker_multi_select = project(":feature-picker-multi-select")
 
 ext.v = v
 ext.d = d

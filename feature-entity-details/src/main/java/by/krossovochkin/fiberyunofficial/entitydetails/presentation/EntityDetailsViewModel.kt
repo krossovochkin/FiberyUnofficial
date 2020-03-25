@@ -32,6 +32,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
@@ -42,6 +43,7 @@ import java.text.DecimalFormat
 class EntityDetailsViewModel(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+    private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
@@ -266,7 +268,8 @@ class EntityDetailsViewModel(
                 title = field.title,
                 text = field.selectedValues.joinToString(separator = ", ") { it.title },
                 values = field.values,
-                fieldSchema = field.schema
+                fieldSchema = field.schema,
+                multiSelectData = field
             )
         )
     }
@@ -337,6 +340,36 @@ class EntityDetailsViewModel(
                     entityData = entityDetailsArgs.entityData,
                     fieldSchema = fieldSchema,
                     singleSelectItem = selectedValue
+                )
+                load()
+            } catch (e: Exception) {
+                mutableError.value = Event(e)
+            } finally {
+                mutableProgress.value = false
+            }
+        }
+    }
+
+    fun selectMultiSelectField(item: FieldMultiSelectItem) {
+        mutableNavigation.value = Event(
+            EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
+                fieldSchema = item.fieldSchema,
+                multiSelectItem = item.multiSelectData
+            )
+        )
+    }
+
+    fun updateMultiSelectField(
+        data: MultiSelectPickedViewModel.MultiSelectPickedData
+    ) {
+        viewModelScope.launch {
+            try {
+                mutableProgress.value = true
+                updateMultiSelectFieldInteractor.execute(
+                    entityData = entityDetailsArgs.entityData,
+                    fieldSchema = data.fieldSchema,
+                    addedItems = data.addedItems,
+                    removedItems = data.removedItems
                 )
                 load()
             } catch (e: Exception) {
@@ -455,7 +488,8 @@ data class FieldMultiSelectItem(
     val title: String,
     val text: String,
     val values: List<FieldData.EnumItemData>,
-    val fieldSchema: FiberyFieldSchema
+    val fieldSchema: FiberyFieldSchema,
+    val multiSelectData: FieldData.MultiSelectFieldData
 ) : ListItem
 
 data class FieldRichTextItem(

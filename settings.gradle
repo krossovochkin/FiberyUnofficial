@@ -9,3 +9,4 @@ include ':app',
         ':feature-entity-picker',
         ':feature-picker-single-select'
 rootProject.name = 'FiberyUnofficial'
+include ':feature-picker-multi-select'

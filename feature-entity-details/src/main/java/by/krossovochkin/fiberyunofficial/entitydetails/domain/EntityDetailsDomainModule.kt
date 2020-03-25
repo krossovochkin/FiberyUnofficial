@@ -40,6 +40,14 @@ object EntityDetailsDomainModule {
 
     @JvmStatic
     @Provides
+    fun updateMultiSelectFieldInteractor(
+        entityDetailsRepository: EntityDetailsRepository
+    ): UpdateMultiSelectFieldInteractor {
+        return UpdateMultiSelectFieldInteractorImpl(entityDetailsRepository)
+    }
+
+    @JvmStatic
+    @Provides
     fun updateEntityFieldInteractor(
         entityDetailsRepository: EntityDetailsRepository
     ): UpdateEntityFieldInteractor {

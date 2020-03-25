@@ -56,7 +56,9 @@ data class FiberyUpdateCommandBody(
 @JsonClass(generateAdapter = true)
 data class FiberyUpdateCommandArgsDto(
     val type: String,
-    val entity: Map<String, Any?>? = null
+    val entity: Map<String, Any?>? = null,
+    val field: String? = null,
+    val items: List<Any>? = null
 )
 
 @JsonClass(generateAdapter = true)
@@ -88,5 +90,7 @@ enum class FiberyCommand(val value: String) {
     QUERY_ENTITY("fibery.entity/query"),
     QUERY_UPDATE("fibery.entity/update"),
     QUERY_CREATE("fibery.entity/create"),
-    QUERY_DELETE("fibery.entity/delete")
+    QUERY_DELETE("fibery.entity/delete"),
+    QUERY_ADD_COLLECTION_ITEM("fibery.entity/add-collection-items"),
+    QUERY_REMOVE_COLLECTION_ITEM("fibery.entity/remove-collection-items")
 }

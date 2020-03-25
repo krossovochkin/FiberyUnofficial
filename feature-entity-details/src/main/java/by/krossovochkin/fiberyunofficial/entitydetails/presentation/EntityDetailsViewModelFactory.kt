@@ -21,12 +21,14 @@ import androidx.lifecycle.ViewModelProvider
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
 import java.lang.IllegalArgumentException
 
 class EntityDetailsViewModelFactory(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+    private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
@@ -37,6 +39,7 @@ class EntityDetailsViewModelFactory(
             EntityDetailsViewModel(
                 getEntityDetailsInteractor,
                 updateSingleSelectFieldInteractor,
+                updateMultiSelectFieldInteractor,
                 updateEntityFieldInteractor,
                 deleteEntityInteractor,
                 entityDetailsArgs

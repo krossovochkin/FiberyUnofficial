@@ -136,6 +136,9 @@ class EntityDetailsFragment(
             bind {
                 binding.fieldMultiSelectTitleView.text = item.title
                 binding.fieldMultiSelectView.text = item.text
+                binding.root.setOnClickListener {
+                    viewModel.selectMultiSelectField(item)
+                }
             }
         },
         adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(
@@ -206,6 +209,7 @@ class EntityDetailsFragment(
 
     private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
     private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
+    private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -233,6 +237,14 @@ class EntityDetailsFragment(
             Observer { event ->
                 event.getContentIfNotHandled()?.let { (fieldSchema, item) ->
                     viewModel.updateSingleSelectField(fieldSchema, item)
+                }
+            }
+        )
+        multiSelectPickedViewModel.pickedMultiSelect.observe(
+            viewLifecycleOwner,
+            Observer { event ->
+                event.getContentIfNotHandled()?.let { data ->
+                    viewModel.updateMultiSelectField(data)
                 }
             }
         )
@@ -281,7 +293,16 @@ class EntityDetailsFragment(
                     parentListener?.onBackPressed()
                 }
                 is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
-                    showUpdateSingleSelectDialog(navEvent.fieldSchema, navEvent.singleSelectItem)
+                    parentListener?.onSingleSelectFieldEdit(
+                        navEvent.fieldSchema,
+                        navEvent.singleSelectItem
+                    )
+                }
+                is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
+                    parentListener?.onMultiSelectFieldEdit(
+                        navEvent.fieldSchema,
+                        navEvent.multiSelectItem
+                    )
                 }
                 is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
                     parentListener?.onEntityFieldEdit(
@@ -332,13 +353,6 @@ class EntityDetailsFragment(
         }
     }
 
-    private fun showUpdateSingleSelectDialog(
-        fieldSchema: FiberyFieldSchema,
-        item: FieldData.SingleSelectFieldData
-    ) {
-        parentListener?.onSingleSelectFieldEdit(fieldSchema, item)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         parentListener = context as ParentListener
@@ -376,6 +390,11 @@ class EntityDetailsFragment(
         fun onSingleSelectFieldEdit(
             fieldSchema: FiberyFieldSchema,
             item: FieldData.SingleSelectFieldData
+        )
+
+        fun onMultiSelectFieldEdit(
+            fieldSchema: FiberyFieldSchema,
+            item: FieldData.MultiSelectFieldData
         )
 
         fun onBackPressed()

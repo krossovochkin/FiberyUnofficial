@@ -33,6 +33,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
@@ -171,6 +172,28 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         binding.navHostFragment.findNavController().apply {
             ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
                 .pickSingleSelect(fieldSchema, item)
+            onBackPressed()
+        }
+    }
+
+    override fun onMultiSelectFieldEdit(
+        fieldSchema: FiberyFieldSchema,
+        item: FieldData.MultiSelectFieldData
+    ) {
+        binding.navHostFragment.findNavController().navigate(
+            EntityDetailsFragmentDirections
+                .actionEntityDetailsToPickerMultiSelectDialogFragment(fieldSchema, item)
+        )
+    }
+
+    override fun onMultiSelectPicked(
+        fieldSchema: FiberyFieldSchema,
+        addedItems: List<FieldData.EnumItemData>,
+        removedItems: List<FieldData.EnumItemData>
+    ) {
+        binding.navHostFragment.findNavController().apply {
+            ViewModelProvider(this@MainActivity).get<MultiSelectPickedViewModel>()
+                .pickMultiSelect(fieldSchema, addedItems, removedItems)
             onBackPressed()
         }
     }
