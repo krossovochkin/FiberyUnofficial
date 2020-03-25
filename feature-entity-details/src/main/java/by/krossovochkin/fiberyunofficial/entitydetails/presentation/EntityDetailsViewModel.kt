@@ -28,6 +28,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
@@ -61,11 +62,12 @@ class EntityDetailsViewModel(
     private val mutableNavigation = MutableLiveData<Event<EntityDetailsNavEvent>>()
     val navigation: LiveData<Event<EntityDetailsNavEvent>> = mutableNavigation
 
-    val toolbarViewState: EntityDetailsToolbarViewState
-        get() = EntityDetailsToolbarViewState(
+    val toolbarViewState: ToolbarViewState
+        get() = ToolbarViewState(
             title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
             bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex),
-            menuResId = R.menu.menu_entity_details
+            menuResId = R.menu.menu_entity_details,
+            hasBackButton = true
         )
 
     init {

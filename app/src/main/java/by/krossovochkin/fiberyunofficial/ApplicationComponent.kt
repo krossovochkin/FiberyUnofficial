@@ -21,6 +21,7 @@ import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
 import by.krossovochkin.fiberyunofficial.core.data.api.ApiModule
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 import by.krossovochkin.fiberyunofficial.core.data.network.NetworkModule
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -52,5 +53,13 @@ object AuthModule {
         context: Context
     ): AuthStorage {
         return AuthStorageImpl(context.applicationContext)
+    }
+
+    @JvmStatic
+    @Provides
+    fun resProvider(
+        context: Context
+    ): ResProvider {
+        return ResProviderImpl(context.applicationContext)
     }
 }

@@ -31,7 +31,6 @@ import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.databinding.FragmentAppListBinding
 import by.krossovochkin.fiberyunofficial.applist.databinding.ItemAppBinding
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
@@ -113,8 +112,7 @@ class AppListFragment(
 
         binding.appListToolbar.initToolbar(
             activity = requireActivity(),
-            title = requireContext().getString(R.string.title_app_list),
-            bgColorInt = ColorUtils.getColor(requireContext(), R.attr.colorPrimary)
+            state = viewModel.getToolbarViewState(requireContext())
         )
     }
 

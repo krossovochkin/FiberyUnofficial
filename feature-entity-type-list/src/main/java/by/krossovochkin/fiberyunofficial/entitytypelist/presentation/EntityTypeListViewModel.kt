@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,12 +24,16 @@ import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import kotlinx.coroutines.launch
 
 class EntityTypeListViewModel(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
-    private val args: EntityTypeListFragment.Args
+    private val args: EntityTypeListFragment.Args,
+    private val resProvider: ResProvider
 ) : ViewModel() {
 
     private val mutableEntityTypeItems = MutableLiveData<List<ListItem>>()
@@ -77,4 +82,10 @@ class EntityTypeListViewModel(
     fun onBackPressed() {
         mutableNavigation.value = Event(EntityTypeListNavEvent.BackEvent)
     }
+
+    fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
+        title = resProvider.getString(R.string.title_entity_type_list),
+        bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary),
+        hasBackButton = true
+    )
 }

@@ -16,17 +16,22 @@
  */
 package by.krossovochkin.fiberyunofficial.applist.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import kotlinx.coroutines.launch
 
 class AppListViewModel(
-    private val getAppListInteractor: GetAppListInteractor
+    private val getAppListInteractor: GetAppListInteractor,
+    private val resProvider: ResProvider
 ) : ViewModel() {
 
     private val mutableAppItems = MutableLiveData<List<ListItem>>()
@@ -69,4 +74,9 @@ class AppListViewModel(
             throw IllegalArgumentException()
         }
     }
+
+    fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
+        title = resProvider.getString(R.string.title_app_list),
+        bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+    )
 }

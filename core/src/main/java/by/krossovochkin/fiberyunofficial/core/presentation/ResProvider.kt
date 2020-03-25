@@ -14,15 +14,23 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitylist.presentation
+package by.krossovochkin.fiberyunofficial.core.presentation
 
+import android.content.Context
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.annotation.MenuRes
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 
-data class EntityListToolbarViewState(
-    val title: String,
+interface ResProvider {
+
+    fun getString(@StringRes stringResId: Int): String
+
+    fun getString(@StringRes stringResId: Int, vararg params: Any): String
+
     @ColorInt
-    val bgColorInt: Int,
-    @MenuRes
-    val menuResId: Int?
-)
+    fun getColor(@ColorRes colorResId: Int): Int
+
+    @ColorInt
+    fun getColorAttr(themedContext: Context, @AttrRes colorAttrResId: Int): Int
+}

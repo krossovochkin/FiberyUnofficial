@@ -22,12 +22,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.entitycreate.R
 import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateInteractor
 import kotlinx.coroutines.launch
 
 class EntityCreateViewModel(
     private val entityCreateArgs: EntityCreateFragment.Args,
-    private val entityCreateInteractor: EntityCreateInteractor
+    private val entityCreateInteractor: EntityCreateInteractor,
+    private val resProvider: ResProvider
 ) : ViewModel() {
 
     private val mutableNavigation = MutableLiveData<Event<EntityCreateNavEvent>>()
@@ -36,10 +40,13 @@ class EntityCreateViewModel(
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
 
-    val toolbarViewState: EntityCreateToolbarViewState
-        get() = EntityCreateToolbarViewState(
-            title = entityCreateArgs.entityTypeSchema.displayName,
-            bgColorInt = ColorUtils.getColor(entityCreateArgs.entityTypeSchema.meta.uiColorHex)
+    val toolbarViewState: ToolbarViewState
+        get() = ToolbarViewState(
+            title = resProvider.getString(
+                R.string.toolbar_title_create, entityCreateArgs.entityTypeSchema.displayName
+            ),
+            bgColorInt = ColorUtils.getColor(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
+            hasBackButton = true
         )
 
     fun createEntity(name: String) {

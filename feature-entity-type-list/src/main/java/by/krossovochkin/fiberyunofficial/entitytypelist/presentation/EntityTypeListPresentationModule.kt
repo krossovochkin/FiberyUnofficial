@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import dagger.Module
 import dagger.Provides
@@ -48,11 +49,13 @@ object EntityTypeListPresentationModule {
     @Provides
     fun entityTypeListViewModelFactory(
         getEntityTypeListInteractor: GetEntityTypeListInteractor,
-        args: EntityTypeListFragment.Args
+        args: EntityTypeListFragment.Args,
+        resProvider: ResProvider
     ): EntityTypeListViewModelFactory {
         return EntityTypeListViewModelFactory(
             getEntityTypeListInteractor,
-            args
+            args,
+            resProvider
         )
     }
 }

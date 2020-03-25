@@ -28,6 +28,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 import kotlinx.coroutines.launch
@@ -65,16 +66,17 @@ class EntityPickerViewModel(
     private val entityItemsDatasourceFactory: EntityPickerDataSourceFactory =
         EntityPickerDataSourceFactory(entityPickerArgs, getEntityListInteractor, mutableError)
 
-    private val mutableToolbarViewState = MutableLiveData<EntityPickerToolbarViewState>()
-    val toolbarViewState: LiveData<EntityPickerToolbarViewState> = mutableToolbarViewState
+    private val mutableToolbarViewState = MutableLiveData<ToolbarViewState>()
+    val toolbarViewState: LiveData<ToolbarViewState> = mutableToolbarViewState
 
     init {
         viewModelScope.launch {
             val entityType = getEntityTypeSchemaInteractor.execute(entityPickerArgs.fieldSchema)
             mutableToolbarViewState.postValue(
-                EntityPickerToolbarViewState(
+                ToolbarViewState(
                     title = entityType.displayName,
-                    bgColorInt = ColorUtils.getColor(entityType.meta.uiColorHex)
+                    bgColorInt = ColorUtils.getColor(entityType.meta.uiColorHex),
+                    hasBackButton = true
                 )
             )
         }

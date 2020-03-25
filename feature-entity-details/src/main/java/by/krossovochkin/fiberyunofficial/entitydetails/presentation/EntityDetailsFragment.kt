@@ -333,24 +333,19 @@ class EntityDetailsFragment(
     }
 
     private fun initToolbar() {
-        with(viewModel.toolbarViewState) {
-            binding.entityDetailsToolbar.initToolbar(
-                activity = requireActivity(),
-                title = title,
-                bgColorInt = bgColorInt,
-                hasBackButton = true,
-                onBackPressed = { viewModel.onBackPressed() },
-                menuResId = menuResId,
-                onMenuItemClicked = { menuId ->
-                    if (menuId.itemId == R.id.action_delete) {
-                        viewModel.deleteEntity()
-                        true
-                    } else {
-                        error("Unknown menu item")
-                    }
+        binding.entityDetailsToolbar.initToolbar(
+            activity = requireActivity(),
+            state = viewModel.toolbarViewState,
+            onBackPressed = { viewModel.onBackPressed() },
+            onMenuItemClicked = { menuId ->
+                if (menuId.itemId == R.id.action_delete) {
+                    viewModel.deleteEntity()
+                    true
+                } else {
+                    error("Unknown menu item")
                 }
-            )
-        }
+            }
+        )
     }
 
     override fun onAttach(context: Context) {

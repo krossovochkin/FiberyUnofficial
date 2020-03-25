@@ -18,8 +18,6 @@ package by.krossovochkin.fiberyunofficial.core.presentation
 
 import android.content.res.ColorStateList
 import android.view.MenuItem
-import androidx.annotation.ColorInt
-import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
@@ -30,23 +28,19 @@ import by.krossovochkin.fiberyunofficial.core.R
 @Suppress("LongParameterList")
 inline fun Toolbar.initToolbar(
     activity: FragmentActivity,
-    title: String,
-    @ColorInt bgColorInt: Int,
-    hasBackButton: Boolean = false,
+    state: ToolbarViewState,
     crossinline onBackPressed: () -> Unit = {},
-    @MenuRes
-    menuResId: Int? = null,
     crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false }
 ) {
-    val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(activity, bgColorInt)
+    val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(activity, state.bgColorInt)
     val contrastColor = ColorUtils.getContrastColor(activity, backgroundColor)
 
     activity.window.statusBarColor = ColorUtils.getDarkenColor(backgroundColor)
-    this.title = title
+    this.title = state.title
     this.setTitleTextColor(contrastColor)
     this.setBackgroundColor(backgroundColor)
 
-    if (hasBackButton) {
+    if (state.hasBackButton) {
         this.navigationIcon = ContextCompat
             .getDrawable(
                 activity,
@@ -57,7 +51,7 @@ inline fun Toolbar.initToolbar(
         this.setNavigationOnClickListener { onBackPressed() }
     }
 
-    if (menuResId != null) {
+    state.menuResId?.let { menuResId ->
         activity.menuInflater
             .inflate(menuResId, this.menu)
         this.setOnMenuItemClickListener { item -> onMenuItemClicked(item) }

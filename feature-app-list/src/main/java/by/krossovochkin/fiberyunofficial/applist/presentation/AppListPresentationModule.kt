@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import dagger.Module
 import dagger.Provides
 
@@ -38,10 +39,12 @@ object AppListPresentationModule {
     @JvmStatic
     @Provides
     fun appListViewModelFactory(
-        getAppListInteractor: GetAppListInteractor
+        getAppListInteractor: GetAppListInteractor,
+        resProvider: ResProvider
     ): AppListViewModelFactory {
         return AppListViewModelFactory(
-            getAppListInteractor
+            getAppListInteractor,
+            resProvider
         )
     }
 }

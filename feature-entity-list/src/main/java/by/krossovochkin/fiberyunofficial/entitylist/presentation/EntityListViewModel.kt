@@ -28,6 +28,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
@@ -72,10 +73,11 @@ class EntityListViewModel(
     private val entityItemsDatasourceFactory: EntityListDataSourceFactory =
         EntityListDataSourceFactory(entityListArgs, getEntityListInteractor, mutableError)
 
-    val toolbarViewState: EntityListToolbarViewState
-        get() = EntityListToolbarViewState(
+    val toolbarViewState: ToolbarViewState
+        get() = ToolbarViewState(
             title = entityListArgs.entityTypeSchema.displayName,
             bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
+            hasBackButton = true,
             menuResId = if (entityListArgs.entityParams == null) {
                 R.menu.menu_entity_list
             } else {

@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitycreate.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateInteractor
 import dagger.Module
 import dagger.Provides
@@ -48,11 +49,13 @@ object EntityCreatePresentationModule {
     @Provides
     fun entityCreateViewModelFactory(
         entityCreateArgs: EntityCreateFragment.Args,
-        entityCreateInteractor: EntityCreateInteractor
+        entityCreateInteractor: EntityCreateInteractor,
+        resProvider: ResProvider
     ): EntityCreateViewModelFactory {
         return EntityCreateViewModelFactory(
             entityCreateArgs,
-            entityCreateInteractor
+            entityCreateInteractor,
+            resProvider
         )
     }
 }

@@ -144,29 +144,24 @@ class EntityListFragment(
     }
 
     private fun initToolbar() {
-        with(viewModel.toolbarViewState) {
-            binding.entityListToolbar.initToolbar(
-                activity = requireActivity(),
-                title = title,
-                bgColorInt = bgColorInt,
-                hasBackButton = true,
-                onBackPressed = { viewModel.onBackPressed() },
-                menuResId = menuResId,
-                onMenuItemClicked = { item ->
-                    when (item.itemId) {
-                        R.id.action_filter -> {
-                            viewModel.onFilterClicked()
-                            true
-                        }
-                        R.id.action_sort -> {
-                            viewModel.onSortClicked()
-                            true
-                        }
-                        else -> error("Unknown menu item: $item")
+        binding.entityListToolbar.initToolbar(
+            activity = requireActivity(),
+            state = viewModel.toolbarViewState,
+            onBackPressed = { viewModel.onBackPressed() },
+            onMenuItemClicked = { item ->
+                when (item.itemId) {
+                    R.id.action_filter -> {
+                        viewModel.onFilterClicked()
+                        true
                     }
+                    R.id.action_sort -> {
+                        viewModel.onSortClicked()
+                        true
+                    }
+                    else -> error("Unknown menu item: $item")
                 }
-            )
-        }
+            }
+        )
     }
 
     private fun showUpdateFilterDialog(

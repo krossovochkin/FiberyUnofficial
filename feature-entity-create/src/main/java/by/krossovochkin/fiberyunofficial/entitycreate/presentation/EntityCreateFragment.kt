@@ -77,15 +77,11 @@ class EntityCreateFragment(
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
 
-        with(viewModel.toolbarViewState) {
-            binding.entityCreateToolbar.initToolbar(
-                activity = requireActivity(),
-                title = getString(R.string.toolbar_title_create, title),
-                bgColorInt = bgColorInt,
-                hasBackButton = true,
-                onBackPressed = { parentListener?.onBackPressed() }
-            )
-        }
+        binding.entityCreateToolbar.initToolbar(
+            activity = requireActivity(),
+            state = viewModel.toolbarViewState,
+            onBackPressed = { parentListener?.onBackPressed() }
+        )
     }
 
     override fun onAttach(context: Context) {

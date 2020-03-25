@@ -128,15 +128,11 @@ class EntityPickerFragment(
 
     private fun initToolbar() {
         viewModel.toolbarViewState.observe(viewLifecycleOwner, Observer {
-            with(it) {
-                binding.entityPickerToolbar.initToolbar(
-                    activity = requireActivity(),
-                    title = title,
-                    bgColorInt = bgColorInt,
-                    hasBackButton = true,
-                    onBackPressed = { viewModel.onBackPressed() }
-                )
-            }
+            binding.entityPickerToolbar.initToolbar(
+                activity = requireActivity(),
+                state = it,
+                onBackPressed = { viewModel.onBackPressed() }
+            )
         })
     }
 

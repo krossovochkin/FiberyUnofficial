@@ -14,12 +14,16 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitycreate.presentation
+package by.krossovochkin.fiberyunofficial.core.presentation
 
 import androidx.annotation.ColorInt
+import androidx.annotation.MenuRes
 
-data class EntityCreateToolbarViewState(
+data class ToolbarViewState(
     val title: String,
     @ColorInt
-    val bgColorInt: Int
+    val bgColorInt: Int,
+    @MenuRes
+    val menuResId: Int? = null,
+    val hasBackButton: Boolean = false
 )

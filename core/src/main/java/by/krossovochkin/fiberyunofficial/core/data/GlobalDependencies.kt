@@ -19,10 +19,13 @@ package by.krossovochkin.fiberyunofficial.core.data
 import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 interface GlobalDependencies {
 
     fun context(): Context
+
+    fun resProvider(): ResProvider
 
     fun fiberyServiceApi(): FiberyServiceApi
 
