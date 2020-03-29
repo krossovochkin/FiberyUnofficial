@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
@@ -58,6 +59,7 @@ object EntityListPresentationModule {
         setEntityListSortInteractor: SetEntityListSortInteractor,
         getEntityListFilterInteractor: GetEntityListFilterInteractor,
         getEntityListSortInteractor: GetEntityListSortInteractor,
+        addEntityRelationInteractor: AddEntityRelationInteractor,
         removeEntityRelationInteractor: RemoveEntityRelationInteractor,
         entityListArgs: EntityListFragment.Args
     ): EntityListViewModelFactory {
@@ -68,6 +70,7 @@ object EntityListPresentationModule {
             getEntityListFilterInteractor,
             getEntityListSortInteractor,
             removeEntityRelationInteractor,
+            addEntityRelationInteractor,
             entityListArgs
         )
     }

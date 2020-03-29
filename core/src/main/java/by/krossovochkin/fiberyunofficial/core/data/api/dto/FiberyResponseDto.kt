@@ -96,6 +96,21 @@ data class FiberyDocumentResponse(
 )
 
 @JsonClass(generateAdapter = true)
+data class FiberyCreatedEntityResponseDto(
+    @Json(name = "success")
+    val isSuccess: Boolean,
+    @Json(name = "result")
+    val result: Result
+) {
+
+    @JsonClass(generateAdapter = true)
+    data class Result(
+        @Json(name = "fibery/id")
+        val id: String
+    )
+}
+
+@JsonClass(generateAdapter = true)
 data class FiberyCommandResponseDto(
     @Json(name = "success")
     val isSuccess: Boolean

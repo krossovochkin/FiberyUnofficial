@@ -23,6 +23,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -53,6 +54,8 @@ class EntityListFragment(
     lateinit var viewModel: EntityListViewModel
 
     private val binding by viewBinding(FragmentEntityListBinding::bind)
+
+    private val entityCreatedViewModel by activityViewModels<EntityCreatedViewModel>()
 
     private var parentListener: ParentListener? = null
 
@@ -104,6 +107,15 @@ class EntityListFragment(
         binding.entityListCreateFab.setOnClickListener {
             viewModel.onCreateEntityClicked()
         }
+
+        entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                viewModel.onEntityCreated(
+                    entityParams = it.entityParams,
+                    createdEntityId = it.createdEntityId
+                )
+            }
+        })
     }
 
     private fun initList() {

@@ -17,74 +17,49 @@
 package by.krossovochkin.fiberyunofficial.entitycreate.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateRepository
 import java.util.UUID
 
 class EntityCreateRepositoryImpl(
-    private val fiberyServiceApi: FiberyServiceApi,
-    private val fiberyApiRepository: FiberyApiRepository
+    private val fiberyServiceApi: FiberyServiceApi
 ) : EntityCreateRepository {
 
     override suspend fun createEntity(
         entityTypeSchema: FiberyEntityTypeSchema,
-        name: String,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
-    ) {
+        name: String
+    ): String {
         if (name.isEmpty()) {
             throw IllegalArgumentException("name should not be null")
         }
-        val commands = mutableListOf<FiberyCommandBody>()
 
         val titleFieldName = requireNotNull(
             entityTypeSchema.fields.find { it.meta.isUiTitle }
         ) { "title is missing" }.name
         val id = UUID.randomUUID().toString()
 
-        commands.add(
-            FiberyCommandBody(
-                command = FiberyCommand.QUERY_CREATE.value,
-                args = FiberyCommandArgsDto(
-                    type = entityTypeSchema.name,
-                    entity = mapOf(
-                        titleFieldName to name,
-                        FiberyApiConstants.Field.ID.value to id
-                    )
-                )
-            )
-        )
-
-        entityParams
-            ?.let {
-                val relationFieldName = fiberyApiRepository.getTypeSchema(entityTypeSchema.name)
-                    .fields.find { field -> field.meta.relationId == it.first.meta.relationId }!!
-                    .name
-                FiberyCommandBody(
-                    command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
-                    args = FiberyCommandArgsDto(
-                        entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to id
-                        ),
-                        field = relationFieldName,
-                        type = entityTypeSchema.name,
-                        items = listOf(
-                            mapOf(FiberyApiConstants.Field.ID.value to it.second.id)
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_CREATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entityTypeSchema.name,
+                            entity = mapOf(
+                                titleFieldName to name,
+                                FiberyApiConstants.Field.ID.value to id
+                            )
                         )
                     )
                 )
-            }
-            ?.let { commands.add(it) }
-
-        fiberyServiceApi
-            .sendCommand(commands)
+            )
             .checkResultSuccess()
+
+        return id
     }
 }

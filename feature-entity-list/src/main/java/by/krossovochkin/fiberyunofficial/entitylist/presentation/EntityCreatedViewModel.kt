@@ -14,15 +14,26 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitycreate.presentation
+package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.presentation.Event
 
-sealed class EntityCreateNavEvent {
+class EntityCreatedViewModel : ViewModel() {
 
-    data class OnEntityCreateSuccessEvent(
-        val createdEntityId: String,
-        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
-    ) : EntityCreateNavEvent()
+    private val mutableCreatedEntityId = MutableLiveData<Event<EntityCreatedData>>()
+    val createdEntityId: LiveData<Event<EntityCreatedData>> = mutableCreatedEntityId
+
+    fun createEntity(data: EntityCreatedData) {
+        mutableCreatedEntityId.value = Event(data)
+    }
 }
+
+data class EntityCreatedData(
+    val createdEntityId: String,
+    val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+)

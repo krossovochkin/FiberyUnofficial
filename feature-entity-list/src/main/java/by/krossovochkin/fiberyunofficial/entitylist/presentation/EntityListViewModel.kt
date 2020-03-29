@@ -31,6 +31,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitylist.R
+import by.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
@@ -49,6 +50,7 @@ class EntityListViewModel(
     private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
+    private val addEntityRelationInteractor: AddEntityRelationInteractor,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
 
@@ -164,6 +166,33 @@ class EntityListViewModel(
                 entityListArgs.entityParams
             )
         )
+    }
+
+    fun onEntityCreated(
+        createdEntityId: String,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ) {
+        if (entityParams == null) {
+            entityItemsDatasourceFactory.dataSource?.invalidate()
+            return
+        }
+
+        if (entityParams != entityListArgs.entityParams) {
+            error("Can't add relation: params do not match")
+        }
+
+        viewModelScope.launch {
+            try {
+                addEntityRelationInteractor
+                    .execute(
+                        fieldSchema = entityParams.first,
+                        parentEntity = entityParams.second,
+                        childEntityId = createdEntityId
+                    )
+            } catch (e: Exception) {
+                mutableError.postValue(Event(e))
+            }
+        }
     }
 }
 

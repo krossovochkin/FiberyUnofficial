@@ -14,15 +14,33 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitycreate.presentation
+package by.krossovochkin.fiberyunofficial.entitylist.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 
-sealed class EntityCreateNavEvent {
+interface AddEntityRelationInteractor {
 
-    data class OnEntityCreateSuccessEvent(
-        val createdEntityId: String,
-        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
-    ) : EntityCreateNavEvent()
+    suspend fun execute(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntityId: String
+    )
+}
+
+class AddEntityRelationInteractorImpl(
+    private val entityListRepository: EntityListRepository
+) : AddEntityRelationInteractor {
+
+    override suspend fun execute(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntityId: String
+    ) {
+        entityListRepository.addRelation(
+            fieldSchema = fieldSchema,
+            parentEntity = parentEntity,
+            childEntityId = childEntityId
+        )
+    }
 }

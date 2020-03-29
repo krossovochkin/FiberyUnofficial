@@ -54,9 +54,12 @@ class EntityCreateFragment(
             .inject(this)
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
-            when (event.getContentIfNotHandled()) {
+            when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
-                    parentListener?.onEntityCreateSuccess()
+                    parentListener?.onEntityCreateSuccess(
+                        createdEntityId = navEvent.createdEntityId,
+                        entityParams = navEvent.entityParams
+                    )
                 }
             }
         })
@@ -106,7 +109,10 @@ class EntityCreateFragment(
 
     interface ParentListener {
 
-        fun onEntityCreateSuccess()
+        fun onEntityCreateSuccess(
+            createdEntityId: String,
+            entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        )
 
         fun onBackPressed()
     }

@@ -42,4 +42,10 @@ interface EntityListRepository {
         parentEntity: FiberyEntityData,
         childEntity: FiberyEntityData
     )
+
+    suspend fun addRelation(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntityId: String
+    )
 }

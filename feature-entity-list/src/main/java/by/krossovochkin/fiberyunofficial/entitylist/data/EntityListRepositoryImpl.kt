@@ -183,6 +183,32 @@ class EntityListRepositoryImpl(
             .checkResultSuccess()
     }
 
+    override suspend fun addRelation(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntityId: String
+    ) {
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
+                        args = FiberyCommandArgsDto(
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntity.id
+                            ),
+                            field = fieldSchema.name,
+                            type = parentEntity.schema.name,
+                            items = listOf(
+                                mapOf(FiberyApiConstants.Field.ID.value to childEntityId)
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
+    }
+
     private fun FiberyEntityTypeSchema.getUiTitle(): String {
         return requireNotNull(
             this.fields.find { it.meta.isUiTitle }

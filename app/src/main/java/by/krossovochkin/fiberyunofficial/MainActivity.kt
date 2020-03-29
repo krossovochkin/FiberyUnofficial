@@ -35,6 +35,8 @@ import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetail
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedViewModel
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedData
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
@@ -133,7 +135,22 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         )
     }
 
-    override fun onEntityCreateSuccess() {
+    override fun onEntityCreateSuccess(
+        createdEntityId: String,
+        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+    ) {
+        if (entityParams == null) {
+            onBackPressed()
+            return
+        }
+
+        ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
+            .createEntity(
+                EntityCreatedData(
+                    entityParams = entityParams,
+                    createdEntityId = createdEntityId
+                )
+            )
         onBackPressed()
     }
 
@@ -148,11 +165,9 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     }
 
     override fun onEntityPicked(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
-        binding.navHostFragment.findNavController().apply {
-            ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
-                .pickEntity(fieldSchema, entity)
-            onBackPressed()
-        }
+        ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
+            .pickEntity(fieldSchema, entity)
+        onBackPressed()
     }
 
     override fun onSingleSelectFieldEdit(
@@ -169,11 +184,9 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         fieldSchema: FiberyFieldSchema,
         item: FieldData.EnumItemData
     ) {
-        binding.navHostFragment.findNavController().apply {
-            ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
-                .pickSingleSelect(fieldSchema, item)
-            onBackPressed()
-        }
+        ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
+            .pickSingleSelect(fieldSchema, item)
+        onBackPressed()
     }
 
     override fun onMultiSelectFieldEdit(
@@ -191,10 +204,8 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     ) {
-        binding.navHostFragment.findNavController().apply {
-            ViewModelProvider(this@MainActivity).get<MultiSelectPickedViewModel>()
-                .pickMultiSelect(fieldSchema, addedItems, removedItems)
-            onBackPressed()
-        }
+        ViewModelProvider(this@MainActivity).get<MultiSelectPickedViewModel>()
+            .pickMultiSelect(fieldSchema, addedItems, removedItems)
+        onBackPressed()
     }
 }

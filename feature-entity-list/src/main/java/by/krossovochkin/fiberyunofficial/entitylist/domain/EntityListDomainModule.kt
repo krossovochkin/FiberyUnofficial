@@ -69,4 +69,12 @@ object EntityListDomainModule {
     ): RemoveEntityRelationInteractor {
         return RemoveEntityRelationInteractorImpl(entityListRepository)
     }
+
+    @JvmStatic
+    @Provides
+    fun addEntityRelationInteractor(
+        entityListRepository: EntityListRepository
+    ): AddEntityRelationInteractor {
+        return AddEntityRelationInteractorImpl(entityListRepository)
+    }
 }

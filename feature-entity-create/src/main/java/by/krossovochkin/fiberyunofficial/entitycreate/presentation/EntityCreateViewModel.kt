@@ -52,10 +52,15 @@ class EntityCreateViewModel(
     fun createEntity(name: String) {
         viewModelScope.launch {
             try {
-                entityCreateInteractor
-                    .execute(entityCreateArgs.entityTypeSchema, name, entityCreateArgs.entityParams)
+                val id = entityCreateInteractor
+                    .execute(entityCreateArgs.entityTypeSchema, name)
                 mutableNavigation.postValue(
-                    Event(EntityCreateNavEvent.OnEntityCreateSuccessEvent)
+                    Event(
+                        EntityCreateNavEvent.OnEntityCreateSuccessEvent(
+                            createdEntityId = id,
+                            entityParams = entityCreateArgs.entityParams
+                        )
+                    )
                 )
             } catch (e: Exception) {
                 mutableError.postValue(Event(e))
