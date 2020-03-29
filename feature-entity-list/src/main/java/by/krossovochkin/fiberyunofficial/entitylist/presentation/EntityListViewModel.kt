@@ -25,6 +25,7 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -33,6 +34,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
+import by.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import kotlinx.coroutines.launch
@@ -46,6 +48,7 @@ class EntityListViewModel(
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
     private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
+    private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
 
@@ -60,7 +63,8 @@ class EntityListViewModel(
             .map<ListItem> { entity ->
                 EntityListItem(
                     title = entity.title,
-                    entityData = entity
+                    entityData = entity,
+                    isRemoveAvailable = entityListArgs.entityParams != null
                 )
             }
             .toLiveData(
@@ -92,6 +96,24 @@ class EntityListViewModel(
             )
         } else {
             throw IllegalArgumentException()
+        }
+    }
+
+    fun removeRelation(item: EntityListItem) {
+        val (fieldSchema: FiberyFieldSchema, entity: FiberyEntityData) = entityListArgs.entityParams
+            ?: error("Can't remove relation from top-level entity list")
+
+        viewModelScope.launch {
+            try {
+                removeEntityRelationInteractor.execute(
+                    fieldSchema = fieldSchema,
+                    parentEntity = entity,
+                    childEntity = item.entityData
+                )
+                entityItemsDatasourceFactory.dataSource?.invalidate()
+            } catch (e: Exception) {
+                mutableError.postValue(Event(e))
+            }
         }
     }
 

@@ -23,6 +23,7 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
@@ -156,6 +157,30 @@ class EntityListRepositoryImpl(
 
     override fun getEntityListSort(entityType: FiberyEntityTypeSchema): String {
         return entityListFiltersSortStorage.getRawSort(entityType.name)
+    }
+
+    override suspend fun removeRelation(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntity: FiberyEntityData
+    ) {
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
+                        args = FiberyCommandArgsDto(
+                            type = parentEntity.schema.name,
+                            field = fieldSchema.name,
+                            items = listOf(mapOf(FiberyApiConstants.Field.ID.value to childEntity.id)),
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntity.id
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
     }
 
     private fun FiberyEntityTypeSchema.getUiTitle(): String {

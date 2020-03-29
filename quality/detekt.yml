@@ -47,3 +47,7 @@ style:
 potential-bugs:
   LateinitUsage:
     excludeAnnotatedProperties: "Inject"
+
+performance:
+  SpreadOperator:
+    active: false

@@ -17,29 +17,30 @@
 package by.krossovochkin.fiberyunofficial.entitylist.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 
-interface EntityListRepository {
+interface RemoveEntityRelationInteractor {
 
-    suspend fun getEntityList(
-        entityType: FiberyEntityTypeSchema,
-        offset: Int,
-        pageSize: Int,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
-    ): List<FiberyEntityData>
-
-    fun setEntityListFilter(entityType: FiberyEntityTypeSchema, filter: String, params: String)
-
-    fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String)
-
-    fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String>
-
-    fun getEntityListSort(entityType: FiberyEntityTypeSchema): String
-
-    suspend fun removeRelation(
+    suspend fun execute(
         fieldSchema: FiberyFieldSchema,
         parentEntity: FiberyEntityData,
         childEntity: FiberyEntityData
     )
+}
+
+class RemoveEntityRelationInteractorImpl(
+    private val entityListRepository: EntityListRepository
+) : RemoveEntityRelationInteractor {
+
+    override suspend fun execute(
+        fieldSchema: FiberyFieldSchema,
+        parentEntity: FiberyEntityData,
+        childEntity: FiberyEntityData
+    ) {
+        entityListRepository.removeRelation(
+            fieldSchema = fieldSchema,
+            parentEntity = parentEntity,
+            childEntity = childEntity
+        )
+    }
 }

@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
@@ -76,6 +77,13 @@ class EntityListFragment(
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTitleTextView.text = item.title
+
+                binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
+                if (item.isRemoveAvailable) {
+                    binding.entityRemoveRelationAction.setOnClickListener {
+                        viewModel.removeRelation(item)
+                    }
+                }
             }
         }
     )
