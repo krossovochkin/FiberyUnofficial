@@ -6,7 +6,7 @@ include ':app',
         ':feature-entity-details',
         ':feature-login',
         ':feature-entity-create',
-        ':feature-entity-picker',
+        ':feature-picker-entity',
         ':feature-picker-single-select'
 rootProject.name = 'FiberyUnofficial'
 include ':feature-picker-multi-select'
