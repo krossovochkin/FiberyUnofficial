@@ -30,7 +30,7 @@ class ResProviderImpl(
     }
 
     override fun getString(stringResId: Int, vararg params: Any): String {
-        return context.getString(stringResId, params)
+        return context.getString(stringResId, *params)
     }
 
     override fun getColor(colorResId: Int): Int {
