@@ -33,7 +33,7 @@ inline fun Toolbar.initToolbar(
     crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false }
 ) {
     val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(activity, state.bgColorInt)
-    val contrastColor = ColorUtils.getContrastColor(activity, backgroundColor)
+    val contrastColor = ColorUtils.getContrastColor(backgroundColor)
 
     activity.window.statusBarColor = ColorUtils.getDarkenColor(backgroundColor)
     this.title = state.title

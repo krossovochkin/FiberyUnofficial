@@ -22,12 +22,10 @@ import android.graphics.Color
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 
 private const val DARKEN_COLOR_RATIO = 0.8f
 private const val DESATURATE_COLOR_RATIO = 0.6f
-private const val DARK_COLOR_LUMINANCE_THRESHOLD = 0.5
 
 object ColorUtils {
 
@@ -60,15 +58,12 @@ object ColorUtils {
         return Color.HSVToColor(result)
     }
 
-    fun isDarkColor(@ColorInt color: Int): Boolean {
-        return ColorUtils.calculateLuminance(color) < DARK_COLOR_LUMINANCE_THRESHOLD
-    }
-
-    fun Context.isDarkMode(): Boolean {
+    private fun Context.isDarkMode(): Boolean {
         val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return mode == Configuration.UI_MODE_NIGHT_YES
     }
 
+    @ColorInt
     fun getDesaturatedColorIfNeeded(context: Context, @ColorInt color: Int): Int {
         return if (context.isDarkMode()) {
             getDesaturatedColor(color)
@@ -77,25 +72,16 @@ object ColorUtils {
         }
     }
 
+    @ColorInt
     fun getDefaultContrastColor(context: Context): Int {
-        return ContextCompat.getColor(
-            context,
-            if (context.isDarkMode()) {
-                android.R.color.white
-            } else {
-                android.R.color.black
-            }
-        )
+        return if (context.isDarkMode()) Color.WHITE else Color.BLACK
     }
 
-    fun getContrastColor(context: Context, @ColorInt color: Int): Int {
-        return ContextCompat.getColor(
-            context,
-            if (isDarkColor(color)) {
-                android.R.color.white
-            } else {
-                android.R.color.black
-            }
-        )
+    @ColorInt
+    fun getContrastColor(@ColorInt color: Int): Int {
+        val whiteContrast = ColorUtils.calculateContrast(Color.WHITE, color)
+        val blackContrast = ColorUtils.calculateContrast(Color.BLACK, color)
+
+        return if (whiteContrast > blackContrast) Color.WHITE else Color.BLACK
     }
 }
