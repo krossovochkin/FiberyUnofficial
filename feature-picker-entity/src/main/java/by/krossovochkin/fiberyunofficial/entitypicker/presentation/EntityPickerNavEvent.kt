@@ -25,6 +25,7 @@ sealed class EntityPickerNavEvent {
 
     data class OnEntityPickedEvent(
         val fieldSchema: FiberyFieldSchema,
-        val entity: FiberyEntityData?
+        val entity: FiberyEntityData?,
+        val parentEntity: FiberyEntityData?
     ) : EntityPickerNavEvent()
 }

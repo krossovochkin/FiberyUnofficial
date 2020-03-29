@@ -34,7 +34,7 @@ import by.krossovochkin.fiberyunofficial.entitypicker.DaggerEntityPickerComponen
 import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.FragmentEntityPickerBinding
-import by.krossovochkin.fiberyunofficial.entitypicker.databinding.ItemEntityBinding
+import by.krossovochkin.fiberyunofficial.entitypicker.databinding.ItemEntityPickerBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
@@ -66,9 +66,9 @@ class EntityPickerFragment(
             }
         },
         adapterDelegateLayoutContainer<EntityPickerItem, ListItem>(
-            layout = R.layout.item_entity
+            layout = R.layout.item_entity_picker
         ) {
-            val binding = ItemEntityBinding.bind(this.itemView)
+            val binding = ItemEntityPickerBinding.bind(this.itemView)
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTitleTextView.text = item.title
@@ -117,7 +117,11 @@ class EntityPickerFragment(
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityPickerNavEvent.OnEntityPickedEvent -> {
-                    parentListener?.onEntityPicked(navEvent.fieldSchema, navEvent.entity)
+                    parentListener?.onEntityPicked(
+                        navEvent.fieldSchema,
+                        navEvent.entity,
+                        navEvent.parentEntity
+                    )
                 }
                 is EntityPickerNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
@@ -158,7 +162,11 @@ class EntityPickerFragment(
 
     interface ParentListener {
 
-        fun onEntityPicked(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?)
+        fun onEntityPicked(
+            fieldSchema: FiberyFieldSchema,
+            entity: FiberyEntityData?,
+            parentEntity: FiberyEntityData?
+        )
 
         fun onBackPressed()
     }

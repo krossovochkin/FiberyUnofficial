@@ -121,29 +121,34 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
     }
 
-    override fun onCreateEntity(
+    override fun onAddEntityRequested(
         entityType: FiberyEntityTypeSchema,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ) {
-        binding.navHostFragment.findNavController().navigate(
-            EntityListFragmentDirections
-                .actionEntityListToEntityCreateFragment(
-                    entityType,
-                    entityParams?.second,
-                    entityParams?.first
-                )
-        )
+        if (entityParams == null) {
+            binding.navHostFragment.findNavController().navigate(
+                EntityListFragmentDirections
+                    .actionEntityListToEntityCreateFragment(
+                        entityType,
+                        entityParams?.second,
+                        entityParams?.first
+                    )
+            )
+        } else {
+            binding.navHostFragment.findNavController().navigate(
+                EntityListFragmentDirections
+                    .actionEntityListToEntityPickerFragment(
+                        fieldSchema = entityParams.first,
+                        entity = entityParams.second
+                    )
+            )
+        }
     }
 
     override fun onEntityCreateSuccess(
         createdEntityId: String,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ) {
-        if (entityParams == null) {
-            onBackPressed()
-            return
-        }
-
         ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
             .createEntity(
                 EntityCreatedData(
@@ -164,9 +169,26 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         )
     }
 
-    override fun onEntityPicked(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
-        ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
-            .pickEntity(fieldSchema, entity)
+    override fun onEntityPicked(
+        fieldSchema: FiberyFieldSchema,
+        entity: FiberyEntityData?,
+        parentEntity: FiberyEntityData?
+    ) {
+        if (fieldSchema.meta.isCollection) {
+            if (entity == null) {
+                error("Can't add null entity to collection")
+            }
+            ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
+                .createEntity(
+                    EntityCreatedData(
+                        createdEntityId = entity.id,
+                        entityParams = parentEntity?.let { fieldSchema to it }
+                    )
+                )
+        } else {
+            ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
+                .pickEntity(fieldSchema, entity)
+        }
         onBackPressed()
     }
 

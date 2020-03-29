@@ -87,7 +87,8 @@ class EntityPickerViewModel(
             mutableNavigation.value = Event(
                 EntityPickerNavEvent.OnEntityPickedEvent(
                     fieldSchema = entityPickerArgs.fieldSchema,
-                    entity = item.entityData
+                    entity = item.entityData,
+                    parentEntity = entityPickerArgs.entity
                 )
             )
         } else {

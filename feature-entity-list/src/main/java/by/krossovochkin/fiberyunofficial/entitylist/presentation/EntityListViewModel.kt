@@ -189,6 +189,7 @@ class EntityListViewModel(
                         parentEntity = entityParams.second,
                         childEntityId = createdEntityId
                     )
+                entityItemsDatasourceFactory.dataSource?.invalidate()
             } catch (e: Exception) {
                 mutableError.postValue(Event(e))
             }

@@ -229,7 +229,7 @@ class EntityListFragment(
         entityType: FiberyEntityTypeSchema,
         entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
     ) {
-        parentListener?.onCreateEntity(entityType, entityParams)
+        parentListener?.onAddEntityRequested(entityType, entityParams)
     }
 
     override fun onAttach(context: Context) {
@@ -256,7 +256,7 @@ class EntityListFragment(
 
         fun onEntitySelected(entity: FiberyEntityData)
 
-        fun onCreateEntity(
+        fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,
             entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
         )

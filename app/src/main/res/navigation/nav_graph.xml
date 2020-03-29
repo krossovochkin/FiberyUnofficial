@@ -52,6 +52,9 @@
             android:id="@+id/action_entityList_to_entityCreateFragment"
             app:destination="@id/entityCreateFragment"
             app:enterAnim="@anim/fragment_open_enter" />
+        <action
+            android:id="@+id/action_entityList_to_entityPickerFragment"
+            app:destination="@id/entityPickerFragment" />
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
