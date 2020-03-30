@@ -17,13 +17,12 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface UpdateEntityFieldInteractor {
 
     suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         selectedEntity: FiberyEntityData?
     )
 }
@@ -33,13 +32,11 @@ class UpdateEntityFieldInteractorImpl(
 ) : UpdateEntityFieldInteractor {
 
     override suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         selectedEntity: FiberyEntityData?
     ) {
         entityDetailsRepository.updateEntityField(
-            entityData = entityData,
-            fieldSchema = fieldSchema,
+            parentEntityData = parentEntityData,
             selectedEntity = selectedEntity
         )
     }

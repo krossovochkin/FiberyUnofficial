@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.pickersingleselect.DaggerPickerSingleSelectComponent
 import by.krossovochkin.fiberyunofficial.pickersingleselect.PickerSingleSelectParentComponent
 import javax.inject.Inject
@@ -74,7 +75,7 @@ class PickerSingleSelectDialogFragment(
     }
 
     data class Args(
-        val fieldSchema: FiberyFieldSchema,
+        val parentEntityData: ParentEntityData,
         val item: FieldData.SingleSelectFieldData
     )
 

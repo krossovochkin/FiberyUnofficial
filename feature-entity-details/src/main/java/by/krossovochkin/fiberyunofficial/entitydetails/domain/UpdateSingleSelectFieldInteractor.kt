@@ -16,15 +16,13 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.domain
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface UpdateSingleSelectFieldInteractor {
 
     suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         singleSelectItem: FieldData.EnumItemData
     )
 }
@@ -34,10 +32,9 @@ class UpdateSingleSelectFieldInteractorImpl(
 ) : UpdateSingleSelectFieldInteractor {
 
     override suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         singleSelectItem: FieldData.EnumItemData
     ) {
-        return entityDetailsRepository.updateSingleSelectField(entityData, fieldSchema, singleSelectItem)
+        return entityDetailsRepository.updateSingleSelectField(parentEntityData, singleSelectItem)
     }
 }

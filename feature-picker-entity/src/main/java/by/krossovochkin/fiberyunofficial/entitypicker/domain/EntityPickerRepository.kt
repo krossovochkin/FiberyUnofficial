@@ -17,12 +17,12 @@
 package by.krossovochkin.fiberyunofficial.entitypicker.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface EntityPickerRepository {
 
     suspend fun getEntityList(
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         offset: Int,
         pageSize: Int,
         searchQuery: String

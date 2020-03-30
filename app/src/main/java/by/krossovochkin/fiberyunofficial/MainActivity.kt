@@ -29,6 +29,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
@@ -73,8 +74,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             R.id.entityTypeList -> {
                 EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
                     entityType = entityTypeSchema,
-                    entity = null,
-                    field = null
+                    parentEntityData = null
                 )
             }
             else -> error("Unknown current direction: $id")
@@ -85,16 +85,14 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     @Suppress("UseIfInsteadOfWhen")
     override fun onEntityTypeSelected(
         entityTypeSchema: FiberyEntityTypeSchema,
-        entity: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema
+        parentEntityData: ParentEntityData
     ) {
         val navController = binding.navHostFragment.findNavController()
         val directions = when (val id = navController.currentDestination?.id) {
             R.id.entityDetails -> {
                 EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
                     entityType = entityTypeSchema,
-                    entity = entity,
-                    field = fieldSchema
+                    parentEntityData = parentEntityData
                 )
             }
             else -> error("Unknown current direction: $id")
@@ -123,82 +121,76 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onAddEntityRequested(
         entityType: FiberyEntityTypeSchema,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ) {
-        if (entityParams == null) {
+        if (parentEntityData == null) {
             binding.navHostFragment.findNavController().navigate(
                 EntityListFragmentDirections
                     .actionEntityListToEntityCreateFragment(
-                        entityType,
-                        entityParams?.second,
-                        entityParams?.first
+                        entityType = entityType
                     )
             )
         } else {
             binding.navHostFragment.findNavController().navigate(
                 EntityListFragmentDirections
                     .actionEntityListToEntityPickerFragment(
-                        fieldSchema = entityParams.first,
-                        entity = entityParams.second
+                        parentEntityData = parentEntityData,
+                        currentEntity = null
                     )
             )
         }
     }
 
     override fun onEntityCreateSuccess(
-        createdEntityId: String,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        createdEntityId: String
     ) {
         ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
             .createEntity(
-                EntityCreatedData(
-                    entityParams = entityParams,
-                    createdEntityId = createdEntityId
-                )
+                EntityCreatedData(createdEntityId = createdEntityId)
             )
         onBackPressed()
     }
 
-    override fun onEntityFieldEdit(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
+    override fun onEntityFieldEdit(
+        parentEntityData: ParentEntityData,
+        entity: FiberyEntityData?
+    ) {
         binding.navHostFragment.findNavController().navigate(
             EntityDetailsFragmentDirections
                 .actionEntityDetailsToEntityPickerFragment(
-                    fieldSchema = fieldSchema,
-                    entity = entity
+                    parentEntityData = parentEntityData,
+                    currentEntity = entity
                 )
         )
     }
 
     override fun onEntityPicked(
-        fieldSchema: FiberyFieldSchema,
-        entity: FiberyEntityData?,
-        parentEntity: FiberyEntityData?
+        parentEntityData: ParentEntityData,
+        entity: FiberyEntityData?
     ) {
-        if (fieldSchema.meta.isCollection) {
+        if (parentEntityData.fieldSchema.meta.isCollection) {
             if (entity == null) {
                 error("Can't add null entity to collection")
             }
             ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-                .createEntity(
-                    EntityCreatedData(
-                        createdEntityId = entity.id,
-                        entityParams = parentEntity?.let { fieldSchema to it }
-                    )
-                )
+                .createEntity(EntityCreatedData(createdEntityId = entity.id))
         } else {
             ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
-                .pickEntity(fieldSchema, entity)
+                .pickEntity(parentEntityData, entity)
         }
         onBackPressed()
     }
 
     override fun onSingleSelectFieldEdit(
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         item: FieldData.SingleSelectFieldData
     ) {
         binding.navHostFragment.findNavController().navigate(
             EntityDetailsFragmentDirections
-                .actionEntityDetailsToPickerSingleSelectDialogFragment(item, fieldSchema)
+                .actionEntityDetailsToPickerSingleSelectDialogFragment(
+                    item = item,
+                    parentEntityData = parentEntityData
+                )
         )
     }
 
@@ -212,12 +204,15 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     }
 
     override fun onMultiSelectFieldEdit(
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         item: FieldData.MultiSelectFieldData
     ) {
         binding.navHostFragment.findNavController().navigate(
             EntityDetailsFragmentDirections
-                .actionEntityDetailsToPickerMultiSelectDialogFragment(fieldSchema, item)
+                .actionEntityDetailsToPickerMultiSelectDialogFragment(
+                    parentEntityData = parentEntityData,
+                    item = item
+                )
         )
     }
 

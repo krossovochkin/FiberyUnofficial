@@ -79,7 +79,8 @@ class EntityPickerViewModel(
 
     init {
         viewModelScope.launch {
-            val entityType = getEntityTypeSchemaInteractor.execute(entityPickerArgs.fieldSchema)
+            val entityType = getEntityTypeSchemaInteractor
+                .execute(entityPickerArgs.parentEntityData.fieldSchema)
             mutableToolbarViewState.postValue(
                 ToolbarViewState(
                     title = entityType.displayName,
@@ -96,9 +97,8 @@ class EntityPickerViewModel(
         if (item is EntityPickerItem) {
             mutableNavigation.value = Event(
                 EntityPickerNavEvent.OnEntityPickedEvent(
-                    fieldSchema = entityPickerArgs.fieldSchema,
-                    entity = item.entityData,
-                    parentEntity = entityPickerArgs.entity
+                    parentEntityData = entityPickerArgs.parentEntityData,
+                    entity = item.entityData
                 )
             )
         } else {
@@ -170,7 +170,7 @@ private class EntityPickerDataSource(
             runBlocking {
                 getEntityListInteractor
                     .execute(
-                        entityListArgs.fieldSchema,
+                        entityListArgs.parentEntityData,
                         offset,
                         pageSize,
                         searchQuery.value.orEmpty()

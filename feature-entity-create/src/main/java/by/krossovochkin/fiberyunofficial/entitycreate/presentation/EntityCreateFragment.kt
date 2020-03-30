@@ -21,9 +21,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
@@ -57,8 +55,7 @@ class EntityCreateFragment(
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
                     parentListener?.onEntityCreateSuccess(
-                        createdEntityId = navEvent.createdEntityId,
-                        entityParams = navEvent.entityParams
+                        createdEntityId = navEvent.createdEntityId
                     )
                 }
             }
@@ -98,8 +95,7 @@ class EntityCreateFragment(
     }
 
     data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        val entityTypeSchema: FiberyEntityTypeSchema
     )
 
     interface ArgsProvider {
@@ -110,8 +106,7 @@ class EntityCreateFragment(
     interface ParentListener {
 
         fun onEntityCreateSuccess(
-            createdEntityId: String,
-            entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+            createdEntityId: String
         )
 
         fun onBackPressed()

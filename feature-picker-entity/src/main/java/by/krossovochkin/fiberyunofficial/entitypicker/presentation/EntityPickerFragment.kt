@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -118,9 +118,8 @@ class EntityPickerFragment(
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityPickerNavEvent.OnEntityPickedEvent -> {
                     parentListener?.onEntityPicked(
-                        navEvent.fieldSchema,
-                        navEvent.entity,
-                        navEvent.parentEntity
+                        entity = navEvent.entity,
+                        parentEntityData = navEvent.parentEntityData
                     )
                 }
                 is EntityPickerNavEvent.BackEvent -> {
@@ -153,7 +152,7 @@ class EntityPickerFragment(
     }
 
     data class Args(
-        val fieldSchema: FiberyFieldSchema,
+        val parentEntityData: ParentEntityData,
         val entity: FiberyEntityData?
     )
 
@@ -165,9 +164,8 @@ class EntityPickerFragment(
     interface ParentListener {
 
         fun onEntityPicked(
-            fieldSchema: FiberyFieldSchema,
-            entity: FiberyEntityData?,
-            parentEntity: FiberyEntityData?
+            parentEntityData: ParentEntityData,
+            entity: FiberyEntityData?
         )
 
         fun onBackPressed()

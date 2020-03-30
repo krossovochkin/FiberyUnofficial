@@ -18,8 +18,8 @@ package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 sealed class EntityDetailsNavEvent {
 
@@ -30,23 +30,22 @@ sealed class EntityDetailsNavEvent {
     ) : EntityDetailsNavEvent()
 
     data class OnEntityFieldEditEvent(
-        val fieldSchema: FiberyFieldSchema,
+        val parentEntityData: ParentEntityData,
         val currentEntity: FiberyEntityData?
     ) : EntityDetailsNavEvent()
 
     data class OnEntityTypeSelectedEvent(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val entity: FiberyEntityData,
-        val fieldSchema: FiberyFieldSchema
+        val parentEntityData: ParentEntityData,
+        val entityTypeSchema: FiberyEntityTypeSchema
     ) : EntityDetailsNavEvent()
 
     data class OnSingleSelectSelectedEvent(
-        val fieldSchema: FiberyFieldSchema,
+        val parentEntityData: ParentEntityData,
         val singleSelectItem: FieldData.SingleSelectFieldData
     ) : EntityDetailsNavEvent()
 
     data class OnMultiSelectSelectedEvent(
-        val fieldSchema: FiberyFieldSchema,
+        val parentEntityData: ParentEntityData,
         val multiSelectItem: FieldData.MultiSelectFieldData
     ) : EntityDetailsNavEvent()
 

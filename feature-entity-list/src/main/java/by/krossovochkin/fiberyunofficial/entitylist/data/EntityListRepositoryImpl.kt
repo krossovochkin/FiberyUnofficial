@@ -26,7 +26,7 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 
 class EntityListRepositoryImpl(
@@ -39,7 +39,7 @@ class EntityListRepositoryImpl(
         entityType: FiberyEntityTypeSchema,
         offset: Int,
         pageSize: Int,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): List<FiberyEntityData> {
         val uiTitleType = entityType.getUiTitle()
         val idType = FiberyApiConstants.Field.ID.value
@@ -59,18 +59,18 @@ class EntityListRepositoryImpl(
                             ),
                             where = getQueryWhere(
                                 entityType = entityType,
-                                entityParams = entityParams
+                                parentEntityData = parentEntityData
                             ),
                             orderBy = getQueryOrderBy(
                                 entityType = entityType,
-                                entityParams = entityParams
+                                parentEntityData = parentEntityData
                             ),
                             offset = offset,
                             limit = pageSize
                         ),
                         params = getQueryParams(
                             entityType = entityType,
-                            entityParams = entityParams
+                            parentEntityData = parentEntityData
                         )
                     )
                 )
@@ -92,9 +92,9 @@ class EntityListRepositoryImpl(
 
     private suspend fun getQueryWhere(
         entityType: FiberyEntityTypeSchema,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): List<Any>? {
-        return entityParams
+        return parentEntityData
             ?.let { (field, _) ->
                 val fieldName =
                     requireNotNull(fiberyApiRepository.getTypeSchema(entityType.name)
@@ -116,9 +116,9 @@ class EntityListRepositoryImpl(
 
     private fun getQueryOrderBy(
         entityType: FiberyEntityTypeSchema,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): List<Any>? {
-        return if (entityParams == null) {
+        return if (parentEntityData == null) {
             entityListFiltersSortStorage.getSort(entityType.name)
                 ?: EntityListFilters.orderMap[entityType.name]
         } else {
@@ -128,9 +128,9 @@ class EntityListRepositoryImpl(
 
     private fun getQueryParams(
         entityType: FiberyEntityTypeSchema,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): Map<String, Any>? {
-        return entityParams
+        return parentEntityData
             ?.let { (_, entity) ->
                 mapOf(PARAM_ID to entity.id)
             }
@@ -160,8 +160,7 @@ class EntityListRepositoryImpl(
     }
 
     override suspend fun removeRelation(
-        fieldSchema: FiberyFieldSchema,
-        parentEntity: FiberyEntityData,
+        parentEntityData: ParentEntityData,
         childEntity: FiberyEntityData
     ) {
         fiberyServiceApi
@@ -170,11 +169,11 @@ class EntityListRepositoryImpl(
                     FiberyCommandBody(
                         command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
                         args = FiberyCommandArgsDto(
-                            type = parentEntity.schema.name,
-                            field = fieldSchema.name,
+                            type = parentEntityData.parentEntity.schema.name,
+                            field = parentEntityData.fieldSchema.name,
                             items = listOf(mapOf(FiberyApiConstants.Field.ID.value to childEntity.id)),
                             entity = mapOf(
-                                FiberyApiConstants.Field.ID.value to parentEntity.id
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
                             )
                         )
                     )
@@ -184,8 +183,7 @@ class EntityListRepositoryImpl(
     }
 
     override suspend fun addRelation(
-        fieldSchema: FiberyFieldSchema,
-        parentEntity: FiberyEntityData,
+        parentEntityData: ParentEntityData,
         childEntityId: String
     ) {
         fiberyServiceApi
@@ -195,10 +193,10 @@ class EntityListRepositoryImpl(
                         command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
                         args = FiberyCommandArgsDto(
                             entity = mapOf(
-                                FiberyApiConstants.Field.ID.value to parentEntity.id
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
                             ),
-                            field = fieldSchema.name,
-                            type = parentEntity.schema.name,
+                            field = parentEntityData.fieldSchema.name,
+                            type = parentEntityData.parentEntity.schema.name,
                             items = listOf(
                                 mapOf(FiberyApiConstants.Field.ID.value to childEntityId)
                             )

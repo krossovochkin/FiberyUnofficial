@@ -90,6 +90,12 @@ data class FiberyEntityDetailsData(
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 
+@Parcelize
+data class ParentEntityData(
+    val fieldSchema: FiberyFieldSchema,
+    val parentEntity: FiberyEntityData
+) : Parcelable
+
 sealed class FieldData : Parcelable {
 
     abstract val schema: FiberyFieldSchema
@@ -202,7 +208,6 @@ sealed class FieldData : Parcelable {
         val title: String,
         val count: Int,
         val entityTypeSchema: FiberyEntityTypeSchema,
-        val entityData: FiberyEntityData,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 }

@@ -17,15 +17,14 @@
 package by.krossovochkin.fiberyunofficial.entitypicker.presentation
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 sealed class EntityPickerNavEvent {
 
     object BackEvent : EntityPickerNavEvent()
 
     data class OnEntityPickedEvent(
-        val fieldSchema: FiberyFieldSchema,
         val entity: FiberyEntityData?,
-        val parentEntity: FiberyEntityData?
+        val parentEntityData: ParentEntityData
     ) : EntityPickerNavEvent()
 }

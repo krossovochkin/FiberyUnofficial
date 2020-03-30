@@ -18,7 +18,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface GetEntityListInteractor {
 
@@ -26,7 +26,7 @@ interface GetEntityListInteractor {
         entityType: FiberyEntityTypeSchema,
         offset: Int,
         pageSize: Int,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): List<FiberyEntityData>
 }
 
@@ -38,8 +38,8 @@ class GetEntityListInteractorImpl(
         entityType: FiberyEntityTypeSchema,
         offset: Int,
         pageSize: Int,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ): List<FiberyEntityData> {
-        return entityListRepository.getEntityList(entityType, offset, pageSize, entityParams)
+        return entityListRepository.getEntityList(entityType, offset, pageSize, parentEntityData)
     }
 }

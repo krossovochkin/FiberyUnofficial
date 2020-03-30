@@ -31,8 +31,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
@@ -189,7 +189,6 @@ class EntityDetailsFragment(
                 itemView.setOnClickListener {
                     viewModel.selectCollectionField(
                         entityTypeSchema = item.entityTypeSchema,
-                        entityData = item.entityData,
                         fieldSchema = item.fieldSchema
                     )
                 }
@@ -227,8 +226,8 @@ class EntityDetailsFragment(
         entityPickedViewModel.pickedEntity.observe(
             viewLifecycleOwner,
             Observer { event ->
-                event.getContentIfNotHandled()?.let { (fieldSchema, entity) ->
-                    viewModel.updateEntityField(fieldSchema, entity)
+                event.getContentIfNotHandled()?.let { (parentEntityData, entity) ->
+                    viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
                 }
             }
         )
@@ -285,8 +284,7 @@ class EntityDetailsFragment(
                 is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
                     parentListener?.onEntityTypeSelected(
                         entityTypeSchema = navEvent.entityTypeSchema,
-                        entity = navEvent.entity,
-                        fieldSchema = navEvent.fieldSchema
+                        parentEntityData = navEvent.parentEntityData
                     )
                 }
                 is EntityDetailsNavEvent.BackEvent -> {
@@ -294,19 +292,19 @@ class EntityDetailsFragment(
                 }
                 is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
                     parentListener?.onSingleSelectFieldEdit(
-                        navEvent.fieldSchema,
-                        navEvent.singleSelectItem
+                        parentEntityData = navEvent.parentEntityData,
+                        item = navEvent.singleSelectItem
                     )
                 }
                 is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
                     parentListener?.onMultiSelectFieldEdit(
-                        navEvent.fieldSchema,
-                        navEvent.multiSelectItem
+                        parentEntityData = navEvent.parentEntityData,
+                        item = navEvent.multiSelectItem
                     )
                 }
                 is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
                     parentListener?.onEntityFieldEdit(
-                        fieldSchema = navEvent.fieldSchema,
+                        parentEntityData = navEvent.parentEntityData,
                         entity = navEvent.currentEntity
                     )
                 }
@@ -373,22 +371,21 @@ class EntityDetailsFragment(
 
         fun onEntityTypeSelected(
             entityTypeSchema: FiberyEntityTypeSchema,
-            entity: FiberyEntityData,
-            fieldSchema: FiberyFieldSchema
+            parentEntityData: ParentEntityData
         )
 
         fun onEntityFieldEdit(
-            fieldSchema: FiberyFieldSchema,
+            parentEntityData: ParentEntityData,
             entity: FiberyEntityData?
         )
 
         fun onSingleSelectFieldEdit(
-            fieldSchema: FiberyFieldSchema,
+            parentEntityData: ParentEntityData,
             item: FieldData.SingleSelectFieldData
         )
 
         fun onMultiSelectFieldEdit(
-            fieldSchema: FiberyFieldSchema,
+            parentEntityData: ParentEntityData,
             item: FieldData.MultiSelectFieldData
         )
 

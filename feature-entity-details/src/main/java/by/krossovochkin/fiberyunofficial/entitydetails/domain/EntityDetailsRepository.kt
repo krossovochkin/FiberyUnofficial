@@ -18,28 +18,25 @@ package by.krossovochkin.fiberyunofficial.entitydetails.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface EntityDetailsRepository {
 
     suspend fun getEntityDetails(entityData: FiberyEntityData): FiberyEntityDetailsData
 
     suspend fun updateSingleSelectField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         singleSelectItem: FieldData.EnumItemData
     )
 
     suspend fun updateEntityField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         selectedEntity: FiberyEntityData?
     )
 
     suspend fun updateMultiSelectField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     )

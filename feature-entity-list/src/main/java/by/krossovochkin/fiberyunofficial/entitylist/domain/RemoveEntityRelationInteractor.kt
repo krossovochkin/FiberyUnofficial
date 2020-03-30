@@ -17,13 +17,12 @@
 package by.krossovochkin.fiberyunofficial.entitylist.domain
 
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface RemoveEntityRelationInteractor {
 
     suspend fun execute(
-        fieldSchema: FiberyFieldSchema,
-        parentEntity: FiberyEntityData,
+        parentEntityData: ParentEntityData,
         childEntity: FiberyEntityData
     )
 }
@@ -33,13 +32,11 @@ class RemoveEntityRelationInteractorImpl(
 ) : RemoveEntityRelationInteractor {
 
     override suspend fun execute(
-        fieldSchema: FiberyFieldSchema,
-        parentEntity: FiberyEntityData,
+        parentEntityData: ParentEntityData,
         childEntity: FiberyEntityData
     ) {
         entityListRepository.removeRelation(
-            fieldSchema = fieldSchema,
-            parentEntity = parentEntity,
+            parentEntityData = parentEntityData,
             childEntity = childEntity
         )
     }

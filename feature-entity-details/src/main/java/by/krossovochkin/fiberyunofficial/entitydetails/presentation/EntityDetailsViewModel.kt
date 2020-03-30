@@ -25,6 +25,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -303,7 +304,6 @@ class EntityDetailsViewModel(
             FieldCollectionItem(
                 title = field.title,
                 countText = field.count.toString(),
-                entityData = field.entityData,
                 entityTypeSchema = field.entityTypeSchema,
                 fieldSchema = field.schema
             )
@@ -322,7 +322,10 @@ class EntityDetailsViewModel(
     fun selectSingleSelectField(item: FieldSingleSelectItem) {
         mutableNavigation.value = Event(
             EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
-                fieldSchema = item.fieldSchema,
+                parentEntityData = ParentEntityData(
+                    fieldSchema = item.fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
                 singleSelectItem = item.singleSelectData
             )
         )
@@ -339,8 +342,10 @@ class EntityDetailsViewModel(
             try {
                 mutableProgress.value = true
                 updateSingleSelectFieldInteractor.execute(
-                    entityData = entityDetailsArgs.entityData,
-                    fieldSchema = fieldSchema,
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
                     singleSelectItem = selectedValue
                 )
                 load()
@@ -355,7 +360,10 @@ class EntityDetailsViewModel(
     fun selectMultiSelectField(item: FieldMultiSelectItem) {
         mutableNavigation.value = Event(
             EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
-                fieldSchema = item.fieldSchema,
+                parentEntityData = ParentEntityData(
+                    fieldSchema = item.fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
                 multiSelectItem = item.multiSelectData
             )
         )
@@ -368,8 +376,10 @@ class EntityDetailsViewModel(
             try {
                 mutableProgress.value = true
                 updateMultiSelectFieldInteractor.execute(
-                    entityData = entityDetailsArgs.entityData,
-                    fieldSchema = data.fieldSchema,
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = data.fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
                     addedItems = data.addedItems,
                     removedItems = data.removedItems
                 )
@@ -384,7 +394,13 @@ class EntityDetailsViewModel(
 
     fun selectEntityField(fieldSchema: FiberyFieldSchema, entityData: FiberyEntityData?) {
         mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntityFieldEditEvent(fieldSchema, entityData)
+            EntityDetailsNavEvent.OnEntityFieldEditEvent(
+                parentEntityData = ParentEntityData(
+                    fieldSchema = fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
+                currentEntity = entityData
+            )
         )
     }
 
@@ -399,8 +415,10 @@ class EntityDetailsViewModel(
             try {
                 mutableProgress.value = true
                 updateEntityFieldInteractor.execute(
-                    entityData = entityDetailsArgs.entityData,
-                    fieldSchema = fieldSchema,
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
                     selectedEntity = entity
                 )
                 load()
@@ -414,14 +432,15 @@ class EntityDetailsViewModel(
 
     fun selectCollectionField(
         entityTypeSchema: FiberyEntityTypeSchema,
-        entityData: FiberyEntityData,
         fieldSchema: FiberyFieldSchema
     ) {
         mutableNavigation.value = Event(
             EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
                 entityTypeSchema = entityTypeSchema,
-                entity = entityData,
-                fieldSchema = fieldSchema
+                parentEntityData = ParentEntityData(
+                    fieldSchema = fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                )
             )
         )
     }
@@ -515,7 +534,6 @@ data class FieldCollectionItem(
     val title: String,
     val countText: String,
     val entityTypeSchema: FiberyEntityTypeSchema,
-    val entityData: FiberyEntityData,
     val fieldSchema: FiberyFieldSchema
 ) : ListItem
 

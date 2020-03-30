@@ -16,13 +16,9 @@
  */
 package by.krossovochkin.fiberyunofficial.entitycreate.presentation
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-
 sealed class EntityCreateNavEvent {
 
     data class OnEntityCreateSuccessEvent(
-        val createdEntityId: String,
-        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        val createdEntityId: String
     ) : EntityCreateNavEvent()
 }

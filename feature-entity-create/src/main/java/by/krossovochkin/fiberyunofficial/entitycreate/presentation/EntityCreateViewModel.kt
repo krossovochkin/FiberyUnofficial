@@ -57,8 +57,7 @@ class EntityCreateViewModel(
                 mutableNavigation.postValue(
                     Event(
                         EntityCreateNavEvent.OnEntityCreateSuccessEvent(
-                            createdEntityId = id,
-                            entityParams = entityCreateArgs.entityParams
+                            createdEntityId = id
                         )
                     )
                 )

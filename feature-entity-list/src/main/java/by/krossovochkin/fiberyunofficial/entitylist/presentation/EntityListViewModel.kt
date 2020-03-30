@@ -25,7 +25,6 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -66,7 +65,7 @@ class EntityListViewModel(
                 EntityListItem(
                     title = entity.title,
                     entityData = entity,
-                    isRemoveAvailable = entityListArgs.entityParams != null
+                    isRemoveAvailable = entityListArgs.parentEntityData != null
                 )
             }
             .toLiveData(
@@ -84,7 +83,7 @@ class EntityListViewModel(
             title = entityListArgs.entityTypeSchema.displayName,
             bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true,
-            menuResId = if (entityListArgs.entityParams == null) {
+            menuResId = if (entityListArgs.parentEntityData == null) {
                 R.menu.menu_entity_list
             } else {
                 null
@@ -102,14 +101,14 @@ class EntityListViewModel(
     }
 
     fun removeRelation(item: EntityListItem) {
-        val (fieldSchema: FiberyFieldSchema, entity: FiberyEntityData) = entityListArgs.entityParams
-            ?: error("Can't remove relation from top-level entity list")
+        if (entityListArgs.parentEntityData == null) {
+            error("Can't remove relation from top-level entity list")
+        }
 
         viewModelScope.launch {
             try {
                 removeEntityRelationInteractor.execute(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entity,
+                    parentEntityData = entityListArgs.parentEntityData,
                     childEntity = item.entityData
                 )
                 entityItemsDatasourceFactory.dataSource?.invalidate()
@@ -163,30 +162,24 @@ class EntityListViewModel(
         mutableNavigation.value = Event(
             EntityListNavEvent.OnCreateEntityEvent(
                 entityListArgs.entityTypeSchema,
-                entityListArgs.entityParams
+                entityListArgs.parentEntityData
             )
         )
     }
 
     fun onEntityCreated(
-        createdEntityId: String,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        createdEntityId: String
     ) {
-        if (entityParams == null) {
+        if (entityListArgs.parentEntityData == null) {
             entityItemsDatasourceFactory.dataSource?.invalidate()
             return
-        }
-
-        if (entityParams != entityListArgs.entityParams) {
-            error("Can't add relation: params do not match")
         }
 
         viewModelScope.launch {
             try {
                 addEntityRelationInteractor
                     .execute(
-                        fieldSchema = entityParams.first,
-                        parentEntity = entityParams.second,
+                        parentEntityData = entityListArgs.parentEntityData,
                         childEntityId = createdEntityId
                     )
                 entityItemsDatasourceFactory.dataSource?.invalidate()
@@ -247,7 +240,7 @@ private class EntityListDataSource(
                         entityListArgs.entityTypeSchema,
                         offset,
                         pageSize,
-                        entityListArgs.entityParams
+                        entityListArgs.parentEntityData
                     )
             }
         } catch (e: Exception) {

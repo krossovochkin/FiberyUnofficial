@@ -52,11 +52,7 @@ class MainActivityArgsProvider :
         val args = EntityListFragmentArgs.fromBundle(arguments)
         return EntityListFragment.Args(
             entityTypeSchema = args.entityType,
-            entityParams = if (args.field != null && args.entity != null) {
-                args.field to args.entity
-            } else {
-                null
-            }
+            parentEntityData = args.parentEntityData
         )
     }
 
@@ -70,20 +66,15 @@ class MainActivityArgsProvider :
     override fun getEntityCreateArgs(arguments: Bundle): EntityCreateFragment.Args {
         val args = EntityCreateFragmentArgs.fromBundle(arguments)
         return EntityCreateFragment.Args(
-            entityTypeSchema = args.entityType,
-            entityParams = if (args.entity != null && args.fieldSchema != null) {
-                args.fieldSchema to args.entity
-            } else {
-                null
-            }
+            entityTypeSchema = args.entityType
         )
     }
 
     override fun getEntityPickerArgs(arguments: Bundle): EntityPickerFragment.Args {
         val args = EntityPickerFragmentArgs.fromBundle(arguments)
         return EntityPickerFragment.Args(
-            fieldSchema = args.fieldSchema,
-            entity = args.entity
+            parentEntityData = args.parentEntityData,
+            entity = args.currentEntity
         )
     }
 
@@ -91,7 +82,7 @@ class MainActivityArgsProvider :
         val args = PickerSingleSelectDialogFragmentArgs.fromBundle(arguments)
         return PickerSingleSelectDialogFragment.Args(
             item = args.item,
-            fieldSchema = args.fieldSchema
+            parentEntityData = args.parentEntityData
         )
     }
 
@@ -99,7 +90,7 @@ class MainActivityArgsProvider :
         val args = PickerMultiSelectDialogFragmentArgs.fromBundle(arguments)
         return PickerMultiSelectDialogFragment.Args(
             item = args.item,
-            fieldSchema = args.fieldSchema
+            parentEntityData = args.parentEntityData
         )
     }
 }

@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -111,7 +111,6 @@ class EntityListFragment(
         entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 viewModel.onEntityCreated(
-                    entityParams = it.entityParams,
                     createdEntityId = it.createdEntityId
                 )
             }
@@ -157,7 +156,7 @@ class EntityListFragment(
                     showUpdateSortDialog(navEvent.sort)
                 }
                 is EntityListNavEvent.OnCreateEntityEvent -> {
-                    onCreateEntity(navEvent.entityType, navEvent.entityParams)
+                    onCreateEntity(navEvent.entityType, navEvent.parentEntityData)
                 }
             }
         })
@@ -227,9 +226,9 @@ class EntityListFragment(
 
     private fun onCreateEntity(
         entityType: FiberyEntityTypeSchema,
-        entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        parentEntityData: ParentEntityData?
     ) {
-        parentListener?.onAddEntityRequested(entityType, entityParams)
+        parentListener?.onAddEntityRequested(entityType, parentEntityData)
     }
 
     override fun onAttach(context: Context) {
@@ -244,7 +243,7 @@ class EntityListFragment(
 
     data class Args(
         val entityTypeSchema: FiberyEntityTypeSchema,
-        val entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+        val parentEntityData: ParentEntityData?
     )
 
     interface ArgsProvider {
@@ -258,7 +257,7 @@ class EntityListFragment(
 
         fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,
-            entityParams: Pair<FiberyFieldSchema, FiberyEntityData>?
+            parentEntityData: ParentEntityData?
         )
 
         fun onBackPressed()

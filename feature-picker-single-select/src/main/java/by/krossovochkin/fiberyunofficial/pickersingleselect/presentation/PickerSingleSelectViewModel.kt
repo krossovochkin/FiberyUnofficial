@@ -28,5 +28,5 @@ class PickerSingleSelectViewModel(
         get() = args.item
 
     val fieldSchema: FiberyFieldSchema
-        get() = args.fieldSchema
+        get() = args.parentEntityData.fieldSchema
 }

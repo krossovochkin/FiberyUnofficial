@@ -16,15 +16,13 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.domain
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface UpdateMultiSelectFieldInteractor {
 
     suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     )
@@ -35,14 +33,12 @@ class UpdateMultiSelectFieldInteractorImpl(
 ) : UpdateMultiSelectFieldInteractor {
 
     override suspend fun execute(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     ) {
         return entityDetailsRepository.updateMultiSelectField(
-            entityData = entityData,
-            fieldSchema = fieldSchema,
+            parentEntityData = parentEntityData,
             addedItems = addedItems,
             removedItems = removedItems
         )

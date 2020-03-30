@@ -31,6 +31,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -257,8 +258,7 @@ class EntityDetailsRepositoryImpl(
                     else -> {
                         mapEntityDetailsEntityFields(
                             data = it,
-                            fieldSchema = fieldSchema,
-                            entityData = entityData
+                            fieldSchema = fieldSchema
                         )
                     }
                 }
@@ -267,8 +267,7 @@ class EntityDetailsRepositoryImpl(
 
     private suspend fun mapEntityDetailsEntityFields(
         data: Map.Entry<String, Any>,
-        fieldSchema: FiberyFieldSchema,
-        entityData: FiberyEntityData
+        fieldSchema: FiberyFieldSchema
     ): FieldData? {
         return when {
             fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
@@ -293,8 +292,7 @@ class EntityDetailsRepositoryImpl(
             fieldSchema.meta.isRelation && fieldSchema.meta.isCollection -> {
                 mapCollectionFieldData(
                     fieldSchema = fieldSchema,
-                    data = data,
-                    entityData = entityData
+                    data = data
                 )
             }
             else -> {
@@ -539,14 +537,12 @@ class EntityDetailsRepositoryImpl(
 
     private suspend fun mapCollectionFieldData(
         fieldSchema: FiberyFieldSchema,
-        data: Map.Entry<String, Any>,
-        entityData: FiberyEntityData
+        data: Map.Entry<String, Any>
     ): FieldData.CollectionFieldData {
         return FieldData.CollectionFieldData(
             title = fieldSchema.name.normalizeTitle(),
             count = (data.value as? Number)?.toInt() ?: 0,
             entityTypeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type),
-            entityData = entityData,
             schema = fieldSchema
         )
     }
@@ -567,8 +563,7 @@ class EntityDetailsRepositoryImpl(
     }
 
     override suspend fun updateSingleSelectField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         singleSelectItem: FieldData.EnumItemData
     ) {
         fiberyServiceApi
@@ -577,14 +572,14 @@ class EntityDetailsRepositoryImpl(
                     FiberyCommandBody(
                         command = FiberyCommand.QUERY_UPDATE.value,
                         args = FiberyCommandArgsDto(
-                            type = entityData.schema.name,
+                            type = parentEntityData.parentEntity.schema.name,
                             entity = mapOf(
-                                FiberyApiConstants.Field.ID.value to entityData.id,
-                                fieldSchema.name to mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id,
+                                parentEntityData.fieldSchema.name to mapOf(
                                     FiberyApiConstants.Field.ID.value to singleSelectItem.id
                                 )
                             ),
-                            field = fieldSchema.name
+                            field = parentEntityData.fieldSchema.name
                         )
                     )
                 )
@@ -593,8 +588,7 @@ class EntityDetailsRepositoryImpl(
     }
 
     override suspend fun updateEntityField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         selectedEntity: FiberyEntityData?
     ) {
         fiberyServiceApi
@@ -603,12 +597,12 @@ class EntityDetailsRepositoryImpl(
                     FiberyCommandBody(
                         command = FiberyCommand.QUERY_UPDATE.value,
                         args = FiberyCommandArgsDto(
-                            type = entityData.schema.name,
+                            type = parentEntityData.parentEntity.schema.name,
                             entity = mapOf(
-                                FiberyApiConstants.Field.ID.value to entityData.id,
-                                fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id,
+                                parentEntityData.fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
                             ),
-                            field = fieldSchema.name
+                            field = parentEntityData.fieldSchema.name
                         )
                     )
                 )
@@ -617,8 +611,7 @@ class EntityDetailsRepositoryImpl(
     }
 
     override suspend fun updateMultiSelectField(
-        entityData: FiberyEntityData,
-        fieldSchema: FiberyFieldSchema,
+        parentEntityData: ParentEntityData,
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     ) {
@@ -628,11 +621,11 @@ class EntityDetailsRepositoryImpl(
                 FiberyCommandBody(
                     command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
                     args = FiberyCommandArgsDto(
-                        type = entityData.schema.name,
-                        field = fieldSchema.name,
+                        type = parentEntityData.parentEntity.schema.name,
+                        field = parentEntityData.fieldSchema.name,
                         items = addedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
                         entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to entityData.id
+                            FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
                         )
                     )
                 )
@@ -643,11 +636,11 @@ class EntityDetailsRepositoryImpl(
                 FiberyCommandBody(
                     command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
                     args = FiberyCommandArgsDto(
-                        type = entityData.schema.name,
-                        field = fieldSchema.name,
+                        type = parentEntityData.parentEntity.schema.name,
+                        field = parentEntityData.fieldSchema.name,
                         items = removedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
                         entity = mapOf(
-                            FiberyApiConstants.Field.ID.value to entityData.id
+                            FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
                         )
                     )
                 )
