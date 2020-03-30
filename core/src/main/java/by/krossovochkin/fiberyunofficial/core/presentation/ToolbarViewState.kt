@@ -17,6 +17,7 @@
 package by.krossovochkin.fiberyunofficial.core.presentation
 
 import androidx.annotation.ColorInt
+import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
 
 data class ToolbarViewState(
@@ -25,5 +26,7 @@ data class ToolbarViewState(
     val bgColorInt: Int,
     @MenuRes
     val menuResId: Int? = null,
+    @IdRes
+    val searchActionItemId: Int? = null,
     val hasBackButton: Boolean = false
 )

@@ -24,7 +24,8 @@ interface GetEntityListInteractor {
     suspend fun execute(
         fieldSchema: FiberyFieldSchema,
         offset: Int,
-        pageSize: Int
+        pageSize: Int,
+        searchQuery: String
     ): List<FiberyEntityData>
 }
 
@@ -35,8 +36,9 @@ class GetEntityListInteractorImpl(
     override suspend fun execute(
         fieldSchema: FiberyFieldSchema,
         offset: Int,
-        pageSize: Int
+        pageSize: Int,
+        searchQuery: String
     ): List<FiberyEntityData> {
-        return entityPickerRepository.getEntityList(fieldSchema, offset, pageSize)
+        return entityPickerRepository.getEntityList(fieldSchema, offset, pageSize, searchQuery)
     }
 }

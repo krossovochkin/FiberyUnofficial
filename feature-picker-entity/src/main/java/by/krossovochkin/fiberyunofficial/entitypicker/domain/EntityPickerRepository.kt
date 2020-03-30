@@ -24,6 +24,7 @@ interface EntityPickerRepository {
     suspend fun getEntityList(
         fieldSchema: FiberyFieldSchema,
         offset: Int,
-        pageSize: Int
+        pageSize: Int,
+        searchQuery: String
     ): List<FiberyEntityData>
 }

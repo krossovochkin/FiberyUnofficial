@@ -29,6 +29,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 import kotlinx.coroutines.launch
@@ -48,6 +49,8 @@ class EntityPickerViewModel(
     private val mutableNavigation = MutableLiveData<Event<EntityPickerNavEvent>>()
     val navigation: LiveData<Event<EntityPickerNavEvent>> = mutableNavigation
 
+    private val mutableSearchQuery = MutableLiveData<String>()
+
     val entityItems: LiveData<PagedList<ListItem>>
         get() = entityItemsDatasourceFactory
             .map<ListItem> { entity ->
@@ -64,7 +67,12 @@ class EntityPickerViewModel(
             )
 
     private val entityItemsDatasourceFactory: EntityPickerDataSourceFactory =
-        EntityPickerDataSourceFactory(entityPickerArgs, getEntityListInteractor, mutableError)
+        EntityPickerDataSourceFactory(
+            entityPickerArgs,
+            getEntityListInteractor,
+            mutableError,
+            mutableSearchQuery
+        )
 
     private val mutableToolbarViewState = MutableLiveData<ToolbarViewState>()
     val toolbarViewState: LiveData<ToolbarViewState> = mutableToolbarViewState
@@ -76,7 +84,9 @@ class EntityPickerViewModel(
                 ToolbarViewState(
                     title = entityType.displayName,
                     bgColorInt = ColorUtils.getColor(entityType.meta.uiColorHex),
-                    hasBackButton = true
+                    hasBackButton = true,
+                    menuResId = R.menu.menu_entity_picker,
+                    searchActionItemId = R.id.action_search
                 )
             )
         }
@@ -99,19 +109,30 @@ class EntityPickerViewModel(
     fun onBackPressed() {
         mutableNavigation.value = Event(EntityPickerNavEvent.BackEvent)
     }
+
+    fun onSearchQueryChanged(query: String) {
+        mutableSearchQuery.value = query
+        entityItemsDatasourceFactory.dataSource?.invalidate()
+    }
 }
 
 private class EntityPickerDataSourceFactory(
     private val entityListArgs: EntityPickerFragment.Args,
     private val getEntityListInteractor: GetEntityListInteractor,
-    private val mutableError: MutableLiveData<Event<Exception>>
+    private val mutableError: MutableLiveData<Event<Exception>>,
+    private val searchQuery: LiveData<String>
 ) : DataSource.Factory<Int, FiberyEntityData>() {
 
     var dataSource: EntityPickerDataSource? = null
         private set
 
     override fun create(): DataSource<Int, FiberyEntityData> {
-        val new = EntityPickerDataSource(entityListArgs, getEntityListInteractor, mutableError)
+        val new = EntityPickerDataSource(
+            entityListArgs,
+            getEntityListInteractor,
+            mutableError,
+            searchQuery
+        )
         dataSource = new
         return new
     }
@@ -120,7 +141,8 @@ private class EntityPickerDataSourceFactory(
 private class EntityPickerDataSource(
     private val entityListArgs: EntityPickerFragment.Args,
     private val getEntityListInteractor: GetEntityListInteractor,
-    private val mutableError: MutableLiveData<Event<Exception>>
+    private val mutableError: MutableLiveData<Event<Exception>>,
+    private val searchQuery: LiveData<String>
 ) : PositionalDataSource<FiberyEntityData>() {
 
     override fun loadRange(
@@ -150,7 +172,8 @@ private class EntityPickerDataSource(
                     .execute(
                         entityListArgs.fieldSchema,
                         offset,
-                        pageSize
+                        pageSize,
+                        searchQuery.value.orEmpty()
                     )
             }
         } catch (e: Exception) {

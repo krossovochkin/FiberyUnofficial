@@ -135,8 +135,10 @@ class EntityPickerFragment(
             binding.entityPickerToolbar.initToolbar(
                 activity = requireActivity(),
                 state = it,
-                onBackPressed = { viewModel.onBackPressed() }
+                onBackPressed = { viewModel.onBackPressed() },
+                onSearchQueryChanged = { query -> viewModel.onSearchQueryChanged(query) }
             )
+            binding.entityPickerToolbar
         })
     }
 

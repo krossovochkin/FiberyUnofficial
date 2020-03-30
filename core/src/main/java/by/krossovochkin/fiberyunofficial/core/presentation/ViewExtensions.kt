@@ -18,19 +18,23 @@ package by.krossovochkin.fiberyunofficial.core.presentation
 
 import android.content.res.ColorStateList
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.children
 import androidx.core.view.iterator
 import androidx.fragment.app.FragmentActivity
 import by.krossovochkin.fiberyunofficial.core.R
+import java.util.concurrent.TimeUnit
 
 @Suppress("LongParameterList")
 inline fun Toolbar.initToolbar(
     activity: FragmentActivity,
     state: ToolbarViewState,
     crossinline onBackPressed: () -> Unit = {},
-    crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false }
+    crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false },
+    crossinline onSearchQueryChanged: (String) -> Unit = {}
 ) {
     val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(activity, state.bgColorInt)
     val contrastColor = ColorUtils.getContrastColor(backgroundColor)
@@ -57,6 +61,22 @@ inline fun Toolbar.initToolbar(
         this.setOnMenuItemClickListener { item -> onMenuItemClicked(item) }
         this.menu.iterator().forEach { item ->
             MenuItemCompat.setIconTintList(item, ColorStateList.valueOf(contrastColor))
+        }
+
+        state.searchActionItemId?.let { searchActionItemId ->
+            val searchView =
+                this.menu.children.find { it.itemId == searchActionItemId }?.actionView as SearchView
+            val debouncer = Debouncer(300, TimeUnit.MILLISECONDS) { text ->
+                onSearchQueryChanged(text)
+            }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean = false
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    debouncer.process(newText.orEmpty())
+                    return true
+                }
+            })
         }
     }
 }

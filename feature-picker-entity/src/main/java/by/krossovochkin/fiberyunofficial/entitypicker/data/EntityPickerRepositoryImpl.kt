@@ -28,6 +28,8 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.EntityPickerRepository
 
+private const val WHERE_1 = "\$where1"
+
 class EntityPickerRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
     private val fiberyApiRepository: FiberyApiRepository
@@ -36,7 +38,8 @@ class EntityPickerRepositoryImpl(
     override suspend fun getEntityList(
         fieldSchema: FiberyFieldSchema,
         offset: Int,
-        pageSize: Int
+        pageSize: Int,
+        searchQuery: String
     ): List<FiberyEntityData> {
         val entityType = fiberyApiRepository.getTypeSchema(fieldSchema.type)
         val uiTitleType = entityType.getUiTitle()
@@ -55,9 +58,15 @@ class EntityPickerRepositoryImpl(
                                 idType,
                                 publicIdType
                             ),
+                            where = listOf(
+                                FiberyApiConstants.Operator.CONTAINS.value,
+                                listOf(uiTitleType),
+                                WHERE_1
+                            ),
                             offset = offset,
                             limit = pageSize
-                        )
+                        ),
+                        params = mapOf(WHERE_1 to searchQuery)
                     )
                 )
             )

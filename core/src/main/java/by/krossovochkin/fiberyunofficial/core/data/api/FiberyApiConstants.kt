@@ -63,7 +63,8 @@ object FiberyApiConstants {
     enum class Operator(
         val value: String
     ) {
-        EQUALS("=")
+        EQUALS("="),
+        CONTAINS("q/contains")
     }
 
     enum class Limit(
