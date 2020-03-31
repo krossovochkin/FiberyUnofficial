@@ -9,6 +9,8 @@ complexity:
     active: false
   LongParameterList:
     active: false
+  LabeledExpression:
+    active: false
 
 comments:
   UndocumentedPublicClass:

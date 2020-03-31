@@ -600,7 +600,9 @@ class EntityDetailsRepositoryImpl(
                             type = parentEntityData.parentEntity.schema.name,
                             entity = mapOf(
                                 FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id,
-                                parentEntityData.fieldSchema.name to mapOf(FiberyApiConstants.Field.ID.value to selectedEntity?.id)
+                                parentEntityData.fieldSchema.name to mapOf(
+                                    FiberyApiConstants.Field.ID.value to selectedEntity?.id
+                                )
                             ),
                             field = parentEntityData.fieldSchema.name
                         )

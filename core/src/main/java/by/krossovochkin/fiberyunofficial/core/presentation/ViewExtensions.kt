@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentActivity
 import by.krossovochkin.fiberyunofficial.core.R
 import java.util.concurrent.TimeUnit
 
+const val SEARCH_QUERY_DEBOUNCE_MILLIS = 300L
+
 @Suppress("LongParameterList")
 inline fun Toolbar.initToolbar(
     activity: FragmentActivity,
@@ -66,7 +68,7 @@ inline fun Toolbar.initToolbar(
         state.searchActionItemId?.let { searchActionItemId ->
             val searchView =
                 this.menu.children.find { it.itemId == searchActionItemId }?.actionView as SearchView
-            val debouncer = Debouncer(300, TimeUnit.MILLISECONDS) { text ->
+            val debouncer = Debouncer(SEARCH_QUERY_DEBOUNCE_MILLIS, TimeUnit.MILLISECONDS) { text ->
                 onSearchQueryChanged(text)
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
