@@ -1,4 +1,4 @@
-<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.8.0" target="_blank">![](https://img.shields.io/badge/version-0.8.0-yellow)</a>
+<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.9.0" target="_blank">![](https://img.shields.io/badge/version-0.9.0-yellow)</a>
 
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
@@ -23,6 +23,9 @@ Fibery is a work management platform that adapts to companies and grows with the
   - for particular entity (child entities)
   - pagination support
   - raw filter/sort support
+  - create entity
+  - add entity relation (pick or create on inner Entity List)
+  - remove entity relation (on inner Entity List)
     
 ### Entity Details
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_details.jpg?raw=true" width="200"/>
@@ -39,8 +42,8 @@ Fibery is a work management platform that adapts to companies and grows with the
   - Single select fields (update supported)
   - Multi select fields (update supported)
   - One-to-one relation fields (update supported)
-  - One-to-many relation fields (parent update supported, adding child supported)
-  - Many-to-many relation fields (adding child supported)
+  - One-to-many relation fields (update supported)
+  - Many-to-many relation fields (update supported)
   
 ### Create Entity
 <img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/entity_create.png?raw=true" width="200"/>
