@@ -110,9 +110,7 @@ class EntityListFragment(
 
         entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
-                viewModel.onEntityCreated(
-                    createdEntityId = it.createdEntityId
-                )
+                viewModel.onEntityCreated(createdEntity = it.createdEntity)
             }
         })
     }

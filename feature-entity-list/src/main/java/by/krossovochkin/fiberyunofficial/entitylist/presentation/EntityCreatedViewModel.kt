@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 
 class EntityCreatedViewModel : ViewModel() {
@@ -32,5 +33,5 @@ class EntityCreatedViewModel : ViewModel() {
 }
 
 data class EntityCreatedData(
-    val createdEntityId: String
+    val createdEntity: FiberyEntityData
 )

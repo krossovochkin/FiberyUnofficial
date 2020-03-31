@@ -14,26 +14,15 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitycreate.domain
+package by.krossovochkin.fiberyunofficial.core.domain.entitycreate
 
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 
-interface EntityCreateInteractor {
+interface EntityCreateRepository {
 
-    suspend fun execute(
+    suspend fun createEntity(
         entityTypeSchema: FiberyEntityTypeSchema,
         name: String
-    ): String
-}
-
-class EntityCreateInteractorImpl(
-    private val entityCreateRepository: EntityCreateRepository
-) : EntityCreateInteractor {
-
-    override suspend fun execute(
-        entityTypeSchema: FiberyEntityTypeSchema,
-        name: String
-    ): String {
-        return entityCreateRepository.createEntity(entityTypeSchema, name)
-    }
+    ): FiberyEntityData
 }

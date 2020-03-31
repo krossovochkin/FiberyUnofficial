@@ -14,7 +14,7 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.entitycreate.data
+package by.krossovochkin.fiberyunofficial.core.data.entitycreate
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
@@ -22,8 +22,9 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateRepository
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
 import java.util.UUID
 
 class EntityCreateRepositoryImpl(
@@ -33,7 +34,7 @@ class EntityCreateRepositoryImpl(
     override suspend fun createEntity(
         entityTypeSchema: FiberyEntityTypeSchema,
         name: String
-    ): String {
+    ): FiberyEntityData {
         if (name.isEmpty()) {
             throw IllegalArgumentException("name should not be null")
         }
@@ -60,6 +61,11 @@ class EntityCreateRepositoryImpl(
             )
             .checkResultSuccess()
 
-        return id
+        return FiberyEntityData(
+            id = id,
+            publicId = "",
+            title = name,
+            schema = entityTypeSchema
+        )
     }
 }

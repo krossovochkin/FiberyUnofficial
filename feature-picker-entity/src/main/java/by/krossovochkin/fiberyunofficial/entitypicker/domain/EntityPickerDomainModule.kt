@@ -17,6 +17,9 @@
 package by.krossovochkin.fiberyunofficial.entitypicker.domain
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractorImpl
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
 import dagger.Module
 import dagger.Provides
 
@@ -37,5 +40,13 @@ object EntityPickerDomainModule {
         fiberyApiRepository: FiberyApiRepository
     ): GetEntityTypeSchemaInteractor {
         return GetEntityTypeSchemaInteractorImpl(fiberyApiRepository)
+    }
+
+    @JvmStatic
+    @Provides
+    fun createEntityInteractor(
+        entityCreateRepository: EntityCreateRepository
+    ): EntityCreateInteractor {
+        return EntityCreateInteractorImpl(entityCreateRepository)
     }
 }

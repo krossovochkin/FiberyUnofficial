@@ -184,7 +184,7 @@ class EntityListRepositoryImpl(
 
     override suspend fun addRelation(
         parentEntityData: ParentEntityData,
-        childEntityId: String
+        childEntity: FiberyEntityData
     ) {
         fiberyServiceApi
             .sendCommand(
@@ -198,7 +198,7 @@ class EntityListRepositoryImpl(
                             field = parentEntityData.fieldSchema.name,
                             type = parentEntityData.parentEntity.schema.name,
                             items = listOf(
-                                mapOf(FiberyApiConstants.Field.ID.value to childEntityId)
+                                mapOf(FiberyApiConstants.Field.ID.value to childEntity.id)
                             )
                         )
                     )

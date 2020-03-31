@@ -25,6 +25,7 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -38,8 +39,9 @@ import kotlinx.coroutines.runBlocking
 private const val PAGE_SIZE = 20
 
 class EntityPickerViewModel(
-    getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
+    private val getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
     getEntityListInteractor: GetEntityListInteractor,
+    private val entityCreateInteractor: EntityCreateInteractor,
     private val entityPickerArgs: EntityPickerFragment.Args
 ) : ViewModel() {
 
@@ -49,7 +51,10 @@ class EntityPickerViewModel(
     private val mutableNavigation = MutableLiveData<Event<EntityPickerNavEvent>>()
     val navigation: LiveData<Event<EntityPickerNavEvent>> = mutableNavigation
 
-    private val mutableSearchQuery = MutableLiveData<String>()
+    private val mutableSearchQuery = MutableLiveData("")
+
+    private val mutableCreateButtonEnabledState = MutableLiveData(false)
+    val entityCreateEnabled: LiveData<Boolean> = mutableCreateButtonEnabledState
 
     val entityItems: LiveData<PagedList<ListItem>>
         get() = entityItemsDatasourceFactory
@@ -95,12 +100,7 @@ class EntityPickerViewModel(
 
     fun select(item: ListItem) {
         if (item is EntityPickerItem) {
-            mutableNavigation.value = Event(
-                EntityPickerNavEvent.OnEntityPickedEvent(
-                    parentEntityData = entityPickerArgs.parentEntityData,
-                    entity = item.entityData
-                )
-            )
+            onEntityPicked(item.entityData)
         } else {
             throw IllegalArgumentException()
         }
@@ -112,7 +112,34 @@ class EntityPickerViewModel(
 
     fun onSearchQueryChanged(query: String) {
         mutableSearchQuery.value = query
+        mutableCreateButtonEnabledState.value = query.isNotEmpty()
         entityItemsDatasourceFactory.dataSource?.invalidate()
+    }
+
+    fun createEntity() {
+        val name = mutableSearchQuery.value.orEmpty()
+        require(name.isNotEmpty()) { "search query is empty" }
+
+        viewModelScope.launch {
+            val entityType = getEntityTypeSchemaInteractor
+                .execute(entityPickerArgs.parentEntityData.fieldSchema)
+            val entity = entityCreateInteractor.execute(
+                entityTypeSchema = entityType,
+                name = name
+            )
+            onEntityPicked(entity)
+        }
+    }
+
+    private fun onEntityPicked(entity: FiberyEntityData?) {
+        mutableNavigation.postValue(
+            Event(
+                EntityPickerNavEvent.OnEntityPickedEvent(
+                    parentEntityData = entityPickerArgs.parentEntityData,
+                    entity = entity
+                )
+            )
+        )
     }
 }
 

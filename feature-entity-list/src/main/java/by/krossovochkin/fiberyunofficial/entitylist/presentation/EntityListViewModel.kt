@@ -168,7 +168,7 @@ class EntityListViewModel(
     }
 
     fun onEntityCreated(
-        createdEntityId: String
+        createdEntity: FiberyEntityData
     ) {
         if (entityListArgs.parentEntityData == null) {
             entityItemsDatasourceFactory.dataSource?.invalidate()
@@ -180,7 +180,7 @@ class EntityListViewModel(
                 addEntityRelationInteractor
                     .execute(
                         parentEntityData = entityListArgs.parentEntityData,
-                        childEntityId = createdEntityId
+                        childEntity = createdEntity
                     )
                 entityItemsDatasourceFactory.dataSource?.invalidate()
             } catch (e: Exception) {

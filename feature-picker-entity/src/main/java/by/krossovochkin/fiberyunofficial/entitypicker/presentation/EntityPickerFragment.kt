@@ -88,6 +88,11 @@ class EntityPickerFragment(
         initList()
         initNavigation()
         initToolbar()
+
+        viewModel.entityCreateEnabled.observe(viewLifecycleOwner, Observer { isEnabled ->
+            binding.entityCreateAction.isEnabled = isEnabled
+        })
+        binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
     }
 
     private fun initList() {

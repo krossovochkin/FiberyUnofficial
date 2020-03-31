@@ -20,12 +20,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitycreate.R
-import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateInteractor
 import kotlinx.coroutines.launch
 
 class EntityCreateViewModel(
@@ -52,12 +52,12 @@ class EntityCreateViewModel(
     fun createEntity(name: String) {
         viewModelScope.launch {
             try {
-                val id = entityCreateInteractor
+                val createdEntity = entityCreateInteractor
                     .execute(entityCreateArgs.entityTypeSchema, name)
                 mutableNavigation.postValue(
                     Event(
                         EntityCreateNavEvent.OnEntityCreateSuccessEvent(
-                            createdEntityId = id
+                            createdEntity = createdEntity
                         )
                     )
                 )

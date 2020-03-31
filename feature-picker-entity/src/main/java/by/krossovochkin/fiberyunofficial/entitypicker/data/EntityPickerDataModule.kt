@@ -18,6 +18,8 @@ package by.krossovochkin.fiberyunofficial.entitypicker.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import by.krossovochkin.fiberyunofficial.core.data.entitycreate.EntityCreateRepositoryImpl
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.EntityPickerRepository
 import dagger.Module
 import dagger.Provides
@@ -34,6 +36,16 @@ object EntityPickerDataModule {
         return EntityPickerRepositoryImpl(
             fiberyServiceApi = fiberyServiceApi,
             fiberyApiRepository = fiberyApiRepository
+        )
+    }
+
+    @JvmStatic
+    @Provides
+    fun entityCreateRepository(
+        fiberyServiceApi: FiberyServiceApi
+    ): EntityCreateRepository {
+        return EntityCreateRepositoryImpl(
+            fiberyServiceApi
         )
     }
 }

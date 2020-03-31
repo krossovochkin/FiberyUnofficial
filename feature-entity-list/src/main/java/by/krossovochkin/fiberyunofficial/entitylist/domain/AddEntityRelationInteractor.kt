@@ -16,13 +16,14 @@
  */
 package by.krossovochkin.fiberyunofficial.entitylist.domain
 
+import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface AddEntityRelationInteractor {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
-        childEntityId: String
+        childEntity: FiberyEntityData
     )
 }
 
@@ -32,11 +33,11 @@ class AddEntityRelationInteractorImpl(
 
     override suspend fun execute(
         parentEntityData: ParentEntityData,
-        childEntityId: String
+        childEntity: FiberyEntityData
     ) {
         entityListRepository.addRelation(
             parentEntityData = parentEntityData,
-            childEntityId = childEntityId
+            childEntity = childEntity
         )
     }
 }

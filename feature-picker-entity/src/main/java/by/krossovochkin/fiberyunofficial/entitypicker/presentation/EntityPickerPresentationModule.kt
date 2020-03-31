@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial.entitypicker.presentation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 import dagger.Module
@@ -50,11 +51,13 @@ object EntityPickerPresentationModule {
     fun entityPickerViewModelFactory(
         getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
         getEntityListInteractor: GetEntityListInteractor,
+        createEntityInteractor: EntityCreateInteractor,
         entityPickerArgs: EntityPickerFragment.Args
     ): EntityPickerViewModelFactory {
         return EntityPickerViewModelFactory(
             getEntityTypeSchemaInteractor,
             getEntityListInteractor,
+            createEntityInteractor,
             entityPickerArgs
         )
     }

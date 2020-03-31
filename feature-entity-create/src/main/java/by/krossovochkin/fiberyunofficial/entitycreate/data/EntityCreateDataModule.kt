@@ -17,7 +17,8 @@
 package by.krossovochkin.fiberyunofficial.entitycreate.data
 
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import by.krossovochkin.fiberyunofficial.entitycreate.domain.EntityCreateRepository
+import by.krossovochkin.fiberyunofficial.core.data.entitycreate.EntityCreateRepositoryImpl
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
 import dagger.Module
 import dagger.Provides
 
@@ -29,6 +30,8 @@ object EntityCreateDataModule {
     fun entityCreateRepository(
         fiberyServiceApi: FiberyServiceApi
     ): EntityCreateRepository {
-        return EntityCreateRepositoryImpl(fiberyServiceApi)
+        return EntityCreateRepositoryImpl(
+            fiberyServiceApi
+        )
     }
 }

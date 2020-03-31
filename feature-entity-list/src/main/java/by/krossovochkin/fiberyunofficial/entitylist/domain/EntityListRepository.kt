@@ -44,6 +44,6 @@ interface EntityListRepository {
 
     suspend fun addRelation(
         parentEntityData: ParentEntityData,
-        childEntityId: String
+        childEntity: FiberyEntityData
     )
 }

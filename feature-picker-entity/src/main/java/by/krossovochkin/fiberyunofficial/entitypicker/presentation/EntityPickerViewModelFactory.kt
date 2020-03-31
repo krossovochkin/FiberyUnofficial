@@ -18,12 +18,14 @@ package by.krossovochkin.fiberyunofficial.entitypicker.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 
 class EntityPickerViewModelFactory(
     private val getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
     private val getEntityListInteractor: GetEntityListInteractor,
+    private val entityCreateInteractor: EntityCreateInteractor,
     private val entityPickerArgs: EntityPickerFragment.Args
 ) : ViewModelProvider.Factory {
 
@@ -33,6 +35,7 @@ class EntityPickerViewModelFactory(
             EntityPickerViewModel(
                 getEntityTypeSchemaInteractor,
                 getEntityListInteractor,
+                entityCreateInteractor,
                 entityPickerArgs
             ) as T
         } else {

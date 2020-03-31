@@ -142,12 +142,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     }
 
     override fun onEntityCreateSuccess(
-        createdEntityId: String
+        createdEntity: FiberyEntityData
     ) {
         ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-            .createEntity(
-                EntityCreatedData(createdEntityId = createdEntityId)
-            )
+            .createEntity(EntityCreatedData(createdEntity = createdEntity))
         onBackPressed()
     }
 
@@ -173,7 +171,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                 error("Can't add null entity to collection")
             }
             ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-                .createEntity(EntityCreatedData(createdEntityId = entity.id))
+                .createEntity(EntityCreatedData(createdEntity = entity))
         } else {
             ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
                 .pickEntity(parentEntityData, entity)
