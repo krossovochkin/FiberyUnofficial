@@ -32,6 +32,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
@@ -105,7 +106,10 @@ class EntityListFragment(
         initNavigation()
         initToolbar()
 
-        binding.entityListCreateFab.setOnClickListener {
+        binding.entityListCreateFab.initFab(
+            requireContext(),
+            viewModel.getCreateFabViewState(requireContext())
+        ) {
             viewModel.onCreateEntityClicked()
         }
 

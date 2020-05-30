@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.core.presentation
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
@@ -26,9 +27,23 @@ import androidx.core.view.children
 import androidx.core.view.iterator
 import androidx.fragment.app.FragmentActivity
 import by.krossovochkin.fiberyunofficial.core.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.TimeUnit
 
 const val SEARCH_QUERY_DEBOUNCE_MILLIS = 300L
+
+inline fun FloatingActionButton.initFab(
+    context: Context,
+    state: FabViewState,
+    crossinline onClick: () -> Unit
+) {
+    this.backgroundTintList = ColorStateList.valueOf(
+        ColorUtils.getDesaturatedColorIfNeeded(context, state.bgColorInt)
+    )
+    this.imageTintList = ColorStateList.valueOf(ColorUtils.getContrastColor(state.bgColorInt))
+
+    this.setOnClickListener { onClick() }
+}
 
 @Suppress("LongParameterList")
 inline fun Toolbar.initToolbar(

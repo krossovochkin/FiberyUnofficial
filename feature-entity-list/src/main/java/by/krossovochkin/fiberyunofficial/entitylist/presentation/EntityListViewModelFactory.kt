@@ -18,6 +18,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
@@ -34,6 +35,7 @@ class EntityListViewModelFactory(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
+    private val resProvider: ResProvider,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -47,6 +49,7 @@ class EntityListViewModelFactory(
                 getEntityListSortInteractor,
                 removeEntityRelationInteractor,
                 addEntityRelationInteractor,
+                resProvider,
                 entityListArgs
             ) as T
         } else {

@@ -7,11 +7,13 @@
     <TextView
         android:id="@+id/richTextTitleView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/EntityDetailsFieldTitle" />
 
     <TextView
         android:id="@+id/richTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/EntityDetailsFieldText" />
 
 </LinearLayout>

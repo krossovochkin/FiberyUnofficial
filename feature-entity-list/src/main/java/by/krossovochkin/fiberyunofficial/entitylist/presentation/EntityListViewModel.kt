@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,7 +28,9 @@ import androidx.paging.toLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.FabViewState
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
@@ -50,6 +53,7 @@ class EntityListViewModel(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
+    private val resProvider: ResProvider,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModel() {
 
@@ -89,6 +93,10 @@ class EntityListViewModel(
                 null
             }
         )
+
+    fun getCreateFabViewState(context: Context) = FabViewState(
+        bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+    )
 
     fun select(item: ListItem) {
         if (item is EntityListItem) {

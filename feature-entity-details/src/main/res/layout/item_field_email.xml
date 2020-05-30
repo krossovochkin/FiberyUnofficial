@@ -9,13 +9,13 @@
         android:id="@+id/fieldEmailTitleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textAppearance="@style/EntityDetailsFieldTitle"
         tools:text="Title" />
 
     <TextView
         android:id="@+id/fieldEmailView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textAppearance="@style/EntityDetailsFieldText"
         tools:text="Value" />
 </LinearLayout>

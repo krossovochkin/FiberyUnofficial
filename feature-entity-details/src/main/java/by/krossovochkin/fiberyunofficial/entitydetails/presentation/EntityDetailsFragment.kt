@@ -35,6 +35,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.OffsetItemDecoration
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
@@ -253,6 +254,7 @@ class EntityDetailsFragment(
     private fun initList() {
         binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityDetailsRecyclerView.adapter = adapter
+        binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entityDetails_fieldOffset))
 
         viewModel.items.observe(viewLifecycleOwner, Observer {
             adapter.items = it
