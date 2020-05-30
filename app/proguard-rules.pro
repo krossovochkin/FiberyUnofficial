@@ -40,3 +40,8 @@
     <fields>;
     **[] values();
 }
+
+# https://issuetracker.google.com/issues/154315507
+-keepclassmembers class * extends com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite {
+  <fields>;
+}
