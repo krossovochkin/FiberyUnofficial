@@ -4,8 +4,8 @@ v.android.compileSdkVersion = 29
 v.android.buildToolsVersion = "29.0.3"
 v.android.minSdkVersion = 23
 v.android.targetSdkVersion = 29
-v.android.versionCode = 4
-v.android.versionName = "0.7.0"
+v.android.versionCode = 5
+v.android.versionName = "0.10.0"
 
 v.plugin = [:]
 v.plugin.gradle_android = '4.1.0-alpha10'
