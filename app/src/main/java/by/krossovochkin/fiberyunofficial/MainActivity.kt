@@ -45,10 +45,11 @@ import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirecti
 class MainActivity : AppCompatActivity(), MainActivityListener {
 
     private val mainActivityComponent: MainActivityComponent by lazy {
-        DaggerMainActivityComponent.builder()
-            .applicationComponent((applicationContext as App).applicationComponent)
-            .mainActivityArgsProvider(argsProvider)
-            .build()
+        DaggerMainActivityComponent.factory()
+            .create(
+                applicationComponent = (applicationContext as App).applicationComponent,
+                mainActivityArgsProvider = argsProvider
+            )
     }
     private val argsProvider: MainActivityArgsProvider = MainActivityArgsProvider()
 

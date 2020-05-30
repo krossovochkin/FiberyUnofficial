@@ -79,10 +79,11 @@ class EntityPickerFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerEntityPickerComponent.builder()
-            .fragment(this)
-            .entityPickerParentDependencies(entityPickerParentComponent)
-            .build()
+        DaggerEntityPickerComponent.factory()
+            .create(
+                entityPickerParentComponent = entityPickerParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         initList()

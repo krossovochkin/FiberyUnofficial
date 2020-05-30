@@ -47,15 +47,13 @@ interface EntityCreateComponent {
 
     fun inject(fragment: EntityCreateFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun entityCreateGlobalDependencies(entityCreateParentComponent: EntityCreateParentComponent): Builder
-
-        fun build(): EntityCreateComponent
+        fun create(
+            entityCreateParentComponent: EntityCreateParentComponent,
+            @BindsInstance fragment: Fragment
+        ): EntityCreateComponent
     }
 }
 

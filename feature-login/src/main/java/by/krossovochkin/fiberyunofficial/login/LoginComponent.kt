@@ -50,15 +50,13 @@ interface LoginComponent {
 
     fun inject(fragment: LoginFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun loginGlobalDependencies(loginParentComponent: LoginParentComponent): Builder
-
-        fun build(): LoginComponent
+        fun create(
+            loginParentComponent: LoginParentComponent,
+            @BindsInstance fragment: Fragment
+        ): LoginComponent
     }
 }
 

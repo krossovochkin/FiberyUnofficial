@@ -41,7 +41,7 @@ private const val JS_EXTRACT_TOKEN =
             "  .then(obj => ${JS_INTERFACE_NAME}.onTokenReceived(obj.value))"
 
 class LoginFragment(
-    private val loginComponent: LoginParentComponent
+    private val loginParentComponent: LoginParentComponent
 ) : Fragment(R.layout.fragment_login) {
 
     @Inject
@@ -55,10 +55,11 @@ class LoginFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerLoginComponent.builder()
-            .fragment(this)
-            .loginGlobalDependencies(loginComponent)
-            .build()
+        DaggerLoginComponent.factory()
+            .create(
+                loginParentComponent = loginParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->

@@ -22,9 +22,10 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 class App : Application() {
 
     val applicationComponent: ApplicationComponent by lazy {
-        DaggerApplicationComponent.builder()
-            .context(this)
-            .build()
+        DaggerApplicationComponent.factory()
+            .create(
+                context = this
+            )
     }
 
     override fun onCreate() {

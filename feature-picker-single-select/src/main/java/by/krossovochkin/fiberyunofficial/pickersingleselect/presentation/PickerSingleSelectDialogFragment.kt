@@ -40,10 +40,11 @@ class PickerSingleSelectDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DaggerPickerSingleSelectComponent.builder()
-            .fragment(this)
-            .pickerSingleSelectParentComponent(pickerSingleSelectParentComponent)
-            .build()
+        DaggerPickerSingleSelectComponent.factory()
+            .create(
+                pickerSingleSelectParentComponent = pickerSingleSelectParentComponent,
+                fragment = this
+            )
             .inject(this)
     }
 

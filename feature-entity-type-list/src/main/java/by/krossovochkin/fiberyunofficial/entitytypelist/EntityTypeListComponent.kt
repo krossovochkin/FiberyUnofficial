@@ -49,17 +49,13 @@ interface EntityTypeListComponent {
 
     fun inject(fragment: EntityTypeListFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun entityTypeListGlobalDependencies(
-            entityTypeListParentComponent: EntityTypeListParentComponent
-        ): Builder
-
-        fun build(): EntityTypeListComponent
+        fun create(
+            entityTypeListParentComponent: EntityTypeListParentComponent,
+            @BindsInstance fragment: Fragment
+        ): EntityTypeListComponent
     }
 }
 

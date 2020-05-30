@@ -49,15 +49,13 @@ interface EntityPickerComponent {
 
     fun inject(fragment: EntityPickerFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun entityPickerParentDependencies(entityPickerParentComponent: EntityPickerParentComponent): Builder
-
-        fun build(): EntityPickerComponent
+        fun create(
+            entityPickerParentComponent: EntityPickerParentComponent,
+            @BindsInstance fragment: Fragment
+        ): EntityPickerComponent
     }
 }
 

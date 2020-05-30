@@ -45,17 +45,13 @@ interface PickerSingleSelectComponent {
 
     fun inject(fragment: PickerSingleSelectDialogFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun pickerSingleSelectParentComponent(
-            pickerSingleSelectParentComponent: PickerSingleSelectParentComponent
-        ): Builder
-
-        fun build(): PickerSingleSelectComponent
+        fun create(
+            pickerSingleSelectParentComponent: PickerSingleSelectParentComponent,
+            @BindsInstance fragment: Fragment
+        ): PickerSingleSelectComponent
     }
 }
 

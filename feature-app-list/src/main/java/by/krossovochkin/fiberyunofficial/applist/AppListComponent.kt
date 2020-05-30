@@ -44,15 +44,13 @@ interface AppListComponent {
 
     fun inject(fragment: AppListFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun appListGlobalDependencies(appListParentComponent: AppListParentComponent): Builder
-
-        fun build(): AppListComponent
+        fun create(
+            appListParentComponent: AppListParentComponent,
+            @BindsInstance fragment: Fragment
+        ): AppListComponent
     }
 }
 

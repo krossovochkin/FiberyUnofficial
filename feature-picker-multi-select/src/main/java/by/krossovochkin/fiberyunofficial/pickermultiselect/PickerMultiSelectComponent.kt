@@ -45,17 +45,13 @@ interface PickerMultiSelectComponent {
 
     fun inject(fragment: PickerMultiSelectDialogFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun pickerMultiSelectParentComponent(
-            pickerMultiSelectParentComponent: PickerMultiSelectParentComponent
-        ): Builder
-
-        fun build(): PickerMultiSelectComponent
+        fun create(
+            pickerMultiSelectParentComponent: PickerMultiSelectParentComponent,
+            @BindsInstance fragment: Fragment
+        ): PickerMultiSelectComponent
     }
 }
 

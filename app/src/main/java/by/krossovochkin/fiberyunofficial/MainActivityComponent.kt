@@ -54,17 +54,13 @@ interface MainActivityComponent :
     PickerSingleSelectParentComponent,
     PickerMultiSelectParentComponent {
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        fun applicationComponent(applicationComponent: ApplicationComponent): Builder
-
-        @BindsInstance
-        fun mainActivityArgsProvider(
-            mainActivityArgsProvider: MainActivityArgsProvider
-        ): Builder
-
-        fun build(): MainActivityComponent
+        fun create(
+            applicationComponent: ApplicationComponent,
+            @BindsInstance mainActivityArgsProvider: MainActivityArgsProvider
+        ): MainActivityComponent
     }
 }
 

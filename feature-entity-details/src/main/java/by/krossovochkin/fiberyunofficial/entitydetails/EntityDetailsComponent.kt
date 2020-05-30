@@ -49,15 +49,13 @@ interface EntityDetailsComponent {
 
     fun inject(fragment: EntityDetailsFragment)
 
-    @Component.Builder
-    interface Builder {
+    @Component.Factory
+    interface Factory {
 
-        @BindsInstance
-        fun fragment(fragment: Fragment): Builder
-
-        fun entityDetailsParentComponent(entityDetailsParentComponent: EntityDetailsParentComponent): Builder
-
-        fun build(): EntityDetailsComponent
+        fun create(
+            entityDetailsParentComponent: EntityDetailsParentComponent,
+            @BindsInstance fragment: Fragment
+        ): EntityDetailsComponent
     }
 }
 

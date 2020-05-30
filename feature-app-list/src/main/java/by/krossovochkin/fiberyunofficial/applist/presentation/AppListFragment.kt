@@ -66,10 +66,11 @@ class AppListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerAppListComponent.builder()
-            .fragment(this)
-            .appListGlobalDependencies(appListParentComponent)
-            .build()
+        DaggerAppListComponent.factory()
+            .create(
+                appListParentComponent = appListParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         binding.appListRecyclerView.layoutManager = LinearLayoutManager(context)

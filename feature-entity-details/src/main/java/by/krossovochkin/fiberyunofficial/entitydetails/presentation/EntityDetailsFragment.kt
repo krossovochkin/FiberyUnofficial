@@ -213,10 +213,11 @@ class EntityDetailsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerEntityDetailsComponent.builder()
-            .fragment(this)
-            .entityDetailsParentComponent(entityDetailsParentComponent)
-            .build()
+        DaggerEntityDetailsComponent.factory()
+            .create(
+                entityDetailsParentComponent = entityDetailsParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         initList()

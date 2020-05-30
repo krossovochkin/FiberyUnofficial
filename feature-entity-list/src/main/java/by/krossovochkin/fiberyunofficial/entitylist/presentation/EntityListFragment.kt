@@ -94,10 +94,11 @@ class EntityListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerEntityListComponent.builder()
-            .fragment(this)
-            .entityListGlobalDependencies(entityListParentComponent)
-            .build()
+        DaggerEntityListComponent.factory()
+            .create(
+                entityListParentComponent = entityListParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         initList()

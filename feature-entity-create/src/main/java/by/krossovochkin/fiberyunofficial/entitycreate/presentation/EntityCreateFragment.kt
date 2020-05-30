@@ -33,7 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class EntityCreateFragment(
-    private val entityCreateComponent: EntityCreateParentComponent
+    private val entityCreateParentComponent: EntityCreateParentComponent
 ) : Fragment(R.layout.fragment_entity_create) {
 
     @Inject
@@ -46,10 +46,11 @@ class EntityCreateFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerEntityCreateComponent.builder()
-            .fragment(this)
-            .entityCreateGlobalDependencies(entityCreateComponent)
-            .build()
+        DaggerEntityCreateComponent.factory()
+            .create(
+                entityCreateParentComponent = entityCreateParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->

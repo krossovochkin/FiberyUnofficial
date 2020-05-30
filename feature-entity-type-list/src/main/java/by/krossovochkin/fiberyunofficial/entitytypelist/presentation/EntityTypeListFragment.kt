@@ -70,10 +70,11 @@ class EntityTypeListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        DaggerEntityTypeListComponent.builder()
-            .fragment(this)
-            .entityTypeListGlobalDependencies(entityTypeListParentComponent)
-            .build()
+        DaggerEntityTypeListComponent.factory()
+            .create(
+                entityTypeListParentComponent = entityTypeListParentComponent,
+                fragment = this
+            )
             .inject(this)
 
         binding.entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)

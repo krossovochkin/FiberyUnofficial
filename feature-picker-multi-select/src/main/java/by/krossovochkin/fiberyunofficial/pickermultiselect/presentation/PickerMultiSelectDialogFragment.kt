@@ -40,10 +40,11 @@ class PickerMultiSelectDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DaggerPickerMultiSelectComponent.builder()
-            .fragment(this)
-            .pickerMultiSelectParentComponent(pickerMultiSelectParentComponent)
-            .build()
+        DaggerPickerMultiSelectComponent.factory()
+            .create(
+                pickerMultiSelectParentComponent = pickerMultiSelectParentComponent,
+                fragment = this
+            )
             .inject(this)
     }
 
