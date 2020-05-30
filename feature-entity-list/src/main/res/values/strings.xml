@@ -8,4 +8,5 @@
     <string name="hint_sort">Sort</string>
     <string name="dialog_sort_title">Sort</string>
     <string name="content_description_remove_relation">Remove relation</string>
+    <string name="entityList_create">Create</string>
 </resources>

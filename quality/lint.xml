@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="Overdraw" severity="ignore" />
+
+    <!-- ignored till https://issuetracker.google.com/issues/157785695 is fixed -->
+    <issue id="NullSafeMutableLiveData" severity="ignore" />
 </lint>
