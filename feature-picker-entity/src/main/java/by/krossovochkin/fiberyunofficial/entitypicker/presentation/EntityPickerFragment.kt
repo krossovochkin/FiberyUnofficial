@@ -36,7 +36,7 @@ import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.FragmentEntityPickerBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.ItemEntityPickerBinding
 import com.google.android.material.snackbar.Snackbar
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
 import javax.inject.Inject
 
@@ -65,10 +65,11 @@ class EntityPickerFragment(
                 return oldItem.equals(newItem)
             }
         },
-        adapterDelegateLayoutContainer<EntityPickerItem, ListItem>(
-            layout = R.layout.item_entity_picker
+        adapterDelegateViewBinding<EntityPickerItem, ListItem, ItemEntityPickerBinding>(
+            viewBinding = { inflater, parent ->
+                ItemEntityPickerBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemEntityPickerBinding.bind(this.itemView)
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTitleTextView.text = item.title

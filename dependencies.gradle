@@ -75,7 +75,7 @@ d.network.moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:${v.network.m
 
 d.ui = [:]
 d.ui.material = "com.google.android.material:material:${v.ui.material}"
-d.ui.adapter_delegates = "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:${v.ui.adapter_delegates}"
+d.ui.adapter_delegates = "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:${v.ui.adapter_delegates}"
 d.ui.adapter_delegates_paging = "com.hannesdorfmann:adapterdelegates4-pagination:${v.ui.adapter_delegates}"
 d.ui.markwon = "io.noties.markwon:core:${v.ui.markwon}"
 

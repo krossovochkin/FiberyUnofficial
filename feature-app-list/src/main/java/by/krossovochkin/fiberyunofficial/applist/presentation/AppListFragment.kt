@@ -37,7 +37,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import javax.inject.Inject
 
 class AppListFragment(
@@ -51,11 +51,10 @@ class AppListFragment(
 
     private val binding by viewBinding(FragmentAppListBinding::bind)
 
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
-        adapterDelegateLayoutContainer<AppListItem, ListItem>(
-            layout = R.layout.item_app
+    private val adapter = ListDelegationAdapter(
+        adapterDelegateViewBinding<AppListItem, ListItem, ItemAppBinding>(
+            viewBinding = { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
         ) {
-            val binding = ItemAppBinding.bind(this.itemView)
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.appTitleTextView.text = item.title

@@ -38,7 +38,7 @@ import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.FragmentEnti
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.ItemEntityTypeBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import javax.inject.Inject
 
 class EntityTypeListFragment(
@@ -52,12 +52,13 @@ class EntityTypeListFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
-        adapterDelegateLayoutContainer<EntityTypeListItem, ListItem>(
-            layout = R.layout.item_entity_type
+    private val adapter = ListDelegationAdapter(
+        adapterDelegateViewBinding<EntityTypeListItem, ListItem, ItemEntityTypeBinding>(
+            viewBinding = { inflater, parent ->
+                ItemEntityTypeBinding.inflate(inflater, parent, false)
+            }
         ) {
             bind {
-                val binding = ItemEntityTypeBinding.bind(this.itemView)
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTypeTitleTextView.text = item.title
                 binding.entityTypeBadgeView.setBackgroundColor(

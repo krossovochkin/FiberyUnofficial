@@ -45,7 +45,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityLi
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -77,10 +77,11 @@ class EntityListFragment(
                 return oldItem.equals(newItem)
             }
         },
-        adapterDelegateLayoutContainer<EntityListItem, ListItem>(
-            layout = R.layout.item_entity
+        adapterDelegateViewBinding<EntityListItem, ListItem, ItemEntityBinding>(
+            viewBinding = { inflater, parent ->
+                ItemEntityBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemEntityBinding.bind(this.itemView)
             bind {
                 itemView.setOnClickListener { viewModel.select(item) }
                 binding.entityTitleTextView.text = item.title

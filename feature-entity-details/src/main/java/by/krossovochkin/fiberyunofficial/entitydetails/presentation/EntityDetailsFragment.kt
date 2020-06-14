@@ -54,7 +54,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldText
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldUrlBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import io.noties.markwon.Markwon
 import javax.inject.Inject
 
@@ -70,27 +70,30 @@ class EntityDetailsFragment(
     private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter(
-        adapterDelegateLayoutContainer<FieldHeaderItem, ListItem>(
-            layout = R.layout.item_field_header
+        adapterDelegateViewBinding<FieldHeaderItem, ListItem, ItemFieldHeaderBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldHeaderBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldHeaderBinding.bind(this.itemView)
             bind {
                 binding.fieldHeaderTitleTextView.text = item.title
             }
         },
-        adapterDelegateLayoutContainer<FieldTextItem, ListItem>(
-            layout = R.layout.item_field_text
+        adapterDelegateViewBinding<FieldTextItem, ListItem, ItemFieldTextBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldTextBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldTextBinding.bind(this.itemView)
             bind {
                 binding.fieldTextTitleView.text = item.title
                 binding.fieldTextView.text = item.text
             }
         },
-        adapterDelegateLayoutContainer<FieldUrlItem, ListItem>(
-            layout = R.layout.item_field_url
+        adapterDelegateViewBinding<FieldUrlItem, ListItem, ItemFieldUrlBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldUrlBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldUrlBinding.bind(this.itemView)
             bind {
                 binding.fieldUrlTitleView.text = item.title
                 binding.fieldUrlView.text = item.url
@@ -101,10 +104,11 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateLayoutContainer<FieldEmailItem, ListItem>(
-            layout = R.layout.item_field_email
+        adapterDelegateViewBinding<FieldEmailItem, ListItem, ItemFieldEmailBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldEmailBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldEmailBinding.bind(this.itemView)
             bind {
                 binding.fieldEmailTitleView.text = item.title
                 binding.fieldEmailView.text = item.email
@@ -115,10 +119,11 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateLayoutContainer<FieldSingleSelectItem, ListItem>(
-            layout = R.layout.item_field_single_select
+        adapterDelegateViewBinding<FieldSingleSelectItem, ListItem, ItemFieldSingleSelectBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldSingleSelectBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldSingleSelectBinding.bind(this.itemView)
             bind {
                 binding.fieldSingleSelectTitleView.text = item.title
                 binding.fieldSingleSelectView.text = item.text
@@ -130,10 +135,11 @@ class EntityDetailsFragment(
                 binding.root.setOnClickListener(null)
             }
         },
-        adapterDelegateLayoutContainer<FieldMultiSelectItem, ListItem>(
-            layout = R.layout.item_field_multi_select
+        adapterDelegateViewBinding<FieldMultiSelectItem, ListItem, ItemFieldMultiSelectBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldMultiSelectBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldMultiSelectBinding.bind(this.itemView)
             bind {
                 binding.fieldMultiSelectTitleView.text = item.title
                 binding.fieldMultiSelectView.text = item.text
@@ -142,20 +148,22 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateLayoutContainer<FieldRichTextItem, ListItem>(
-            layout = R.layout.item_field_rich_text
+        adapterDelegateViewBinding<FieldRichTextItem, ListItem, ItemFieldRichTextBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldRichTextBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldRichTextBinding.bind(this.itemView)
             bind {
                 binding.richTextTitleView.text = item.title
 
                 Markwon.create(context).setMarkdown(binding.richTextView, item.value)
             }
         },
-        adapterDelegateLayoutContainer<FieldRelationItem, ListItem>(
-            layout = R.layout.item_field_relation
+        adapterDelegateViewBinding<FieldRelationItem, ListItem, ItemFieldRelationBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldRelationBinding.inflate(inflater, parent, false)
+            }
         ) {
-            val binding = ItemFieldRelationBinding.bind(this.itemView)
             bind {
                 binding.fieldRelationTitleView.text = item.title
                 binding.fieldRelationEntityNameTextView.text = item.entityName
@@ -179,11 +187,12 @@ class EntityDetailsFragment(
                 binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
             }
         },
-        adapterDelegateLayoutContainer<FieldCollectionItem, ListItem>(
-            layout = R.layout.item_field_collection
+        adapterDelegateViewBinding<FieldCollectionItem, ListItem, ItemFieldCollectionBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldCollectionBinding.inflate(inflater, parent, false)
+            }
         ) {
             bind {
-                val binding = ItemFieldCollectionBinding.bind(this.itemView)
                 binding.fieldCollectionTitleView.text = item.title
                 binding.fieldCollectionCountTextView.text = item.countText
 
@@ -195,11 +204,12 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateLayoutContainer<FieldCheckboxItem, ListItem>(
-            layout = R.layout.item_field_checkbox
+        adapterDelegateViewBinding<FieldCheckboxItem, ListItem, ItemFieldCheckboxBinding>(
+            viewBinding = { inflater, parent ->
+                ItemFieldCheckboxBinding.inflate(inflater, parent, false)
+            }
         ) {
             bind {
-                val binding = ItemFieldCheckboxBinding.bind(this.itemView)
                 binding.fieldCheckboxTitleView.text = item.title
                 binding.fieldCheckBox.isChecked = item.value
                 binding.fieldCheckBox.isEnabled = false
