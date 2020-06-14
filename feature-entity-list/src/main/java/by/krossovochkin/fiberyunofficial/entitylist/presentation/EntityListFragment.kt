@@ -25,6 +25,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,8 +44,10 @@ import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogSortBindin
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityListBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
 import com.google.android.material.snackbar.Snackbar
+import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
-import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EntityListFragment(
@@ -60,7 +63,7 @@ class EntityListFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = PagedListDelegationAdapter(
+    private val adapter = PagingDataDelegationAdapter(
         object : DiffUtil.ItemCallback<ListItem>() {
             override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                 return if (oldItem is EntityListItem && newItem is EntityListItem) {
@@ -126,9 +129,11 @@ class EntityListFragment(
         binding.entityListRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.entityItems.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.entityItems.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
 
         viewModel.error.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let { error ->

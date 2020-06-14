@@ -21,10 +21,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.DataSource
-import androidx.paging.PagedList
-import androidx.paging.PositionalDataSource
-import androidx.paging.toLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
@@ -40,8 +41,9 @@ import by.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInte
 import by.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import by.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 private const val PAGE_SIZE = 20
 
@@ -63,24 +65,30 @@ class EntityListViewModel(
     private val mutableNavigation = MutableLiveData<Event<EntityListNavEvent>>()
     val navigation: LiveData<Event<EntityListNavEvent>> = mutableNavigation
 
-    val entityItems: LiveData<PagedList<ListItem>>
-        get() = entityItemsDatasourceFactory
-            .map<ListItem> { entity ->
-                EntityListItem(
-                    title = entity.title,
-                    entityData = entity,
-                    isRemoveAvailable = entityListArgs.parentEntityData != null
-                )
-            }
-            .toLiveData(
-                config = PagedList.Config.Builder()
-                    .setPageSize(PAGE_SIZE)
-                    .setEnablePlaceholders(false)
-                    .build()
-            )
+    private var dataSource: EntityListDataSource? = null
+    private val pager = Pager(
+        PagingConfig(
+            pageSize = PAGE_SIZE,
+            enablePlaceholders = false
+        )
+    ) {
+        EntityListDataSource(entityListArgs, getEntityListInteractor)
+            .also { dataSource = it }
+    }
 
-    private val entityItemsDatasourceFactory: EntityListDataSourceFactory =
-        EntityListDataSourceFactory(entityListArgs, getEntityListInteractor, mutableError)
+    val entityItems: Flow<PagingData<ListItem>>
+        get() = pager
+            .flow
+            .map {
+                it.map<ListItem> { entity ->
+                    EntityListItem(
+                        title = entity.title,
+                        entityData = entity,
+                        isRemoveAvailable = entityListArgs.parentEntityData != null
+                    )
+                }
+            }
+            .cachedIn(viewModelScope)
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
@@ -119,7 +127,7 @@ class EntityListViewModel(
                     parentEntityData = entityListArgs.parentEntityData,
                     childEntity = item.entityData
                 )
-                entityItemsDatasourceFactory.dataSource?.invalidate()
+                dataSource?.invalidate()
             } catch (e: Exception) {
                 mutableError.postValue(Event(e))
             }
@@ -133,14 +141,14 @@ class EntityListViewModel(
     fun onFilterSelected(filter: String, params: String) {
         viewModelScope.launch {
             setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter, params)
-            entityItemsDatasourceFactory.dataSource?.invalidate()
+            dataSource?.invalidate()
         }
     }
 
     fun onSortSelected(sort: String) {
         viewModelScope.launch {
             setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
-            entityItemsDatasourceFactory.dataSource?.invalidate()
+            dataSource?.invalidate()
         }
     }
 
@@ -179,7 +187,7 @@ class EntityListViewModel(
         createdEntity: FiberyEntityData
     ) {
         if (entityListArgs.parentEntityData == null) {
-            entityItemsDatasourceFactory.dataSource?.invalidate()
+            dataSource?.invalidate()
             return
         }
 
@@ -190,7 +198,7 @@ class EntityListViewModel(
                         parentEntityData = entityListArgs.parentEntityData,
                         childEntity = createdEntity
                     )
-                entityItemsDatasourceFactory.dataSource?.invalidate()
+                dataSource?.invalidate()
             } catch (e: Exception) {
                 mutableError.postValue(Event(e))
             }
@@ -198,62 +206,36 @@ class EntityListViewModel(
     }
 }
 
-private class EntityListDataSourceFactory(
-    private val entityListArgs: EntityListFragment.Args,
-    private val getEntityListInteractor: GetEntityListInteractor,
-    private val mutableError: MutableLiveData<Event<Exception>>
-) : DataSource.Factory<Int, FiberyEntityData>() {
-
-    var dataSource: EntityListDataSource? = null
-        private set
-
-    override fun create(): DataSource<Int, FiberyEntityData> {
-        val new = EntityListDataSource(entityListArgs, getEntityListInteractor, mutableError)
-        dataSource = new
-        return new
-    }
-}
-
 private class EntityListDataSource(
     private val entityListArgs: EntityListFragment.Args,
-    private val getEntityListInteractor: GetEntityListInteractor,
-    private val mutableError: MutableLiveData<Event<Exception>>
-) : PositionalDataSource<FiberyEntityData>() {
+    private val getEntityListInteractor: GetEntityListInteractor
+) : PagingSource<Int, FiberyEntityData>() {
 
-    override fun loadRange(
-        params: LoadRangeParams,
-        callback: LoadRangeCallback<FiberyEntityData>
-    ) {
-        val offset = params.startPosition
-        val size = params.loadSize
-
-        callback.onResult(loadPage(offset, size))
-    }
-
-    override fun loadInitial(
-        params: LoadInitialParams,
-        callback: LoadInitialCallback<FiberyEntityData>
-    ) {
-        val offset = params.requestedStartPosition
-        val size = params.requestedLoadSize
-
-        callback.onResult(loadPage(offset, size), offset)
-    }
-
-    private fun loadPage(offset: Int, pageSize: Int): List<FiberyEntityData> {
+    private suspend fun loadPage(offset: Int, pageSize: Int): LoadResult<Int, FiberyEntityData> {
         return try {
-            runBlocking {
-                getEntityListInteractor
+            LoadResult.Page(
+                data = getEntityListInteractor
                     .execute(
                         entityListArgs.entityTypeSchema,
                         offset,
                         pageSize,
                         entityListArgs.parentEntityData
-                    )
-            }
+                    ),
+                prevKey = null,
+                nextKey = offset + pageSize
+            )
         } catch (e: Exception) {
-            mutableError.postValue(Event(e))
-            emptyList()
+            LoadResult.Error(e)
+        }
+    }
+
+    override suspend fun load(
+        params: LoadParams<Int>
+    ): LoadResult<Int, FiberyEntityData> {
+        return when (params) {
+            is LoadParams.Refresh -> loadPage(0, params.loadSize)
+            is LoadParams.Append -> loadPage(params.key, params.loadSize)
+            is LoadParams.Prepend -> LoadResult.Error(UnsupportedOperationException())
         }
     }
 }
