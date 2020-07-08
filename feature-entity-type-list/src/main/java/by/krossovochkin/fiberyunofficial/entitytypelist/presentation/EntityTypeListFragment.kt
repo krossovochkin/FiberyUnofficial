@@ -22,7 +22,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
@@ -85,16 +85,16 @@ class EntityTypeListFragment(
                 DividerItemDecoration(context, LinearLayout.VERTICAL)
             )
 
-        viewModel.entityTypeItems.observe(viewLifecycleOwner, Observer {
+        viewModel.entityTypeItems.observe(viewLifecycleOwner) {
             adapter.items = it
             adapter.notifyDataSetChanged()
-        })
+        }
 
-        viewModel.progress.observe(viewLifecycleOwner, Observer {
+        viewModel.progress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -104,9 +104,9 @@ class EntityTypeListFragment(
                     )
                     .show()
             }
-        })
+        }
 
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
                     parentListener?.onEntityTypeSelected(navEvent.entityTypeSchema)
@@ -115,7 +115,7 @@ class EntityTypeListFragment(
                     parentListener?.onBackPressed()
                 }
             }
-        })
+        }
 
         binding.entityTypeListToolbar.initToolbar(
             activity = requireActivity(),

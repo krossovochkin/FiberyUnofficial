@@ -46,9 +46,9 @@ class PagingDataDelegationAdapter<T : Any>(
         val delegate = delegatesManager.getDelegateForViewType(holder.itemViewType)
             ?: throw NullPointerException(
                 "No delegate found for item at position = " +
-                        position +
-                        " for viewType = " +
-                        holder.itemViewType
+                    position +
+                    " for viewType = " +
+                    holder.itemViewType
             )
 
         delegate.onBindViewHolder(listOf(item as T), 0, holder, emptyList())

@@ -20,7 +20,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
@@ -53,7 +53,7 @@ class EntityCreateFragment(
             )
             .inject(this)
 
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
                     parentListener?.onEntityCreateSuccess(
@@ -61,9 +61,9 @@ class EntityCreateFragment(
                     )
                 }
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -73,7 +73,7 @@ class EntityCreateFragment(
                     )
                     .show()
             }
-        })
+        }
 
         binding.entityCreateButton.setOnClickListener {
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())

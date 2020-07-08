@@ -28,6 +28,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -266,16 +267,16 @@ class EntityDetailsFragment(
         binding.entityDetailsRecyclerView.adapter = adapter
         binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entityDetails_fieldOffset))
 
-        viewModel.items.observe(viewLifecycleOwner, Observer {
+        viewModel.items.observe(viewLifecycleOwner) {
             adapter.items = it
             adapter.notifyDataSetChanged()
-        })
+        }
 
-        viewModel.progress.observe(viewLifecycleOwner, Observer {
+        viewModel.progress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -285,11 +286,11 @@ class EntityDetailsFragment(
                     )
                     .show()
             }
-        })
+        }
     }
 
     private fun initNavigation() {
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
                     parentListener?.onEntitySelected(navEvent.entity)
@@ -340,7 +341,7 @@ class EntityDetailsFragment(
                         }
                 }
             }
-        })
+        }
     }
 
     private fun initToolbar() {

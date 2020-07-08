@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -91,9 +91,9 @@ class EntityPickerFragment(
         initNavigation()
         initToolbar()
 
-        viewModel.entityCreateEnabled.observe(viewLifecycleOwner, Observer { isEnabled ->
+        viewModel.entityCreateEnabled.observe(viewLifecycleOwner) { isEnabled ->
             binding.entityCreateAction.isEnabled = isEnabled
-        })
+        }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
     }
 
@@ -103,11 +103,11 @@ class EntityPickerFragment(
         binding.entityPickerRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.entityItems.observe(viewLifecycleOwner, Observer {
+        viewModel.entityItems.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -117,11 +117,11 @@ class EntityPickerFragment(
                     )
                     .show()
             }
-        })
+        }
     }
 
     private fun initNavigation() {
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityPickerNavEvent.OnEntityPickedEvent -> {
                     parentListener?.onEntityPicked(
@@ -133,11 +133,11 @@ class EntityPickerFragment(
                     parentListener?.onBackPressed()
                 }
             }
-        })
+        }
     }
 
     private fun initToolbar() {
-        viewModel.toolbarViewState.observe(viewLifecycleOwner, Observer {
+        viewModel.toolbarViewState.observe(viewLifecycleOwner) {
             binding.entityPickerToolbar.initToolbar(
                 activity = requireActivity(),
                 state = it,
@@ -145,7 +145,7 @@ class EntityPickerFragment(
                 onSearchQueryChanged = { query -> viewModel.onSearchQueryChanged(query) }
             )
             binding.entityPickerToolbar
-        })
+        }
     }
 
     override fun onAttach(context: Context) {

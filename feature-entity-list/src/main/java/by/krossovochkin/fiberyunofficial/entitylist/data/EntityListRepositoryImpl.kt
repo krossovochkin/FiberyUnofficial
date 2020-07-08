@@ -97,8 +97,9 @@ class EntityListRepositoryImpl(
         return parentEntityData
             ?.let { (field, _) ->
                 val fieldName =
-                    requireNotNull(fiberyApiRepository.getTypeSchema(entityType.name)
-                        .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }
+                    requireNotNull(
+                        fiberyApiRepository.getTypeSchema(entityType.name)
+                            .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }
                     ) { "relation wasn't found" }.name
 
                 listOf(
@@ -152,7 +153,7 @@ class EntityListRepositoryImpl(
 
     override fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String> {
         return entityListFiltersSortStorage.getRawFilter(entityType.name) to
-                entityListFiltersSortStorage.getRawParams(entityType.name)
+            entityListFiltersSortStorage.getRawParams(entityType.name)
     }
 
     override fun getEntityListSort(entityType: FiberyEntityTypeSchema): String {

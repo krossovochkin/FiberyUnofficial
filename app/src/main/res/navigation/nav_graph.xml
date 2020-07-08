@@ -81,7 +81,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="by.krossovochkin.fiberyunofficial.login.presentation.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_appList"
             app:destination="@id/appList"
@@ -92,7 +92,7 @@
     <fragment
         android:id="@+id/entityCreateFragment"
         android:name="by.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment"
-        android:label="EntityCreateFragment" >
+        android:label="EntityCreateFragment">
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
@@ -100,7 +100,7 @@
     <fragment
         android:id="@+id/entityPickerFragment"
         android:name="by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment"
-        android:label="EntityPickerFragment" >
+        android:label="EntityPickerFragment">
         <argument
             android:name="parentEntityData"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData" />
@@ -112,7 +112,7 @@
     <dialog
         android:id="@+id/pickerSingleSelectDialogFragment"
         android:name="by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment"
-        android:label="PickerSingleSelectDialogFragment" >
+        android:label="PickerSingleSelectDialogFragment">
         <argument
             android:name="item"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FieldData$SingleSelectFieldData" />
@@ -123,7 +123,7 @@
     <dialog
         android:id="@+id/pickerMultiSelectDialogFragment"
         android:name="by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment"
-        android:label="PickerMultiSelectDialogFragment" >
+        android:label="PickerMultiSelectDialogFragment">
         <argument
             android:name="item"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FieldData$MultiSelectFieldData" />

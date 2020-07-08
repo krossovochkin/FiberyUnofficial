@@ -24,8 +24,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -117,11 +117,11 @@ class EntityListFragment(
             viewModel.onCreateEntityClicked()
         }
 
-        entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner, Observer { event ->
+        entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 viewModel.onEntityCreated(createdEntity = it.createdEntity)
             }
-        })
+        }
     }
 
     private fun initList() {
@@ -136,7 +136,7 @@ class EntityListFragment(
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -146,11 +146,11 @@ class EntityListFragment(
                     )
                     .show()
             }
-        })
+        }
     }
 
     private fun initNavigation() {
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityListNavEvent.OnEntitySelectedEvent -> {
                     parentListener?.onEntitySelected(navEvent.entity)
@@ -168,7 +168,7 @@ class EntityListFragment(
                     onCreateEntity(navEvent.entityType, navEvent.parentEntityData)
                 }
             }
-        })
+        }
     }
 
     private fun initToolbar() {

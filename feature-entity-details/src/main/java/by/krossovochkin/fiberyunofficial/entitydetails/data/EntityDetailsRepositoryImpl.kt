@@ -146,8 +146,8 @@ class EntityDetailsRepositoryImpl(
         return entityData.schema.fields
             .filter { fieldSchema ->
                 fieldSchema.meta.isRelation && fieldSchema.meta.isCollection &&
-                        // filter out multi-select fields
-                        !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
+                    // filter out multi-select fields
+                    !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
             }
             .map { fieldSchema ->
                 mapOf(
@@ -219,10 +219,12 @@ class EntityDetailsRepositoryImpl(
         return result
             .filter { it.key !in defaultFieldKeys }
             .mapNotNull {
-                val fieldSchema = requireNotNull(entityData.schema.fields
-                    .find { field: FiberyFieldSchema ->
-                        field.name == it.key || field.name == it.key.unwrapCollectionCount()
-                    }) { "fieldSchema for key ${it.key} is missing" }
+                val fieldSchema = requireNotNull(
+                    entityData.schema.fields
+                        .find { field: FiberyFieldSchema ->
+                            field.name == it.key || field.name == it.key.unwrapCollectionCount()
+                        }
+                ) { "fieldSchema for key ${it.key} is missing" }
                 when (fieldSchema.type) {
                     FiberyApiConstants.FieldType.TEXT.value -> {
                         mapTextFieldData(fieldSchema = fieldSchema, data = it)
@@ -457,7 +459,7 @@ class EntityDetailsRepositoryImpl(
             @Suppress("UNCHECKED_CAST")
             (data.value as? Map<String, Any>)
                 ?.get(FiberyApiConstants.Field.DOCUMENT_SECRET.value)
-                    as? String
+                as? String
         ) { "rich text secret is missing" }
         val documentDto = fiberyServiceApi.getDocument(secret).await()
 
@@ -493,8 +495,10 @@ class EntityDetailsRepositoryImpl(
         val values = fiberyApiRepository.getEnumValues(fieldSchema.type)
 
         @Suppress("UNCHECKED_CAST")
-        val selectedValues = ((data.value as? Map<String, Any>)
-            ?.get(FiberyApiConstants.Field.ID.value) as? List<Map<String, String>>)
+        val selectedValues = (
+            (data.value as? Map<String, Any>)
+                ?.get(FiberyApiConstants.Field.ID.value) as? List<Map<String, String>>
+            )
             ?.map { it[FiberyApiConstants.Field.ID.value] }
             ?.map { id -> values.first { value -> value.id == id } }
             ?: emptyList()

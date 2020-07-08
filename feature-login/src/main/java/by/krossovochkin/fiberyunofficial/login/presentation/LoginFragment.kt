@@ -23,7 +23,7 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
@@ -32,13 +32,13 @@ import by.krossovochkin.fiberyunofficial.login.databinding.FragmentLoginBinding
 import javax.inject.Inject
 
 private const val MOCK_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; " +
-        "Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+    "Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
 private const val JS_INTERFACE_NAME = "FiberyUnofficial"
 private const val FIBERY_IO_WEBSITE = "https://fibery.io"
 private const val JS_EXTRACT_TOKEN =
     "fetch(`https://\${window.location.host}/api/tokens`, { method: 'POST' })\n" +
-            "  .then(res => res.json())\n" +
-            "  .then(obj => ${JS_INTERFACE_NAME}.onTokenReceived(obj.value))"
+        "  .then(res => res.json())\n" +
+        "  .then(obj => ${JS_INTERFACE_NAME}.onTokenReceived(obj.value))"
 
 class LoginFragment(
     private val loginParentComponent: LoginParentComponent
@@ -62,13 +62,13 @@ class LoginFragment(
             )
             .inject(this)
 
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (event.getContentIfNotHandled()) {
                 is LoginNavEvent.OnLoginSuccessEvent -> {
                     parentListener?.onLoginSuccess()
                 }
             }
-        })
+        }
 
         binding.loginWebView.apply {
             webViewClient = WebViewClient()

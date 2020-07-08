@@ -22,7 +22,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
@@ -81,16 +81,16 @@ class AppListFragment(
             )
         )
 
-        viewModel.appItems.observe(viewLifecycleOwner, Observer {
+        viewModel.appItems.observe(viewLifecycleOwner) {
             adapter.items = it
             adapter.notifyDataSetChanged()
-        })
+        }
 
-        viewModel.progress.observe(viewLifecycleOwner, Observer {
+        viewModel.progress.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.error.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Snackbar
                     .make(
@@ -100,15 +100,15 @@ class AppListFragment(
                     )
                     .show()
             }
-        })
+        }
 
-        viewModel.navigation.observe(viewLifecycleOwner, Observer { event: Event<AppListNavEvent> ->
+        viewModel.navigation.observe(viewLifecycleOwner) { event: Event<AppListNavEvent> ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is AppListNavEvent.OnAppSelectedEvent -> {
                     parentListener?.onAppSelected(navEvent.fiberyAppData)
                 }
             }
-        })
+        }
 
         binding.appListToolbar.initToolbar(
             activity = requireActivity(),
