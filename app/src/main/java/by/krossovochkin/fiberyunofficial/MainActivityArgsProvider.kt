@@ -1,18 +1,21 @@
 /*
-   Copyright 2020 Vasya Drobushkov
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ *
+ *    Copyright 2020 Vasya Drobushkov
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ *
+ *
  */
 package by.krossovochkin.fiberyunofficial
 
@@ -31,6 +34,8 @@ import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMu
 import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragmentArgs
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
+import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
+import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragmentArgs
 
 class MainActivityArgsProvider :
     EntityTypeListFragment.ArgsProvider,
@@ -39,7 +44,8 @@ class MainActivityArgsProvider :
     EntityCreateFragment.ArgsProvider,
     EntityPickerFragment.ArgsProvider,
     PickerSingleSelectDialogFragment.ArgsProvider,
-    PickerMultiSelectDialogFragment.ArgsProvider {
+    PickerMultiSelectDialogFragment.ArgsProvider,
+    PickerFilterFragment.ArgsProvider {
 
     override fun getEntityTypeListArgs(arguments: Bundle): EntityTypeListFragment.Args {
         val args = EntityTypeListFragmentArgs.fromBundle(arguments)
@@ -91,6 +97,15 @@ class MainActivityArgsProvider :
         return PickerMultiSelectDialogFragment.Args(
             item = args.item,
             parentEntityData = args.parentEntityData
+        )
+    }
+
+    override fun getPickerFilterArgs(arguments: Bundle): PickerFilterFragment.Args {
+        val args = PickerFilterFragmentArgs.fromBundle(arguments)
+        return PickerFilterFragment.Args(
+            entityTypeSchema = args.entityTypeSchema,
+            filter = args.filter,
+            params = args.params
         )
     }
 }

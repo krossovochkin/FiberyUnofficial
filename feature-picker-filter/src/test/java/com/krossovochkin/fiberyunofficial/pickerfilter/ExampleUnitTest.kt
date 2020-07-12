@@ -18,16 +18,19 @@
  *
  */
 
-rootProject.name = 'FiberyUnofficial'
-include ':app'
-include ':core'
-include ':feature-app-list'
-include ':feature-entity-type-list'
-include ':feature-entity-list'
-include ':feature-entity-details'
-include ':feature-login'
-include ':feature-entity-create'
-include ':feature-picker-entity'
-include ':feature-picker-single-select'
-include ':feature-picker-multi-select'
-include ':feature-picker-filter'
+package com.krossovochkin.fiberyunofficial.pickerfilter
+
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+class ExampleUnitTest {
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2)
+    }
+}

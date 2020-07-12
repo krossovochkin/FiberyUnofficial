@@ -1,18 +1,21 @@
 /*
-   Copyright 2020 Vasya Drobushkov
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ *
+ *    Copyright 2020 Vasya Drobushkov
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ *
+ *
  */
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
@@ -39,7 +42,6 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
-import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogFilterBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogSortBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityListBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
@@ -96,6 +98,8 @@ class EntityListFragment(
         }
     )
 
+    private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -109,6 +113,12 @@ class EntityListFragment(
         initList()
         initNavigation()
         initToolbar()
+
+        filterPickedViewModel.pickedFilterSelect.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
+                viewModel.onFilterSelected(filter = it.filter, params = it.params)
+            }
+        }
 
         binding.entityListCreateFab.initFab(
             requireContext(),
@@ -159,7 +169,11 @@ class EntityListFragment(
                     parentListener?.onBackPressed()
                 }
                 is EntityListNavEvent.OnFilterSelectedEvent -> {
-                    showUpdateFilterDialog(navEvent.filter, navEvent.params)
+                    parentListener?.onFilterEdit(
+                        entityTypeSchema = navEvent.entityTypeSchema,
+                        filter = navEvent.filter,
+                        params = navEvent.params
+                    )
                 }
                 is EntityListNavEvent.OnSortSelectedEvent -> {
                     showUpdateSortDialog(navEvent.sort)
@@ -190,28 +204,6 @@ class EntityListFragment(
                 }
             }
         )
-    }
-
-    private fun showUpdateFilterDialog(
-        filter: String,
-        params: String
-    ) {
-        val binding = DialogFilterBinding.inflate(layoutInflater)
-        binding.filterTextInput.setText(filter)
-        binding.paramsTextInput.setText(params)
-
-        AlertDialog.Builder(requireContext())
-            .setView(binding.root)
-            .setTitle(getString(R.string.dialog_filter_title))
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel.onFilterSelected(
-                    filter = binding.filterTextInput.text.toString(),
-                    params = binding.paramsTextInput.text.toString()
-                )
-            }
-            .create()
-            .show()
     }
 
     private fun showUpdateSortDialog(
@@ -267,6 +259,12 @@ class EntityListFragment(
         fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,
             parentEntityData: ParentEntityData?
+        )
+
+        fun onFilterEdit(
+            entityTypeSchema: FiberyEntityTypeSchema,
+            filter: String,
+            params: String
         )
 
         fun onBackPressed()

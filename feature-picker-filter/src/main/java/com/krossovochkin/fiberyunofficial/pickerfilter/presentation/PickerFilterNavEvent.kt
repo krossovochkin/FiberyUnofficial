@@ -18,16 +18,14 @@
  *
  */
 
-rootProject.name = 'FiberyUnofficial'
-include ':app'
-include ':core'
-include ':feature-app-list'
-include ':feature-entity-type-list'
-include ':feature-entity-list'
-include ':feature-entity-details'
-include ':feature-login'
-include ':feature-entity-create'
-include ':feature-picker-entity'
-include ':feature-picker-single-select'
-include ':feature-picker-multi-select'
-include ':feature-picker-filter'
+package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
+
+sealed class PickerFilterNavEvent {
+
+    data class ApplyFilterEvent(
+        val filter: String,
+        val params: String
+    ) : PickerFilterNavEvent()
+
+    object BackEvent : PickerFilterNavEvent()
+}
