@@ -27,6 +27,8 @@ exceptions:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: false
+  NotImplementedDeclaration:
+    active: false
 
 formatting:
   ImportOrdering:
