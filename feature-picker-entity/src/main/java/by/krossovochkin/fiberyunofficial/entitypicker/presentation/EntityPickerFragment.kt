@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,8 +37,10 @@ import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.FragmentEntityPickerBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.ItemEntityPickerBinding
 import com.google.android.material.snackbar.Snackbar
+import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.hannesdorfmann.adapterdelegates4.paging.PagedListDelegationAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EntityPickerFragment(
@@ -51,31 +54,32 @@ class EntityPickerFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = PagedListDelegationAdapter(
-        object : DiffUtil.ItemCallback<ListItem>() {
-            override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return if (oldItem is EntityPickerItem && newItem is EntityPickerItem) {
-                    oldItem.entityData.id == newItem.entityData.id
-                } else {
-                    oldItem === newItem
+    private val adapter =
+        PagingDataDelegationAdapter(
+            object : DiffUtil.ItemCallback<ListItem>() {
+                override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                    return if (oldItem is EntityPickerItem && newItem is EntityPickerItem) {
+                        oldItem.entityData.id == newItem.entityData.id
+                    } else {
+                        oldItem === newItem
+                    }
+                }
+
+                override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                    return oldItem.equals(newItem)
+                }
+            },
+            adapterDelegateViewBinding<EntityPickerItem, ListItem, ItemEntityPickerBinding>(
+                viewBinding = { inflater, parent ->
+                    ItemEntityPickerBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    itemView.setOnClickListener { viewModel.select(item) }
+                    binding.entityTitleTextView.text = item.title
                 }
             }
-
-            override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return oldItem.equals(newItem)
-            }
-        },
-        adapterDelegateViewBinding<EntityPickerItem, ListItem, ItemEntityPickerBinding>(
-            viewBinding = { inflater, parent ->
-                ItemEntityPickerBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                itemView.setOnClickListener { viewModel.select(item) }
-                binding.entityTitleTextView.text = item.title
-            }
-        }
-    )
+        )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -103,8 +107,10 @@ class EntityPickerFragment(
         binding.entityPickerRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
 
-        viewModel.entityItems.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.entityItems.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { event ->

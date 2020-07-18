@@ -63,38 +63,39 @@ class EntityListFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = PagingDataDelegationAdapter(
-        object : DiffUtil.ItemCallback<ListItem>() {
-            override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return if (oldItem is EntityListItem && newItem is EntityListItem) {
-                    oldItem.entityData.id == newItem.entityData.id
-                } else {
-                    oldItem === newItem
+    private val adapter =
+        PagingDataDelegationAdapter(
+            object : DiffUtil.ItemCallback<ListItem>() {
+                override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                    return if (oldItem is EntityListItem && newItem is EntityListItem) {
+                        oldItem.entityData.id == newItem.entityData.id
+                    } else {
+                        oldItem === newItem
+                    }
                 }
-            }
 
-            override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return oldItem.equals(newItem)
-            }
-        },
-        adapterDelegateViewBinding<EntityListItem, ListItem, ItemEntityBinding>(
-            viewBinding = { inflater, parent ->
-                ItemEntityBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                itemView.setOnClickListener { viewModel.select(item) }
-                binding.entityTitleTextView.text = item.title
+                override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+                    return oldItem.equals(newItem)
+                }
+            },
+            adapterDelegateViewBinding<EntityListItem, ListItem, ItemEntityBinding>(
+                viewBinding = { inflater, parent ->
+                    ItemEntityBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    itemView.setOnClickListener { viewModel.select(item) }
+                    binding.entityTitleTextView.text = item.title
 
-                binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
-                if (item.isRemoveAvailable) {
-                    binding.entityRemoveRelationAction.setOnClickListener {
-                        viewModel.removeRelation(item)
+                    binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
+                    if (item.isRemoveAvailable) {
+                        binding.entityRemoveRelationAction.setOnClickListener {
+                            viewModel.removeRelation(item)
+                        }
                     }
                 }
             }
-        }
-    )
+        )
 
     private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
 
