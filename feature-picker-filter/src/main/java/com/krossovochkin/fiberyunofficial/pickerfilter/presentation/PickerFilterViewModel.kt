@@ -65,7 +65,8 @@ class PickerFilterViewModel(
         viewModelScope.launch {
             supportedFields = pickerFilterArgs.entityTypeSchema.fields
                 .filter {
-                    fiberyApiRepository.getTypeSchema(it.type).meta.isEnum
+                    fiberyApiRepository.getTypeSchema(it.type).meta.isEnum &&
+                        !it.meta.isCollection
                 }
 
             (pickerFilterArgs.filter to pickerFilterArgs.params).fromJson()
@@ -75,7 +76,13 @@ class PickerFilterViewModel(
         }
     }
 
-    fun onFieldSelected(position: Int, field: FiberyFieldSchema) {
+    fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
+        if (field == null) {
+            data.removeAt(position)
+            update()
+            return
+        }
+
         viewModelScope.launch {
             if (position >= data.size) {
                 data.add(
@@ -99,7 +106,7 @@ class PickerFilterViewModel(
         }
     }
 
-    fun onConditionSelected(position: Int, condition: FilterCondition) {
+    fun onConditionSelected(position: Int, condition: FilterCondition?) {
         val item = data[position]
         data[position] = if (item is SingleSelectFilterItemData) {
             item.copy(condition = condition)
@@ -109,15 +116,19 @@ class PickerFilterViewModel(
         update()
     }
 
-    fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData) {
+    fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData?) {
         val item = data[position] as SingleSelectFilterItemData
         data[position] = item.copy(selectedItem = value)
         update()
     }
 
     fun applyFilter() {
-        val item = data.first() as SingleSelectFilterItemData
-        val (filter, params) = item.toJson()
+        val (filter, params) = if (data.isEmpty()) {
+            "" to ""
+        } else {
+            val item = data.first() as SingleSelectFilterItemData
+            item.toJson()
+        }
 
         mutableNavigation.postValue(
             Event(

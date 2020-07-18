@@ -63,7 +63,7 @@ class PickerFilterFragment(
                 binding.spinner.setup(
                     items = item.fields.map { it.name }
                 ) { position ->
-                    viewModel.onFieldSelected(adapterPosition, item.fields[position])
+                    viewModel.onFieldSelected(adapterPosition, item.fields.getOrNull(position))
                 }
             }
             onViewRecycled { binding.spinner.recycle() }
@@ -78,21 +78,30 @@ class PickerFilterFragment(
                     items = item.fields.map { it.name },
                     selectedItem = item.field.name
                 ) { position ->
-                    viewModel.onFieldSelected(adapterPosition, item.fields[position])
+                    viewModel.onFieldSelected(
+                        adapterPosition,
+                        item.fields.getOrNull(position)
+                    )
                 }
 
                 binding.conditionSpinner.setup(
                     items = item.conditions.map { it.name },
                     selectedItem = item.condition?.name
                 ) { position ->
-                    viewModel.onConditionSelected(adapterPosition, item.conditions[position])
+                    viewModel.onConditionSelected(
+                        adapterPosition,
+                        item.conditions.getOrNull(position)
+                    )
                 }
 
                 binding.singleSelectValueSpinner.setup(
                     items = item.values.map { it.title },
                     selectedItem = item.selectedValue?.title
                 ) { position ->
-                    viewModel.onSingleSelectValueSelected(adapterPosition, item.values[position])
+                    viewModel.onSingleSelectValueSelected(
+                        adapterPosition,
+                        item.values.getOrNull(position)
+                    )
                 }
             }
 
@@ -158,7 +167,7 @@ class PickerFilterFragment(
     ) {
         this.adapter = ArrayAdapter<String>(
             context,
-            android.R.layout.simple_spinner_item,
+            android.R.layout.simple_list_item_1,
             listOf("") + items
         )
 
@@ -177,9 +186,6 @@ class PickerFilterFragment(
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    return
-                }
                 onSelection(position - 1)
             }
         }
