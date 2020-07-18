@@ -19,6 +19,7 @@ package by.krossovochkin.fiberyunofficial
 import android.content.Context
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 
 private const val PREFS_NAME = "AUTH"
@@ -31,9 +32,11 @@ class AuthStorageImpl(
 ) : AuthStorage {
 
     private val prefs = EncryptedSharedPreferences.create(
-        PREFS_NAME,
-        MASTER_KEY_ALIAS,
         context.applicationContext,
+        PREFS_NAME,
+        MasterKey.Builder(context.applicationContext, MASTER_KEY_ALIAS)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build(),
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
