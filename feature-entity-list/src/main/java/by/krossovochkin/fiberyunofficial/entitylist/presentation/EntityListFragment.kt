@@ -27,13 +27,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -42,12 +40,10 @@ import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogSortBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityListBinding
-import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
 import com.google.android.material.snackbar.Snackbar
-import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import me.ibrahimyilmaz.kiel.pagingDataAdapterOf
 import javax.inject.Inject
 
 class EntityListFragment(
@@ -63,39 +59,27 @@ class EntityListFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter =
-        PagingDataDelegationAdapter(
-            object : DiffUtil.ItemCallback<ListItem>() {
-                override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                    return if (oldItem is EntityListItem && newItem is EntityListItem) {
-                        oldItem.entityData.id == newItem.entityData.id
-                    } else {
-                        oldItem === newItem
-                    }
-                }
+    private val adapter = pagingDataAdapterOf<EntityListItem> {
+        diff(
+            areItemsTheSame = { old, new -> old.entityData.id == new.entityData.id },
+            areContentsTheSame = { old, new -> old == new }
+        )
+        register(
+            layoutResource = R.layout.item_entity,
+            viewHolder = ::EntityListItemViewHolder,
+            onBindBindViewHolder = { viewHolder, _, item ->
+                viewHolder.itemView.setOnClickListener { viewModel.select(item) }
+                viewHolder.binding.entityTitleTextView.text = item.title
 
-                override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                    return oldItem.equals(newItem)
-                }
-            },
-            adapterDelegateViewBinding<EntityListItem, ListItem, ItemEntityBinding>(
-                viewBinding = { inflater, parent ->
-                    ItemEntityBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    itemView.setOnClickListener { viewModel.select(item) }
-                    binding.entityTitleTextView.text = item.title
-
-                    binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
-                    if (item.isRemoveAvailable) {
-                        binding.entityRemoveRelationAction.setOnClickListener {
-                            viewModel.removeRelation(item)
-                        }
+                viewHolder.binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
+                if (item.isRemoveAvailable) {
+                    viewHolder.binding.entityRemoveRelationAction.setOnClickListener {
+                        viewModel.removeRelation(item)
                     }
                 }
             }
         )
+    }
 
     private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
 

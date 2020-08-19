@@ -27,6 +27,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
+import androidx.paging.map
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
@@ -77,11 +78,11 @@ class EntityListViewModel(
             .also { dataSource = it }
     }
 
-    val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<EntityListItem>>
         get() = pager
             .flow
             .map {
-                it.map<ListItem> { entity ->
+                it.map { entity ->
                     EntityListItem(
                         title = entity.title,
                         entityData = entity,

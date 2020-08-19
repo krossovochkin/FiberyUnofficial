@@ -1,7 +1,7 @@
 apply from: "../feature_default.gradle"
 
 dependencies {
-    implementation d.ui.adapter_delegates_paging3
+    implementation d.ui.kiel
 
     implementation d.network.moshi
 }
