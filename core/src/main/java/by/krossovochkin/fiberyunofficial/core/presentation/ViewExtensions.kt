@@ -86,14 +86,16 @@ inline fun Toolbar.initToolbar(
             val debouncer = Debouncer(SEARCH_QUERY_DEBOUNCE_MILLIS, TimeUnit.MILLISECONDS) { text ->
                 onSearchQueryChanged(text)
             }
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
+            searchView.setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean = false
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    debouncer.process(newText.orEmpty())
-                    return true
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        debouncer.process(newText.orEmpty())
+                        return true
+                    }
                 }
-            })
+            )
         }
     }
 }

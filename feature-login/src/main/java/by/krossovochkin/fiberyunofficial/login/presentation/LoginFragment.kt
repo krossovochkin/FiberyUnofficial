@@ -23,7 +23,6 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
@@ -91,8 +90,9 @@ class LoginFragment(
         }
     }
 
-    private fun extractAccount(url: String): String {
+    private fun extractAccount(url: String?): String {
         return url
+            .orEmpty()
             .substringAfter("https://")
             .substringBefore(".fibery.io")
     }

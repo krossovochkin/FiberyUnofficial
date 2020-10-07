@@ -152,7 +152,8 @@ class EntityDetailsRepositoryImpl(
             .map { fieldSchema ->
                 mapOf(
                     fieldSchema.name.wrapCollectionCount() to listOf(
-                        "q/count", listOf(fieldSchema.name, FiberyApiConstants.Field.ID.value)
+                        "q/count",
+                        listOf(fieldSchema.name, FiberyApiConstants.Field.ID.value)
                     )
                 )
             }

@@ -20,7 +20,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar

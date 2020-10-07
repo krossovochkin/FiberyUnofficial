@@ -43,7 +43,8 @@ class EntityCreateViewModel(
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = resProvider.getString(
-                R.string.toolbar_title_create, entityCreateArgs.entityTypeSchema.displayName
+                R.string.toolbar_title_create,
+                entityCreateArgs.entityTypeSchema.displayName
             ),
             bgColorInt = ColorUtils.getColor(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true

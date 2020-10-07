@@ -25,6 +25,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
+import androidx.paging.map
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
@@ -73,7 +74,7 @@ class EntityPickerViewModel(
         get() = pager
             .flow
             .map {
-                it.map<ListItem> { entity ->
+                it.map<FiberyEntityData, ListItem> { entity ->
                     EntityPickerItem(
                         title = entity.title,
                         entityData = entity

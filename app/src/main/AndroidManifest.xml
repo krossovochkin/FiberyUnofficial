@@ -22,4 +22,15 @@
         </activity>
     </application>
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https|http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
 </manifest>

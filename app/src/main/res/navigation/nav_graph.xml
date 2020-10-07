@@ -33,7 +33,7 @@
         <action
             android:id="@+id/action_appList_to_entityTypeList"
             app:destination="@id/entityTypeList"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/entityTypeList"
@@ -43,7 +43,7 @@
         <action
             android:id="@+id/action_entityTypeList_to_entityList"
             app:destination="@id/entityList"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <argument
             android:name="fiberyApp"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData" />
@@ -56,24 +56,26 @@
         <action
             android:id="@+id/action_entityList_to_entityDetails"
             app:destination="@id/entityDetails"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
         <action
             android:id="@+id/action_entityList_to_entityCreateFragment"
             app:destination="@id/entityCreateFragment"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_entityList_to_entityPickerFragment"
-            app:destination="@id/entityPickerFragment" />
+            app:destination="@id/entityPickerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <argument
             android:name="parentEntityData"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData"
             app:nullable="true" />
         <action
             android:id="@+id/action_entityList_to_pickerFilterFragment"
-            app:destination="@id/pickerFilterFragment" />
+            app:destination="@id/pickerFilterFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
@@ -86,20 +88,23 @@
         <action
             android:id="@+id/action_entityDetails_self"
             app:destination="@id/entityDetails"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_entityDetails_to_entityList"
             app:destination="@id/entityList"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_entityDetails_to_entityPickerFragment"
-            app:destination="@id/entityPickerFragment" />
+            app:destination="@id/entityPickerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
-            app:destination="@id/pickerSingleSelectDialogFragment" />
+            app:destination="@id/pickerSingleSelectDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
         <action
             android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
-            app:destination="@id/pickerMultiSelectDialogFragment" />
+            app:destination="@id/pickerMultiSelectDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -108,7 +113,7 @@
         <action
             android:id="@+id/action_loginFragment_to_appList"
             app:destination="@id/appList"
-            app:enterAnim="@anim/fragment_open_enter"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>

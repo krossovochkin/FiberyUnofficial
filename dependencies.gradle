@@ -1,39 +1,39 @@
 def v = [:]
 v.android = [:]
-v.android.compileSdkVersion = 29
-v.android.buildToolsVersion = "29.0.3"
+v.android.compileSdkVersion = 30
+v.android.buildToolsVersion = "30.0.2"
 v.android.minSdkVersion = 23
-v.android.targetSdkVersion = 29
+v.android.targetSdkVersion = 30
 v.android.versionCode = 7
 v.android.versionName = "0.11.0"
 
 v.plugin = [:]
-v.plugin.gradle_android = '4.2.0-alpha04'
+v.plugin.gradle_android = '4.2.0-alpha13'
 
 v.core = [:]
-v.core.kotlin = "1.3.72"
-v.core.dagger = "2.28.1"
+v.core.kotlin = "1.4.10"
+v.core.dagger = "2.29.1"
 v.core.date_time = "1.2.4"
 
 v.androidx = [:]
-v.androidx.core = "1.4.0-alpha01"
-v.androidx.appcompat = "1.3.0-alpha01"
-v.androidx.activity = "1.2.0-alpha06"
-v.androidx.fragment = "1.3.0-alpha06"
-v.androidx.constraint_layout = "2.0.0-beta8"
+v.androidx.core = "1.5.0-alpha04"
+v.androidx.appcompat = "1.3.0-alpha02"
+v.androidx.activity = "1.2.0-beta01"
+v.androidx.fragment = "1.3.0-beta01"
+v.androidx.constraint_layout = "2.0.2"
 v.androidx.navigation = "2.3.0"
-v.androidx.lifecycle = "2.3.0-alpha05"
-v.androidx.paging = "3.0.0-alpha02"
-v.androidx.security = "1.1.0-alpha01"
+v.androidx.lifecycle = "2.3.0-beta01"
+v.androidx.paging = "3.0.0-alpha07"
+v.androidx.security = "1.1.0-alpha02"
 
 v.network = [:]
 v.network.retrofit = "2.9.0"
-v.network.moshi = "1.9.3"
+v.network.moshi = "1.11.0"
 
 v.ui = [:]
-v.ui.material = "1.3.0-alpha01"
+v.ui.material = "1.3.0-alpha03"
 v.ui.adapter_delegates = "4.3.0"
-v.ui.markwon = "4.4.0"
+v.ui.markwon = "4.6.0"
 
 v.quality = [:]
 

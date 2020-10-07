@@ -27,8 +27,6 @@ import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -236,30 +234,21 @@ class EntityDetailsFragment(
         initNavigation()
         initToolbar()
 
-        entityPickedViewModel.pickedEntity.observe(
-            viewLifecycleOwner,
-            Observer { event ->
-                event.getContentIfNotHandled()?.let { (parentEntityData, entity) ->
-                    viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
-                }
+        entityPickedViewModel.pickedEntity.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { (parentEntityData, entity) ->
+                viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
             }
-        )
-        singleSelectPickedViewModel.pickedSingleSelect.observe(
-            viewLifecycleOwner,
-            Observer { event ->
-                event.getContentIfNotHandled()?.let { (fieldSchema, item) ->
-                    viewModel.updateSingleSelectField(fieldSchema, item)
-                }
+        }
+        singleSelectPickedViewModel.pickedSingleSelect.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { (fieldSchema, item) ->
+                viewModel.updateSingleSelectField(fieldSchema, item)
             }
-        )
-        multiSelectPickedViewModel.pickedMultiSelect.observe(
-            viewLifecycleOwner,
-            Observer { event ->
-                event.getContentIfNotHandled()?.let { data ->
-                    viewModel.updateMultiSelectField(data)
-                }
+        }
+        multiSelectPickedViewModel.pickedMultiSelect.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { data ->
+                viewModel.updateMultiSelectField(data)
             }
-        )
+        }
     }
 
     private fun initList() {
