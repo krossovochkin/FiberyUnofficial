@@ -52,6 +52,7 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    @Suppress("ForbiddenComment")
     private suspend fun getEntityDetailsDto(
         entityData: FiberyEntityData
     ): FiberyEntityResponseDto {
@@ -101,6 +102,7 @@ class EntityDetailsRepositoryImpl(
             .map { it.name }
     }
 
+    @Suppress("UnusedPrivateMember")
     private suspend fun getEntityEnumsQuery(
         entityData: FiberyEntityData
     ): List<Any> {
