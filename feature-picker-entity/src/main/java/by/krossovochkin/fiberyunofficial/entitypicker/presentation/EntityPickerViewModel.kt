@@ -163,16 +163,17 @@ private class EntityPickerDataSource(
 
     private suspend fun loadPage(offset: Int, pageSize: Int): LoadResult<Int, FiberyEntityData> {
         return try {
+            val pageData = getEntityListInteractor
+                .execute(
+                    entityListArgs.parentEntityData,
+                    offset,
+                    pageSize,
+                    searchQuery.value.orEmpty()
+                )
             LoadResult.Page(
-                data = getEntityListInteractor
-                    .execute(
-                        entityListArgs.parentEntityData,
-                        offset,
-                        pageSize,
-                        searchQuery.value.orEmpty()
-                    ),
+                data = pageData,
                 prevKey = null,
-                nextKey = offset + pageSize
+                nextKey = if (pageData.size == pageSize) offset + pageSize else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

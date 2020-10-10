@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -278,6 +279,7 @@ class EntityDetailsFragment(
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun initNavigation() {
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {

@@ -58,9 +58,7 @@ class EntityDetailsRepositoryImpl(
         val primitives = getEntityPrimitivesQuery(
             entityData = entityData
         )
-        val enums = getEntityEnumsQuery(
-            entityData = entityData
-        )
+        val enums = emptyList<Any>() // TODO: #247 return support // getEntityEnumsQuery(entityData = entityData)
         val relations = getEntityRelationsQuery(
             entityData = entityData
         )

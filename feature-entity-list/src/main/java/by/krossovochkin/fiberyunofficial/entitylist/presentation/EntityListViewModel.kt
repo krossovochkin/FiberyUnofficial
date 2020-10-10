@@ -216,16 +216,17 @@ private class EntityListDataSource(
 
     private suspend fun loadPage(offset: Int, pageSize: Int): LoadResult<Int, FiberyEntityData> {
         return try {
+            val pageData = getEntityListInteractor
+                .execute(
+                    entityListArgs.entityTypeSchema,
+                    offset,
+                    pageSize,
+                    entityListArgs.parentEntityData
+                )
             LoadResult.Page(
-                data = getEntityListInteractor
-                    .execute(
-                        entityListArgs.entityTypeSchema,
-                        offset,
-                        pageSize,
-                        entityListArgs.parentEntityData
-                    ),
+                data = pageData,
                 prevKey = null,
-                nextKey = offset + pageSize
+                nextKey = if (pageData.size == pageSize) offset + pageSize else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
