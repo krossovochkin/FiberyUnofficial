@@ -6,6 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath d.plugin.r8
         classpath d.plugin.gradle_android
         classpath d.plugin.gradle_kotlin
         classpath d.plugin.navigation

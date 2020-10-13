@@ -9,6 +9,7 @@ v.android.versionName = "0.12.0"
 
 v.plugin = [:]
 v.plugin.gradle_android = '4.2.0-alpha13'
+v.plugin.r8 = "2.1.67"
 
 v.core = [:]
 v.core.kotlin = "1.4.10"
@@ -44,6 +45,7 @@ v.test.espresso = "3.2.0"
 
 def d = [:]
 d.plugin = [:]
+d.plugin.r8 = "com.android.tools:r8:${v.plugin.r8}"
 d.plugin.gradle_android = "com.android.tools.build:gradle:${v.plugin.gradle_android}"
 d.plugin.gradle_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${v.core.kotlin}"
 d.plugin.navigation = "androidx.navigation:navigation-safe-args-gradle-plugin:${v.androidx.navigation}"
