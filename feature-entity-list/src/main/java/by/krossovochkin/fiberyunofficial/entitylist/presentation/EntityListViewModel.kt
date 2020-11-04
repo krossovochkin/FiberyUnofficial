@@ -94,7 +94,8 @@ class EntityListViewModel(
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = entityListArgs.entityTypeSchema.displayName,
+            title = entityListArgs.parentEntityData?.fieldSchema?.displayName
+                ?: entityListArgs.entityTypeSchema.displayName,
             bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true,
             menuResId = if (entityListArgs.parentEntityData == null) {

@@ -16,7 +16,6 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.data
 
-import android.annotation.SuppressLint
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
@@ -302,7 +301,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any>
     ): FieldData.TextFieldData {
         return FieldData.TextFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = data.value as? String,
             schema = fieldSchema
         )
@@ -313,7 +312,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any>
     ): FieldData.UrlFieldData {
         return FieldData.UrlFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = data.value as? String,
             schema = fieldSchema
         )
@@ -324,7 +323,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any>
     ): FieldData.EmailFieldData {
         return FieldData.EmailFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = data.value as? String,
             schema = fieldSchema
         )
@@ -335,7 +334,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any?>
     ): FieldData.NumberFieldData {
         return FieldData.NumberFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = data.value?.toString()?.toBigDecimal(),
             unit = fieldSchema.meta.numberUnit,
             precision = if (fieldSchema.type == FiberyApiConstants.FieldType.NUMBER_INT.value) {
@@ -353,7 +352,7 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any?>
     ): FieldData.CheckboxFieldData {
         return FieldData.CheckboxFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = data.value as? Boolean,
             schema = fieldSchema
         )
@@ -370,7 +369,7 @@ class EntityDetailsRepositoryImpl(
             )
         }
         return FieldData.DateFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = value,
             schema = fieldSchema
         )
@@ -387,7 +386,7 @@ class EntityDetailsRepositoryImpl(
             )
         }
         return FieldData.DateTimeFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = value,
             schema = fieldSchema
         )
@@ -412,7 +411,7 @@ class EntityDetailsRepositoryImpl(
             )
         }
         return FieldData.DateRangeFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             start = start,
             end = end,
             schema = fieldSchema
@@ -438,7 +437,7 @@ class EntityDetailsRepositoryImpl(
             )
         }
         return FieldData.DateTimeRangeFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             start = start,
             end = end,
             schema = fieldSchema
@@ -458,7 +457,7 @@ class EntityDetailsRepositoryImpl(
         val documentDto = fiberyServiceApi.getDocument(secret).await()
 
         return FieldData.RichTextFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             value = documentDto?.content ?: "",
             schema = fieldSchema
         )
@@ -475,7 +474,7 @@ class EntityDetailsRepositoryImpl(
             ?.get(FiberyApiConstants.Field.ID.value)
             ?.let { id -> values.find { value -> value.id == id } }
         return FieldData.SingleSelectFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             selectedValue = selectedValue,
             values = values,
             schema = fieldSchema
@@ -498,7 +497,7 @@ class EntityDetailsRepositoryImpl(
             ?.map { id -> values.first { value -> value.id == id } }
             ?: emptyList()
         return FieldData.MultiSelectFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             selectedValues = selectedValues,
             values = values,
             schema = fieldSchema
@@ -528,7 +527,7 @@ class EntityDetailsRepositoryImpl(
         }
 
         return FieldData.RelationFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             fiberyEntityData = entityData,
             schema = fieldSchema
         )
@@ -539,18 +538,11 @@ class EntityDetailsRepositoryImpl(
         data: Map.Entry<String, Any>
     ): FieldData.CollectionFieldData {
         return FieldData.CollectionFieldData(
-            title = fieldSchema.name.normalizeTitle(),
+            title = fieldSchema.displayName,
             count = (data.value as? Number)?.toInt() ?: 0,
             entityTypeSchema = fiberyApiRepository.getTypeSchema(fieldSchema.type),
             schema = fieldSchema
         )
-    }
-
-    @SuppressLint("DefaultLocale")
-    private fun String.normalizeTitle(): String {
-        return this.substringAfter(FiberyApiConstants.DELIMITER_APP_TYPE)
-            .split("-")
-            .joinToString(separator = " ") { it.capitalize() }
     }
 
     private fun String.wrapCollectionCount(): String {

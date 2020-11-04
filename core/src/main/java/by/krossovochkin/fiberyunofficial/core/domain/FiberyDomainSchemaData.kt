@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.core.domain
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -38,7 +39,10 @@ data class FiberyEntityTypeSchema(
 ) : Parcelable {
 
     @IgnoredOnParcel
-    val displayName: String = name.substringAfter("/")
+    val appName: String = name.substringBefore("/")
+
+    @IgnoredOnParcel
+    val displayName: String = name.substringAfterLast("/")
 }
 
 @JsonClass(generateAdapter = true)
@@ -56,7 +60,15 @@ data class FiberyFieldSchema(
     val name: String,
     val type: String,
     val meta: FiberyFieldMetaData
-) : Parcelable
+) : Parcelable {
+
+    @IgnoredOnParcel
+    val displayName: String
+        @SuppressLint("DefaultLocale")
+        get() = name.substringAfterLast("/")
+            .split("-")
+            .joinToString(separator = " ") { it.capitalize() }
+}
 
 @JsonClass(generateAdapter = true)
 @Parcelize

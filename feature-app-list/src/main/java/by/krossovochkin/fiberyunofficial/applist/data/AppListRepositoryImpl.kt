@@ -28,11 +28,7 @@ class AppListRepositoryImpl(
     override suspend fun getAppList(): List<FiberyAppData> {
         return fiberyApiRepository.getTypeSchemas()
             .filter { it.meta.isDomain && it.name != FiberyApiConstants.Type.USER.value }
-            .map {
-                FiberyAppData(
-                    name = it.name.substringBefore(FiberyApiConstants.DELIMITER_APP_TYPE)
-                )
-            }
+            .map { FiberyAppData(name = it.appName) }
             .distinct()
     }
 }

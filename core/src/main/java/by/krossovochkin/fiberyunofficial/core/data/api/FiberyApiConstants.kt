@@ -72,6 +72,4 @@ object FiberyApiConstants {
     ) {
         NO_LIMIT("q/no-limit")
     }
-
-    const val DELIMITER_APP_TYPE = "/"
 }
