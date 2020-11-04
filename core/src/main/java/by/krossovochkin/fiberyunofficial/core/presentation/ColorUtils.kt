@@ -39,7 +39,12 @@ object ColorUtils {
 
     @ColorInt
     fun getColor(colorHex: String): Int {
-        return Color.parseColor(colorHex)
+        val color = Color.parseColor(colorHex)
+        return if (Color.alpha(color) == 0) {
+            Color.WHITE
+        } else {
+            color
+        }
     }
 
     @ColorInt

@@ -59,7 +59,9 @@ class EntityDetailsRepositoryImpl(
         val primitives = getEntityPrimitivesQuery(
             entityData = entityData
         )
-        val enums = emptyList<Any>() // TODO: #247 return support // getEntityEnumsQuery(entityData = entityData)
+        val enums = getEntityEnumsQuery(
+            entityData = entityData
+        )
         val relations = getEntityRelationsQuery(
             entityData = entityData
         )
@@ -108,7 +110,8 @@ class EntityDetailsRepositoryImpl(
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
-                fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
+                fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum &&
+                    !fieldSchema.meta.isCollection
             }
             .map { fieldSchema ->
                 mapOf(
@@ -125,7 +128,9 @@ class EntityDetailsRepositoryImpl(
     ): List<Any> {
         return entityData.schema.fields
             .filter { fieldSchema ->
-                fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection
+                fieldSchema.meta.isRelation &&
+                    !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum &&
+                    !fieldSchema.meta.isCollection
             }
             .map { fieldSchema ->
                 val titleFieldName = fiberyApiRepository.getTypeSchema(fieldSchema.type)
@@ -140,15 +145,11 @@ class EntityDetailsRepositoryImpl(
             }
     }
 
-    private suspend fun getEntityCollectionsQuery(
+    private fun getEntityCollectionsQuery(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
-            .filter { fieldSchema ->
-                fieldSchema.meta.isRelation && fieldSchema.meta.isCollection &&
-                    // filter out multi-select fields
-                    !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum
-            }
+            .filter { fieldSchema -> fieldSchema.meta.isCollection }
             .map { fieldSchema ->
                 mapOf(
                     fieldSchema.name.wrapCollectionCount() to listOf(
@@ -273,29 +274,22 @@ class EntityDetailsRepositoryImpl(
         fieldSchema: FiberyFieldSchema
     ): FieldData? {
         return when {
-            fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
-                if (fieldSchema.meta.isCollection) {
-                    mapMultiSelectFieldData(
-                        fieldSchema = fieldSchema,
-                        data = data
-                    )
-                } else {
-                    mapSingleSelectFieldData(
-                        fieldSchema = fieldSchema,
-                        data = data
-                    )
-                }
-            }
-            fieldSchema.meta.isRelation && !fieldSchema.meta.isCollection -> {
-                mapRelationFieldData(
-                    fieldSchema = fieldSchema,
-                    dataEntry = data
-                )
-            }
-            fieldSchema.meta.isRelation && fieldSchema.meta.isCollection -> {
+            fieldSchema.meta.isCollection -> {
                 mapCollectionFieldData(
                     fieldSchema = fieldSchema,
                     data = data
+                )
+            }
+            fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
+                mapSingleSelectFieldData(
+                    fieldSchema = fieldSchema,
+                    data = data
+                )
+            }
+            fieldSchema.meta.isRelation -> {
+                mapRelationFieldData(
+                    fieldSchema = fieldSchema,
+                    dataEntry = data
                 )
             }
             else -> {
