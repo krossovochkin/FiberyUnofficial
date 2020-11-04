@@ -52,7 +52,6 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
-    @Suppress("ForbiddenComment")
     private suspend fun getEntityDetailsDto(
         entityData: FiberyEntityData
     ): FiberyEntityResponseDto {
@@ -483,6 +482,7 @@ class EntityDetailsRepositoryImpl(
         )
     }
 
+    @Suppress("UnusedPrivateMember")
     private suspend fun mapMultiSelectFieldData(
         fieldSchema: FiberyFieldSchema,
         data: Map.Entry<String, Any>
