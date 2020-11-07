@@ -17,6 +17,7 @@
 package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -69,10 +70,10 @@ class EntityTypeListViewModel(
         }
     }
 
-    fun select(item: ListItem) {
+    fun select(item: ListItem, itemView: View) {
         if (item is EntityTypeListItem) {
             mutableNavigation.value = Event(
-                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData)
+                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
             )
         } else {
             throw IllegalArgumentException()

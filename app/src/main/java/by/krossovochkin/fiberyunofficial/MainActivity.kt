@@ -17,12 +17,14 @@
 package by.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
@@ -63,57 +65,76 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         setContentView(binding.root)
     }
 
-    override fun onAppSelected(fiberyAppData: FiberyAppData) {
+    override fun onAppSelected(fiberyAppData: FiberyAppData, itemView: View) {
         binding.navHostFragment.findNavController().navigate(
-            AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData)
+            AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData),
+            FragmentNavigatorExtras(
+                itemView to
+                    getString(R.string.entity_type_root_transition_name)
+            )
         )
     }
 
     @Suppress("UseIfInsteadOfWhen")
-    override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema) {
+    override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: View) {
         val navController = binding.navHostFragment.findNavController()
-        val directions = when (val id = navController.currentDestination?.id) {
+        val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityTypeList -> {
                 EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
                     entityType = entityTypeSchema,
                     parentEntityData = null
+                ) to FragmentNavigatorExtras(
+                    itemView to
+                        getString(R.string.entity_list_root_transition_name)
                 )
             }
             else -> error("Unknown current direction: $id")
         }
-        navController.navigate(directions)
+        navController.navigate(directions, extras)
     }
 
     @Suppress("UseIfInsteadOfWhen")
     override fun onEntityTypeSelected(
         entityTypeSchema: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData
+        parentEntityData: ParentEntityData,
+        itemView: View
     ) {
         val navController = binding.navHostFragment.findNavController()
-        val directions = when (val id = navController.currentDestination?.id) {
+        val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityDetails -> {
                 EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
                     entityType = entityTypeSchema,
                     parentEntityData = parentEntityData
+                ) to FragmentNavigatorExtras(
+                    itemView to
+                        getString(R.string.entity_list_root_transition_name)
                 )
             }
             else -> error("Unknown current direction: $id")
         }
-        navController.navigate(directions)
+        navController.navigate(directions, extras)
     }
 
-    override fun onEntitySelected(entity: FiberyEntityData) {
+    override fun onEntitySelected(entity: FiberyEntityData, itemView: View) {
         val navController = binding.navHostFragment.findNavController()
-        val directions = when (val id = navController.currentDestination?.id) {
+        val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityList -> {
-                EntityListFragmentDirections.actionEntityListToEntityDetails(entity)
+                EntityListFragmentDirections.actionEntityListToEntityDetails(entity) to
+                    FragmentNavigatorExtras(
+                        itemView to
+                            getString(R.string.entity_details_root_transition_name, entity.id)
+                    )
             }
             R.id.entityDetails -> {
-                EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity)
+                EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity) to
+                    FragmentNavigatorExtras(
+                        itemView to
+                            getString(R.string.entity_details_root_transition_name, entity.id)
+                    )
             }
             else -> error("Unknown current direction: $id")
         }
-        navController.navigate(directions)
+        navController.navigate(directions, extras)
     }
 
     override fun onLoginSuccess() {
@@ -153,14 +174,19 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onEntityFieldEdit(
         parentEntityData: ParentEntityData,
-        entity: FiberyEntityData?
+        entity: FiberyEntityData?,
+        itemView: View
     ) {
         binding.navHostFragment.findNavController().navigate(
             EntityDetailsFragmentDirections
                 .actionEntityDetailsToEntityPickerFragment(
                     parentEntityData = parentEntityData,
                     currentEntity = entity
-                )
+                ),
+            FragmentNavigatorExtras(
+                itemView to
+                    getString(R.string.entity_picker_root_transition_name)
+            )
         )
     }
 

@@ -32,8 +32,7 @@
         tools:layout="@layout/fragment_app_list">
         <action
             android:id="@+id/action_appList_to_entityTypeList"
-            app:destination="@id/entityTypeList"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityTypeList" />
     </fragment>
     <fragment
         android:id="@+id/entityTypeList"
@@ -42,8 +41,7 @@
         tools:layout="@layout/fragment_entity_type_list">
         <action
             android:id="@+id/action_entityTypeList_to_entityList"
-            app:destination="@id/entityList"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityList" />
         <argument
             android:name="fiberyApp"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData" />
@@ -55,27 +53,23 @@
         tools:layout="@layout/fragment_entity_list">
         <action
             android:id="@+id/action_entityList_to_entityDetails"
-            app:destination="@id/entityDetails"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityDetails" />
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
         <action
             android:id="@+id/action_entityList_to_entityCreateFragment"
-            app:destination="@id/entityCreateFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityCreateFragment" />
         <action
             android:id="@+id/action_entityList_to_entityPickerFragment"
-            app:destination="@id/entityPickerFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityPickerFragment" />
         <argument
             android:name="parentEntityData"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData"
             app:nullable="true" />
         <action
             android:id="@+id/action_entityList_to_pickerFilterFragment"
-            app:destination="@id/pickerFilterFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/pickerFilterFragment" />
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
@@ -87,24 +81,19 @@
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />
         <action
             android:id="@+id/action_entityDetails_self"
-            app:destination="@id/entityDetails"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityDetails" />
         <action
             android:id="@+id/action_entityDetails_to_entityList"
-            app:destination="@id/entityList"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityList" />
         <action
             android:id="@+id/action_entityDetails_to_entityPickerFragment"
-            app:destination="@id/entityPickerFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/entityPickerFragment" />
         <action
             android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
-            app:destination="@id/pickerSingleSelectDialogFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/pickerSingleSelectDialogFragment" />
         <action
             android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
-            app:destination="@id/pickerMultiSelectDialogFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:destination="@id/pickerMultiSelectDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -113,7 +102,6 @@
         <action
             android:id="@+id/action_loginFragment_to_appList"
             app:destination="@id/appList"
-            app:enterAnim="@anim/nav_default_enter_anim"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>

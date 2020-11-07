@@ -28,7 +28,10 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
@@ -58,17 +61,26 @@ class EntityTypeListFragment(
             }
         ) {
             bind {
-                itemView.setOnClickListener { viewModel.select(item) }
+                itemView.setOnClickListener { viewModel.select(item, itemView) }
                 binding.entityTypeTitleTextView.text = item.title
                 binding.entityTypeBadgeView.setBackgroundColor(
                     ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
                 )
+                itemView.transitionName = requireContext()
+                    .getString(R.string.entity_type_list_transition_name, adapterPosition)
             }
         }
     )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerEntityTypeListComponent.factory()
             .create(
@@ -76,6 +88,8 @@ class EntityTypeListFragment(
                 fragment = this
             )
             .inject(this)
+
+        view.transitionName = requireContext().getString(R.string.entity_type_root_transition_name)
 
         binding.entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityTypeListRecyclerView.adapter = adapter
@@ -108,7 +122,8 @@ class EntityTypeListFragment(
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
-                    parentListener?.onEntityTypeSelected(navEvent.entityTypeSchema)
+                    setupTransformExitTransition()
+                    parentListener?.onEntityTypeSelected(navEvent.entityTypeSchema, navEvent.itemView)
                 }
                 is EntityTypeListNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
@@ -144,7 +159,7 @@ class EntityTypeListFragment(
 
     interface ParentListener {
 
-        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema)
+        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: View)
 
         fun onBackPressed()
     }

@@ -17,6 +17,7 @@
 package by.krossovochkin.fiberyunofficial.applist.presentation
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -65,10 +66,10 @@ class AppListViewModel(
         }
     }
 
-    fun select(item: ListItem) {
+    fun select(item: ListItem, itemView: View) {
         if (item is AppListItem) {
             mutableNavigation.value = Event(
-                AppListNavEvent.OnAppSelectedEvent(item.appData)
+                AppListNavEvent.OnAppSelectedEvent(item.appData, itemView)
             )
         } else {
             throw IllegalArgumentException()

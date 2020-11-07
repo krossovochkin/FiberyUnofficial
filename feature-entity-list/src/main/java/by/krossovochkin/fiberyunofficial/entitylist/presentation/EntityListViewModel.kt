@@ -18,6 +18,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -109,10 +110,10 @@ class EntityListViewModel(
         bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
     )
 
-    fun select(item: ListItem) {
+    fun select(item: ListItem, itemView: View) {
         if (item is EntityListItem) {
             mutableNavigation.value = Event(
-                EntityListNavEvent.OnEntitySelectedEvent(item.entityData)
+                EntityListNavEvent.OnEntitySelectedEvent(item.entityData, itemView)
             )
         } else {
             throw IllegalArgumentException()

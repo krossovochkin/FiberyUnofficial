@@ -2,4 +2,5 @@
 <resources>
     <string name="action_search">Search</string>
     <string name="button_create">Create</string>
+    <string name="entity_picker_root_transition_name">entity_picker_root_transition_name</string>
 </resources>

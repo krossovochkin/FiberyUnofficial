@@ -36,7 +36,10 @@ import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.OffsetItemDecoration
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
@@ -169,13 +172,13 @@ class EntityDetailsFragment(
                 binding.fieldRelationEntityNameTextView.text = item.entityName
 
                 itemView.setOnClickListener {
-                    viewModel.selectEntityField(item.fieldSchema, item.entityData)
+                    viewModel.selectEntityField(item.fieldSchema, item.entityData, itemView)
                 }
 
                 binding.fieldRelationOpenAction.imageTintList =
                     ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
                 binding.fieldRelationOpenAction.setOnClickListener {
-                    item.entityData?.let(viewModel::openEntity)
+                    item.entityData?.let { viewModel.openEntity(it, itemView) }
                 }
                 binding.fieldRelationOpenAction.isVisible = item.isOpenAvailable
 
@@ -185,6 +188,8 @@ class EntityDetailsFragment(
                     item.entityData?.let { viewModel.updateEntityField(item.fieldSchema, null) }
                 }
                 binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
+                itemView.transitionName = requireContext()
+                    .getString(R.string.entity_details_list_transition_name, adapterPosition)
             }
         },
         adapterDelegateViewBinding<FieldCollectionItem, ListItem, ItemFieldCollectionBinding>(
@@ -199,9 +204,12 @@ class EntityDetailsFragment(
                 itemView.setOnClickListener {
                     viewModel.selectCollectionField(
                         entityTypeSchema = item.entityTypeSchema,
-                        fieldSchema = item.fieldSchema
+                        fieldSchema = item.fieldSchema,
+                        itemView = itemView
                     )
                 }
+                itemView.transitionName = requireContext()
+                    .getString(R.string.entity_details_list_transition_name, adapterPosition)
             }
         },
         adapterDelegateViewBinding<FieldCheckboxItem, ListItem, ItemFieldCheckboxBinding>(
@@ -221,8 +229,15 @@ class EntityDetailsFragment(
     private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
     private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerEntityDetailsComponent.factory()
             .create(
@@ -230,6 +245,10 @@ class EntityDetailsFragment(
                 fragment = this
             )
             .inject(this)
+
+        val id: String = entityDetailsParentComponent.entityDetailsArgsProvider()
+            .getEntityDetailsArgs(requireArguments()).entityData.id
+        view.transitionName = requireContext().getString(R.string.entity_details_root_transition_name, id)
 
         initList()
         initNavigation()
@@ -284,12 +303,15 @@ class EntityDetailsFragment(
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
-                    parentListener?.onEntitySelected(navEvent.entity)
+                    setupTransformExitTransition()
+                    parentListener?.onEntitySelected(navEvent.entity, navEvent.itemView)
                 }
                 is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
+                    setupTransformExitTransition()
                     parentListener?.onEntityTypeSelected(
                         entityTypeSchema = navEvent.entityTypeSchema,
-                        parentEntityData = navEvent.parentEntityData
+                        parentEntityData = navEvent.parentEntityData,
+                        itemView = navEvent.itemView
                     )
                 }
                 is EntityDetailsNavEvent.BackEvent -> {
@@ -308,9 +330,11 @@ class EntityDetailsFragment(
                     )
                 }
                 is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
+                    setupTransformExitTransition()
                     parentListener?.onEntityFieldEdit(
                         parentEntityData = navEvent.parentEntityData,
-                        entity = navEvent.currentEntity
+                        entity = navEvent.currentEntity,
+                        itemView = navEvent.itemView
                     )
                 }
                 is EntityDetailsNavEvent.OpenUrlEvent -> {
@@ -372,16 +396,21 @@ class EntityDetailsFragment(
 
     interface ParentListener {
 
-        fun onEntitySelected(entity: FiberyEntityData)
+        fun onEntitySelected(
+            entity: FiberyEntityData,
+            itemView: View
+        )
 
         fun onEntityTypeSelected(
             entityTypeSchema: FiberyEntityTypeSchema,
-            parentEntityData: ParentEntityData
+            parentEntityData: ParentEntityData,
+            itemView: View
         )
 
         fun onEntityFieldEdit(
             parentEntityData: ParentEntityData,
-            entity: FiberyEntityData?
+            entity: FiberyEntityData?,
+            itemView: View
         )
 
         fun onSingleSelectFieldEdit(

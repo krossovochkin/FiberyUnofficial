@@ -32,7 +32,9 @@ import by.krossovochkin.fiberyunofficial.applist.databinding.ItemAppBinding
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -55,14 +57,18 @@ class AppListFragment(
             viewBinding = { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
         ) {
             bind {
-                itemView.setOnClickListener { viewModel.select(item) }
+                itemView.setOnClickListener { viewModel.select(item, itemView) }
                 binding.appTitleTextView.text = item.title
+                itemView.transitionName = requireContext()
+                    .getString(R.string.app_list_list_transition_name, adapterPosition)
             }
         }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerAppListComponent.factory()
             .create(
@@ -104,7 +110,8 @@ class AppListFragment(
         viewModel.navigation.observe(viewLifecycleOwner) { event: Event<AppListNavEvent> ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is AppListNavEvent.OnAppSelectedEvent -> {
-                    parentListener?.onAppSelected(navEvent.fiberyAppData)
+                    setupTransformExitTransition()
+                    parentListener?.onAppSelected(navEvent.fiberyAppData, navEvent.itemView)
                 }
             }
         }
@@ -127,6 +134,6 @@ class AppListFragment(
 
     interface ParentListener {
 
-        fun onAppSelected(fiberyAppData: FiberyAppData)
+        fun onAppSelected(fiberyAppData: FiberyAppData, itemView: View)
     }
 }

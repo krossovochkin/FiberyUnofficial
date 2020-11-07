@@ -3,4 +3,6 @@
     <string name="content_description_open_relation">Open Relation</string>
     <string name="content_description_delete_relation">Delete Relation</string>
     <string name="action_delete">Delete</string>
+    <string name="entity_details_list_transition_name" translatable="false">entity_details_list_transition_name_$1%d</string>
+    <string name="entity_details_root_transition_name" translatable="false">entity_details_root_transition_name_$1%s</string>
 </resources>

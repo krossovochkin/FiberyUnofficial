@@ -33,8 +33,11 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
@@ -83,7 +86,7 @@ class EntityListFragment(
                 }
             ) {
                 bind {
-                    itemView.setOnClickListener { viewModel.select(item) }
+                    itemView.setOnClickListener { viewModel.select(item, itemView) }
                     binding.entityTitleTextView.text = item.title
 
                     binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
@@ -92,14 +95,24 @@ class EntityListFragment(
                             viewModel.removeRelation(item)
                         }
                     }
+
+                    itemView.transitionName = requireContext()
+                        .getString(R.string.entity_list_list_transition_name, adapterPosition)
                 }
             }
         )
 
     private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerEntityListComponent.factory()
             .create(
@@ -107,6 +120,8 @@ class EntityListFragment(
                 fragment = this
             )
             .inject(this)
+
+        view.transitionName = requireContext().getString(R.string.entity_list_root_transition_name)
 
         initList()
         initNavigation()
@@ -161,7 +176,8 @@ class EntityListFragment(
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {
                 is EntityListNavEvent.OnEntitySelectedEvent -> {
-                    parentListener?.onEntitySelected(navEvent.entity)
+                    setupTransformExitTransition()
+                    parentListener?.onEntitySelected(navEvent.entity, navEvent.itemView)
                 }
                 is EntityListNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
@@ -252,7 +268,7 @@ class EntityListFragment(
 
     interface ParentListener {
 
-        fun onEntitySelected(entity: FiberyEntityData)
+        fun onEntitySelected(entity: FiberyEntityData, itemView: View)
 
         fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,

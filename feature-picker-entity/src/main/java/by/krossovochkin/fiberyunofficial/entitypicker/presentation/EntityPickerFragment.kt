@@ -28,7 +28,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.DaggerEntityPickerComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
@@ -80,8 +82,15 @@ class EntityPickerFragment(
             }
         )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerEntityPickerComponent.factory()
             .create(
@@ -89,6 +98,8 @@ class EntityPickerFragment(
                 fragment = this
             )
             .inject(this)
+
+        view.transitionName = requireContext().getString(R.string.entity_picker_root_transition_name)
 
         initList()
         initNavigation()

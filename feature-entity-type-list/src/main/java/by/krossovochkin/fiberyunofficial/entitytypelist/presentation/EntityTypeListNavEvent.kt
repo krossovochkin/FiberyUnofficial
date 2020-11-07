@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
+import android.view.View
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 
 sealed class EntityTypeListNavEvent {
@@ -23,6 +24,7 @@ sealed class EntityTypeListNavEvent {
     object BackEvent : EntityTypeListNavEvent()
 
     data class OnEntityTypeSelectedEvent(
-        val entityTypeSchema: FiberyEntityTypeSchema
+        val entityTypeSchema: FiberyEntityTypeSchema,
+        val itemView: View
     ) : EntityTypeListNavEvent()
 }

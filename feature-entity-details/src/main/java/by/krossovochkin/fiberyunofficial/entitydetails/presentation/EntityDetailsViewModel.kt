@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -392,21 +393,22 @@ class EntityDetailsViewModel(
         }
     }
 
-    fun selectEntityField(fieldSchema: FiberyFieldSchema, entityData: FiberyEntityData?) {
+    fun selectEntityField(fieldSchema: FiberyFieldSchema, entityData: FiberyEntityData?, itemView: View) {
         mutableNavigation.value = Event(
             EntityDetailsNavEvent.OnEntityFieldEditEvent(
                 parentEntityData = ParentEntityData(
                     fieldSchema = fieldSchema,
                     parentEntity = entityDetailsArgs.entityData
                 ),
-                currentEntity = entityData
+                currentEntity = entityData,
+                itemView = itemView
             )
         )
     }
 
-    fun openEntity(entityData: FiberyEntityData) {
+    fun openEntity(entityData: FiberyEntityData, itemView: View) {
         mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData)
+            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData, itemView)
         )
     }
 
@@ -432,7 +434,8 @@ class EntityDetailsViewModel(
 
     fun selectCollectionField(
         entityTypeSchema: FiberyEntityTypeSchema,
-        fieldSchema: FiberyFieldSchema
+        fieldSchema: FiberyFieldSchema,
+        itemView: View
     ) {
         mutableNavigation.value = Event(
             EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
@@ -440,7 +443,8 @@ class EntityDetailsViewModel(
                 parentEntityData = ParentEntityData(
                     fieldSchema = fieldSchema,
                     parentEntity = entityDetailsArgs.entityData
-                )
+                ),
+                itemView = itemView
             )
         )
     }
