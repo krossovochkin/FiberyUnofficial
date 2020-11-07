@@ -144,14 +144,18 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onAddEntityRequested(
         entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?
+        parentEntityData: ParentEntityData?,
+        view: View
     ) {
         if (parentEntityData == null) {
             binding.navHostFragment.findNavController().navigate(
                 EntityListFragmentDirections
                     .actionEntityListToEntityCreateFragment(
                         entityType = entityType
-                    )
+                    ),
+                FragmentNavigatorExtras(
+                    view to getString(R.string.entity_create_root_transition_name)
+                )
             )
         } else {
             binding.navHostFragment.findNavController().navigate(
@@ -159,7 +163,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     .actionEntityListToEntityPickerFragment(
                         parentEntityData = parentEntityData,
                         currentEntity = null
-                    )
+                    ),
+                FragmentNavigatorExtras(
+                    view to getString(R.string.entity_picker_root_transition_name)
+                )
             )
         }
     }

@@ -179,11 +179,12 @@ class EntityListViewModel(
         }
     }
 
-    fun onCreateEntityClicked() {
+    fun onCreateEntityClicked(view: View) {
         mutableNavigation.value = Event(
             EntityListNavEvent.OnCreateEntityEvent(
                 entityListArgs.entityTypeSchema,
-                entityListArgs.parentEntityData
+                entityListArgs.parentEntityData,
+                view
             )
         )
     }

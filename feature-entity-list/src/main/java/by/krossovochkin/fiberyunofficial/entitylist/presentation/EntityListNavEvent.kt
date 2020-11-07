@@ -43,6 +43,7 @@ sealed class EntityListNavEvent {
 
     data class OnCreateEntityEvent(
         val entityType: FiberyEntityTypeSchema,
-        val parentEntityData: ParentEntityData?
+        val parentEntityData: ParentEntityData?,
+        val view: View
     ) : EntityListNavEvent()
 }

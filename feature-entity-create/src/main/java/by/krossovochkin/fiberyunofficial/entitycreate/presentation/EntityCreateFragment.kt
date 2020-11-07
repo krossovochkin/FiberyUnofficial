@@ -22,7 +22,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
@@ -42,8 +44,15 @@ class EntityCreateFragment(
 
     private var parentListener: ParentListener? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        delayTransitions()
 
         DaggerEntityCreateComponent.factory()
             .create(
@@ -51,6 +60,9 @@ class EntityCreateFragment(
                 fragment = this
             )
             .inject(this)
+
+        view.transitionName = requireContext()
+            .getString(R.string.entity_create_root_transition_name)
 
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (val navEvent = event.getContentIfNotHandled()) {

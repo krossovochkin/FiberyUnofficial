@@ -137,8 +137,10 @@ class EntityListFragment(
             requireContext(),
             viewModel.getCreateFabViewState(requireContext())
         ) {
-            viewModel.onCreateEntityClicked()
+            viewModel.onCreateEntityClicked(binding.entityListCreateFab)
         }
+        binding.entityListCreateFab.transitionName = requireContext()
+            .getString(R.string.entity_list_create_fab_transition_name)
 
         entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -193,7 +195,8 @@ class EntityListFragment(
                     showUpdateSortDialog(navEvent.sort)
                 }
                 is EntityListNavEvent.OnCreateEntityEvent -> {
-                    onCreateEntity(navEvent.entityType, navEvent.parentEntityData)
+                    setupTransformExitTransition()
+                    onCreateEntity(navEvent.entityType, navEvent.parentEntityData, navEvent.view)
                 }
             }
         }
@@ -241,9 +244,10 @@ class EntityListFragment(
 
     private fun onCreateEntity(
         entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?
+        parentEntityData: ParentEntityData?,
+        view: View
     ) {
-        parentListener?.onAddEntityRequested(entityType, parentEntityData)
+        parentListener?.onAddEntityRequested(entityType, parentEntityData, view)
     }
 
     override fun onAttach(context: Context) {
@@ -272,7 +276,8 @@ class EntityListFragment(
 
         fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,
-            parentEntityData: ParentEntityData?
+            parentEntityData: ParentEntityData?,
+            view: View
         )
 
         fun onFilterEdit(
