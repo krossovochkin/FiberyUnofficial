@@ -185,10 +185,12 @@ class EntityListFragment(
                     parentListener?.onBackPressed()
                 }
                 is EntityListNavEvent.OnFilterSelectedEvent -> {
+                    setupTransformExitTransition()
                     parentListener?.onFilterEdit(
                         entityTypeSchema = navEvent.entityTypeSchema,
                         filter = navEvent.filter,
-                        params = navEvent.params
+                        params = navEvent.params,
+                        view = navEvent.view
                     )
                 }
                 is EntityListNavEvent.OnSortSelectedEvent -> {
@@ -203,14 +205,18 @@ class EntityListFragment(
     }
 
     private fun initToolbar() {
+        var filterView: View? = null
+
+        val toolbarViewState = viewModel.toolbarViewState
+
         binding.entityListToolbar.initToolbar(
             activity = requireActivity(),
-            state = viewModel.toolbarViewState,
+            state = toolbarViewState,
             onBackPressed = { viewModel.onBackPressed() },
             onMenuItemClicked = { item ->
                 when (item.itemId) {
                     R.id.action_filter -> {
-                        viewModel.onFilterClicked()
+                        viewModel.onFilterClicked(filterView!!)
                         true
                     }
                     R.id.action_sort -> {
@@ -221,6 +227,11 @@ class EntityListFragment(
                 }
             }
         )
+
+        filterView = requireView().findViewById(R.id.action_filter)
+        filterView?.transitionName = requireContext()
+            .getString(R.string.entity_list_filter_transition_name)
+        filterView.tag = toolbarViewState.bgColorInt
     }
 
     private fun showUpdateSortDialog(
@@ -283,7 +294,8 @@ class EntityListFragment(
         fun onFilterEdit(
             entityTypeSchema: FiberyEntityTypeSchema,
             filter: String,
-            params: String
+            params: String,
+            view: View
         )
 
         fun onBackPressed()

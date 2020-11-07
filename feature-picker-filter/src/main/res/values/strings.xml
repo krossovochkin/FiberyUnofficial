@@ -21,4 +21,5 @@
 <resources>
     <string name="picker_filter_apply_action">Apply</string>
     <string name="pickerFilter_toolbarTitle">Filter</string>
+    <string name="picker_filter_root_transition_name" translatable="false">picker_filter_root_transition_name</string>
 </resources>

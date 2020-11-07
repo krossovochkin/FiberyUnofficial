@@ -156,14 +156,15 @@ class EntityListViewModel(
         }
     }
 
-    fun onFilterClicked() {
+    fun onFilterClicked(view: View) {
         viewModelScope.launch {
             val (filter, params) = getEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema)
             mutableNavigation.value = Event(
                 EntityListNavEvent.OnFilterSelectedEvent(
                     entityTypeSchema = entityListArgs.entityTypeSchema,
                     filter = filter,
-                    params = params
+                    params = params,
+                    view = view
                 )
             )
         }

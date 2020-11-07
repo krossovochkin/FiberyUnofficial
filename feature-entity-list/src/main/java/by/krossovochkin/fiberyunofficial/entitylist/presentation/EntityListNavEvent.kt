@@ -34,7 +34,8 @@ sealed class EntityListNavEvent {
     data class OnFilterSelectedEvent(
         val entityTypeSchema: FiberyEntityTypeSchema,
         val filter: String,
-        val params: String
+        val params: String,
+        val view: View
     ) : EntityListNavEvent()
 
     data class OnSortSelectedEvent(

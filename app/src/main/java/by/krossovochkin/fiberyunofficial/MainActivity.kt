@@ -69,8 +69,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         binding.navHostFragment.findNavController().navigate(
             AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData),
             FragmentNavigatorExtras(
-                itemView to
-                    getString(R.string.entity_type_root_transition_name)
+                itemView to getString(R.string.entity_type_root_transition_name)
             )
         )
     }
@@ -84,8 +83,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     entityType = entityTypeSchema,
                     parentEntityData = null
                 ) to FragmentNavigatorExtras(
-                    itemView to
-                        getString(R.string.entity_list_root_transition_name)
+                    itemView to getString(R.string.entity_list_root_transition_name)
                 )
             }
             else -> error("Unknown current direction: $id")
@@ -106,8 +104,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     entityType = entityTypeSchema,
                     parentEntityData = parentEntityData
                 ) to FragmentNavigatorExtras(
-                    itemView to
-                        getString(R.string.entity_list_root_transition_name)
+                    itemView to getString(R.string.entity_list_root_transition_name)
                 )
             }
             else -> error("Unknown current direction: $id")
@@ -191,8 +188,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     currentEntity = entity
                 ),
             FragmentNavigatorExtras(
-                itemView to
-                    getString(R.string.entity_picker_root_transition_name)
+                itemView to getString(R.string.entity_picker_root_transition_name)
             )
         )
     }
@@ -262,7 +258,8 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onFilterEdit(
         entityTypeSchema: FiberyEntityTypeSchema,
         filter: String,
-        params: String
+        params: String,
+        view: View
     ) {
         binding.navHostFragment.findNavController().navigate(
             EntityListFragmentDirections
@@ -270,7 +267,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     entityTypeSchema = entityTypeSchema,
                     filter = filter,
                     params = params
-                )
+                ),
+            FragmentNavigatorExtras(
+                view to getString(R.string.picker_filter_root_transition_name)
+            )
         )
     }
 
