@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">feature-login</string>
-    <string name="connect">Connect</string>
+    <string name="login_action_connect">Connect</string>
 </resources>

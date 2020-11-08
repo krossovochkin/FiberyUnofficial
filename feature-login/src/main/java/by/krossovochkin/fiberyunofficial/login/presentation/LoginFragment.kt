@@ -27,7 +27,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
 import by.krossovochkin.fiberyunofficial.login.R
-import by.krossovochkin.fiberyunofficial.login.databinding.FragmentLoginBinding
+import by.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
 import javax.inject.Inject
 
 private const val MOCK_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; " +
@@ -41,12 +41,12 @@ private const val JS_EXTRACT_TOKEN =
 
 class LoginFragment(
     private val loginParentComponent: LoginParentComponent
-) : Fragment(R.layout.fragment_login) {
+) : Fragment(R.layout.login_fragment) {
 
     @Inject
     lateinit var viewModel: LoginViewModel
 
-    private val binding by viewBinding(FragmentLoginBinding::bind)
+    private val binding by viewBinding(LoginFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
