@@ -35,6 +35,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -85,6 +86,7 @@ class AppListFragment(
                 LinearLayout.VERTICAL
             )
         )
+        binding.appListRecyclerView.updateInsetPaddings(bottom = true)
 
         viewModel.appItems.observe(viewLifecycleOwner) {
             adapter.items = it

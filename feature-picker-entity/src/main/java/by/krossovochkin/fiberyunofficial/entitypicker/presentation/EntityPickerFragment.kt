@@ -31,6 +31,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.DaggerEntityPickerComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
@@ -109,6 +111,7 @@ class EntityPickerFragment(
             binding.entityCreateAction.isEnabled = isEnabled
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
+        binding.entityCreateAction.updateInsetMargins(requireActivity(), bottom = true)
     }
 
     private fun initList() {
@@ -116,6 +119,7 @@ class EntityPickerFragment(
         binding.entityPickerRecyclerView.adapter = adapter
         binding.entityPickerRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+        binding.entityPickerRecyclerView.updateInsetPaddings(bottom = true)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.entityItems.collectLatest { pagingData ->

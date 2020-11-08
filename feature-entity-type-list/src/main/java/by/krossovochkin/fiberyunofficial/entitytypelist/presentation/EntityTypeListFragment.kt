@@ -32,6 +32,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
@@ -97,6 +98,7 @@ class EntityTypeListFragment(
             .addItemDecoration(
                 DividerItemDecoration(context, LinearLayout.VERTICAL)
             )
+        binding.entityTypeListRecyclerView.updateInsetPaddings(bottom = true)
 
         viewModel.entityTypeItems.observe(viewLifecycleOwner) {
             adapter.items = it

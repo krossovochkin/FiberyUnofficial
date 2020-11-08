@@ -40,6 +40,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
@@ -275,6 +276,7 @@ class EntityDetailsFragment(
         binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityDetailsRecyclerView.adapter = adapter
         binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entityDetails_fieldOffset))
+        binding.entityDetailsRecyclerView.updateInsetPaddings(bottom = true)
 
         viewModel.items.observe(viewLifecycleOwner) {
             adapter.items = it

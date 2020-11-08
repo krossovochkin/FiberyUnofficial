@@ -38,6 +38,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
@@ -139,6 +141,7 @@ class EntityListFragment(
         ) {
             viewModel.onCreateEntityClicked(binding.entityListCreateFab)
         }
+        binding.entityListCreateFab.updateInsetMargins(requireActivity(), bottom = true)
         binding.entityListCreateFab.transitionName = requireContext()
             .getString(R.string.entity_list_create_fab_transition_name)
 
@@ -154,6 +157,7 @@ class EntityListFragment(
         binding.entityListRecyclerView.adapter = adapter
         binding.entityListRecyclerView
             .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+        binding.entityListRecyclerView.updateInsetPaddings(bottom = true)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.entityItems.collectLatest { pagingData ->
@@ -207,11 +211,9 @@ class EntityListFragment(
     private fun initToolbar() {
         var filterView: View? = null
 
-        val toolbarViewState = viewModel.toolbarViewState
-
         binding.entityListToolbar.initToolbar(
             activity = requireActivity(),
-            state = toolbarViewState,
+            state = viewModel.toolbarViewState,
             onBackPressed = { viewModel.onBackPressed() },
             onMenuItemClicked = { item ->
                 when (item.itemId) {
@@ -231,7 +233,6 @@ class EntityListFragment(
         filterView = requireView().findViewById(R.id.action_filter)
         filterView?.transitionName = requireContext()
             .getString(R.string.entity_list_filter_transition_name)
-        filterView.tag = toolbarViewState.bgColorInt
     }
 
     private fun showUpdateSortDialog(

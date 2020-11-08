@@ -25,6 +25,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
@@ -89,6 +90,7 @@ class EntityCreateFragment(
         binding.entityCreateButton.setOnClickListener {
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
+        binding.entityCreateButton.updateInsetMargins(requireActivity(), bottom = true)
 
         binding.entityCreateToolbar.initToolbar(
             activity = requireActivity(),

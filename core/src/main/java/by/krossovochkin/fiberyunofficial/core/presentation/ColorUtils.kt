@@ -63,14 +63,14 @@ object ColorUtils {
         return Color.HSVToColor(result)
     }
 
-    private fun Context.isDarkMode(): Boolean {
-        val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    fun isDarkMode(context: Context): Boolean {
+        val mode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return mode == Configuration.UI_MODE_NIGHT_YES
     }
 
     @ColorInt
     fun getDesaturatedColorIfNeeded(context: Context, @ColorInt color: Int): Int {
-        return if (context.isDarkMode()) {
+        return if (isDarkMode(context)) {
             getDesaturatedColor(color)
         } else {
             color
@@ -79,7 +79,7 @@ object ColorUtils {
 
     @ColorInt
     fun getDefaultContrastColor(context: Context): Int {
-        return if (context.isDarkMode()) Color.WHITE else Color.BLACK
+        return if (isDarkMode(context)) Color.WHITE else Color.BLACK
     }
 
     @ColorInt

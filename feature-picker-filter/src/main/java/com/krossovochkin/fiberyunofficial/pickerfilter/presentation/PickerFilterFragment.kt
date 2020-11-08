@@ -32,6 +32,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
+import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -143,6 +145,7 @@ class PickerFilterFragment(
                 LinearLayout.VERTICAL
             )
         )
+        binding.recyclerView.updateInsetPaddings(bottom = true)
 
         binding.pickerFilterToolbar.initToolbar(
             activity = requireActivity(),
@@ -170,6 +173,7 @@ class PickerFilterFragment(
         }
 
         binding.applyAction.setOnClickListener { viewModel.applyFilter() }
+        binding.applyAction.updateInsetMargins(requireActivity(), bottom = true)
     }
 
     private inline fun Spinner.setup(
