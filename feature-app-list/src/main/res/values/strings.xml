@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">feature-app-list</string>
-    <string name="title_app_list">Apps</string>
+    <string name="app_list_title">Apps</string>
     <string name="app_list_list_transition_name" translatable="false">app_list_list_transition_name_%1$d</string>
 </resources>

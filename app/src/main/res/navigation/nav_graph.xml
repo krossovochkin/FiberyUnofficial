@@ -29,7 +29,7 @@
         android:id="@+id/appList"
         android:name="by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment"
         android:label="fragment_apps"
-        tools:layout="@layout/fragment_app_list">
+        tools:layout="@layout/app_list_fragment">
         <action
             android:id="@+id/action_appList_to_entityTypeList"
             app:destination="@id/entityTypeList" />

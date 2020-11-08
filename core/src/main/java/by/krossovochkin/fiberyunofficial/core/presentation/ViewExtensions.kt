@@ -205,7 +205,7 @@ fun View.updateInsetPaddings(
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
         val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         if (bottom) {
-            updatePadding(bottom = originalPaddingBottom + systemInsets.bottom)
+            v.updatePadding(bottom = originalPaddingBottom + systemInsets.bottom)
         }
 
         insets

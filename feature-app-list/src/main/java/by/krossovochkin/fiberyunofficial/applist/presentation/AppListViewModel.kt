@@ -77,7 +77,7 @@ class AppListViewModel(
     }
 
     fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
-        title = resProvider.getString(R.string.title_app_list),
+        title = resProvider.getString(R.string.app_list_title),
         bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
     )
 }

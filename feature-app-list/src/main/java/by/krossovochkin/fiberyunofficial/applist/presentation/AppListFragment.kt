@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
 import by.krossovochkin.fiberyunofficial.applist.DaggerAppListComponent
 import by.krossovochkin.fiberyunofficial.applist.R
-import by.krossovochkin.fiberyunofficial.applist.databinding.FragmentAppListBinding
-import by.krossovochkin.fiberyunofficial.applist.databinding.ItemAppBinding
+import by.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
+import by.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -44,18 +44,18 @@ import javax.inject.Inject
 
 class AppListFragment(
     private val appListParentComponent: AppListParentComponent
-) : Fragment(R.layout.fragment_app_list) {
+) : Fragment(R.layout.app_list_fragment) {
 
     @Inject
     lateinit var viewModel: AppListViewModel
 
     private var parentListener: ParentListener? = null
 
-    private val binding by viewBinding(FragmentAppListBinding::bind)
+    private val binding by viewBinding(AppListFragmentBinding::bind)
 
     private val adapter = ListDelegationAdapter(
-        adapterDelegateViewBinding<AppListItem, ListItem, ItemAppBinding>(
-            viewBinding = { inflater, parent -> ItemAppBinding.inflate(inflater, parent, false) }
+        adapterDelegateViewBinding<AppListItem, ListItem, AppListItemBinding>(
+            viewBinding = { inflater, parent -> AppListItemBinding.inflate(inflater, parent, false) }
         ) {
             bind {
                 itemView.setOnClickListener { viewModel.select(item, itemView) }
