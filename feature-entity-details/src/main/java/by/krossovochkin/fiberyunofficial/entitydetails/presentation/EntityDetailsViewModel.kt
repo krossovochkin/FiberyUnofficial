@@ -68,7 +68,7 @@ class EntityDetailsViewModel(
         get() = ToolbarViewState(
             title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
             bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex),
-            menuResId = R.menu.menu_entity_details,
+            menuResId = R.menu.entity_details_menu,
             hasBackButton = true
         )
 

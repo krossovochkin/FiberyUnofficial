@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <dimen name="entityDetails_fieldOffset">16dp</dimen>
+    <dimen name="entity_details_field_offset">16dp</dimen>
 </resources>

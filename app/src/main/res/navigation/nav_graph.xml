@@ -75,7 +75,7 @@
         android:id="@+id/entityDetails"
         android:name="by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment"
         android:label="fragment_entity_details"
-        tools:layout="@layout/fragment_entity_details">
+        tools:layout="@layout/entity_details_fragment">
         <argument
             android:name="entity"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData" />

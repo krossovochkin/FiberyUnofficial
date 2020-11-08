@@ -1,5 +1,9 @@
 apply from: "../feature_default.gradle"
 
+android {
+    resourcePrefix = "entity_details_"
+}
+
 dependencies {
     implementation d.ui.markwon
 }

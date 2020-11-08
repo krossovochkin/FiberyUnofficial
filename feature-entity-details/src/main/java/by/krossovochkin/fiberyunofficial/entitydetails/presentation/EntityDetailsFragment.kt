@@ -45,17 +45,17 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.FragmentEntityDetailsBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCheckboxBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldCollectionBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldEmailBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldHeaderBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldMultiSelectBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRelationBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldRichTextBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldSingleSelectBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldTextBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.databinding.ItemFieldUrlBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsFragmentBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldCheckboxBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldCollectionBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldEmailBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldHeaderBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldMultiSelectBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldRelationBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldRichTextBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldSingleSelectBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldTextBinding
+import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldUrlBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -64,28 +64,28 @@ import javax.inject.Inject
 
 class EntityDetailsFragment(
     private val entityDetailsParentComponent: EntityDetailsParentComponent
-) : Fragment(R.layout.fragment_entity_details) {
+) : Fragment(R.layout.entity_details_fragment) {
 
     @Inject
     lateinit var viewModel: EntityDetailsViewModel
 
-    private val binding by viewBinding(FragmentEntityDetailsBinding::bind)
+    private val binding by viewBinding(EntityDetailsFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter(
-        adapterDelegateViewBinding<FieldHeaderItem, ListItem, ItemFieldHeaderBinding>(
+        adapterDelegateViewBinding<FieldHeaderItem, ListItem, EntityDetailsItemFieldHeaderBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldHeaderBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldHeaderBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
                 binding.fieldHeaderTitleTextView.text = item.title
             }
         },
-        adapterDelegateViewBinding<FieldTextItem, ListItem, ItemFieldTextBinding>(
+        adapterDelegateViewBinding<FieldTextItem, ListItem, EntityDetailsItemFieldTextBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldTextBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldTextBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -93,9 +93,9 @@ class EntityDetailsFragment(
                 binding.fieldTextView.text = item.text
             }
         },
-        adapterDelegateViewBinding<FieldUrlItem, ListItem, ItemFieldUrlBinding>(
+        adapterDelegateViewBinding<FieldUrlItem, ListItem, EntityDetailsItemFieldUrlBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldUrlBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldUrlBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -108,9 +108,9 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateViewBinding<FieldEmailItem, ListItem, ItemFieldEmailBinding>(
+        adapterDelegateViewBinding<FieldEmailItem, ListItem, EntityDetailsItemFieldEmailBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldEmailBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldEmailBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -123,9 +123,9 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateViewBinding<FieldSingleSelectItem, ListItem, ItemFieldSingleSelectBinding>(
+        adapterDelegateViewBinding<FieldSingleSelectItem, ListItem, EntityDetailsItemFieldSingleSelectBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldSingleSelectBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldSingleSelectBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -139,9 +139,9 @@ class EntityDetailsFragment(
                 binding.root.setOnClickListener(null)
             }
         },
-        adapterDelegateViewBinding<FieldMultiSelectItem, ListItem, ItemFieldMultiSelectBinding>(
+        adapterDelegateViewBinding<FieldMultiSelectItem, ListItem, EntityDetailsItemFieldMultiSelectBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldMultiSelectBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldMultiSelectBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -152,9 +152,9 @@ class EntityDetailsFragment(
                 }
             }
         },
-        adapterDelegateViewBinding<FieldRichTextItem, ListItem, ItemFieldRichTextBinding>(
+        adapterDelegateViewBinding<FieldRichTextItem, ListItem, EntityDetailsItemFieldRichTextBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldRichTextBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldRichTextBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -163,9 +163,9 @@ class EntityDetailsFragment(
                 Markwon.create(context).setMarkdown(binding.richTextView, item.value)
             }
         },
-        adapterDelegateViewBinding<FieldRelationItem, ListItem, ItemFieldRelationBinding>(
+        adapterDelegateViewBinding<FieldRelationItem, ListItem, EntityDetailsItemFieldRelationBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldRelationBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldRelationBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -193,9 +193,9 @@ class EntityDetailsFragment(
                     .getString(R.string.entity_details_list_transition_name, adapterPosition)
             }
         },
-        adapterDelegateViewBinding<FieldCollectionItem, ListItem, ItemFieldCollectionBinding>(
+        adapterDelegateViewBinding<FieldCollectionItem, ListItem, EntityDetailsItemFieldCollectionBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldCollectionBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldCollectionBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -213,9 +213,9 @@ class EntityDetailsFragment(
                     .getString(R.string.entity_details_list_transition_name, adapterPosition)
             }
         },
-        adapterDelegateViewBinding<FieldCheckboxItem, ListItem, ItemFieldCheckboxBinding>(
+        adapterDelegateViewBinding<FieldCheckboxItem, ListItem, EntityDetailsItemFieldCheckboxBinding>(
             viewBinding = { inflater, parent ->
-                ItemFieldCheckboxBinding.inflate(inflater, parent, false)
+                EntityDetailsItemFieldCheckboxBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -275,7 +275,7 @@ class EntityDetailsFragment(
     private fun initList() {
         binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityDetailsRecyclerView.adapter = adapter
-        binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entityDetails_fieldOffset))
+        binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entity_details_field_offset))
         binding.entityDetailsRecyclerView.updateInsetPaddings(bottom = true)
 
         viewModel.items.observe(viewLifecycleOwner) {
