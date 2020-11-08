@@ -28,8 +28,8 @@
         android:id="@+id/entityListCreateFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/entityList_create"
-        android:src="@drawable/ic_add_white_24dp"
+        android:contentDescription="@string/entity_list_entityList_create"
+        android:src="@drawable/entity_list_ic_add_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:useCompatPadding="true" />

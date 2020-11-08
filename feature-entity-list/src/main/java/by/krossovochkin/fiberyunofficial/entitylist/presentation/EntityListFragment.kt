@@ -44,9 +44,9 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
-import by.krossovochkin.fiberyunofficial.entitylist.databinding.DialogSortBinding
-import by.krossovochkin.fiberyunofficial.entitylist.databinding.FragmentEntityListBinding
-import by.krossovochkin.fiberyunofficial.entitylist.databinding.ItemEntityBinding
+import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListDialogSortBinding
+import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListFragmentBinding
+import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListItemBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -56,12 +56,12 @@ import javax.inject.Inject
 
 class EntityListFragment(
     private val entityListParentComponent: EntityListParentComponent
-) : Fragment(R.layout.fragment_entity_list) {
+) : Fragment(R.layout.entity_list_fragment) {
 
     @Inject
     lateinit var viewModel: EntityListViewModel
 
-    private val binding by viewBinding(FragmentEntityListBinding::bind)
+    private val binding by viewBinding(EntityListFragmentBinding::bind)
 
     private val entityCreatedViewModel by activityViewModels<EntityCreatedViewModel>()
 
@@ -82,9 +82,9 @@ class EntityListFragment(
                     return oldItem.equals(newItem)
                 }
             },
-            adapterDelegateViewBinding<EntityListItem, ListItem, ItemEntityBinding>(
+            adapterDelegateViewBinding<EntityListItem, ListItem, EntityListItemBinding>(
                 viewBinding = { inflater, parent ->
-                    ItemEntityBinding.inflate(inflater, parent, false)
+                    EntityListItemBinding.inflate(inflater, parent, false)
                 }
             ) {
                 bind {
@@ -238,12 +238,12 @@ class EntityListFragment(
     private fun showUpdateSortDialog(
         sort: String
     ) {
-        val binding = DialogSortBinding.inflate(layoutInflater)
+        val binding = EntityListDialogSortBinding.inflate(layoutInflater)
         binding.sortTextInput.setText(sort)
 
         AlertDialog.Builder(requireContext())
             .setView(binding.root)
-            .setTitle(getString(R.string.dialog_sort_title))
+            .setTitle(getString(R.string.entity_list_dialog_sort_title))
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 viewModel.onSortSelected(

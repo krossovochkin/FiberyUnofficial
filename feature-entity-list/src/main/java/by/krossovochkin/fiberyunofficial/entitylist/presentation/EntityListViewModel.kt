@@ -100,7 +100,7 @@ class EntityListViewModel(
             bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true,
             menuResId = if (entityListArgs.parentEntityData == null) {
-                R.menu.menu_entity_list
+                R.menu.entity_list_menu
             } else {
                 null
             }

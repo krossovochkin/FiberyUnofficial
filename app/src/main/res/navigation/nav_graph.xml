@@ -50,7 +50,7 @@
         android:id="@+id/entityList"
         android:name="by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment"
         android:label="fragment_entity_list"
-        tools:layout="@layout/fragment_entity_list">
+        tools:layout="@layout/entity_list_fragment">
         <action
             android:id="@+id/action_entityList_to_entityDetails"
             app:destination="@id/entityDetails" />

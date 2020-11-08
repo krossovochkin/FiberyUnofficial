@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/action_filter"
-        android:icon="@drawable/ic_filter_list_white_24dp"
-        android:title="@string/action_filter"
+        android:icon="@drawable/entity_list_ic_filter_list_white_24dp"
+        android:title="@string/entity_list_action_filter"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort_white_24dp"
-        android:title="@string/action_sort"
+        android:icon="@drawable/entity_list_ic_sort_white_24dp"
+        android:title="@string/entity_list_action_sort"
         app:showAsAction="ifRoom" />
 </menu>

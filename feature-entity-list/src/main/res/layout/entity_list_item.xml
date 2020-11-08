@@ -15,7 +15,7 @@
         android:id="@+id/entityRemoveRelationAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/content_description_remove_relation"
-        android:src="@drawable/ic_clear_white_24dp" />
+        android:contentDescription="@string/entity_list_content_description_remove_relation"
+        android:src="@drawable/entity_list_ic_clear_white_24dp" />
 
 </LinearLayout>

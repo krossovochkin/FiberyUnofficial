@@ -1,5 +1,9 @@
 apply from: "../feature_default.gradle"
 
+android {
+    resourcePrefix = "entity_list_"
+}
+
 dependencies {
     implementation d.ui.adapter_delegates_paging3
 
