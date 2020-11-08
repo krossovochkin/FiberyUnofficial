@@ -34,7 +34,7 @@ enum class FilterCondition(
     val value: String
 ) {
     EQUALS("="),
-    NOT_EQUALS("!=")
+    NOT_EQUALS("≠")
 }
 
 interface FilterItemData

@@ -64,7 +64,7 @@ class PickerFilterFragment(
         ) {
             bind {
                 binding.spinner.setup(
-                    items = item.fields.map { it.name }
+                    items = item.fields.map { it.displayName }
                 ) { position ->
                     viewModel.onFieldSelected(adapterPosition, item.fields.getOrNull(position))
                 }
@@ -78,8 +78,8 @@ class PickerFilterFragment(
         ) {
             bind {
                 binding.fieldTypeSpinner.setup(
-                    items = item.fields.map { it.name },
-                    selectedItem = item.field.name
+                    items = item.fields.map { it.displayName },
+                    selectedItem = item.field.displayName
                 ) { position ->
                     viewModel.onFieldSelected(
                         adapterPosition,
@@ -88,8 +88,8 @@ class PickerFilterFragment(
                 }
 
                 binding.conditionSpinner.setup(
-                    items = item.conditions.map { it.name },
-                    selectedItem = item.condition?.name
+                    items = item.conditions.map { it.value },
+                    selectedItem = item.condition?.value
                 ) { position ->
                     viewModel.onConditionSelected(
                         adapterPosition,
