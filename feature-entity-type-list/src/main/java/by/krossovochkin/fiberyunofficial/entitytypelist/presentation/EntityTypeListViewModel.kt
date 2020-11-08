@@ -85,7 +85,7 @@ class EntityTypeListViewModel(
     }
 
     fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
-        title = resProvider.getString(R.string.title_entity_type_list),
+        title = resProvider.getString(R.string.entity_type_list_title),
         bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary),
         hasBackButton = true
     )

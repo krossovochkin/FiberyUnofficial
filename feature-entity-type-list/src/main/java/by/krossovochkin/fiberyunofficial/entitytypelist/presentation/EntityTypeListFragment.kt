@@ -37,8 +37,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
-import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.FragmentEntityTypeListBinding
-import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.ItemEntityTypeBinding
+import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
+import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -46,19 +46,19 @@ import javax.inject.Inject
 
 class EntityTypeListFragment(
     private val entityTypeListParentComponent: EntityTypeListParentComponent
-) : Fragment(R.layout.fragment_entity_type_list) {
+) : Fragment(R.layout.entity_type_list_fragment) {
 
     @Inject
     lateinit var viewModel: EntityTypeListViewModel
 
-    private val binding by viewBinding(FragmentEntityTypeListBinding::bind)
+    private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter(
-        adapterDelegateViewBinding<EntityTypeListItem, ListItem, ItemEntityTypeBinding>(
+        adapterDelegateViewBinding<EntityTypeListItem, ListItem, EntityTypeListItemBinding>(
             viewBinding = { inflater, parent ->
-                ItemEntityTypeBinding.inflate(inflater, parent, false)
+                EntityTypeListItemBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -68,7 +68,7 @@ class EntityTypeListFragment(
                     ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
                 )
                 itemView.transitionName = requireContext()
-                    .getString(R.string.entity_type_list_transition_name, adapterPosition)
+                    .getString(R.string.entity_type_list_list_transition_name, adapterPosition)
             }
         }
     )
@@ -90,7 +90,7 @@ class EntityTypeListFragment(
             )
             .inject(this)
 
-        view.transitionName = requireContext().getString(R.string.entity_type_root_transition_name)
+        view.transitionName = requireContext().getString(R.string.entity_type_list_root_transition_name)
 
         binding.entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.entityTypeListRecyclerView.adapter = adapter

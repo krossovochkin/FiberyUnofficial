@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         binding.navHostFragment.findNavController().navigate(
             AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData),
             FragmentNavigatorExtras(
-                itemView to getString(R.string.entity_type_root_transition_name)
+                itemView to getString(R.string.entity_type_list_root_transition_name)
             )
         )
     }

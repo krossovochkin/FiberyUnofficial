@@ -7,8 +7,8 @@
 
     <View
         android:id="@+id/entityTypeBadgeView"
-        android:layout_width="@dimen/entity_type_badge_size"
-        android:layout_height="@dimen/entity_type_badge_size"
+        android:layout_width="@dimen/entity_type_list_badge_size"
+        android:layout_height="@dimen/entity_type_list_badge_size"
         android:layout_marginEnd="@dimen/base_x4" />
 
     <TextView

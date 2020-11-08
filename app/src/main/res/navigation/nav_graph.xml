@@ -38,7 +38,7 @@
         android:id="@+id/entityTypeList"
         android:name="by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment"
         android:label="fragment_entity_type_list"
-        tools:layout="@layout/fragment_entity_type_list">
+        tools:layout="@layout/entity_type_list_fragment">
         <action
             android:id="@+id/action_entityTypeList_to_entityList"
             app:destination="@id/entityList" />
