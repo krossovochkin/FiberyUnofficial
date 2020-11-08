@@ -56,7 +56,7 @@ class PickerFilterViewModel(
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = resProvider.getString(R.string.pickerFilter_toolbarTitle),
+            title = resProvider.getString(R.string.picker_filter_toolbar_title),
             bgColorInt = ColorUtils.getColor(pickerFilterArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )

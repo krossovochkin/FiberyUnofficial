@@ -40,26 +40,26 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.DaggerPickerFilterComponent
 import com.krossovochkin.fiberyunofficial.pickerfilter.PickerFilterParentComponent
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
-import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.FragmentPickerFilterBinding
-import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.ItemFilterEmptyBinding
-import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.ItemFilterSingleSelectBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemEmptyBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
 import javax.inject.Inject
 
 class PickerFilterFragment(
     private val pickerFilterParentComponent: PickerFilterParentComponent
-) : Fragment(R.layout.fragment_picker_filter) {
+) : Fragment(R.layout.picker_filter_fragment) {
 
     @Inject
     lateinit var viewModel: PickerFilterViewModel
 
-    private val binding by viewBinding(FragmentPickerFilterBinding::bind)
+    private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
     private val adapter = ListDelegationAdapter<List<ListItem>>(
-        adapterDelegateViewBinding<EmptyFilterItem, ListItem, ItemFilterEmptyBinding>(
+        adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
             viewBinding = { inflater, parent ->
-                ItemFilterEmptyBinding.inflate(inflater, parent, false)
+                PickerFilterItemEmptyBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
@@ -71,9 +71,9 @@ class PickerFilterFragment(
             }
             onViewRecycled { binding.spinner.recycle() }
         },
-        adapterDelegateViewBinding<SingleSelectFilterItem, ListItem, ItemFilterSingleSelectBinding>(
+        adapterDelegateViewBinding<SingleSelectFilterItem, ListItem, PickerFilterItemSingleSelectBinding>(
             viewBinding = { inflater, parent ->
-                ItemFilterSingleSelectBinding.inflate(inflater, parent, false)
+                PickerFilterItemSingleSelectBinding.inflate(inflater, parent, false)
             }
         ) {
             bind {
