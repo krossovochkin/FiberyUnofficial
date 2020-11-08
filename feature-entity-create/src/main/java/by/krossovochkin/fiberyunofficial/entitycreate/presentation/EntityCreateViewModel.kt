@@ -43,7 +43,7 @@ class EntityCreateViewModel(
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = resProvider.getString(
-                R.string.toolbar_title_create,
+                R.string.entity_create_toolbar_title,
                 entityCreateArgs.entityTypeSchema.displayName
             ),
             bgColorInt = ColorUtils.getColor(entityCreateArgs.entityTypeSchema.meta.uiColorHex),

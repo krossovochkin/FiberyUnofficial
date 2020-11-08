@@ -16,7 +16,7 @@
         android:id="@+id/entityCreateNameTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_name"
+        android:hint="@string/entity_create_title_hint"
         android:padding="@dimen/base_x4"
         app:layout_constraintTop_toBottomOf="@+id/entityCreateToolbar">
 
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/base_x4"
-        android:text="@string/create"
+        android:text="@string/entity_create_create_action"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,18 +30,18 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.R
-import by.krossovochkin.fiberyunofficial.entitycreate.databinding.FragmentEntityCreateBinding
+import by.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class EntityCreateFragment(
     private val entityCreateParentComponent: EntityCreateParentComponent
-) : Fragment(R.layout.fragment_entity_create) {
+) : Fragment(R.layout.entity_create_fragment) {
 
     @Inject
     lateinit var viewModel: EntityCreateViewModel
 
-    private val binding by viewBinding(FragmentEntityCreateBinding::bind)
+    private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
