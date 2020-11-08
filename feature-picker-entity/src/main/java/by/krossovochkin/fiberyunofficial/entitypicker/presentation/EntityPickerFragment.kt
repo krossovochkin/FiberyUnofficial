@@ -37,8 +37,8 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.DaggerEntityPickerComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.R
-import by.krossovochkin.fiberyunofficial.entitypicker.databinding.FragmentEntityPickerBinding
-import by.krossovochkin.fiberyunofficial.entitypicker.databinding.ItemEntityPickerBinding
+import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
+import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -48,12 +48,12 @@ import javax.inject.Inject
 
 class EntityPickerFragment(
     private val entityPickerParentComponent: EntityPickerParentComponent
-) : Fragment(R.layout.fragment_entity_picker) {
+) : Fragment(R.layout.picker_entity_fragment) {
 
     @Inject
     lateinit var viewModel: EntityPickerViewModel
 
-    private val binding by viewBinding(FragmentEntityPickerBinding::bind)
+    private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 
     private var parentListener: ParentListener? = null
 
@@ -72,9 +72,9 @@ class EntityPickerFragment(
                     return oldItem.equals(newItem)
                 }
             },
-            adapterDelegateViewBinding<EntityPickerItem, ListItem, ItemEntityPickerBinding>(
+            adapterDelegateViewBinding<EntityPickerItem, ListItem, PickerEntityItemBinding>(
                 viewBinding = { inflater, parent ->
-                    ItemEntityPickerBinding.inflate(inflater, parent, false)
+                    PickerEntityItemBinding.inflate(inflater, parent, false)
                 }
             ) {
                 bind {
@@ -101,7 +101,7 @@ class EntityPickerFragment(
             )
             .inject(this)
 
-        view.transitionName = requireContext().getString(R.string.entity_picker_root_transition_name)
+        view.transitionName = requireContext().getString(R.string.picker_entity_root_transition_name)
 
         initList()
         initNavigation()

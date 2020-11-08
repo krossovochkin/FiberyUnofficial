@@ -1,5 +1,9 @@
 apply from: "../feature_default.gradle"
 
+android {
+    resourcePrefix = "picker_entity_"
+}
+
 dependencies {
     implementation d.ui.adapter_delegates_paging3
 }

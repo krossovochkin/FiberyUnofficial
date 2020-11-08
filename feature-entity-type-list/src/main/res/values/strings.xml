@@ -1,5 +1,5 @@
 <resources>
     <string name="entity_type_list_title">Types</string>
-    <string name="entity_type_list_root_transition_name" translatable="false">entity_type_root_transition_name</string>
-    <string name="entity_type_list_list_transition_name" translatable="false">entity_type_list_transition_name_%1$d</string>
+    <string name="entity_type_list_root_transition_name" translatable="false">entity_type_list_root_transition_name</string>
+    <string name="entity_type_list_list_transition_name" translatable="false">entity_type_list_list_transition_name_%1$d</string>
 </resources>

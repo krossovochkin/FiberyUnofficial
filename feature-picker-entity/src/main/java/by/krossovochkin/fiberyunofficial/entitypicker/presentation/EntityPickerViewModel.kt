@@ -95,7 +95,7 @@ class EntityPickerViewModel(
                     title = entityType.displayName,
                     bgColorInt = ColorUtils.getColor(entityType.meta.uiColorHex),
                     hasBackButton = true,
-                    menuResId = R.menu.menu_entity_picker,
+                    menuResId = R.menu.picker_entity_menu,
                     searchActionItemId = R.id.action_search
                 )
             )

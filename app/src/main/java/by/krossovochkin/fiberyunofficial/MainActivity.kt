@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                         currentEntity = null
                     ),
                 FragmentNavigatorExtras(
-                    view to getString(R.string.entity_picker_root_transition_name)
+                    view to getString(R.string.picker_entity_root_transition_name)
                 )
             )
         }
@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                     currentEntity = entity
                 ),
             FragmentNavigatorExtras(
-                itemView to getString(R.string.entity_picker_root_transition_name)
+                itemView to getString(R.string.picker_entity_root_transition_name)
             )
         )
     }
