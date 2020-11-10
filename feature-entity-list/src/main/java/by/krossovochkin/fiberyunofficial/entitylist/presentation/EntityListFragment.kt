@@ -26,6 +26,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -160,22 +161,34 @@ class EntityListFragment(
         binding.entityListRecyclerView.updateInsetPaddings(bottom = true)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.entityItems.collectLatest { pagingData ->
-                adapter.submitData(pagingData)
+            launch {
+                viewModel.entityItems.collectLatest { pagingData ->
+                    adapter.submitData(pagingData)
+                }
+            }
+            launch {
+                adapter.loadStateFlow.collectLatest { loadStates ->
+                    val refreshState = loadStates.refresh
+                    if (refreshState is LoadState.Error) {
+                        showError(refreshState.error.message)
+                    }
+                }
             }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { error ->
-                Snackbar
-                    .make(
-                        requireView(),
-                        error.message ?: getString(R.string.unknown_error),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    .show()
-            }
+            event.getContentIfNotHandled()?.let { error -> showError(error.message) }
         }
+    }
+
+    private fun showError(message: String?) {
+        Snackbar
+            .make(
+                requireView(),
+                message ?: getString(R.string.unknown_error),
+                Snackbar.LENGTH_SHORT
+            )
+            .show()
     }
 
     private fun initNavigation() {
