@@ -62,6 +62,10 @@ dependencies {
 
     api d.ui.material
 
+    debugImplementation d.debug.facebook_soloader
+    debugImplementation d.debug.facebook_flipper
+    debugImplementation d.debug.facebook_flipper_network_plugin
+
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit
     androidTestImplementation d.test.espresso

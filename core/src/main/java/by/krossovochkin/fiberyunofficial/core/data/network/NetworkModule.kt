@@ -16,6 +16,7 @@
  */
 package by.krossovochkin.fiberyunofficial.core.data.network
 
+import by.krossovochkin.fiberyunofficial.core.addDebugNetworkInterceptor
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 import dagger.Module
 import dagger.Provides
@@ -50,6 +51,7 @@ object NetworkModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authorizationInterceptor)
+            .addDebugNetworkInterceptor()
             .build()
     }
 

@@ -17,6 +17,7 @@
 package by.krossovochkin.fiberyunofficial
 
 import android.app.Application
+import by.krossovochkin.fiberyunofficial.core.initDebugTools
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 class App : Application() {
@@ -31,5 +32,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
+        initDebugTools()
     }
 }

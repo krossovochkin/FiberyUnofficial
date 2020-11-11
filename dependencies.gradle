@@ -36,7 +36,9 @@ v.ui.material = "1.3.0-alpha03"
 v.ui.adapter_delegates = "4.3.0"
 v.ui.markwon = "4.6.0"
 
-v.quality = [:]
+v.debug = [:]
+v.debug.facebook_soloader = "0.9.0"
+v.debug.facebook_flipper = "0.64.0"
 
 v.test = [:]
 v.test.junit = "4.12"
@@ -80,6 +82,11 @@ d.ui.material = "com.google.android.material:material:${v.ui.material}"
 d.ui.adapter_delegates = "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:${v.ui.adapter_delegates}"
 d.ui.adapter_delegates_paging3 = project(":adapter-delegates-paging3")
 d.ui.markwon = "io.noties.markwon:core:${v.ui.markwon}"
+
+d.debug = [:]
+d.debug.facebook_soloader = "com.facebook.soloader:soloader:${v.debug.facebook_soloader}"
+d.debug.facebook_flipper = "com.facebook.flipper:flipper:${v.debug.facebook_flipper}"
+d.debug.facebook_flipper_network_plugin = "com.facebook.flipper:flipper-network-plugin:${v.debug.facebook_flipper}"
 
 d.test = [:]
 d.test.junit = "junit:junit:${v.test.junit}"
