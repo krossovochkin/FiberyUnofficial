@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
@@ -34,14 +35,13 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilterItemData
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.coroutines.launch
 
 class PickerFilterViewModel(
     private val pickerFilterArgs: PickerFilterFragment.Args,
     private val fiberyApiRepository: FiberyApiRepository,
-    private val resProvider: ResProvider
+    private val resProvider: ResProvider,
+    private val serializer: Serializer
 ) : ViewModel() {
 
     private val mutableItems = MutableLiveData<List<ListItem>>()
@@ -148,22 +148,9 @@ class PickerFilterViewModel(
     private suspend fun Pair<String, String>.fromJson(): FilterItemData? {
         return runCatching {
             val (filter, params) = this
-            val moshi = Moshi.Builder().build()
-
-            val filterData: List<Any> = moshi
-                .adapter<List<Any>>(Types.newParameterizedType(List::class.java, Any::class.java))
-                .fromJson(filter)
-                .orEmpty()
-            val paramsData: Map<String, Any> = moshi
-                .adapter<Map<String, Any>>(
-                    Types.newParameterizedType(
-                        Map::class.java,
-                        String::class.java,
-                        Any::class.java
-                    )
-                )
-                .fromJson(params)
-                .orEmpty()
+            val filterData: List<Any> = serializer.jsonToList(filter, Any::class.java)
+            val paramsData: Map<String, Any> = serializer
+                .jsonToMap(params, String::class.java, Any::class.java)
 
             val fieldName = (filterData[1] as List<Any>)[0] as String
             val field = supportedFields.find { it.name == fieldName }!!

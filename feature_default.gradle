@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 apply from: '../quality/quality.gradle'
 
 android {
@@ -45,8 +44,6 @@ androidExtensions {
 
 dependencies {
     implementation d.app.core
-
-    kapt d.core.dagger_compiler
 
     implementation d.ui.adapter_delegates
 

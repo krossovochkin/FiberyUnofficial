@@ -22,10 +22,9 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
-import by.krossovochkin.fiberyunofficial.applist.DaggerAppListComponent
 import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import by.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
@@ -40,14 +39,12 @@ import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import javax.inject.Inject
 
 class AppListFragment(
-    private val appListParentComponent: AppListParentComponent
+    factoryProducer: () -> AppListViewModelFactory
 ) : Fragment(R.layout.app_list_fragment) {
 
-    @Inject
-    lateinit var viewModel: AppListViewModel
+    private val viewModel: AppListViewModel by viewModels { factoryProducer() }
 
     private var parentListener: ParentListener? = null
 
@@ -70,13 +67,6 @@ class AppListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         delayTransitions()
-
-        DaggerAppListComponent.factory()
-            .create(
-                appListParentComponent = appListParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         binding.appListRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.appListRecyclerView.adapter = adapter

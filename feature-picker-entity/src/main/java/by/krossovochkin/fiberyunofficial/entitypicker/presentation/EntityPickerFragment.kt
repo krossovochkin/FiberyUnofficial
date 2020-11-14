@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
@@ -35,8 +36,6 @@ import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTr
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.entitypicker.DaggerEntityPickerComponent
-import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
 import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
@@ -45,14 +44,12 @@ import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class EntityPickerFragment(
-    private val entityPickerParentComponent: EntityPickerParentComponent
+    factoryProducer: () -> EntityPickerViewModelFactory
 ) : Fragment(R.layout.picker_entity_fragment) {
 
-    @Inject
-    lateinit var viewModel: EntityPickerViewModel
+    private val viewModel: EntityPickerViewModel by viewModels { factoryProducer() }
 
     private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 
@@ -94,13 +91,6 @@ class EntityPickerFragment(
         super.onViewCreated(view, savedInstanceState)
 
         delayTransitions()
-
-        DaggerEntityPickerComponent.factory()
-            .create(
-                entityPickerParentComponent = entityPickerParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         view.transitionName = requireContext().getString(R.string.picker_entity_root_transition_name)
 
@@ -196,9 +186,9 @@ class EntityPickerFragment(
         val entity: FiberyEntityData?
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getEntityPickerArgs(arguments: Bundle): Args
+        fun getEntityPickerArgs(): Args
     }
 
     interface ParentListener {

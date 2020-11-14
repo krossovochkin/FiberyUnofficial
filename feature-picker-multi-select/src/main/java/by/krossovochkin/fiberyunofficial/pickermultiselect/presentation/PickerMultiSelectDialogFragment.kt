@@ -21,32 +21,18 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import by.krossovochkin.fiberyunofficial.pickermultiselect.DaggerPickerMultiSelectComponent
-import by.krossovochkin.fiberyunofficial.pickermultiselect.PickerMultiSelectParentComponent
-import javax.inject.Inject
 
 class PickerMultiSelectDialogFragment(
-    private val pickerMultiSelectParentComponent: PickerMultiSelectParentComponent
+    factoryProducer: () -> PickerMultiSelectViewModelFactory
 ) : DialogFragment() {
 
-    @Inject
-    lateinit var viewModel: PickerMultiSelectViewModel
+    private val viewModel: PickerMultiSelectViewModel by viewModels { factoryProducer() }
 
     private var parentListener: ParentListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        DaggerPickerMultiSelectComponent.factory()
-            .create(
-                pickerMultiSelectParentComponent = pickerMultiSelectParentComponent,
-                fragment = this
-            )
-            .inject(this)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val fieldSchema = viewModel.fieldSchema
@@ -92,9 +78,9 @@ class PickerMultiSelectDialogFragment(
         val item: FieldData.MultiSelectFieldData
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getPickerMultiSelectArgs(arguments: Bundle): Args
+        fun getPickerMultiSelectArgs(): Args
     }
 
     interface ParentListener {

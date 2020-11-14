@@ -45,8 +45,6 @@ androidExtensions {
 dependencies {
     api d.core.kotlin_stdlib
     api d.core.date_time
-    api d.core.dagger
-    kapt d.core.dagger_compiler
 
     api d.androidx.core
     api d.androidx.activity
@@ -56,15 +54,10 @@ dependencies {
     api d.androidx.lifecycle_viewmodel
 
     api d.network.retrofit
-    implementation d.network.retrofit_moshi
-    api d.network.moshi
+    implementation d.network.moshi
     kapt d.network.moshi_codegen
 
     api d.ui.material
-
-    debugImplementation d.debug.facebook_soloader
-    debugImplementation d.debug.facebook_flipper
-    debugImplementation d.debug.facebook_flipper_network_plugin
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

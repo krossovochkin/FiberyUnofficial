@@ -20,6 +20,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
@@ -27,19 +28,15 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.entitycreate.DaggerEntityCreateComponent
-import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
 import by.krossovochkin.fiberyunofficial.entitycreate.R
 import by.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import javax.inject.Inject
 
 class EntityCreateFragment(
-    private val entityCreateParentComponent: EntityCreateParentComponent
+    factoryProducer: () -> EntityCreateViewModelFactory
 ) : Fragment(R.layout.entity_create_fragment) {
 
-    @Inject
-    lateinit var viewModel: EntityCreateViewModel
+    private val viewModel: EntityCreateViewModel by viewModels { factoryProducer() }
 
     private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 
@@ -54,13 +51,6 @@ class EntityCreateFragment(
         super.onViewCreated(view, savedInstanceState)
 
         delayTransitions()
-
-        DaggerEntityCreateComponent.factory()
-            .create(
-                entityCreateParentComponent = entityCreateParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         view.transitionName = requireContext()
             .getString(R.string.entity_create_root_transition_name)
@@ -113,9 +103,9 @@ class EntityCreateFragment(
         val entityTypeSchema: FiberyEntityTypeSchema
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getEntityCreateArgs(arguments: Bundle): Args
+        fun getEntityCreateArgs(): Args
     }
 
     interface ParentListener {

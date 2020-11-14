@@ -20,12 +20,14 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 class PickerFilterViewModelFactory(
     private val pickerFilterArgs: PickerFilterFragment.Args,
     private val fiberyApiRepository: FiberyApiRepository,
-    private val resProvider: ResProvider
+    private val resProvider: ResProvider,
+    private val serializer: Serializer
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -34,7 +36,8 @@ class PickerFilterViewModelFactory(
             PickerFilterViewModel(
                 pickerFilterArgs = pickerFilterArgs,
                 fiberyApiRepository = fiberyApiRepository,
-                resProvider = resProvider
+                resProvider = resProvider,
+                serializer = serializer
             ) as T
         } else {
             throw IllegalArgumentException()

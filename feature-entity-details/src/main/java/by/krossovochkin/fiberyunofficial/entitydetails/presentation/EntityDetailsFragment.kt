@@ -28,6 +28,7 @@ import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -42,8 +43,6 @@ import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTr
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.entitydetails.DaggerEntityDetailsComponent
-import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldCheckboxBinding
@@ -60,14 +59,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import io.noties.markwon.Markwon
-import javax.inject.Inject
 
 class EntityDetailsFragment(
-    private val entityDetailsParentComponent: EntityDetailsParentComponent
+    factoryProducer: () -> EntityDetailsViewModelFactory,
+    private val argsProvider: ArgsProvider
 ) : Fragment(R.layout.entity_details_fragment) {
 
-    @Inject
-    lateinit var viewModel: EntityDetailsViewModel
+    private val viewModel: EntityDetailsViewModel by viewModels { factoryProducer() }
 
     private val binding by viewBinding(EntityDetailsFragmentBinding::bind)
 
@@ -240,15 +238,7 @@ class EntityDetailsFragment(
 
         delayTransitions()
 
-        DaggerEntityDetailsComponent.factory()
-            .create(
-                entityDetailsParentComponent = entityDetailsParentComponent,
-                fragment = this
-            )
-            .inject(this)
-
-        val id: String = entityDetailsParentComponent.entityDetailsArgsProvider()
-            .getEntityDetailsArgs(requireArguments()).entityData.id
+        val id: String = argsProvider.getEntityDetailsArgs().entityData.id
         view.transitionName = requireContext().getString(R.string.entity_details_root_transition_name, id)
 
         initList()
@@ -391,9 +381,9 @@ class EntityDetailsFragment(
         val entityData: FiberyEntityData
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getEntityDetailsArgs(arguments: Bundle): Args
+        fun getEntityDetailsArgs(): Args
     }
 
     interface ParentListener {

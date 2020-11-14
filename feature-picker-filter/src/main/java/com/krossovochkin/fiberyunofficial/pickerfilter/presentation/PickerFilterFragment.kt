@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -37,20 +38,16 @@ import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import com.krossovochkin.fiberyunofficial.pickerfilter.DaggerPickerFilterComponent
-import com.krossovochkin.fiberyunofficial.pickerfilter.PickerFilterParentComponent
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemEmptyBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
-import javax.inject.Inject
 
 class PickerFilterFragment(
-    private val pickerFilterParentComponent: PickerFilterParentComponent
+    factoryProvider: () -> PickerFilterViewModelFactory
 ) : Fragment(R.layout.picker_filter_fragment) {
 
-    @Inject
-    lateinit var viewModel: PickerFilterViewModel
+    private val viewModel: PickerFilterViewModel by viewModels { factoryProvider() }
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
@@ -118,13 +115,6 @@ class PickerFilterFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        DaggerPickerFilterComponent.factory()
-            .create(
-                pickerFilterParentComponent = pickerFilterParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         setupTransformEnterTransition()
     }
@@ -228,9 +218,9 @@ class PickerFilterFragment(
         val params: String
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getPickerFilterArgs(arguments: Bundle): Args
+        fun getPickerFilterArgs(): Args
     }
 
     interface ParentListener {

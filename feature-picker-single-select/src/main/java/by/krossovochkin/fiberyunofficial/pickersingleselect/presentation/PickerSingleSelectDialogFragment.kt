@@ -21,32 +21,18 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import by.krossovochkin.fiberyunofficial.pickersingleselect.DaggerPickerSingleSelectComponent
-import by.krossovochkin.fiberyunofficial.pickersingleselect.PickerSingleSelectParentComponent
-import javax.inject.Inject
 
 class PickerSingleSelectDialogFragment(
-    private val pickerSingleSelectParentComponent: PickerSingleSelectParentComponent
+    factoryProducer: () -> PickerSingleSelectViewModelFactory
 ) : DialogFragment() {
 
-    @Inject
-    lateinit var viewModel: PickerSingleSelectViewModel
+    private val viewModel: PickerSingleSelectViewModel by viewModels { factoryProducer() }
 
     private var parentListener: ParentListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        DaggerPickerSingleSelectComponent.factory()
-            .create(
-                pickerSingleSelectParentComponent = pickerSingleSelectParentComponent,
-                fragment = this
-            )
-            .inject(this)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val fieldSchema = viewModel.fieldSchema
@@ -80,9 +66,9 @@ class PickerSingleSelectDialogFragment(
         val item: FieldData.SingleSelectFieldData
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getPickerSingleSelectArgs(arguments: Bundle): Args
+        fun getPickerSingleSelectArgs(): Args
     }
 
     interface ParentListener {

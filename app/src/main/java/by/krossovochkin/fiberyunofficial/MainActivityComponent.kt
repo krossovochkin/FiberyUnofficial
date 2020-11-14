@@ -17,33 +17,21 @@
 
 package by.krossovochkin.fiberyunofficial
 
-import by.krossovochkin.fiberyunofficial.applist.AppListParentComponent
-import by.krossovochkin.fiberyunofficial.entitycreate.EntityCreateParentComponent
-import by.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
-import by.krossovochkin.fiberyunofficial.entitydetails.EntityDetailsParentComponent
-import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
-import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
-import by.krossovochkin.fiberyunofficial.entitypicker.EntityPickerParentComponent
-import by.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
-import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
-import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
-import by.krossovochkin.fiberyunofficial.pickermultiselect.PickerMultiSelectParentComponent
-import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
-import by.krossovochkin.fiberyunofficial.pickersingleselect.PickerSingleSelectParentComponent
-import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
-import com.krossovochkin.fiberyunofficial.pickerfilter.PickerFilterParentComponent
-import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
-import dagger.Binds
-import dagger.BindsInstance
+import by.krossovochkin.fiberyunofficial.di.applist.AppListParentComponent
+import by.krossovochkin.fiberyunofficial.di.entitycreate.EntityCreateParentComponent
+import by.krossovochkin.fiberyunofficial.di.entitydetails.EntityDetailsParentComponent
+import by.krossovochkin.fiberyunofficial.di.entitylist.EntityListParentComponent
+import by.krossovochkin.fiberyunofficial.di.entitytypelist.EntityTypeListParentComponent
+import by.krossovochkin.fiberyunofficial.di.login.LoginParentComponent
+import by.krossovochkin.fiberyunofficial.di.pickerentity.EntityPickerParentComponent
+import by.krossovochkin.fiberyunofficial.di.pickerfilter.PickerFilterParentComponent
+import by.krossovochkin.fiberyunofficial.di.pickermultiselect.PickerMultiSelectParentComponent
+import by.krossovochkin.fiberyunofficial.di.pickersingleselect.PickerSingleSelectParentComponent
 import dagger.Component
-import dagger.Module
 import javax.inject.Scope
 
 @MainActivityScope
 @Component(
-    modules = [MainActivityModule::class],
     dependencies = [ApplicationComponent::class]
 )
 interface MainActivityComponent :
@@ -62,62 +50,9 @@ interface MainActivityComponent :
     interface Factory {
 
         fun create(
-            applicationComponent: ApplicationComponent,
-            @BindsInstance mainActivityArgsProvider: MainActivityArgsProvider
+            applicationComponent: ApplicationComponent
         ): MainActivityComponent
     }
-}
-
-@Module
-abstract class MainActivityModule {
-
-    @MainActivityScope
-    @Binds
-    abstract fun entityTypeListArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): EntityTypeListFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun entityListArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): EntityListFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun entityDetailsArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): EntityDetailsFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun entityCreateArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): EntityCreateFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun entityPickerArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): EntityPickerFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun pickerSingleSelectArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): PickerSingleSelectDialogFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun pickerMultiSelectArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): PickerMultiSelectDialogFragment.ArgsProvider
-
-    @MainActivityScope
-    @Binds
-    abstract fun pickerFilterArgsProvider(
-        mainActivityArgsProvider: MainActivityArgsProvider
-    ): PickerFilterFragment.ArgsProvider
 }
 
 @Scope

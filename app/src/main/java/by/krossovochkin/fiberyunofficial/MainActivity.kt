@@ -50,11 +50,9 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     private val mainActivityComponent: MainActivityComponent by lazy {
         DaggerMainActivityComponent.factory()
             .create(
-                applicationComponent = (applicationContext as App).applicationComponent,
-                mainActivityArgsProvider = argsProvider
+                applicationComponent = (applicationContext as App).applicationComponent
             )
     }
-    private val argsProvider: MainActivityArgsProvider = MainActivityArgsProvider()
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 

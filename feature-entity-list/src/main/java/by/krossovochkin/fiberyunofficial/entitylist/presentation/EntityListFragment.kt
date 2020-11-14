@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
@@ -42,8 +43,6 @@ import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTra
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.entitylist.DaggerEntityListComponent
-import by.krossovochkin.fiberyunofficial.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.entitylist.R
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListDialogSortBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListFragmentBinding
@@ -53,14 +52,12 @@ import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class EntityListFragment(
-    private val entityListParentComponent: EntityListParentComponent
+    factoryProvider: () -> EntityListViewModelFactory
 ) : Fragment(R.layout.entity_list_fragment) {
 
-    @Inject
-    lateinit var viewModel: EntityListViewModel
+    private val viewModel: EntityListViewModel by viewModels { factoryProvider() }
 
     private val binding by viewBinding(EntityListFragmentBinding::bind)
 
@@ -116,13 +113,6 @@ class EntityListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         delayTransitions()
-
-        DaggerEntityListComponent.factory()
-            .create(
-                entityListParentComponent = entityListParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         view.transitionName = requireContext().getString(R.string.entity_list_root_transition_name)
 
@@ -290,9 +280,9 @@ class EntityListFragment(
         val parentEntityData: ParentEntityData?
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getEntityListArgs(arguments: Bundle): Args
+        fun getEntityListArgs(): Args
     }
 
     interface ParentListener {

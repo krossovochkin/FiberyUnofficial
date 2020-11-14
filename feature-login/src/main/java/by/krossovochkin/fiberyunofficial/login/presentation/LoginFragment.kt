@@ -23,12 +23,10 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.login.DaggerLoginComponent
-import by.krossovochkin.fiberyunofficial.login.LoginParentComponent
 import by.krossovochkin.fiberyunofficial.login.R
 import by.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
-import javax.inject.Inject
 
 private const val MOCK_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; " +
     "Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
@@ -40,11 +38,10 @@ private const val JS_EXTRACT_TOKEN =
         "  .then(obj => ${JS_INTERFACE_NAME}.onTokenReceived(obj.value))"
 
 class LoginFragment(
-    private val loginParentComponent: LoginParentComponent
+    factoryProducer: () -> LoginViewModelFactory
 ) : Fragment(R.layout.login_fragment) {
 
-    @Inject
-    lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels { factoryProducer() }
 
     private val binding by viewBinding(LoginFragmentBinding::bind)
 
@@ -53,13 +50,6 @@ class LoginFragment(
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        DaggerLoginComponent.factory()
-            .create(
-                loginParentComponent = loginParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (event.getContentIfNotHandled()) {

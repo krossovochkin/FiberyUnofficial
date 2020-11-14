@@ -18,14 +18,13 @@ package by.krossovochkin.fiberyunofficial.core.data.api
 
 import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
+import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
 import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import java.io.File
 
 interface FiberyApiRepository {
@@ -39,9 +38,9 @@ interface FiberyApiRepository {
 
 private const val FILE_NAME_TYPE_SCHEMAS = "type_schemas.json"
 
-internal class FiberyApiRepositoryImpl(
+class FiberyApiRepositoryImpl(
     private val context: Context,
-    private val moshi: Moshi,
+    private val serializer: Serializer,
     private val fiberyServiceApi: FiberyServiceApi,
     private val fiberyEntityTypeMapper: FiberyEntityTypeMapper
 ) : FiberyApiRepository {
@@ -127,24 +126,15 @@ internal class FiberyApiRepositoryImpl(
     private fun readTypeSchemas(): List<FiberyEntityTypeSchema> {
         val json = if (typeSchemasFile.exists()) typeSchemasFile.readText() else null
         return if (!json.isNullOrEmpty()) {
-            moshi
-                .adapter<List<FiberyEntityTypeSchema>>(
-                    Types.newParameterizedType(List::class.java, FiberyEntityTypeSchema::class.java)
-                )
-                .fromJson(json)
-                ?: emptyList()
+            return serializer.jsonToList(json, FiberyEntityTypeSchema::class.java)
         } else {
             emptyList()
         }
     }
 
     private fun writeTypeSchemas(typeSchemas: List<FiberyEntityTypeSchema>) {
-        val json = moshi
-            .adapter<List<FiberyEntityTypeSchema>>(
-                Types.newParameterizedType(List::class.java, FiberyEntityTypeSchema::class.java)
-            )
-            .toJson(typeSchemas)
-        if (!json.isNullOrEmpty()) {
+        val json = serializer.listToJson(typeSchemas, FiberyEntityTypeSchema::class.java)
+        if (json.isNotEmpty()) {
             typeSchemasFile.writeText(json)
         }
     }

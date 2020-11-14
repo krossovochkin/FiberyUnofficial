@@ -22,6 +22,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
@@ -34,22 +35,18 @@ import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTr
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import by.krossovochkin.fiberyunofficial.entitytypelist.DaggerEntityTypeListComponent
-import by.krossovochkin.fiberyunofficial.entitytypelist.EntityTypeListParentComponent
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
 import com.google.android.material.snackbar.Snackbar
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import javax.inject.Inject
 
 class EntityTypeListFragment(
-    private val entityTypeListParentComponent: EntityTypeListParentComponent
+    factoryProducer: () -> EntityTypeListViewModelFactory
 ) : Fragment(R.layout.entity_type_list_fragment) {
 
-    @Inject
-    lateinit var viewModel: EntityTypeListViewModel
+    private val viewModel: EntityTypeListViewModel by viewModels { factoryProducer() }
 
     private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
@@ -82,13 +79,6 @@ class EntityTypeListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         delayTransitions()
-
-        DaggerEntityTypeListComponent.factory()
-            .create(
-                entityTypeListParentComponent = entityTypeListParentComponent,
-                fragment = this
-            )
-            .inject(this)
 
         view.transitionName = requireContext().getString(R.string.entity_type_list_root_transition_name)
 
@@ -154,9 +144,9 @@ class EntityTypeListFragment(
         val fiberyAppData: FiberyAppData
     )
 
-    interface ArgsProvider {
+    fun interface ArgsProvider {
 
-        fun getEntityTypeListArgs(arguments: Bundle): Args
+        fun getEntityTypeListArgs(): Args
     }
 
     interface ParentListener {

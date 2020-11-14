@@ -23,7 +23,6 @@ import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsIn
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
-import java.lang.IllegalArgumentException
 
 class EntityDetailsViewModelFactory(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
