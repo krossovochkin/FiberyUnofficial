@@ -18,6 +18,7 @@
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -34,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
 import by.krossovochkin.fiberyunofficial.core.presentation.initFab
@@ -89,6 +91,8 @@ class EntityListFragment(
                     itemView.setOnClickListener { viewModel.select(item, itemView) }
                     binding.entityTitleTextView.text = item.title
 
+                    binding.entityRemoveRelationAction.imageTintList =
+                        ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
                     binding.entityRemoveRelationAction.isVisible = item.isRemoveAvailable
                     if (item.isRemoveAvailable) {
                         binding.entityRemoveRelationAction.setOnClickListener {
