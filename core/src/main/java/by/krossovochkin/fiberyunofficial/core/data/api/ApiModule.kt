@@ -14,25 +14,67 @@
    limitations under the License.
 
  */
-package by.krossovochkin.fiberyunofficial.di.core
+package by.krossovochkin.fiberyunofficial.core.data.api
 
+import android.content.Context
 import by.krossovochkin.fiberyunofficial.addDebugNetworkInterceptor
+import by.krossovochkin.fiberyunofficial.core.data.api.mapper.FiberyEntityTypeMapper
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import by.krossovochkin.fiberyunofficial.core.data.serialization.MoshiSerializer
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
-object NetworkModule {
+object ApiModule {
 
     @Singleton
     @JvmStatic
     @Provides
-    fun retrofit(
+    fun fiberyServiceApi(
+        authStorage: AuthStorage
+    ): FiberyServiceApi {
+        return retrofit(
+            okHttpClient = okHttpClient(
+                authorizationInterceptor = authorizationInterceptor(
+                    authStorage = authStorage
+                )
+            ),
+            authStorage = authStorage
+        ).create()
+    }
+
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun fiberyApiRepository(
+        context: Context,
+        serializer: Serializer,
+        fiberyServiceApi: FiberyServiceApi
+    ): FiberyApiRepository {
+        return FiberyApiRepositoryImpl(
+            fiberyServiceApi = fiberyServiceApi,
+            fiberyEntityTypeMapper = FiberyEntityTypeMapper(),
+            context = context,
+            serializer = serializer
+        )
+    }
+
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun serializer(): Serializer {
+        return MoshiSerializer(Moshi.Builder().build())
+    }
+
+    private fun retrofit(
         okHttpClient: OkHttpClient,
         authStorage: AuthStorage
     ): Retrofit {
@@ -43,10 +85,7 @@ object NetworkModule {
             .build()
     }
 
-    @Singleton
-    @JvmStatic
-    @Provides
-    fun okHttpClient(
+    private fun okHttpClient(
         authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
@@ -55,10 +94,7 @@ object NetworkModule {
             .build()
     }
 
-    @Singleton
-    @JvmStatic
-    @Provides
-    fun authorizationInterceptor(
+    private fun authorizationInterceptor(
         authStorage: AuthStorage
     ): Interceptor {
         return Interceptor { chain ->

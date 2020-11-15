@@ -18,11 +18,10 @@ package by.krossovochkin.fiberyunofficial
 
 import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import by.krossovochkin.fiberyunofficial.core.data.api.ApiModule
 import by.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
-import by.krossovochkin.fiberyunofficial.di.core.ApiModule
-import by.krossovochkin.fiberyunofficial.di.core.NetworkModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -30,7 +29,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetworkModule::class, ApiModule::class, AuthModule::class])
+@Component(modules = [ApiModule::class, AuthModule::class])
 interface ApplicationComponent : GlobalDependencies {
 
     fun authStorage(): AuthStorage

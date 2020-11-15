@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 
 private var networkPlugin: NetworkFlipperPlugin? = null
 
-fun OkHttpClient.Builder.addDebugNetworkInterceptor(): OkHttpClient.Builder {
+internal fun OkHttpClient.Builder.addDebugNetworkInterceptor(): OkHttpClient.Builder {
     return this
         .addNetworkInterceptor(FlipperOkhttpInterceptor(networkPlugin))
 }

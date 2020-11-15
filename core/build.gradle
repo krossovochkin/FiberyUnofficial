@@ -1,46 +1,5 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply from: "../feature_default.gradle"
 apply plugin: 'kotlin-kapt'
-apply from: '../quality/quality.gradle'
-
-android {
-    compileSdkVersion v.android.compileSdkVersion
-    buildToolsVersion v.android.buildToolsVersion
-
-    defaultConfig {
-        minSdkVersion v.android.minSdkVersion
-        targetSdkVersion v.android.targetSdkVersion
-        versionCode v.android.versionCode
-        versionName v.android.versionName
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    buildFeatures {
-        viewBinding = true
-    }
-}
-
-androidExtensions {
-    features = ["parcelize"]
-}
 
 dependencies {
     api d.core.kotlin_stdlib
@@ -53,11 +12,19 @@ dependencies {
     api d.androidx.constraint_layout
     api d.androidx.lifecycle_viewmodel
 
-    api d.network.retrofit
+    implementation d.network.retrofit
+    implementation d.network.retrofit_moshi
     implementation d.network.moshi
     kapt d.network.moshi_codegen
 
+    implementation d.core.dagger
+    kapt d.core.dagger_compiler
+
     api d.ui.material
+
+    debugImplementation d.debug.facebook_soloader
+    debugImplementation d.debug.facebook_flipper
+    debugImplementation d.debug.facebook_flipper_network_plugin
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

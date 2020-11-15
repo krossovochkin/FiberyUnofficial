@@ -2,4 +2,5 @@ apply from: "../feature_default.gradle"
 
 dependencies {
     api d.androidx.paging
+    api d.ui.adapter_delegates
 }

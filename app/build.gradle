@@ -73,18 +73,9 @@ dependencies {
     implementation d.core.dagger
     kapt d.core.dagger_compiler
 
-    implementation d.network.retrofit
-    implementation d.network.retrofit_moshi
-    implementation d.network.moshi
-    kapt d.network.moshi_codegen
-
     implementation d.androidx.navigation_fragment
     implementation d.androidx.navigation_ui
     implementation d.androidx.security
-
-    debugImplementation d.debug.facebook_soloader
-    debugImplementation d.debug.facebook_flipper
-    debugImplementation d.debug.facebook_flipper_network_plugin
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

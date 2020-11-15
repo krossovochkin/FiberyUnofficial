@@ -17,13 +17,17 @@
 package by.krossovochkin.fiberyunofficial.di.entitylist
 
 import by.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
 
-interface EntityListParentComponent : GlobalDependencies
+interface EntityListParentComponent : GlobalDependencies {
+
+    fun serializer(): Serializer
+}
 
 @EntityList
 @Component(

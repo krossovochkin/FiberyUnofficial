@@ -19,11 +19,11 @@ package by.krossovochkin.fiberyunofficial.di.entitylist
 import android.content.Context
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import by.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import by.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
 import by.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorageImpl
 import by.krossovochkin.fiberyunofficial.entitylist.data.EntityListRepositoryImpl
 import by.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 
@@ -48,14 +48,8 @@ object EntityListDataModule {
     @Provides
     fun entityListFiltersStorage(
         context: Context,
-        moshi: Moshi
+        serializer: Serializer
     ): EntityListFiltersSortStorage {
-        return EntityListFiltersSortStorageImpl(context, moshi)
-    }
-
-    @JvmStatic
-    @Provides
-    fun moshi(): Moshi {
-        return Moshi.Builder().build()
+        return EntityListFiltersSortStorageImpl(context, serializer)
     }
 }

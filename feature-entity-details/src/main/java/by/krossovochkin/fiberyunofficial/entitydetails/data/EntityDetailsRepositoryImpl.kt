@@ -35,7 +35,6 @@ import by.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepos
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import retrofit2.await
 
 class EntityDetailsRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
@@ -454,7 +453,7 @@ class EntityDetailsRepositoryImpl(
                 ?.get(FiberyApiConstants.Field.DOCUMENT_SECRET.value)
                 as? String
         ) { "rich text secret is missing" }
-        val documentDto = fiberyServiceApi.getDocument(secret).await()
+        val documentDto = runCatching { fiberyServiceApi.getDocument(secret) }.getOrNull()
 
         return FieldData.RichTextFieldData(
             title = fieldSchema.displayName,

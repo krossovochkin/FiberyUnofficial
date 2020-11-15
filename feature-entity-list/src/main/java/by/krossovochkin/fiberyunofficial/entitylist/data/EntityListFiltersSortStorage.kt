@@ -18,8 +18,7 @@ package by.krossovochkin.fiberyunofficial.entitylist.data
 
 import android.content.Context
 import androidx.core.content.edit
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 
 interface EntityListFiltersSortStorage {
 
@@ -46,7 +45,7 @@ private const val KEY_PREFS_SORT = "ENTITY_LIST_SORT"
 
 class EntityListFiltersSortStorageImpl(
     context: Context,
-    private val moshi: Moshi
+    private val serializer: Serializer
 ) : EntityListFiltersSortStorage {
 
     private val filterPrefs = context.getSharedPreferences(KEY_PREFS_FILTERS, Context.MODE_PRIVATE)
@@ -65,9 +64,7 @@ class EntityListFiltersSortStorageImpl(
     override fun getFilter(entityType: String): List<Any>? {
         val json = getRawFilter(entityType)
         return if (json.isNotEmpty()) {
-            moshi
-                .adapter<List<Any>>(Types.newParameterizedType(List::class.java, Any::class.java))
-                .fromJson(json)
+            serializer.jsonToList(json, Any::class.java)
         } else {
             null
         }
@@ -80,15 +77,7 @@ class EntityListFiltersSortStorageImpl(
     override fun getParams(entityType: String): Map<String, Any>? {
         val json = getRawParams(entityType)
         return if (json.isNotEmpty()) {
-            moshi
-                .adapter<Map<String, Any>>(
-                    Types.newParameterizedType(
-                        Map::class.java,
-                        String::class.java,
-                        Any::class.java
-                    )
-                )
-                .fromJson(json)
+            serializer.jsonToMap(json, String::class.java, Any::class.java)
         } else {
             null
         }
@@ -101,9 +90,7 @@ class EntityListFiltersSortStorageImpl(
     override fun getSort(entityType: String): List<Any>? {
         val json = getRawSort(entityType)
         return if (json.isNotEmpty()) {
-            moshi
-                .adapter<List<Any>>(Types.newParameterizedType(List::class.java, Any::class.java))
-                .fromJson(json)
+            serializer.jsonToList(json, Any::class.java)
         } else {
             null
         }

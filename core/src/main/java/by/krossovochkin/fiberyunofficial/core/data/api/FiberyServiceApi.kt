@@ -21,7 +21,6 @@ import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandResponse
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyDocumentResponse
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyEntityResponseDto
 import by.krossovochkin.fiberyunofficial.core.data.api.dto.FiberySchemaResponseDto
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -46,8 +45,8 @@ interface FiberyServiceApi {
     ): List<FiberyCommandResponseDto>
 
     @GET("api/documents/{secret}")
-    fun getDocument(
+    suspend fun getDocument(
         @Path("secret") secret: String,
         @Query("format") format: String = "md"
-    ): Call<FiberyDocumentResponse?>
+    ): FiberyDocumentResponse
 }

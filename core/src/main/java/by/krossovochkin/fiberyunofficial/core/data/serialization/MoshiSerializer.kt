@@ -1,6 +1,5 @@
-package by.krossovochkin.fiberyunofficial.serialization
+package by.krossovochkin.fiberyunofficial.core.data.serialization
 
-import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 

@@ -41,13 +41,3 @@ android {
 androidExtensions {
     features = ["parcelize"]
 }
-
-dependencies {
-    implementation d.app.core
-
-    implementation d.ui.adapter_delegates
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
-}
