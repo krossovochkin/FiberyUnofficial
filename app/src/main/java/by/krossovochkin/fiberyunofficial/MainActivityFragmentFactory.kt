@@ -26,6 +26,7 @@ import by.krossovochkin.fiberyunofficial.di.entitycreate.DaggerEntityCreateCompo
 import by.krossovochkin.fiberyunofficial.di.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.di.entitylist.DaggerEntityListComponent
 import by.krossovochkin.fiberyunofficial.di.entitytypelist.DaggerEntityTypeListComponent
+import by.krossovochkin.fiberyunofficial.di.filelist.DaggerFileListComponent
 import by.krossovochkin.fiberyunofficial.di.login.DaggerLoginComponent
 import by.krossovochkin.fiberyunofficial.di.pickerentity.DaggerEntityPickerComponent
 import by.krossovochkin.fiberyunofficial.di.pickerfilter.DaggerPickerFilterComponent
@@ -48,6 +49,8 @@ import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerS
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragmentArgs
+import com.krossovochkin.filelist.presentation.FileListFragment
+import com.krossovochkin.filelist.presentation.FileListFragmentArgs
 
 class MainActivityFragmentFactory(
     private val mainActivityComponent: MainActivityComponent
@@ -84,6 +87,9 @@ class MainActivityFragmentFactory(
             }
             PickerFilterFragment::class.java.canonicalName -> {
                 instantiatePickerFilterFragment()
+            }
+            FileListFragment::class.java.canonicalName -> {
+                instantiateFileListFragment()
             }
             else -> return super.instantiate(classLoader, className)
         }
@@ -263,6 +269,26 @@ class MainActivityFragmentFactory(
                 .create(loginParentComponent = mainActivityComponent)
                 .viewModelFactoryProducer()
         )
+    }
+
+    private fun instantiateFileListFragment(): Fragment {
+        return instantiate { argsExtractor ->
+            FileListFragment(
+                factoryProducer = DaggerFileListComponent.factory()
+                    .create(
+                        fileListParentComponent = mainActivityComponent,
+                        argsProvider = {
+                            val args = FileListFragmentArgs
+                                .fromBundle(argsExtractor.extract())
+                            FileListFragment.Args(
+                                entityTypeSchema = args.entityType,
+                                parentEntityData = args.parentEntityData
+                            )
+                        }
+                    )
+                    .viewModelFactoryProducer()
+            )
+        }
     }
 
     private inline fun instantiate(create: (ArgsExtractor) -> Fragment): Fragment {

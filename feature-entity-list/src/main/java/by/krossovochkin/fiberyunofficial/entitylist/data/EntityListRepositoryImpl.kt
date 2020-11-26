@@ -41,6 +41,18 @@ class EntityListRepositoryImpl(
         pageSize: Int,
         parentEntityData: ParentEntityData?
     ): List<FiberyEntityData> {
+        return if (parentEntityData != null) {
+            getInnerEntityList(parentEntityData, offset, pageSize)
+        } else {
+            getRootEntityList(entityType, offset, pageSize)
+        }
+    }
+
+    private suspend fun getRootEntityList(
+        entityType: FiberyEntityTypeSchema,
+        offset: Int,
+        pageSize: Int,
+    ): List<FiberyEntityData> {
         val uiTitleType = entityType.getUiTitle()
         val idType = FiberyApiConstants.Field.ID.value
         val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
@@ -57,21 +69,15 @@ class EntityListRepositoryImpl(
                                 idType,
                                 publicIdType
                             ),
-                            where = getQueryWhere(
-                                entityType = entityType,
-                                parentEntityData = parentEntityData
-                            ),
-                            orderBy = getQueryOrderBy(
-                                entityType = entityType,
-                                parentEntityData = parentEntityData
-                            ),
+                            where = entityListFiltersSortStorage.getFilter(entityType.name)
+                                ?: EntityListFilters.filtersMap[entityType.name],
+                            orderBy = entityListFiltersSortStorage.getSort(entityType.name)
+                                ?: EntityListFilters.orderMap[entityType.name],
                             offset = offset,
                             limit = pageSize
                         ),
-                        params = getQueryParams(
-                            entityType = entityType,
-                            parentEntityData = parentEntityData
-                        )
+                        params = entityListFiltersSortStorage.getParams(entityType.name)
+                            ?: EntityListFilters.params[entityType.name]
                     )
                 )
             )
@@ -90,53 +96,64 @@ class EntityListRepositoryImpl(
         }
     }
 
-    private suspend fun getQueryWhere(
-        entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?
-    ): List<Any>? {
-        return parentEntityData
-            ?.let { (field, _) ->
-                val fieldName =
-                    requireNotNull(
-                        fiberyApiRepository.getTypeSchema(entityType.name)
-                            .fields.find { fieldSchema -> fieldSchema.meta.relationId == field.meta.relationId }
-                    ) { "relation wasn't found" }.name
+    private suspend fun getInnerEntityList(
+        parentEntityData: ParentEntityData,
+        offset: Int,
+        pageSize: Int
+    ): List<FiberyEntityData> {
+        val entityType = fiberyApiRepository.getTypeSchema(parentEntityData.fieldSchema.type)
+        val uiTitleType = entityType.getUiTitle()
+        val idType = FiberyApiConstants.Field.ID.value
+        val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
 
-                listOf(
-                    FiberyApiConstants.Operator.EQUALS.value,
-                    listOf(
-                        fieldName,
-                        FiberyApiConstants.Field.ID.value
-                    ),
-                    PARAM_ID
+        val dto = fiberyServiceApi.getEntities(
+            listOf(
+                FiberyCommandBody(
+                    command = FiberyCommand.QUERY_ENTITY.value,
+                    args = FiberyCommandArgsDto(
+                        query = FiberyCommandArgsQueryDto(
+                            from = parentEntityData.parentEntity.schema.name,
+                            select = mapOf(
+                                parentEntityData.fieldSchema.name to FiberyCommandArgsQueryDto(
+                                    from = parentEntityData.fieldSchema.name,
+                                    select = listOf(
+                                        uiTitleType,
+                                        idType,
+                                        publicIdType
+                                    ),
+                                    offset = offset,
+                                    limit = pageSize
+                                )
+                            ),
+                            where = listOf(
+                                FiberyApiConstants.Operator.EQUALS.value,
+                                listOf(FiberyApiConstants.Field.ID.value),
+                                PARAM_ID
+                            ),
+                            limit = 1
+                        ),
+                        params = mapOf(PARAM_ID to parentEntityData.parentEntity.id)
+                    )
+                )
+            )
+        ).first()
+
+        @Suppress("UNCHECKED_CAST")
+        val result = dto.result as List<Map<String, List<Map<String, Any>>>>
+        return result.first()
+            .flatMap { it.value }
+            .map {
+                val map = it
+                val title = requireNotNull(map[uiTitleType]) { "title is missing" } as String
+                val id = requireNotNull(map[idType]) { "id is missing" } as String
+                val publicId = requireNotNull(map[publicIdType]) { "publicId is missing" } as String
+                FiberyEntityData(
+                    id = id,
+                    publicId = publicId,
+                    title = title,
+                    schema = entityType
                 )
             }
-            ?: entityListFiltersSortStorage.getFilter(entityType.name)
-            ?: EntityListFilters.filtersMap[entityType.name]
-    }
-
-    private fun getQueryOrderBy(
-        entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?
-    ): List<Any>? {
-        return if (parentEntityData == null) {
-            entityListFiltersSortStorage.getSort(entityType.name)
-                ?: EntityListFilters.orderMap[entityType.name]
-        } else {
-            null
-        }
-    }
-
-    private fun getQueryParams(
-        entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?
-    ): Map<String, Any>? {
-        return parentEntityData
-            ?.let { (_, entity) ->
-                mapOf(PARAM_ID to entity.id)
-            }
-            ?: entityListFiltersSortStorage.getParams(entityType.name)
-            ?: EntityListFilters.params[entityType.name]
     }
 
     override fun setEntityListFilter(

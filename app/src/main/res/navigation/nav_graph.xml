@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
             app:destination="@id/pickerMultiSelectDialogFragment" />
+        <action
+            android:id="@+id/action_entityDetails_to_fileListFragment"
+            app:destination="@id/fileListFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -140,5 +143,16 @@
         <argument
             android:name="params"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/fileListFragment"
+        android:name="com.krossovochkin.filelist.presentation.FileListFragment"
+        android:label="FileListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData" />
     </fragment>
 </navigation>

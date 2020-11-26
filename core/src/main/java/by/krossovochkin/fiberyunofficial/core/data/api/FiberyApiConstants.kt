@@ -21,7 +21,8 @@ object FiberyApiConstants {
     enum class Type(
         val value: String
     ) {
-        USER("fibery/user")
+        USER("fibery/user"),
+        FILE("fibery/file")
     }
 
     enum class FieldType(
@@ -50,7 +51,9 @@ object FiberyApiConstants {
         ENUM_NAME("enum/name"),
         DOCUMENT_SECRET("Collaboration~Documents/secret"),
         START("start"),
-        END("end")
+        END("end"),
+        FILES("Files/Files"),
+        SECRET("fibery/secret")
     }
 
     enum class Format(

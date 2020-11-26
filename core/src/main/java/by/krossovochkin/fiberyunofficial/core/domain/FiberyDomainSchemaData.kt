@@ -94,6 +94,14 @@ class FiberyEntityData(
 ) : Parcelable
 
 @Parcelize
+class FiberyFileData(
+    val id: String,
+    val title: String,
+    val secret: String,
+    val schema: FiberyEntityTypeSchema
+) : Parcelable
+
+@Parcelize
 data class FiberyEntityDetailsData(
     val id: String,
     val publicId: String,

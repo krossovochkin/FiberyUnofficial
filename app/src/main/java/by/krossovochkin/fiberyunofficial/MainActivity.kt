@@ -26,6 +26,7 @@ import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
+import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -98,12 +99,22 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityDetails -> {
-                EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
-                    entityType = entityTypeSchema,
-                    parentEntityData = parentEntityData
-                ) to FragmentNavigatorExtras(
-                    itemView to getString(R.string.entity_list_root_transition_name)
-                )
+                val entityType = entityTypeSchema.name
+                if (entityType == FiberyApiConstants.Type.FILE.value) {
+                    EntityDetailsFragmentDirections.actionEntityDetailsToFileListFragment(
+                        entityType = entityTypeSchema,
+                        parentEntityData = parentEntityData
+                    ) to FragmentNavigatorExtras(
+                        itemView to getString(R.string.file_list_root_transition_name)
+                    )
+                } else {
+                    EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
+                        entityType = entityTypeSchema,
+                        parentEntityData = parentEntityData
+                    ) to FragmentNavigatorExtras(
+                        itemView to getString(R.string.entity_list_root_transition_name)
+                    )
+                }
             }
             else -> error("Unknown current direction: $id")
         }

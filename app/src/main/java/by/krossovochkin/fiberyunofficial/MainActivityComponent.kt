@@ -22,6 +22,7 @@ import by.krossovochkin.fiberyunofficial.di.entitycreate.EntityCreateParentCompo
 import by.krossovochkin.fiberyunofficial.di.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.di.entitylist.EntityListParentComponent
 import by.krossovochkin.fiberyunofficial.di.entitytypelist.EntityTypeListParentComponent
+import by.krossovochkin.fiberyunofficial.di.filelist.FileListParentComponent
 import by.krossovochkin.fiberyunofficial.di.login.LoginParentComponent
 import by.krossovochkin.fiberyunofficial.di.pickerentity.EntityPickerParentComponent
 import by.krossovochkin.fiberyunofficial.di.pickerfilter.PickerFilterParentComponent
@@ -44,7 +45,8 @@ interface MainActivityComponent :
     EntityPickerParentComponent,
     PickerSingleSelectParentComponent,
     PickerMultiSelectParentComponent,
-    PickerFilterParentComponent {
+    PickerFilterParentComponent,
+    FileListParentComponent {
 
     @Component.Factory
     interface Factory {

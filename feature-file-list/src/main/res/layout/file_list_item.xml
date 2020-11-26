@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:padding="@dimen/base_x4">
+
+    <TextView
+        android:id="@+id/fileTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="?textAppearanceBody1" />
+
+    <ImageView
+        android:id="@+id/fileDownloadAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/file_list_content_description_download"
+        android:src="@drawable/file_list_ic_baseline_cloud_download_24" />
+
+</LinearLayout>
