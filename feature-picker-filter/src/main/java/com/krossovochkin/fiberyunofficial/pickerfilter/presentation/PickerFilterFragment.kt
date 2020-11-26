@@ -85,8 +85,8 @@ class PickerFilterFragment(
                 }
 
                 binding.conditionSpinner.setup(
-                    items = item.conditions.map { it.value },
-                    selectedItem = item.condition?.value
+                    items = item.conditions.map { it.displayText },
+                    selectedItem = item.condition?.displayText
                 ) { position ->
                     viewModel.onConditionSelected(
                         adapterPosition,

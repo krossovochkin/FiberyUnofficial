@@ -31,10 +31,11 @@ enum class FilterMergeType {
 }
 
 enum class FilterCondition(
+    val displayText: String,
     val value: String
 ) {
-    EQUALS("="),
-    NOT_EQUALS("≠")
+    EQUALS(displayText = "=", value = "="),
+    NOT_EQUALS(displayText = "≠", value = "!=")
 }
 
 interface FilterItemData
