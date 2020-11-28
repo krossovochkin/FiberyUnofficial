@@ -21,6 +21,8 @@ dependencies {
     kapt d.core.dagger_compiler
 
     api d.ui.material
+    implementation d.ui.adapter_delegates
+    implementation d.ui.adapter_delegates_paging3
 
     debugImplementation d.debug.facebook_soloader
     debugImplementation d.debug.facebook_flipper

@@ -25,12 +25,14 @@ import com.google.android.material.transition.MaterialElevationScale
 
 private const val TRANSITION_DURATION_MILLIS = 400L
 
-fun Fragment.delayTransitions() {
+@PublishedApi
+internal fun Fragment.delayTransitions() {
     postponeEnterTransition()
     requireView().doOnPreDraw { startPostponedEnterTransition() }
 }
 
-fun Fragment.setupTransformExitTransition() {
+@PublishedApi
+internal fun Fragment.setupTransformExitTransition() {
     exitTransition = MaterialElevationScale(false).apply {
         duration = TRANSITION_DURATION_MILLIS
     }

@@ -211,6 +211,10 @@ class EntityListViewModel(
             }
         }
     }
+
+    fun onError(error: Exception) {
+        mutableError.postValue(Event(error))
+    }
 }
 
 private class EntityListDataSource(

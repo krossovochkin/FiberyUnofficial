@@ -4,10 +4,12 @@ complexity:
   StringLiteralDuplication:
     active: false
   ComplexMethod:
-    ignoreSingleWhenExpression: true
+    active: false
   LargeClass:
     active: false
   LongParameterList:
+    active: false
+  LongMethod:
     active: false
   LabeledExpression:
     active: false

@@ -25,6 +25,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+import android.widget.LinearLayout.VERTICAL
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -35,18 +36,168 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.krossovochkin.fiberyunofficial.core.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 const val SEARCH_QUERY_DEBOUNCE_MILLIS = 300L
 
-inline fun FloatingActionButton.initFab(
+inline fun Fragment.initToolbar(
+    toolbar: Toolbar,
+    toolbarData: LiveData<ToolbarViewState>,
+    crossinline onBackPressed: () -> Unit = {},
+    crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false },
+    crossinline onSearchQueryChanged: (String) -> Unit = {},
+    crossinline onToolbarUpdated: () -> Unit = {}
+) {
+    toolbarData.observe(viewLifecycleOwner) {
+        toolbar.initToolbar(
+            activity = requireActivity(),
+            state = it,
+            onBackPressed = onBackPressed,
+            onMenuItemClicked = onMenuItemClicked,
+            onSearchQueryChanged = onSearchQueryChanged
+        )
+        onToolbarUpdated()
+    }
+}
+
+fun Fragment.initProgressBar(
+    progressBar: View,
+    progressVisibleData: LiveData<Boolean>
+) {
+    progressVisibleData.observe(viewLifecycleOwner) {
+        progressBar.isVisible = it
+    }
+}
+
+fun <T : ListItem> Fragment.initRecyclerView(
+    recyclerView: RecyclerView,
+    itemsLiveData: LiveData<List<T>>,
+    vararg adapterDelegates: AdapterDelegate<List<T>>,
+    itemDecoration: RecyclerView.ItemDecoration = DividerItemDecoration(context, VERTICAL)
+) {
+    val adapter = ListDelegationAdapter(*adapterDelegates)
+
+    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.adapter = adapter
+    recyclerView.addItemDecoration(itemDecoration)
+    recyclerView.updateInsetPaddings(bottom = true)
+
+    itemsLiveData.observe(viewLifecycleOwner) {
+        adapter.items = it
+        adapter.notifyDataSetChanged()
+    }
+}
+
+inline fun <T : ListItem> Fragment.initPaginatedRecyclerView(
+    recyclerView: RecyclerView,
+    itemsFlow: Flow<PagingData<T>>,
+    diffCallback: DiffUtil.ItemCallback<T>,
+    vararg adapterDelegates: AdapterDelegate<List<T>>,
+    crossinline onError: (Exception) -> Unit
+) {
+    val adapter = PagingDataDelegationAdapter(
+        diffCallback = diffCallback,
+        *adapterDelegates
+    )
+
+    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.adapter = adapter
+    recyclerView
+        .addItemDecoration(DividerItemDecoration(context, VERTICAL))
+    recyclerView.updateInsetPaddings(bottom = true)
+
+    viewLifecycleOwner.lifecycleScope.launch {
+        launch {
+            itemsFlow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
+        launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                val refreshState = loadStates.refresh
+                if (refreshState is LoadState.Error) {
+                    onError(Exception(refreshState.error.message, refreshState.error))
+                }
+            }
+        }
+    }
+}
+
+fun Fragment.initErrorHandler(
+    errorData: LiveData<Event<Exception>>
+) {
+    errorData.observe(viewLifecycleOwner) { event ->
+        event.getContentIfNotHandled()?.let { error ->
+            Snackbar
+                .make(
+                    requireView(),
+                    error.message ?: getString(R.string.unknown_error),
+                    Snackbar.LENGTH_SHORT
+                )
+                .show()
+        }
+    }
+}
+
+inline fun <T> Fragment.initNavigation(
+    navigationData: LiveData<Event<T>>,
+    transitionName: String? = null,
+    crossinline onEvent: (T) -> Unit
+) {
+    delayTransitions()
+
+    transitionName?.let { requireView().transitionName = it }
+
+    navigationData.observe(viewLifecycleOwner) { event: Event<T> ->
+        val navEvent = event.getContentIfNotHandled()
+        if (navEvent != null) {
+            setupTransformExitTransition()
+            onEvent(navEvent)
+        }
+    }
+}
+
+inline fun Fragment.initFab(
+    fab: FloatingActionButton,
+    state: FabViewState,
+    transitionName: String,
+    crossinline onClick: () -> Unit
+) {
+    fab.initFab(
+        context = requireContext(),
+        state = state,
+        onClick = onClick
+    )
+    fab.updateInsetMargins(requireActivity(), bottom = true)
+    fab.transitionName = transitionName
+}
+
+@PublishedApi
+internal inline fun FloatingActionButton.initFab(
     context: Context,
     state: FabViewState,
     crossinline onClick: () -> Unit
@@ -60,7 +211,8 @@ inline fun FloatingActionButton.initFab(
 }
 
 @Suppress("LongParameterList")
-inline fun Toolbar.initToolbar(
+@PublishedApi
+internal inline fun Toolbar.initToolbar(
     activity: FragmentActivity,
     state: ToolbarViewState,
     crossinline onBackPressed: () -> Unit = {},
@@ -174,7 +326,10 @@ internal fun Activity.setupSystemBars(
     } else {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.decorView.windowInsetsController
-                ?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+                ?.setSystemBarsAppearance(
+                    APPEARANCE_LIGHT_STATUS_BARS,
+                    APPEARANCE_LIGHT_STATUS_BARS
+                )
         }
     }
 }

@@ -19,27 +19,23 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
+import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
+import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
+import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
+import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
-import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
-import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
-import com.google.android.material.snackbar.Snackbar
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
 class EntityTypeListFragment(
@@ -52,24 +48,6 @@ class EntityTypeListFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = ListDelegationAdapter(
-        adapterDelegateViewBinding<EntityTypeListItem, ListItem, EntityTypeListItemBinding>(
-            viewBinding = { inflater, parent ->
-                EntityTypeListItemBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                itemView.setOnClickListener { viewModel.select(item, itemView) }
-                binding.entityTypeTitleTextView.text = item.title
-                binding.entityTypeBadgeView.setBackgroundColor(
-                    ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
-                )
-                itemView.transitionName = requireContext()
-                    .getString(R.string.entity_type_list_list_transition_name, adapterPosition)
-            }
-        }
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTransformEnterTransition()
@@ -78,44 +56,13 @@ class EntityTypeListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        delayTransitions()
-
-        view.transitionName = requireContext().getString(R.string.entity_type_list_root_transition_name)
-
-        binding.entityTypeListRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.entityTypeListRecyclerView.adapter = adapter
-        binding.entityTypeListRecyclerView
-            .addItemDecoration(
-                DividerItemDecoration(context, LinearLayout.VERTICAL)
-            )
-        binding.entityTypeListRecyclerView.updateInsetPaddings(bottom = true)
-
-        viewModel.entityTypeItems.observe(viewLifecycleOwner) {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
-        }
-
-        viewModel.progress.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { error ->
-                Snackbar
-                    .make(
-                        requireView(),
-                        error.message ?: getString(R.string.unknown_error),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    .show()
-            }
-        }
-
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            when (val navEvent = event.getContentIfNotHandled()) {
+        initNavigation(
+            navigationData = viewModel.navigation,
+            transitionName = requireContext().getString(R.string.entity_type_list_root_transition_name)
+        ) { event ->
+            when (event) {
                 is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
-                    setupTransformExitTransition()
-                    parentListener?.onEntityTypeSelected(navEvent.entityTypeSchema, navEvent.itemView)
+                    parentListener?.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
                 }
                 is EntityTypeListNavEvent.BackEvent -> {
                     parentListener?.onBackPressed()
@@ -123,11 +70,38 @@ class EntityTypeListFragment(
             }
         }
 
-        binding.entityTypeListToolbar.initToolbar(
-            activity = requireActivity(),
-            state = viewModel.getToolbarViewState(requireContext()),
+        initToolbar(
+            toolbar = binding.entityTypeListToolbar,
+            toolbarData = MutableLiveData(viewModel.getToolbarViewState(requireContext())),
             onBackPressed = { viewModel.onBackPressed() }
         )
+
+        initRecyclerView(
+            recyclerView = binding.entityTypeListRecyclerView,
+            itemsLiveData = viewModel.entityTypeItems,
+            adapterDelegateViewBinding<EntityTypeListItem, ListItem, EntityTypeListItemBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityTypeListItemBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    itemView.setOnClickListener { viewModel.select(item, itemView) }
+                    binding.entityTypeTitleTextView.text = item.title
+                    binding.entityTypeBadgeView.setBackgroundColor(
+                        ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
+                    )
+                    itemView.transitionName = requireContext()
+                        .getString(R.string.entity_type_list_list_transition_name, adapterPosition)
+                }
+            }
+        )
+
+        initProgressBar(
+            progressBar = binding.progressBar,
+            progressVisibleData = viewModel.progress
+        )
+
+        initErrorHandler(viewModel.error)
     }
 
     override fun onAttach(context: Context) {

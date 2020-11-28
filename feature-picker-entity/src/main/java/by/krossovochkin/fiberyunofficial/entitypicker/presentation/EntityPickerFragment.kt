@@ -19,31 +19,23 @@ package by.krossovochkin.fiberyunofficial.entitypicker.presentation
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
+import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
+import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
+import by.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
-import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
-import com.google.android.material.snackbar.Snackbar
-import com.hannesdorfmann.adapterdelegates4.PagingDataDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class EntityPickerFragment(
     factoryProducer: () -> EntityPickerViewModelFactory
@@ -55,9 +47,42 @@ class EntityPickerFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter =
-        PagingDataDelegationAdapter(
-            object : DiffUtil.ItemCallback<ListItem>() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupTransformEnterTransition()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initNavigation(
+            navigationData = viewModel.navigation,
+            transitionName = requireContext().getString(R.string.picker_entity_root_transition_name)
+        ) { event ->
+            when (event) {
+                is EntityPickerNavEvent.OnEntityPickedEvent -> {
+                    parentListener?.onEntityPicked(
+                        entity = event.entity,
+                        parentEntityData = event.parentEntityData
+                    )
+                }
+                is EntityPickerNavEvent.BackEvent -> {
+                    parentListener?.onBackPressed()
+                }
+            }
+        }
+
+        initToolbar(
+            toolbar = binding.entityPickerToolbar,
+            toolbarData = viewModel.toolbarViewState,
+            onBackPressed = { viewModel.onBackPressed() },
+            onSearchQueryChanged = { query -> viewModel.onSearchQueryChanged(query) }
+        )
+
+        initPaginatedRecyclerView(
+            recyclerView = binding.entityPickerRecyclerView,
+            itemsFlow = viewModel.entityItems,
+            diffCallback = object : DiffUtil.ItemCallback<ListItem>() {
                 override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                     return if (oldItem is EntityPickerItem && newItem is EntityPickerItem) {
                         oldItem.entityData.id == newItem.entityData.id
@@ -80,95 +105,15 @@ class EntityPickerFragment(
                     binding.entityTitleTextView.text = item.title
                 }
             }
-        )
+        ) { error -> viewModel.onError(error) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupTransformEnterTransition()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        delayTransitions()
-
-        view.transitionName = requireContext().getString(R.string.picker_entity_root_transition_name)
-
-        initList()
-        initNavigation()
-        initToolbar()
+        initErrorHandler(viewModel.error)
 
         viewModel.entityCreateEnabled.observe(viewLifecycleOwner) { isEnabled ->
             binding.entityCreateAction.isEnabled = isEnabled
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
         binding.entityCreateAction.updateInsetMargins(requireActivity(), bottom = true)
-    }
-
-    private fun initList() {
-        binding.entityPickerRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.entityPickerRecyclerView.adapter = adapter
-        binding.entityPickerRecyclerView
-            .addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
-        binding.entityPickerRecyclerView.updateInsetPaddings(bottom = true)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                viewModel.entityItems.collectLatest { pagingData ->
-                    adapter.submitData(pagingData)
-                }
-            }
-            launch {
-                adapter.loadStateFlow.collectLatest { loadStates ->
-                    val refreshState = loadStates.refresh
-                    if (refreshState is LoadState.Error) {
-                        showError(refreshState.error.message)
-                    }
-                }
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { error -> showError(error.message) }
-        }
-    }
-
-    private fun showError(message: String?) {
-        Snackbar
-            .make(
-                requireView(),
-                message ?: getString(R.string.unknown_error),
-                Snackbar.LENGTH_SHORT
-            )
-            .show()
-    }
-
-    private fun initNavigation() {
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            when (val navEvent = event.getContentIfNotHandled()) {
-                is EntityPickerNavEvent.OnEntityPickedEvent -> {
-                    parentListener?.onEntityPicked(
-                        entity = navEvent.entity,
-                        parentEntityData = navEvent.parentEntityData
-                    )
-                }
-                is EntityPickerNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
-                }
-            }
-        }
-    }
-
-    private fun initToolbar() {
-        viewModel.toolbarViewState.observe(viewLifecycleOwner) {
-            binding.entityPickerToolbar.initToolbar(
-                activity = requireActivity(),
-                state = it,
-                onBackPressed = { viewModel.onBackPressed() },
-                onSearchQueryChanged = { query -> viewModel.onSearchQueryChanged(query) }
-            )
-            binding.entityPickerToolbar
-        }
     }
 
     override fun onAttach(context: Context) {

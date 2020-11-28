@@ -21,16 +21,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
+import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
+import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.R
 import by.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
-import com.google.android.material.snackbar.Snackbar
 
 class EntityCreateFragment(
     factoryProducer: () -> EntityCreateViewModelFactory
@@ -50,43 +51,32 @@ class EntityCreateFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        delayTransitions()
-
-        view.transitionName = requireContext()
-            .getString(R.string.entity_create_root_transition_name)
-
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            when (val navEvent = event.getContentIfNotHandled()) {
+        initNavigation(
+            navigationData = viewModel.navigation,
+            transitionName = requireContext()
+                .getString(R.string.entity_create_root_transition_name)
+        ) { event ->
+            when (event) {
                 is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
                     parentListener?.onEntityCreateSuccess(
-                        createdEntity = navEvent.createdEntity
+                        createdEntity = event.createdEntity
                     )
                 }
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { error ->
-                Snackbar
-                    .make(
-                        requireView(),
-                        error.message ?: getString(R.string.unknown_error),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    .show()
-            }
-        }
+        initToolbar(
+            toolbar = binding.entityCreateToolbar,
+            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            onBackPressed = { parentListener?.onBackPressed() }
+        )
+
+        initErrorHandler(viewModel.error)
 
         binding.entityCreateButton.setOnClickListener {
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
         binding.entityCreateButton.updateInsetMargins(requireActivity(), bottom = true)
-
-        binding.entityCreateToolbar.initToolbar(
-            activity = requireActivity(),
-            state = viewModel.toolbarViewState,
-            onBackPressed = { parentListener?.onBackPressed() }
-        )
     }
 
     override fun onAttach(context: Context) {

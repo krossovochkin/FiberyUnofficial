@@ -135,6 +135,10 @@ class EntityPickerViewModel(
         }
     }
 
+    fun onError(error: Exception) {
+        mutableError.postValue(Event(error))
+    }
+
     private fun onEntityPicked(entity: FiberyEntityData?) {
         mutableNavigation.postValue(
             Event(

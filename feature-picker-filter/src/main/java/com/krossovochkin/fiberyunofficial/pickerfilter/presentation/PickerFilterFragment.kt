@@ -22,21 +22,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
+import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
+import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
-import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
@@ -53,66 +50,6 @@ class PickerFilterFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
-        adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
-            viewBinding = { inflater, parent ->
-                PickerFilterItemEmptyBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.spinner.setup(
-                    items = item.fields.map { it.displayName }
-                ) { position ->
-                    viewModel.onFieldSelected(adapterPosition, item.fields.getOrNull(position))
-                }
-            }
-            onViewRecycled { binding.spinner.recycle() }
-        },
-        adapterDelegateViewBinding<SingleSelectFilterItem, ListItem, PickerFilterItemSingleSelectBinding>(
-            viewBinding = { inflater, parent ->
-                PickerFilterItemSingleSelectBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldTypeSpinner.setup(
-                    items = item.fields.map { it.displayName },
-                    selectedItem = item.field.displayName
-                ) { position ->
-                    viewModel.onFieldSelected(
-                        adapterPosition,
-                        item.fields.getOrNull(position)
-                    )
-                }
-
-                binding.conditionSpinner.setup(
-                    items = item.conditions.map { it.displayText },
-                    selectedItem = item.condition?.displayText
-                ) { position ->
-                    viewModel.onConditionSelected(
-                        adapterPosition,
-                        item.conditions.getOrNull(position)
-                    )
-                }
-
-                binding.singleSelectValueSpinner.setup(
-                    items = item.values.map { it.title },
-                    selectedItem = item.selectedValue?.title
-                ) { position ->
-                    viewModel.onSingleSelectValueSelected(
-                        adapterPosition,
-                        item.values.getOrNull(position)
-                    )
-                }
-            }
-
-            onViewRecycled {
-                binding.fieldTypeSpinner.recycle()
-                binding.conditionSpinner.recycle()
-                binding.singleSelectValueSpinner.recycle()
-            }
-        }
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -122,45 +59,89 @@ class PickerFilterFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        delayTransitions()
-
-        view.transitionName = requireContext()
-            .getString(R.string.picker_filter_root_transition_name)
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                LinearLayout.VERTICAL
-            )
-        )
-        binding.recyclerView.updateInsetPaddings(bottom = true)
-
-        binding.pickerFilterToolbar.initToolbar(
-            activity = requireActivity(),
-            state = viewModel.toolbarViewState,
-            onBackPressed = { viewModel.onBackPressed() }
-        )
-
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                when (it) {
-                    is PickerFilterNavEvent.ApplyFilterEvent -> {
-                        parentListener?.onFilterSelected(
-                            filter = it.filter,
-                            params = it.params
-                        )
-                    }
-                    PickerFilterNavEvent.BackEvent -> parentListener?.onBackPressed()
+        initNavigation(
+            navigationData = viewModel.navigation,
+            transitionName = requireContext()
+                .getString(R.string.picker_filter_root_transition_name)
+        ) { event ->
+            when (event) {
+                is PickerFilterNavEvent.ApplyFilterEvent -> {
+                    parentListener?.onFilterSelected(
+                        filter = event.filter,
+                        params = event.params
+                    )
                 }
+                PickerFilterNavEvent.BackEvent -> parentListener?.onBackPressed()
             }
         }
 
-        viewModel.items.observe(viewLifecycleOwner) {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
-        }
+        initToolbar(
+            toolbar = binding.pickerFilterToolbar,
+            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            onBackPressed = { viewModel.onBackPressed() }
+        )
+
+        initRecyclerView(
+            recyclerView = binding.recyclerView,
+            itemsLiveData = viewModel.items,
+            adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
+                viewBinding = { inflater, parent ->
+                    PickerFilterItemEmptyBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.spinner.setup(
+                        items = item.fields.map { it.displayName }
+                    ) { position ->
+                        viewModel.onFieldSelected(adapterPosition, item.fields.getOrNull(position))
+                    }
+                }
+                onViewRecycled { binding.spinner.recycle() }
+            },
+            adapterDelegateViewBinding<SingleSelectFilterItem, ListItem, PickerFilterItemSingleSelectBinding>(
+                viewBinding = { inflater, parent ->
+                    PickerFilterItemSingleSelectBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldTypeSpinner.setup(
+                        items = item.fields.map { it.displayName },
+                        selectedItem = item.field.displayName
+                    ) { position ->
+                        viewModel.onFieldSelected(
+                            adapterPosition,
+                            item.fields.getOrNull(position)
+                        )
+                    }
+
+                    binding.conditionSpinner.setup(
+                        items = item.conditions.map { it.displayText },
+                        selectedItem = item.condition?.displayText
+                    ) { position ->
+                        viewModel.onConditionSelected(
+                            adapterPosition,
+                            item.conditions.getOrNull(position)
+                        )
+                    }
+
+                    binding.singleSelectValueSpinner.setup(
+                        items = item.values.map { it.title },
+                        selectedItem = item.selectedValue?.title
+                    ) { position ->
+                        viewModel.onSingleSelectValueSelected(
+                            adapterPosition,
+                            item.values.getOrNull(position)
+                        )
+                    }
+                }
+
+                onViewRecycled {
+                    binding.fieldTypeSpinner.recycle()
+                    binding.conditionSpinner.recycle()
+                    binding.singleSelectValueSpinner.recycle()
+                }
+            }
+        )
 
         binding.applyAction.setOnClickListener { viewModel.applyFilter() }
         binding.applyAction.updateInsetMargins(requireActivity(), bottom = true)

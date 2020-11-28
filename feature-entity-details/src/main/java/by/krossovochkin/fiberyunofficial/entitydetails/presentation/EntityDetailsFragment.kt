@@ -29,7 +29,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
@@ -37,11 +37,12 @@ import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.OffsetItemDecoration
-import by.krossovochkin.fiberyunofficial.core.presentation.delayTransitions
+import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
+import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
+import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
+import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
-import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformExitTransition
-import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetPaddings
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsFragmentBinding
@@ -55,8 +56,6 @@ import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetails
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldSingleSelectBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldTextBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldUrlBinding
-import com.google.android.material.snackbar.Snackbar
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import io.noties.markwon.Markwon
 
@@ -71,159 +70,6 @@ class EntityDetailsFragment(
 
     private var parentListener: ParentListener? = null
 
-    private val adapter = ListDelegationAdapter(
-        adapterDelegateViewBinding<FieldHeaderItem, ListItem, EntityDetailsItemFieldHeaderBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldHeaderBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldHeaderTitleTextView.text = item.title
-            }
-        },
-        adapterDelegateViewBinding<FieldTextItem, ListItem, EntityDetailsItemFieldTextBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldTextBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldTextTitleView.text = item.title
-                binding.fieldTextView.text = item.text
-            }
-        },
-        adapterDelegateViewBinding<FieldUrlItem, ListItem, EntityDetailsItemFieldUrlBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldUrlBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldUrlTitleView.text = item.title
-                binding.fieldUrlView.text = item.url
-
-                if (item.isOpenAvailable) {
-                    LinkifyCompat.addLinks(binding.fieldUrlView, Linkify.WEB_URLS)
-                    itemView.setOnClickListener { viewModel.selectUrl(item) }
-                }
-            }
-        },
-        adapterDelegateViewBinding<FieldEmailItem, ListItem, EntityDetailsItemFieldEmailBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldEmailBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldEmailTitleView.text = item.title
-                binding.fieldEmailView.text = item.email
-
-                if (item.isOpenAvailable) {
-                    LinkifyCompat.addLinks(binding.fieldEmailView, Linkify.EMAIL_ADDRESSES)
-                    itemView.setOnClickListener { viewModel.selectEmail(item) }
-                }
-            }
-        },
-        adapterDelegateViewBinding<FieldSingleSelectItem, ListItem, EntityDetailsItemFieldSingleSelectBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldSingleSelectBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldSingleSelectTitleView.text = item.title
-                binding.fieldSingleSelectView.text = item.text
-                binding.root.setOnClickListener {
-                    viewModel.selectSingleSelectField(item)
-                }
-            }
-            onViewRecycled {
-                binding.root.setOnClickListener(null)
-            }
-        },
-        adapterDelegateViewBinding<FieldMultiSelectItem, ListItem, EntityDetailsItemFieldMultiSelectBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldMultiSelectBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldMultiSelectTitleView.text = item.title
-                binding.fieldMultiSelectView.text = item.text
-                binding.root.setOnClickListener {
-                    viewModel.selectMultiSelectField(item)
-                }
-            }
-        },
-        adapterDelegateViewBinding<FieldRichTextItem, ListItem, EntityDetailsItemFieldRichTextBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldRichTextBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.richTextTitleView.text = item.title
-
-                Markwon.create(context).setMarkdown(binding.richTextView, item.value)
-            }
-        },
-        adapterDelegateViewBinding<FieldRelationItem, ListItem, EntityDetailsItemFieldRelationBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldRelationBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldRelationTitleView.text = item.title
-                binding.fieldRelationEntityNameTextView.text = item.entityName
-
-                itemView.setOnClickListener {
-                    viewModel.selectEntityField(item.fieldSchema, item.entityData, itemView)
-                }
-
-                binding.fieldRelationOpenAction.imageTintList =
-                    ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
-                binding.fieldRelationOpenAction.setOnClickListener {
-                    item.entityData?.let { viewModel.openEntity(it, itemView) }
-                }
-                binding.fieldRelationOpenAction.isVisible = item.isOpenAvailable
-
-                binding.fieldRelationDeleteAction.imageTintList =
-                    ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
-                binding.fieldRelationDeleteAction.setOnClickListener {
-                    item.entityData?.let { viewModel.updateEntityField(item.fieldSchema, null) }
-                }
-                binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
-                itemView.transitionName = requireContext()
-                    .getString(R.string.entity_details_list_transition_name, adapterPosition)
-            }
-        },
-        adapterDelegateViewBinding<FieldCollectionItem, ListItem, EntityDetailsItemFieldCollectionBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldCollectionBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldCollectionTitleView.text = item.title
-                binding.fieldCollectionCountTextView.text = item.countText
-
-                itemView.setOnClickListener {
-                    viewModel.selectCollectionField(
-                        entityTypeSchema = item.entityTypeSchema,
-                        fieldSchema = item.fieldSchema,
-                        itemView = itemView
-                    )
-                }
-                itemView.transitionName = requireContext()
-                    .getString(R.string.entity_details_list_transition_name, adapterPosition)
-            }
-        },
-        adapterDelegateViewBinding<FieldCheckboxItem, ListItem, EntityDetailsItemFieldCheckboxBinding>(
-            viewBinding = { inflater, parent ->
-                EntityDetailsItemFieldCheckboxBinding.inflate(inflater, parent, false)
-            }
-        ) {
-            bind {
-                binding.fieldCheckboxTitleView.text = item.title
-                binding.fieldCheckBox.isChecked = item.value
-                binding.fieldCheckBox.isEnabled = false
-            }
-        }
-    )
-
     private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
     private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
     private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels()
@@ -233,17 +79,245 @@ class EntityDetailsFragment(
         setupTransformEnterTransition()
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        delayTransitions()
+        initNavigation(
+            navigationData = viewModel.navigation,
+            transitionName = argsProvider.getEntityDetailsArgs().entityData.id
+                .let {
+                    requireContext().getString(R.string.entity_details_root_transition_name, it)
+                }
+        ) { event ->
+            when (event) {
+                is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
+                    parentListener?.onEntitySelected(event.entity, event.itemView)
+                }
+                is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
+                    parentListener?.onEntityTypeSelected(
+                        entityTypeSchema = event.entityTypeSchema,
+                        parentEntityData = event.parentEntityData,
+                        itemView = event.itemView
+                    )
+                }
+                is EntityDetailsNavEvent.BackEvent -> {
+                    parentListener?.onBackPressed()
+                }
+                is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
+                    parentListener?.onSingleSelectFieldEdit(
+                        parentEntityData = event.parentEntityData,
+                        item = event.singleSelectItem
+                    )
+                }
+                is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
+                    parentListener?.onMultiSelectFieldEdit(
+                        parentEntityData = event.parentEntityData,
+                        item = event.multiSelectItem
+                    )
+                }
+                is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
+                    parentListener?.onEntityFieldEdit(
+                        parentEntityData = event.parentEntityData,
+                        entity = event.currentEntity,
+                        itemView = event.itemView
+                    )
+                }
+                is EntityDetailsNavEvent.OpenUrlEvent -> {
+                    Intent(Intent.ACTION_VIEW).setData(Uri.parse(event.url)).let { intent ->
+                        intent.resolveActivity(requireContext().packageManager)?.let {
+                            startActivity(intent)
+                        }
+                    }
+                }
+                is EntityDetailsNavEvent.SendEmailEvent -> {
+                    Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto://"))
+                        .apply { putExtra(Intent.EXTRA_EMAIL, event.email) }
+                        .let { intent ->
+                            intent.resolveActivity(requireContext().packageManager)?.let {
+                                startActivity(intent)
+                            }
+                        }
+                }
+            }
+        }
 
-        val id: String = argsProvider.getEntityDetailsArgs().entityData.id
-        view.transitionName = requireContext().getString(R.string.entity_details_root_transition_name, id)
+        initToolbar(
+            toolbar = binding.entityDetailsToolbar,
+            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            onBackPressed = { viewModel.onBackPressed() },
+            onMenuItemClicked = { menuId ->
+                if (menuId.itemId == R.id.action_delete) {
+                    viewModel.deleteEntity()
+                    true
+                } else {
+                    error("Unknown menu item")
+                }
+            }
+        )
 
-        initList()
-        initNavigation()
-        initToolbar()
+        initRecyclerView(
+            recyclerView = binding.entityDetailsRecyclerView,
+            itemsLiveData = viewModel.items,
+            adapterDelegateViewBinding<FieldHeaderItem, ListItem, EntityDetailsItemFieldHeaderBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldHeaderBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldHeaderTitleTextView.text = item.title
+                }
+            },
+            adapterDelegateViewBinding<FieldTextItem, ListItem, EntityDetailsItemFieldTextBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldTextBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldTextTitleView.text = item.title
+                    binding.fieldTextView.text = item.text
+                }
+            },
+            adapterDelegateViewBinding<FieldUrlItem, ListItem, EntityDetailsItemFieldUrlBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldUrlBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldUrlTitleView.text = item.title
+                    binding.fieldUrlView.text = item.url
+
+                    if (item.isOpenAvailable) {
+                        LinkifyCompat.addLinks(binding.fieldUrlView, Linkify.WEB_URLS)
+                        itemView.setOnClickListener { viewModel.selectUrl(item) }
+                    }
+                }
+            },
+            adapterDelegateViewBinding<FieldEmailItem, ListItem, EntityDetailsItemFieldEmailBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldEmailBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldEmailTitleView.text = item.title
+                    binding.fieldEmailView.text = item.email
+
+                    if (item.isOpenAvailable) {
+                        LinkifyCompat.addLinks(binding.fieldEmailView, Linkify.EMAIL_ADDRESSES)
+                        itemView.setOnClickListener { viewModel.selectEmail(item) }
+                    }
+                }
+            },
+            adapterDelegateViewBinding<FieldSingleSelectItem, ListItem, EntityDetailsItemFieldSingleSelectBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldSingleSelectBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldSingleSelectTitleView.text = item.title
+                    binding.fieldSingleSelectView.text = item.text
+                    binding.root.setOnClickListener {
+                        viewModel.selectSingleSelectField(item)
+                    }
+                }
+                onViewRecycled {
+                    binding.root.setOnClickListener(null)
+                }
+            },
+            adapterDelegateViewBinding<FieldMultiSelectItem, ListItem, EntityDetailsItemFieldMultiSelectBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldMultiSelectBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldMultiSelectTitleView.text = item.title
+                    binding.fieldMultiSelectView.text = item.text
+                    binding.root.setOnClickListener {
+                        viewModel.selectMultiSelectField(item)
+                    }
+                }
+            },
+            adapterDelegateViewBinding<FieldRichTextItem, ListItem, EntityDetailsItemFieldRichTextBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldRichTextBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.richTextTitleView.text = item.title
+
+                    Markwon.create(context).setMarkdown(binding.richTextView, item.value)
+                }
+            },
+            adapterDelegateViewBinding<FieldRelationItem, ListItem, EntityDetailsItemFieldRelationBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldRelationBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldRelationTitleView.text = item.title
+                    binding.fieldRelationEntityNameTextView.text = item.entityName
+
+                    itemView.setOnClickListener {
+                        viewModel.selectEntityField(item.fieldSchema, item.entityData, itemView)
+                    }
+
+                    binding.fieldRelationOpenAction.imageTintList =
+                        ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
+                    binding.fieldRelationOpenAction.setOnClickListener {
+                        item.entityData?.let { viewModel.openEntity(it, itemView) }
+                    }
+                    binding.fieldRelationOpenAction.isVisible = item.isOpenAvailable
+
+                    binding.fieldRelationDeleteAction.imageTintList =
+                        ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
+                    binding.fieldRelationDeleteAction.setOnClickListener {
+                        item.entityData?.let { viewModel.updateEntityField(item.fieldSchema, null) }
+                    }
+                    binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
+                    itemView.transitionName = requireContext()
+                        .getString(R.string.entity_details_list_transition_name, adapterPosition)
+                }
+            },
+            adapterDelegateViewBinding<FieldCollectionItem, ListItem, EntityDetailsItemFieldCollectionBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldCollectionBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldCollectionTitleView.text = item.title
+                    binding.fieldCollectionCountTextView.text = item.countText
+
+                    itemView.setOnClickListener {
+                        viewModel.selectCollectionField(
+                            entityTypeSchema = item.entityTypeSchema,
+                            fieldSchema = item.fieldSchema,
+                            itemView = itemView
+                        )
+                    }
+                    itemView.transitionName = requireContext()
+                        .getString(R.string.entity_details_list_transition_name, adapterPosition)
+                }
+            },
+            adapterDelegateViewBinding<FieldCheckboxItem, ListItem, EntityDetailsItemFieldCheckboxBinding>(
+                viewBinding = { inflater, parent ->
+                    EntityDetailsItemFieldCheckboxBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.fieldCheckboxTitleView.text = item.title
+                    binding.fieldCheckBox.isChecked = item.value
+                    binding.fieldCheckBox.isEnabled = false
+                }
+            },
+            itemDecoration = OffsetItemDecoration(R.dimen.entity_details_field_offset),
+        )
+
+        initProgressBar(
+            progressBar = binding.progressBar,
+            progressVisibleData = viewModel.progress
+        )
+
+        initErrorHandler(viewModel.error)
 
         entityPickedViewModel.pickedEntity.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { (parentEntityData, entity) ->
@@ -260,111 +334,6 @@ class EntityDetailsFragment(
                 viewModel.updateMultiSelectField(data)
             }
         }
-    }
-
-    private fun initList() {
-        binding.entityDetailsRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.entityDetailsRecyclerView.adapter = adapter
-        binding.entityDetailsRecyclerView.addItemDecoration(OffsetItemDecoration(R.dimen.entity_details_field_offset))
-        binding.entityDetailsRecyclerView.updateInsetPaddings(bottom = true)
-
-        viewModel.items.observe(viewLifecycleOwner) {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
-        }
-
-        viewModel.progress.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { error ->
-                Snackbar
-                    .make(
-                        requireView(),
-                        error.message ?: getString(R.string.unknown_error),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    .show()
-            }
-        }
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun initNavigation() {
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            when (val navEvent = event.getContentIfNotHandled()) {
-                is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
-                    setupTransformExitTransition()
-                    parentListener?.onEntitySelected(navEvent.entity, navEvent.itemView)
-                }
-                is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
-                    setupTransformExitTransition()
-                    parentListener?.onEntityTypeSelected(
-                        entityTypeSchema = navEvent.entityTypeSchema,
-                        parentEntityData = navEvent.parentEntityData,
-                        itemView = navEvent.itemView
-                    )
-                }
-                is EntityDetailsNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
-                }
-                is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
-                    parentListener?.onSingleSelectFieldEdit(
-                        parentEntityData = navEvent.parentEntityData,
-                        item = navEvent.singleSelectItem
-                    )
-                }
-                is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
-                    parentListener?.onMultiSelectFieldEdit(
-                        parentEntityData = navEvent.parentEntityData,
-                        item = navEvent.multiSelectItem
-                    )
-                }
-                is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
-                    setupTransformExitTransition()
-                    parentListener?.onEntityFieldEdit(
-                        parentEntityData = navEvent.parentEntityData,
-                        entity = navEvent.currentEntity,
-                        itemView = navEvent.itemView
-                    )
-                }
-                is EntityDetailsNavEvent.OpenUrlEvent -> {
-                    Intent(Intent.ACTION_VIEW).setData(Uri.parse(navEvent.url)).let { intent ->
-                        intent.resolveActivity(requireContext().packageManager)?.let {
-                            startActivity(intent)
-                        }
-                    }
-                }
-                is EntityDetailsNavEvent.SendEmailEvent -> {
-                    Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto://"))
-                        .apply {
-                            putExtra(Intent.EXTRA_EMAIL, navEvent.email)
-                        }
-                        .let { intent ->
-                            intent.resolveActivity(requireContext().packageManager)?.let {
-                                startActivity(intent)
-                            }
-                        }
-                }
-            }
-        }
-    }
-
-    private fun initToolbar() {
-        binding.entityDetailsToolbar.initToolbar(
-            activity = requireActivity(),
-            state = viewModel.toolbarViewState,
-            onBackPressed = { viewModel.onBackPressed() },
-            onMenuItemClicked = { menuId ->
-                if (menuId.itemId == R.id.action_delete) {
-                    viewModel.deleteEntity()
-                    true
-                } else {
-                    error("Unknown menu item")
-                }
-            }
-        )
     }
 
     override fun onAttach(context: Context) {
