@@ -17,7 +17,6 @@
 
 package com.krossovochkin.filelist.presentation
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -33,6 +32,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -48,7 +48,7 @@ class FileListFragment(
 
     private val binding by viewBinding(FileListFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,7 @@ class FileListFragment(
             transitionName = requireContext().getString(R.string.file_list_root_transition_name)
         ) { event ->
             when (event) {
-                FileListNavEvent.BackEvent -> parentListener?.onBackPressed()
+                FileListNavEvent.BackEvent -> parentListener.onBackPressed()
             }
         }
 
@@ -107,16 +107,6 @@ class FileListFragment(
                 }
             }
         ) { error -> viewModel.onError(error) }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

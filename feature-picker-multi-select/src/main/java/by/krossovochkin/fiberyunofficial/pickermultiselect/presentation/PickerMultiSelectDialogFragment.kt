@@ -17,7 +17,6 @@
 package by.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -25,6 +24,7 @@ import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 
 class PickerMultiSelectDialogFragment(
     factoryProducer: () -> PickerMultiSelectViewModelFactory
@@ -32,7 +32,7 @@ class PickerMultiSelectDialogFragment(
 
     private val viewModel: PickerMultiSelectViewModel by viewModels { factoryProducer() }
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val fieldSchema = viewModel.fieldSchema
@@ -54,23 +54,13 @@ class PickerMultiSelectDialogFragment(
                 val selectedItems = item.values.filterIndexed { index, _ -> selectedItemIds[index] }
                 val addedItems = selectedItems.filter { value -> value !in item.selectedValues }
                 val removedItems = item.selectedValues.filter { value -> value !in selectedItems }
-                parentListener?.onMultiSelectPicked(
+                parentListener.onMultiSelectPicked(
                     fieldSchema = fieldSchema,
                     addedItems = addedItems,
                     removedItems = removedItems
                 )
             }
             .create()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

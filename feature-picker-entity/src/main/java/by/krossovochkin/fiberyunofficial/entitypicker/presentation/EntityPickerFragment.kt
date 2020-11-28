@@ -16,7 +16,6 @@
  */
 package by.krossovochkin.fiberyunofficial.entitypicker.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -29,6 +28,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -45,7 +45,7 @@ class EntityPickerFragment(
 
     private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +61,13 @@ class EntityPickerFragment(
         ) { event ->
             when (event) {
                 is EntityPickerNavEvent.OnEntityPickedEvent -> {
-                    parentListener?.onEntityPicked(
+                    parentListener.onEntityPicked(
                         entity = event.entity,
                         parentEntityData = event.parentEntityData
                     )
                 }
                 is EntityPickerNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
+                    parentListener.onBackPressed()
                 }
             }
         }
@@ -114,16 +114,6 @@ class EntityPickerFragment(
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
         binding.entityCreateAction.updateInsetMargins(requireActivity(), bottom = true)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

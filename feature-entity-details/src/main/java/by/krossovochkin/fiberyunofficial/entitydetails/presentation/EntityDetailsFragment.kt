@@ -17,7 +17,6 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
@@ -42,6 +41,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
 import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.R
@@ -68,7 +68,7 @@ class EntityDetailsFragment(
 
     private val binding by viewBinding(EntityDetailsFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
     private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
@@ -92,32 +92,32 @@ class EntityDetailsFragment(
         ) { event ->
             when (event) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
-                    parentListener?.onEntitySelected(event.entity, event.itemView)
+                    parentListener.onEntitySelected(event.entity, event.itemView)
                 }
                 is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
-                    parentListener?.onEntityTypeSelected(
+                    parentListener.onEntityTypeSelected(
                         entityTypeSchema = event.entityTypeSchema,
                         parentEntityData = event.parentEntityData,
                         itemView = event.itemView
                     )
                 }
                 is EntityDetailsNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
+                    parentListener.onBackPressed()
                 }
                 is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
-                    parentListener?.onSingleSelectFieldEdit(
+                    parentListener.onSingleSelectFieldEdit(
                         parentEntityData = event.parentEntityData,
                         item = event.singleSelectItem
                     )
                 }
                 is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
-                    parentListener?.onMultiSelectFieldEdit(
+                    parentListener.onMultiSelectFieldEdit(
                         parentEntityData = event.parentEntityData,
                         item = event.multiSelectItem
                     )
                 }
                 is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
-                    parentListener?.onEntityFieldEdit(
+                    parentListener.onEntityFieldEdit(
                         parentEntityData = event.parentEntityData,
                         entity = event.currentEntity,
                         itemView = event.itemView
@@ -334,16 +334,6 @@ class EntityDetailsFragment(
                 viewModel.updateMultiSelectField(data)
             }
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

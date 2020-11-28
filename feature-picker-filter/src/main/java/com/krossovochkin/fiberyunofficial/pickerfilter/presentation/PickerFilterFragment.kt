@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -31,6 +30,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -48,7 +48,7 @@ class PickerFilterFragment(
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,12 +66,12 @@ class PickerFilterFragment(
         ) { event ->
             when (event) {
                 is PickerFilterNavEvent.ApplyFilterEvent -> {
-                    parentListener?.onFilterSelected(
+                    parentListener.onFilterSelected(
                         filter = event.filter,
                         params = event.params
                     )
                 }
-                PickerFilterNavEvent.BackEvent -> parentListener?.onBackPressed()
+                PickerFilterNavEvent.BackEvent -> parentListener.onBackPressed()
             }
         }
 
@@ -152,7 +152,7 @@ class PickerFilterFragment(
         selectedItem: String? = null,
         crossinline onSelection: (Int) -> Unit
     ) {
-        this.adapter = ArrayAdapter<String>(
+        this.adapter = ArrayAdapter(
             context,
             android.R.layout.simple_list_item_1,
             listOf("") + items
@@ -181,16 +181,6 @@ class PickerFilterFragment(
     private fun Spinner.recycle() {
         this.onItemSelectedListener = null
         this.adapter = null
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

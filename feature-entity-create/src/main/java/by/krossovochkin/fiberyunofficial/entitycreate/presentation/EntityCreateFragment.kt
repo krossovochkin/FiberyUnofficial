@@ -16,7 +16,6 @@
  */
 package by.krossovochkin.fiberyunofficial.entitycreate.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -27,6 +26,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
@@ -41,7 +41,7 @@ class EntityCreateFragment(
 
     private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class EntityCreateFragment(
         ) { event ->
             when (event) {
                 is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
-                    parentListener?.onEntityCreateSuccess(
+                    parentListener.onEntityCreateSuccess(
                         createdEntity = event.createdEntity
                     )
                 }
@@ -68,7 +68,7 @@ class EntityCreateFragment(
         initToolbar(
             toolbar = binding.entityCreateToolbar,
             toolbarData = MutableLiveData(viewModel.toolbarViewState),
-            onBackPressed = { parentListener?.onBackPressed() }
+            onBackPressed = { parentListener.onBackPressed() }
         )
 
         initErrorHandler(viewModel.error)
@@ -77,16 +77,6 @@ class EntityCreateFragment(
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
         binding.entityCreateButton.updateInsetMargins(requireActivity(), bottom = true)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

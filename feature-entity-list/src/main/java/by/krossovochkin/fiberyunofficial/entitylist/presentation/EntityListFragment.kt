@@ -17,7 +17,6 @@
 
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -38,6 +37,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitylist.R
@@ -56,7 +56,7 @@ class EntityListFragment(
 
     private val entityCreatedViewModel by activityViewModels<EntityCreatedViewModel>()
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
 
@@ -74,13 +74,13 @@ class EntityListFragment(
         ) { event ->
             when (event) {
                 is EntityListNavEvent.OnEntitySelectedEvent -> {
-                    parentListener?.onEntitySelected(event.entity, event.itemView)
+                    parentListener.onEntitySelected(event.entity, event.itemView)
                 }
                 is EntityListNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
+                    parentListener.onBackPressed()
                 }
                 is EntityListNavEvent.OnFilterSelectedEvent -> {
-                    parentListener?.onFilterEdit(
+                    parentListener.onFilterEdit(
                         entityTypeSchema = event.entityTypeSchema,
                         filter = event.filter,
                         params = event.params,
@@ -210,17 +210,7 @@ class EntityListFragment(
         parentEntityData: ParentEntityData?,
         view: View
     ) {
-        parentListener?.onAddEntityRequested(entityType, parentEntityData, view)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
+        parentListener.onAddEntityRequested(entityType, parentEntityData, view)
     }
 
     data class Args(

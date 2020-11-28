@@ -17,13 +17,13 @@
 package by.krossovochkin.fiberyunofficial.login.presentation
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.R
 import by.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
@@ -45,7 +45,7 @@ class LoginFragment(
 
     private val binding by viewBinding(LoginFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class LoginFragment(
         viewModel.navigation.observe(viewLifecycleOwner) { event ->
             when (event.getContentIfNotHandled()) {
                 is LoginNavEvent.OnLoginSuccessEvent -> {
-                    parentListener?.onLoginSuccess()
+                    parentListener.onLoginSuccess()
                 }
             }
         }
@@ -85,16 +85,6 @@ class LoginFragment(
             .orEmpty()
             .substringAfter("https://")
             .substringBefore(".fibery.io")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     class TokenExtractor(

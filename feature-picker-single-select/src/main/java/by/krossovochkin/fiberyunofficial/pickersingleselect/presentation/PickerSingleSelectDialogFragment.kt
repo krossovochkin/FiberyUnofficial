@@ -17,7 +17,6 @@
 package by.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -25,6 +24,7 @@ import androidx.fragment.app.viewModels
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 
 class PickerSingleSelectDialogFragment(
     factoryProducer: () -> PickerSingleSelectViewModelFactory
@@ -32,7 +32,7 @@ class PickerSingleSelectDialogFragment(
 
     private val viewModel: PickerSingleSelectViewModel by viewModels { factoryProducer() }
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val fieldSchema = viewModel.fieldSchema
@@ -46,19 +46,9 @@ class PickerSingleSelectDialogFragment(
             .setTitle(item.title)
             .setNegativeButton(android.R.string.cancel) { _, _ -> }
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                parentListener?.onSingleSelectPicked(fieldSchema, item.values[selectedIndex])
+                parentListener.onSingleSelectPicked(fieldSchema, item.values[selectedIndex])
             }
             .create()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(

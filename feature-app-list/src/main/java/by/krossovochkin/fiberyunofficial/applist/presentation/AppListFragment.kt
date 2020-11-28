@@ -16,7 +16,6 @@
  */
 package by.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -32,6 +31,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
 import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
@@ -41,7 +41,7 @@ class AppListFragment(
 
     private val viewModel: AppListViewModel by viewModels { factoryProducer() }
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     private val binding by viewBinding(AppListFragmentBinding::bind)
 
@@ -53,7 +53,7 @@ class AppListFragment(
         ) { event ->
             when (event) {
                 is AppListNavEvent.OnAppSelectedEvent -> {
-                    parentListener?.onAppSelected(event.fiberyAppData, event.itemView)
+                    parentListener.onAppSelected(event.fiberyAppData, event.itemView)
                 }
             }
         }
@@ -84,16 +84,6 @@ class AppListFragment(
         )
 
         initErrorHandler(viewModel.error)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     interface ParentListener {

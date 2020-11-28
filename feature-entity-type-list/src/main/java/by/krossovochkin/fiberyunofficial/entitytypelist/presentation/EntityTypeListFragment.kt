@@ -16,7 +16,6 @@
  */
 package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -31,6 +30,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
 import by.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
+import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
@@ -46,7 +46,7 @@ class EntityTypeListFragment(
 
     private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
-    private var parentListener: ParentListener? = null
+    private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,10 +62,10 @@ class EntityTypeListFragment(
         ) { event ->
             when (event) {
                 is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
-                    parentListener?.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
+                    parentListener.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
                 }
                 is EntityTypeListNavEvent.BackEvent -> {
-                    parentListener?.onBackPressed()
+                    parentListener.onBackPressed()
                 }
             }
         }
@@ -102,16 +102,6 @@ class EntityTypeListFragment(
         )
 
         initErrorHandler(viewModel.error)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentListener = context as ParentListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        parentListener = null
     }
 
     data class Args(
