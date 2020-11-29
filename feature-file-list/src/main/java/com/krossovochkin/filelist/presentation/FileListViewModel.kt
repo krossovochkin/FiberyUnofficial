@@ -21,24 +21,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.cachedIn
-import androidx.paging.map
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-
-private const val PAGE_SIZE = 20
 
 class FileListViewModel(
     getFileListInteractor: GetFileListInteractor,
@@ -46,35 +39,33 @@ class FileListViewModel(
     private val fileListArgs: FileListFragment.Args
 ) : ViewModel() {
 
+    private val paginatedListDelegate = PaginatedListViewModelDelegate(
+        viewModel = this,
+        loadPage = { offset: Int, pageSize: Int ->
+            getFileListInteractor
+                .execute(
+                    fileListArgs.entityTypeSchema,
+                    fileListArgs.parentEntityData,
+                    offset,
+                    pageSize
+                )
+        },
+        mapper = { file ->
+            FileListItem(
+                title = file.title,
+                fileData = file,
+            )
+        }
+    )
+
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
 
     private val mutableNavigation = MutableLiveData<Event<FileListNavEvent>>()
     val navigation: LiveData<Event<FileListNavEvent>> = mutableNavigation
 
-    private var dataSource: EntityListDataSource? = null
-    private val pager = Pager(
-        PagingConfig(
-            pageSize = PAGE_SIZE,
-            enablePlaceholders = false
-        )
-    ) {
-        EntityListDataSource(fileListArgs, getFileListInteractor)
-            .also { dataSource = it }
-    }
-
     val entityItems: Flow<PagingData<ListItem>>
-        get() = pager
-            .flow
-            .map {
-                it.map<FiberyFileData, ListItem> { file ->
-                    FileListItem(
-                        title = file.title,
-                        fileData = file,
-                    )
-                }
-            }
-            .cachedIn(viewModelScope)
+        get() = paginatedListDelegate.items
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
@@ -95,40 +86,5 @@ class FileListViewModel(
 
     fun onError(error: Exception) {
         mutableError.postValue(Event(error))
-    }
-}
-
-private class EntityListDataSource(
-    private val entityListArgs: FileListFragment.Args,
-    private val getFileListInteractor: GetFileListInteractor
-) : PagingSource<Int, FiberyFileData>() {
-
-    private suspend fun loadPage(offset: Int, pageSize: Int): LoadResult<Int, FiberyFileData> {
-        return try {
-            val pageData = getFileListInteractor
-                .execute(
-                    entityListArgs.entityTypeSchema,
-                    entityListArgs.parentEntityData,
-                    offset,
-                    pageSize
-                )
-            LoadResult.Page(
-                data = pageData,
-                prevKey = null,
-                nextKey = if (pageData.size == pageSize) offset + pageSize else null
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
-    }
-
-    override suspend fun load(
-        params: LoadParams<Int>
-    ): LoadResult<Int, FiberyFileData> {
-        return when (params) {
-            is LoadParams.Refresh -> loadPage(0, params.loadSize)
-            is LoadParams.Append -> loadPage(params.key, params.loadSize)
-            is LoadParams.Prepend -> LoadResult.Error(UnsupportedOperationException())
-        }
     }
 }

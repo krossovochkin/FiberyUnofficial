@@ -21,15 +21,14 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
-import kotlinx.coroutines.launch
 
 class EntityTypeListViewModel(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
@@ -37,38 +36,31 @@ class EntityTypeListViewModel(
     private val resProvider: ResProvider
 ) : ViewModel() {
 
-    private val mutableEntityTypeItems = MutableLiveData<List<ListItem>>()
-    val entityTypeItems: LiveData<List<ListItem>> = mutableEntityTypeItems
-
     private val mutableProgress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = mutableProgress
 
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
 
+    private val listDelegate = ListViewModelDelegate(
+        viewModel = this,
+        mutableProgress = mutableProgress,
+        mutableError = mutableError,
+        load = {
+            getEntityTypeListInteractor.execute(args.fiberyAppData)
+                .map { entityType ->
+                    EntityTypeListItem(
+                        title = entityType.displayName,
+                        badgeBgColor = ColorUtils.getColor(entityType.meta.uiColorHex),
+                        entityTypeData = entityType
+                    )
+                }
+        }
+    )
+    val entityTypeItems: LiveData<List<ListItem>> = listDelegate.items
+
     private val mutableNavigation = MutableLiveData<Event<EntityTypeListNavEvent>>()
     val navigation: LiveData<Event<EntityTypeListNavEvent>> = mutableNavigation
-
-    init {
-        viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                mutableEntityTypeItems.value =
-                    getEntityTypeListInteractor.execute(args.fiberyAppData)
-                        .map { entityType ->
-                            EntityTypeListItem(
-                                title = entityType.displayName,
-                                badgeBgColor = ColorUtils.getColor(entityType.meta.uiColorHex),
-                                entityTypeData = entityType
-                            )
-                        }
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
-        }
-    }
 
     fun select(item: ListItem, itemView: View) {
         if (item is EntityTypeListItem) {

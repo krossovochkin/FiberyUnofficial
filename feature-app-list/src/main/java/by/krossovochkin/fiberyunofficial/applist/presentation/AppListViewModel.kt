@@ -21,22 +21,18 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
-import kotlinx.coroutines.launch
+import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
 
 class AppListViewModel(
     private val getAppListInteractor: GetAppListInteractor,
     private val resProvider: ResProvider
 ) : ViewModel() {
-
-    private val mutableAppItems = MutableLiveData<List<ListItem>>()
-    val appItems: LiveData<List<ListItem>> = mutableAppItems
 
     private val mutableProgress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = mutableProgress
@@ -44,27 +40,24 @@ class AppListViewModel(
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
 
+    private val listDelegate = ListViewModelDelegate(
+        viewModel = this,
+        mutableProgress = mutableProgress,
+        mutableError = mutableError,
+        load = {
+            getAppListInteractor.execute()
+                .map { app ->
+                    AppListItem(
+                        title = app.name,
+                        appData = app
+                    )
+                }
+        }
+    )
+    val appItems: LiveData<List<ListItem>> = listDelegate.items
+
     private val mutableNavigation = MutableLiveData<Event<AppListNavEvent>>()
     val navigation: LiveData<Event<AppListNavEvent>> = mutableNavigation
-
-    init {
-        viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                mutableAppItems.value = getAppListInteractor.execute()
-                    .map { app ->
-                        AppListItem(
-                            title = app.name,
-                            appData = app
-                        )
-                    }
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
-        }
-    }
 
     fun select(item: ListItem, itemView: View) {
         if (item is AppListItem) {

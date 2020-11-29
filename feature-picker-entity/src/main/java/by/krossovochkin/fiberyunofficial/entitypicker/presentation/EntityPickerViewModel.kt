@@ -20,26 +20,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.cachedIn
-import androidx.paging.map
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import by.krossovochkin.fiberyunofficial.entitypicker.R
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import by.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-
-private const val PAGE_SIZE = 20
 
 class EntityPickerViewModel(
     private val getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
@@ -47,6 +40,25 @@ class EntityPickerViewModel(
     private val entityCreateInteractor: EntityCreateInteractor,
     private val entityPickerArgs: EntityPickerFragment.Args
 ) : ViewModel() {
+
+    private val paginatedListDelegate = PaginatedListViewModelDelegate(
+        viewModel = this,
+        loadPage = { offset: Int, pageSize: Int ->
+            getEntityListInteractor
+                .execute(
+                    entityPickerArgs.parentEntityData,
+                    offset,
+                    pageSize,
+                    mutableSearchQuery.value.orEmpty()
+                )
+        },
+        mapper = { entity ->
+            EntityPickerItem(
+                title = entity.title,
+                entityData = entity
+            )
+        }
+    )
 
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
@@ -59,29 +71,8 @@ class EntityPickerViewModel(
     private val mutableCreateButtonEnabledState = MutableLiveData(false)
     val entityCreateEnabled: LiveData<Boolean> = mutableCreateButtonEnabledState
 
-    private var dataSource: EntityPickerDataSource? = null
-    private val pager = Pager(
-        PagingConfig(
-            pageSize = PAGE_SIZE,
-            enablePlaceholders = false
-        )
-    ) {
-        EntityPickerDataSource(entityPickerArgs, getEntityListInteractor, mutableSearchQuery)
-            .also { dataSource = it }
-    }
-
     val entityItems: Flow<PagingData<ListItem>>
-        get() = pager
-            .flow
-            .map {
-                it.map<FiberyEntityData, ListItem> { entity ->
-                    EntityPickerItem(
-                        title = entity.title,
-                        entityData = entity
-                    )
-                }
-            }
-            .cachedIn(viewModelScope)
+        get() = paginatedListDelegate.items
 
     private val mutableToolbarViewState = MutableLiveData<ToolbarViewState>()
     val toolbarViewState: LiveData<ToolbarViewState> = mutableToolbarViewState
@@ -117,7 +108,7 @@ class EntityPickerViewModel(
     fun onSearchQueryChanged(query: String) {
         mutableSearchQuery.value = query
         mutableCreateButtonEnabledState.value = query.isNotEmpty()
-        dataSource?.invalidate()
+        paginatedListDelegate.invalidate()
     }
 
     fun createEntity() {
@@ -148,39 +139,5 @@ class EntityPickerViewModel(
                 )
             )
         )
-    }
-}
-
-private class EntityPickerDataSource(
-    private val entityListArgs: EntityPickerFragment.Args,
-    private val getEntityListInteractor: GetEntityListInteractor,
-    private val searchQuery: LiveData<String>
-) : PagingSource<Int, FiberyEntityData>() {
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FiberyEntityData> {
-        return when (params) {
-            is LoadParams.Refresh -> loadPage(0, params.loadSize)
-            is LoadParams.Append -> loadPage(params.key, params.loadSize)
-            is LoadParams.Prepend -> LoadResult.Error(UnsupportedOperationException())
-        }
-    }
-
-    private suspend fun loadPage(offset: Int, pageSize: Int): LoadResult<Int, FiberyEntityData> {
-        return try {
-            val pageData = getEntityListInteractor
-                .execute(
-                    entityListArgs.parentEntityData,
-                    offset,
-                    pageSize,
-                    searchQuery.value.orEmpty()
-                )
-            LoadResult.Page(
-                data = pageData,
-                prevKey = null,
-                nextKey = if (pageData.size == pageSize) offset + pageSize else null
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
     }
 }

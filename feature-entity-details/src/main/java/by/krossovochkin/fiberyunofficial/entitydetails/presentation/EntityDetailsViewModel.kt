@@ -20,7 +20,6 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -31,13 +30,14 @@ import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
+import by.krossovochkin.fiberyunofficial.core.presentation.load
 import by.krossovochkin.fiberyunofficial.entitydetails.R
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
-import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
@@ -52,14 +52,22 @@ class EntityDetailsViewModel(
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModel() {
 
-    private val mutableEntityDetailsItems = MutableLiveData<List<ListItem>>()
-    val items: LiveData<List<ListItem>> = mutableEntityDetailsItems
-
     private val mutableProgress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = mutableProgress
 
     private val mutableError = MutableLiveData<Event<Exception>>()
     val error: LiveData<Event<Exception>> = mutableError
+
+    private val listDelegate = ListViewModelDelegate(
+        viewModel = this,
+        mutableProgress = mutableProgress,
+        mutableError = mutableError,
+        load = {
+            mapItems(getEntityDetailsInteractor.execute(entityDetailsArgs.entityData))
+        }
+    )
+
+    val items: LiveData<List<ListItem>> = listDelegate.items
 
     private val mutableNavigation = MutableLiveData<Event<EntityDetailsNavEvent>>()
     val navigation: LiveData<Event<EntityDetailsNavEvent>> = mutableNavigation
@@ -71,25 +79,6 @@ class EntityDetailsViewModel(
             menuResId = R.menu.entity_details_menu,
             hasBackButton = true
         )
-
-    init {
-        viewModelScope.launch {
-            load()
-        }
-    }
-
-    private suspend fun load() {
-        try {
-            mutableProgress.value = true
-            val entityData = getEntityDetailsInteractor.execute(entityDetailsArgs.entityData)
-
-            mutableEntityDetailsItems.value = mapItems(entityData)
-        } catch (e: Exception) {
-            mutableError.value = Event(e)
-        } finally {
-            mutableProgress.value = false
-        }
-    }
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
         val fields = entityData.fields.flatMap { field ->
@@ -339,22 +328,18 @@ class EntityDetailsViewModel(
         if (selectedValue == null) {
             return
         }
-        viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                updateSingleSelectFieldInteractor.execute(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
-                    ),
-                    singleSelectItem = selectedValue
-                )
-                load()
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
+        load(
+            mutableProgress = mutableProgress,
+            mutableError = mutableError
+        ) {
+            updateSingleSelectFieldInteractor.execute(
+                parentEntityData = ParentEntityData(
+                    fieldSchema = fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
+                singleSelectItem = selectedValue
+            )
+            listDelegate.invalidate()
         }
     }
 
@@ -373,23 +358,19 @@ class EntityDetailsViewModel(
     fun updateMultiSelectField(
         data: MultiSelectPickedViewModel.MultiSelectPickedData
     ) {
-        viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                updateMultiSelectFieldInteractor.execute(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = data.fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
-                    ),
-                    addedItems = data.addedItems,
-                    removedItems = data.removedItems
-                )
-                load()
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
+        load(
+            mutableProgress = mutableProgress,
+            mutableError = mutableError
+        ) {
+            updateMultiSelectFieldInteractor.execute(
+                parentEntityData = ParentEntityData(
+                    fieldSchema = data.fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
+                addedItems = data.addedItems,
+                removedItems = data.removedItems
+            )
+            listDelegate.invalidate()
         }
     }
 
@@ -413,22 +394,18 @@ class EntityDetailsViewModel(
     }
 
     fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
-        viewModelScope.launch {
-            try {
-                mutableProgress.value = true
-                updateEntityFieldInteractor.execute(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
-                    ),
-                    selectedEntity = entity
-                )
-                load()
-            } catch (e: Exception) {
-                mutableError.value = Event(e)
-            } finally {
-                mutableProgress.value = false
-            }
+        load(
+            mutableProgress = mutableProgress,
+            mutableError = mutableError
+        ) {
+            updateEntityFieldInteractor.execute(
+                parentEntityData = ParentEntityData(
+                    fieldSchema = fieldSchema,
+                    parentEntity = entityDetailsArgs.entityData
+                ),
+                selectedEntity = entity
+            )
+            listDelegate.invalidate()
         }
     }
 
@@ -462,16 +439,12 @@ class EntityDetailsViewModel(
     }
 
     fun deleteEntity() {
-        viewModelScope.launch {
-            try {
-                mutableProgress.postValue(true)
-                deleteEntityInteractor.execute(entityDetailsArgs.entityData)
-                onBackPressed()
-            } catch (e: Exception) {
-                mutableError.postValue(Event(e))
-            } finally {
-                mutableProgress.postValue(false)
-            }
+        load(
+            mutableProgress = mutableProgress,
+            mutableError = mutableError
+        ) {
+            deleteEntityInteractor.execute(entityDetailsArgs.entityData)
+            onBackPressed()
         }
     }
 }

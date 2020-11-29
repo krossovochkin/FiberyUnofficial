@@ -93,7 +93,10 @@ class PickerFilterFragment(
                     binding.spinner.setup(
                         items = item.fields.map { it.displayName }
                     ) { position ->
-                        viewModel.onFieldSelected(adapterPosition, item.fields.getOrNull(position))
+                        viewModel.onFieldSelected(
+                            absoluteAdapterPosition,
+                            item.fields.getOrNull(position)
+                        )
                     }
                 }
                 onViewRecycled { binding.spinner.recycle() }
@@ -109,7 +112,7 @@ class PickerFilterFragment(
                         selectedItem = item.field.displayName
                     ) { position ->
                         viewModel.onFieldSelected(
-                            adapterPosition,
+                            absoluteAdapterPosition,
                             item.fields.getOrNull(position)
                         )
                     }
@@ -119,7 +122,7 @@ class PickerFilterFragment(
                         selectedItem = item.condition?.displayText
                     ) { position ->
                         viewModel.onConditionSelected(
-                            adapterPosition,
+                            absoluteAdapterPosition,
                             item.conditions.getOrNull(position)
                         )
                     }
@@ -129,7 +132,7 @@ class PickerFilterFragment(
                         selectedItem = item.selectedValue?.title
                     ) { position ->
                         viewModel.onSingleSelectValueSelected(
-                            adapterPosition,
+                            absoluteAdapterPosition,
                             item.values.getOrNull(position)
                         )
                     }
