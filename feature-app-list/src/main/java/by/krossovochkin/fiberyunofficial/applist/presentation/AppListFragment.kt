@@ -73,7 +73,7 @@ class AppListFragment(
                     itemView.setOnClickListener { viewModel.select(item, itemView) }
                     binding.appTitleTextView.text = item.title
                     itemView.transitionName = requireContext()
-                        .getString(R.string.app_list_list_transition_name, adapterPosition)
+                        .getString(R.string.app_list_list_transition_name, absoluteAdapterPosition)
                 }
             }
         )

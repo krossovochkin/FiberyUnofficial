@@ -156,7 +156,10 @@ class EntityListFragment(
                     }
 
                     itemView.transitionName = requireContext()
-                        .getString(R.string.entity_list_list_transition_name, adapterPosition)
+                        .getString(
+                            R.string.entity_list_list_transition_name,
+                            absoluteAdapterPosition
+                        )
                 }
             },
             onError = viewModel::onError

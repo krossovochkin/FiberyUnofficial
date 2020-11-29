@@ -275,7 +275,10 @@ class EntityDetailsFragment(
                     }
                     binding.fieldRelationDeleteAction.isVisible = item.isDeleteAvailable
                     itemView.transitionName = requireContext()
-                        .getString(R.string.entity_details_list_transition_name, adapterPosition)
+                        .getString(
+                            R.string.entity_details_list_transition_name,
+                            absoluteAdapterPosition
+                        )
                 }
             },
             adapterDelegateViewBinding<FieldCollectionItem, ListItem, EntityDetailsItemFieldCollectionBinding>(
@@ -295,7 +298,10 @@ class EntityDetailsFragment(
                         )
                     }
                     itemView.transitionName = requireContext()
-                        .getString(R.string.entity_details_list_transition_name, adapterPosition)
+                        .getString(
+                            R.string.entity_details_list_transition_name,
+                            absoluteAdapterPosition
+                        )
                 }
             },
             adapterDelegateViewBinding<FieldCheckboxItem, ListItem, EntityDetailsItemFieldCheckboxBinding>(

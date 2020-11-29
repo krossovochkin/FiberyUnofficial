@@ -91,7 +91,10 @@ class EntityTypeListFragment(
                         ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
                     )
                     itemView.transitionName = requireContext()
-                        .getString(R.string.entity_type_list_list_transition_name, adapterPosition)
+                        .getString(
+                            R.string.entity_type_list_list_transition_name,
+                            absoluteAdapterPosition
+                        )
                 }
             }
         )
