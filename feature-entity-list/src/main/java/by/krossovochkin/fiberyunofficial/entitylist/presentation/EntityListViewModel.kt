@@ -207,4 +207,3 @@ class EntityListViewModel(
         mutableError.postValue(Event(error))
     }
 }
-

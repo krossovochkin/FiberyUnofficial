@@ -99,21 +99,31 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityDetails -> {
-                val entityType = entityTypeSchema.name
-                if (entityType == FiberyApiConstants.Type.FILE.value) {
-                    EntityDetailsFragmentDirections.actionEntityDetailsToFileListFragment(
-                        entityType = entityTypeSchema,
-                        parentEntityData = parentEntityData
-                    ) to FragmentNavigatorExtras(
-                        itemView to getString(R.string.file_list_root_transition_name)
-                    )
-                } else {
-                    EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
-                        entityType = entityTypeSchema,
-                        parentEntityData = parentEntityData
-                    ) to FragmentNavigatorExtras(
-                        itemView to getString(R.string.entity_list_root_transition_name)
-                    )
+                when (entityTypeSchema.name) {
+                    FiberyApiConstants.Type.FILE.value -> {
+                        EntityDetailsFragmentDirections.actionEntityDetailsToFileListFragment(
+                            entityType = entityTypeSchema,
+                            parentEntityData = parentEntityData
+                        ) to FragmentNavigatorExtras(
+                            itemView to getString(R.string.file_list_root_transition_name)
+                        )
+                    }
+                    FiberyApiConstants.Type.COMMENT.value -> {
+                        EntityDetailsFragmentDirections.actionEntityDetailsToCommentListFragment(
+                            entityType = entityTypeSchema,
+                            parentEntityData = parentEntityData
+                        ) to FragmentNavigatorExtras(
+                            itemView to getString(R.string.comment_list_root_transition_name)
+                        )
+                    }
+                    else -> {
+                        EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
+                            entityType = entityTypeSchema,
+                            parentEntityData = parentEntityData
+                        ) to FragmentNavigatorExtras(
+                            itemView to getString(R.string.entity_list_root_transition_name)
+                        )
+                    }
                 }
             }
             else -> error("Unknown current direction: $id")

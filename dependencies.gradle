@@ -106,6 +106,7 @@ d.app.feature_picker_single_select = project(":feature-picker-single-select")
 d.app.feature_picker_multi_select = project(":feature-picker-multi-select")
 d.app.feature_picker_filter = project(":feature-picker-filter")
 d.app.feature_file_list = project(":feature-file-list")
+d.app.feature_comment_list = project(":feature-comment-list")
 
 ext.v = v
 ext.d = d

@@ -86,7 +86,7 @@ data class FiberyFieldMetaData(
 }
 
 @Parcelize
-class FiberyEntityData(
+data class FiberyEntityData(
     val id: String,
     val publicId: String,
     val title: String,
@@ -94,10 +94,19 @@ class FiberyEntityData(
 ) : Parcelable
 
 @Parcelize
-class FiberyFileData(
+data class FiberyFileData(
     val id: String,
     val title: String,
     val secret: String,
+    val schema: FiberyEntityTypeSchema
+) : Parcelable
+
+@Parcelize
+data class FiberyCommentData(
+    val id: String,
+    val authorName: String,
+    val text: String,
+    val createDate: LocalDateTime,
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 

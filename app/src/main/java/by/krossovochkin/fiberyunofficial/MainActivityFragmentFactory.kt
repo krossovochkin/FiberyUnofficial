@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import by.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
 import by.krossovochkin.fiberyunofficial.di.applist.DaggerAppListComponent
+import by.krossovochkin.fiberyunofficial.di.commentlist.DaggerCommentListComponent
 import by.krossovochkin.fiberyunofficial.di.entitycreate.DaggerEntityCreateComponent
 import by.krossovochkin.fiberyunofficial.di.entitydetails.DaggerEntityDetailsComponent
 import by.krossovochkin.fiberyunofficial.di.entitylist.DaggerEntityListComponent
@@ -47,6 +48,8 @@ import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMu
 import by.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragmentArgs
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import by.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
+import com.krossovochkin.commentlist.presentation.CommentListFragment
+import com.krossovochkin.commentlist.presentation.CommentListFragmentArgs
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragmentArgs
 import com.krossovochkin.filelist.presentation.FileListFragment
@@ -90,6 +93,9 @@ class MainActivityFragmentFactory(
             }
             FileListFragment::class.java.canonicalName -> {
                 instantiateFileListFragment()
+            }
+            CommentListFragment::class.java.canonicalName -> {
+                instantiateCommentListFragment()
             }
             else -> return super.instantiate(classLoader, className)
         }
@@ -281,6 +287,26 @@ class MainActivityFragmentFactory(
                             val args = FileListFragmentArgs
                                 .fromBundle(argsExtractor.extract())
                             FileListFragment.Args(
+                                entityTypeSchema = args.entityType,
+                                parentEntityData = args.parentEntityData
+                            )
+                        }
+                    )
+                    .viewModelFactoryProducer()
+            )
+        }
+    }
+
+    private fun instantiateCommentListFragment(): Fragment {
+        return instantiate { argsExtractor ->
+            CommentListFragment(
+                factoryProducer = DaggerCommentListComponent.factory()
+                    .create(
+                        commentListParentComponent = mainActivityComponent,
+                        argsProvider = {
+                            val args = CommentListFragmentArgs
+                                .fromBundle(argsExtractor.extract())
+                            CommentListFragment.Args(
                                 entityTypeSchema = args.entityType,
                                 parentEntityData = args.parentEntityData
                             )

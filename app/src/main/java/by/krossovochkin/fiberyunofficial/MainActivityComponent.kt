@@ -18,6 +18,7 @@
 package by.krossovochkin.fiberyunofficial
 
 import by.krossovochkin.fiberyunofficial.di.applist.AppListParentComponent
+import by.krossovochkin.fiberyunofficial.di.commentlist.CommentListParentComponent
 import by.krossovochkin.fiberyunofficial.di.entitycreate.EntityCreateParentComponent
 import by.krossovochkin.fiberyunofficial.di.entitydetails.EntityDetailsParentComponent
 import by.krossovochkin.fiberyunofficial.di.entitylist.EntityListParentComponent
@@ -46,7 +47,8 @@ interface MainActivityComponent :
     PickerSingleSelectParentComponent,
     PickerMultiSelectParentComponent,
     PickerFilterParentComponent,
-    FileListParentComponent {
+    FileListParentComponent,
+    CommentListParentComponent {
 
     @Component.Factory
     interface Factory {

@@ -70,6 +70,7 @@ dependencies {
     implementation d.app.feature_picker_multi_select
     implementation d.app.feature_picker_filter
     implementation d.app.feature_file_list
+    implementation d.app.feature_comment_list
 
     implementation d.core.dagger
     kapt d.core.dagger_compiler

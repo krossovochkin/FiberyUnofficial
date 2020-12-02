@@ -77,6 +77,9 @@
         <action
             android:id="@+id/action_entityDetails_to_fileListFragment"
             app:destination="@id/fileListFragment" />
+        <action
+            android:id="@+id/action_entityDetails_to_commentListFragment"
+            app:destination="@id/commentListFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -148,6 +151,17 @@
         android:id="@+id/fileListFragment"
         android:name="com.krossovochkin.filelist.presentation.FileListFragment"
         android:label="FileListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentListFragment"
+        android:name="com.krossovochkin.commentlist.presentation.CommentListFragment"
+        android:label="CommentListFragment">
         <argument
             android:name="entityType"
             app:argType="by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema" />
