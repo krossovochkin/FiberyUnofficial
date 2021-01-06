@@ -19,8 +19,8 @@ package by.krossovochkin.fiberyunofficial.core.domain
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal

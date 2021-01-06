@@ -1,7 +1,18 @@
 android {
     lintOptions {
         abortOnError true
-        warningsAsErrors = true
-        setLintConfig(file("$rootDir/quality/lint.xml"))
+        warningsAsErrors true
+        xmlReport false
+        htmlReport true
+
+        disable = [
+                "ConvertToWebp",
+                "Overdraw",
+                "UnusedIds",
+                "SelectableText",
+                "UnusedResources",
+                "StopShip",
+                "DuplicateStrings"
+        ]
     }
 }

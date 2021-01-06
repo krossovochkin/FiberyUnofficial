@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply from: '../quality/quality.gradle'
+apply plugin: 'kotlin-parcelize'
+apply from: '../quality/lint.gradle'
 
 android {
     compileSdkVersion v.android.compileSdkVersion
@@ -36,8 +36,4 @@ android {
     buildFeatures {
         viewBinding = true
     }
-}
-
-androidExtensions {
-    features = ["parcelize"]
 }
