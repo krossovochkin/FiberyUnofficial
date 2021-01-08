@@ -17,4 +17,4 @@ jobs:
           VERSION_CODE=$(grep "v.android.versionCode = *" dependencies.gradle | sed 's/[^0-9]//g' | awk '{ sum = $1 + 1 }; END { print sum }')
           sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
           sed -i 's/v\.android\.versionName = "[0-9]*"/v\.android\.versionName = "${{ github.event.inputs.version }}"/' dependencies.gradle
-          echo grep "v.android.version" dependencies.gradle
+          grep "v.android.version" dependencies.gradle
