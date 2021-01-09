@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
       - name: Setup version
         run: |
           VERSION_CODE=$(grep "v.android.versionCode = *" dependencies.gradle | sed 's/[^0-9]//g' | awk '{ sum = $1 + 1 }; END { print sum }')
