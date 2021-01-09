@@ -18,3 +18,14 @@ jobs:
           sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
           sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
           grep "v.android.version" dependencies.gradle
+      - name: Prepare keystore
+        run: |
+          openssl base64 -d < ${{ secrets.RELEASE_KEY_STORE }} >> release-keystore-fibery-unofficial.jks
+      - name: Build Release APK
+        run: |
+          chmod +x gradlew
+          ./gradlew aRelease
+        env:
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
