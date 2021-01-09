@@ -20,7 +20,8 @@ jobs:
           grep "v.android.version" dependencies.gradle
       - name: Prepare keystore
         run: |
-          openssl base64 -d < "${{ secrets.RELEASE_KEY_STORE }}" >> release-keystore-fibery-unofficial.jks
+          echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
+          openssl base64 -d < keystore_base64.txt >> release-keystore-fibery-unofficial.jks
       - name: Build Release APK
         run: |
           chmod +x gradlew
