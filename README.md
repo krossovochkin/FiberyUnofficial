@@ -1,4 +1,4 @@
-<a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank"><img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> ![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases/tag/v0.13.0" target="_blank">![](https://img.shields.io/badge/version-0.13.0-yellow)</a>
+<img src="https://github.com/krossovochkin/FiberyUnofficial/blob/master/docs/app_icon.png?raw=true" width="50"/> <a href="https://github.com/krossovochkin/FiberyUnofficial/actions?query=workflow%3Apipeline" target="_blank">![](https://github.com/krossovochkin/FiberyUnofficial/workflows/pipeline/badge.svg)</a> <a href="https://github.com/krossovochkin/FiberyUnofficial/releases" target="_blank">![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/krossovochkin/FiberyUnofficial?color=yellow&include_prereleases&label=version&sort=semver)</a>
 
 # Fibery Unofficial
 Android companion application for [Fibery](https://fibery.io).<br>
