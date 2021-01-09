@@ -7,4 +7,4 @@ internal fun OkHttpClient.Builder.addDebugNetworkInterceptor(): OkHttpClient.Bui
     return this
 }
 
-fun Application.initDebugTools()
+fun Application.initDebugTools() = Unit

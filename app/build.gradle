@@ -8,6 +8,7 @@ apply from: '../quality/lint.gradle'
 android {
     compileSdkVersion v.android.compileSdkVersion
     buildToolsVersion v.android.buildToolsVersion
+
     defaultConfig {
         applicationId "by.krossovochkin.fiberyunofficial"
         minSdkVersion v.android.minSdkVersion
@@ -16,16 +17,31 @@ android {
         versionName v.android.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("$rootDir/release-keystore-fibery-unofficial.jks")
+            storePassword System.getenv()['RELEASE_STORE_PASSWORD']
+            keyAlias System.getenv()['RELEASE_KEY_ALIAS']
+            keyPassword System.getenv()['RELEASE_KEY_PASSWORD']
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
