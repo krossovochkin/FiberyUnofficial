@@ -23,12 +23,13 @@ jobs:
           VERSION_CODE=$(grep "v.android.versionCode = *" dependencies.gradle | sed 's/[^0-9]//g' | awk '{ sum = $1 + 1 }; END { print sum }')
           sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
           sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
-      #- name: Test
-      #  run: ./gradlew detektAll lintDebug testDebug
-      #- name: Push changes
-      #  uses: actions-js/push@master
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test
+        run: ./gradlew detektAll lintDebug testDebug
+      - name: Push changes
+        uses: actions-js/push@master
+        with:
+          message: v${{ github.event.inputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare keystore
         run: |
           echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
@@ -71,4 +72,4 @@ jobs:
           asset_name: fibery-unofficial-${{ github.event.inputs.version }}.apk
           asset_content_type: application/zip
       - name: Complete Release
-        run: echo "Complete release"
+        run: python scripts/complete_release.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }}
