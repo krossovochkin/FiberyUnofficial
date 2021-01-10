@@ -47,6 +47,8 @@ style:
     active: false
   OptionalWhenBraces:
     active: false
+  OptionalUnit:
+    active: false
   ReturnCount:
     active: false
 
