@@ -40,7 +40,7 @@ jobs:
      #     RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       - name: Generate release notes
         run: |
-          python scripts/generate_release_notes.py "${{ github.event.inputs.version }}" " ${{ secrets.FIBERY_API_KEY }}" >> release_notes.txt
+          python scripts/generate_release_notes.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }} >> release_notes.txt
           cat release_notes.txt
       - name: Create Release
         run: echo "Create release"
