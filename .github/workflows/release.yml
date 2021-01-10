@@ -31,12 +31,12 @@ jobs:
         run: |
           echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
           openssl base64 -d < keystore_base64.txt >> release-keystore-fibery-unofficial.jks
-     # - name: Build Release APK
-     #   run: ./gradlew aRelease
-     #   env:
-     #     RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
-     #     RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-     #     RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      - name: Build Release APK
+        run: ./gradlew aRelease
+        env:
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -48,6 +48,25 @@ jobs:
       - name: Generate release notes
         run: python scripts/generate_release_notes.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }} >> release_notes.txt
       - name: Create Release
-        run: echo "Create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          release_name: Version ${{ github.event.inputs.version }}
+          body_path: release_notes.txt
+          draft: true
+          prerelease: true
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./app/build/outputs/apk/release/app-release.apk
+          asset_name: fibery-unofficial-${{ github.event.inputs.version }}.apk
+          asset_content_type: application/zip
       - name: Complete Release
         run: echo "Complete release"
