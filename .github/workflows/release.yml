@@ -24,21 +24,23 @@ jobs:
           sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
           sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
           grep "v.android.version" dependencies.gradle
-      - name: Test
-        run: ./gradlew detektAll lintDebug testDebug
+     # - name: Test
+     #   run: ./gradlew detektAll lintDebug testDebug
       - name: Push changes
         run: echo "TODO push changes to master"
       - name: Prepare keystore
         run: |
           echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
           openssl base64 -d < keystore_base64.txt >> release-keystore-fibery-unofficial.jks
-      - name: Build Release APK
-        run: ./gradlew aRelease
-        env:
-          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
-          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-      - name: Query release notes
-        run: echo "Query release notes"
+     # - name: Build Release APK
+     #   run: ./gradlew aRelease
+     #   env:
+     #     RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+     #     RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+     #     RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      - name: Generate release notes
+        run: |
+          python scripts/generate_release_notes.py "${{ github.event.inputs.version }}" " ${{ secrets.FIBERY_API_KEY }}" >> release_notes.txt
+          cat release_notes.txt
       - name: Create Release
         run: echo "Create release"
