@@ -38,6 +38,10 @@ jobs:
      #     RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
      #     RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
      #     RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
       - name: Generate release notes
         run: |
           python scripts/generate_release_notes.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }} >> release_notes.txt
