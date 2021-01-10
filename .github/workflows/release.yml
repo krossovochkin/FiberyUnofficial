@@ -23,7 +23,6 @@ jobs:
           VERSION_CODE=$(grep "v.android.versionCode = *" dependencies.gradle | sed 's/[^0-9]//g' | awk '{ sum = $1 + 1 }; END { print sum }')
           sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
           sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
-          grep "v.android.version" dependencies.gradle
      # - name: Test
      #   run: ./gradlew detektAll lintDebug testDebug
       - name: Push changes
@@ -47,8 +46,8 @@ jobs:
            python -m pip install --upgrade pip
            pip install requests
       - name: Generate release notes
-        run: |
-          python scripts/generate_release_notes.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }} >> release_notes.txt
-          cat release_notes.txt
+        run: python scripts/generate_release_notes.py ${{ github.event.inputs.version }} ${{ secrets.FIBERY_API_TOKEN }} >> release_notes.txt
       - name: Create Release
         run: echo "Create release"
+      - name: Complete Release
+        run: echo "Complete release"
