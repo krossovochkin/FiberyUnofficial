@@ -35,5 +35,3 @@ release_id = r[0]["result"][0]["fibery/id"]
 data = '''[{"command":"fibery.entity/update","args":{"type":"FiberyUnofficial/Release","entity":{"FiberyUnofficial/Released":true,"fibery/id":"{id}"}}}]'''
 data = data.replace("{id}", release_id)
 response = requests.post('https://krossovochkin.fibery.io/api/commands', headers=headers, data=data).content
-
-print(response)
