@@ -51,6 +51,8 @@ style:
     active: false
   ReturnCount:
     active: false
+  UseDataClass:
+    active: false
 
 potential-bugs:
   LateinitUsage:

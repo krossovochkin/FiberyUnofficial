@@ -1,21 +1,18 @@
 package by.krossovochkin.fiberyunofficial.core.presentation.common
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.load
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class ListViewModelDelegate(
     private val viewModel: ViewModel,
-    private val mutableProgress: MutableLiveData<Boolean>,
-    private val mutableError: MutableLiveData<Event<Exception>>,
+    private val progress: MutableStateFlow<Boolean>,
+    private val errorChannel: Channel<Exception>,
     private val load: suspend () -> List<ListItem>
 ) {
-
-    private val mutableItems = MutableLiveData<List<ListItem>>()
-    val items: LiveData<List<ListItem>> = mutableItems
+    val items = MutableStateFlow(emptyList<ListItem>())
 
     init {
         loadInternal()
@@ -23,10 +20,10 @@ class ListViewModelDelegate(
 
     private fun loadInternal() {
         viewModel.load(
-            mutableProgress = mutableProgress,
-            mutableError = mutableError
+            progress = progress,
+            error = errorChannel
         ) {
-            mutableItems.value = load()
+            items.value = load()
         }
     }
 

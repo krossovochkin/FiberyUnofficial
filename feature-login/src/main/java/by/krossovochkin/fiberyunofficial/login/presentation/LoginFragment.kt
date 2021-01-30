@@ -23,6 +23,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import by.krossovochkin.fiberyunofficial.core.presentation.collect
 import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.login.R
@@ -51,8 +52,8 @@ class LoginFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.navigation.observe(viewLifecycleOwner) { event ->
-            when (event.getContentIfNotHandled()) {
+        viewModel.navigation.collect(this) { event ->
+            when (event) {
                 is LoginNavEvent.OnLoginSuccessEvent -> {
                     parentListener.onLoginSuccess()
                 }

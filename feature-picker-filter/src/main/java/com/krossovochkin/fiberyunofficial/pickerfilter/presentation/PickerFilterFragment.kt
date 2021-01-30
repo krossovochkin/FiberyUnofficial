@@ -24,7 +24,6 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
@@ -39,6 +38,7 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemEmptyBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerFilterFragment(
     factoryProvider: () -> PickerFilterViewModelFactory
@@ -77,13 +77,13 @@ class PickerFilterFragment(
 
         initToolbar(
             toolbar = binding.pickerFilterToolbar,
-            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
             onBackPressed = { viewModel.onBackPressed() }
         )
 
         initRecyclerView(
             recyclerView = binding.recyclerView,
-            itemsLiveData = viewModel.items,
+            itemsFlow = viewModel.items,
             adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
                 viewBinding = { inflater, parent ->
                     PickerFilterItemEmptyBinding.inflate(inflater, parent, false)

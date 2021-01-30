@@ -38,10 +38,10 @@ class EntityListViewModelFactory(
     private val resProvider: ResProvider,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass == EntityListViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            EntityListViewModel(
+        return when (modelClass) {
+            EntityListViewModel::class.java -> EntityListViewModelImpl(
                 getEntityListInteractor,
                 setEntityListFilterInteractor,
                 setEntityListSortInteractor,
@@ -52,8 +52,9 @@ class EntityListViewModelFactory(
                 resProvider,
                 entityListArgs
             ) as T
-        } else {
-            throw IllegalArgumentException()
+            EntityCreatedViewModel::class.java -> EntityCreatedViewModel() as T
+            FilterPickedViewModel::class.java -> FilterPickedViewModel() as T
+            else -> throw IllegalArgumentException()
         }
     }
 }

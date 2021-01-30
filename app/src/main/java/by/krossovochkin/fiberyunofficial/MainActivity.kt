@@ -36,12 +36,16 @@ import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedData
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedData
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedViewModel
+import by.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedData
 import by.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedData
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedViewModel
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
+import by.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedData
 import by.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedViewModel
 import by.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import by.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
@@ -191,7 +195,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         createdEntity: FiberyEntityData
     ) {
         ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-            .createEntity(EntityCreatedData(createdEntity = createdEntity))
+            .send(EntityCreatedData(createdEntity = createdEntity))
         onBackPressed()
     }
 
@@ -221,10 +225,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                 error("Can't add null entity to collection")
             }
             ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-                .createEntity(EntityCreatedData(createdEntity = entity))
+                .send(EntityCreatedData(createdEntity = entity))
         } else {
             ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
-                .pickEntity(parentEntityData, entity)
+                .send(EntityPickedData(parentEntityData, entity))
         }
         onBackPressed()
     }
@@ -247,7 +251,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         item: FieldData.EnumItemData
     ) {
         ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
-            .pickSingleSelect(fieldSchema, item)
+            .send(SingleSelectPickedData(fieldSchema, item))
         onBackPressed()
     }
 
@@ -270,7 +274,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         removedItems: List<FieldData.EnumItemData>
     ) {
         ViewModelProvider(this@MainActivity).get<MultiSelectPickedViewModel>()
-            .pickMultiSelect(fieldSchema, addedItems, removedItems)
+            .send(MultiSelectPickedData(fieldSchema, addedItems, removedItems))
         onBackPressed()
     }
 
@@ -295,7 +299,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onFilterSelected(filter: String, params: String) {
         ViewModelProvider(this@MainActivity).get<FilterPickedViewModel>()
-            .pickFilter(filter = filter, params = params)
+            .send(FilterPickedData(filter = filter, params = params))
         onBackPressed()
     }
 }

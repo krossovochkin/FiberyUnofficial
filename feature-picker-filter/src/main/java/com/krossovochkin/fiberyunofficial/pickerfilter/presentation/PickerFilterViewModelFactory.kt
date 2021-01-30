@@ -33,7 +33,7 @@ class PickerFilterViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == PickerFilterViewModel::class.java) {
-            PickerFilterViewModel(
+            PickerFilterViewModelImpl(
                 pickerFilterArgs = pickerFilterArgs,
                 fiberyApiRepository = fiberyApiRepository,
                 resProvider = resProvider,

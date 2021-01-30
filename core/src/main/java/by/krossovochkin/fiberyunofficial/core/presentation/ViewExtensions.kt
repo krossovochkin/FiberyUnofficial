@@ -43,7 +43,6 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -66,13 +65,13 @@ const val SEARCH_QUERY_DEBOUNCE_MILLIS = 300L
 
 inline fun Fragment.initToolbar(
     toolbar: Toolbar,
-    toolbarData: LiveData<ToolbarViewState>,
+    toolbarData: Flow<ToolbarViewState>,
     crossinline onBackPressed: () -> Unit = {},
     crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false },
     crossinline onSearchQueryChanged: (String) -> Unit = {},
     crossinline onToolbarUpdated: () -> Unit = {}
 ) {
-    toolbarData.observe(viewLifecycleOwner) {
+    toolbarData.collect(this) {
         toolbar.initToolbar(
             activity = requireActivity(),
             state = it,
@@ -86,16 +85,16 @@ inline fun Fragment.initToolbar(
 
 fun Fragment.initProgressBar(
     progressBar: View,
-    progressVisibleData: LiveData<Boolean>
+    progressVisibleData: Flow<Boolean>
 ) {
-    progressVisibleData.observe(viewLifecycleOwner) {
+    progressVisibleData.collect(this) {
         progressBar.isVisible = it
     }
 }
 
 fun <T : ListItem> Fragment.initRecyclerView(
     recyclerView: RecyclerView,
-    itemsLiveData: LiveData<List<T>>,
+    itemsFlow: Flow<List<T>>,
     vararg adapterDelegates: AdapterDelegate<List<T>>,
     itemDecoration: RecyclerView.ItemDecoration = DividerItemDecoration(context, VERTICAL)
 ) {
@@ -106,7 +105,7 @@ fun <T : ListItem> Fragment.initRecyclerView(
     recyclerView.addItemDecoration(itemDecoration)
     recyclerView.updateInsetPaddings(bottom = true)
 
-    itemsLiveData.observe(viewLifecycleOwner) {
+    itemsFlow.collect(this) {
         adapter.items = it
         adapter.notifyDataSetChanged()
     }
@@ -148,23 +147,21 @@ inline fun <T : ListItem> Fragment.initPaginatedRecyclerView(
 }
 
 fun Fragment.initErrorHandler(
-    errorData: LiveData<Event<Exception>>
+    errorData: Flow<Exception>
 ) {
-    errorData.observe(viewLifecycleOwner) { event ->
-        event.getContentIfNotHandled()?.let { error ->
-            Snackbar
-                .make(
-                    requireView(),
-                    error.message ?: getString(R.string.unknown_error),
-                    Snackbar.LENGTH_SHORT
-                )
-                .show()
-        }
+    errorData.collect(this) { error ->
+        Snackbar
+            .make(
+                requireView(),
+                error.message ?: getString(R.string.unknown_error),
+                Snackbar.LENGTH_SHORT
+            )
+            .show()
     }
 }
 
-inline fun <T> Fragment.initNavigation(
-    navigationData: LiveData<Event<T>>,
+inline fun <reified T> Fragment.initNavigation(
+    navigationData: Flow<T>,
     transitionName: String? = null,
     crossinline onEvent: (T) -> Unit
 ) {
@@ -172,11 +169,10 @@ inline fun <T> Fragment.initNavigation(
 
     transitionName?.let { requireView().transitionName = it }
 
-    navigationData.observe(viewLifecycleOwner) { event: Event<T> ->
-        val navEvent = event.getContentIfNotHandled()
-        if (navEvent != null) {
+    navigationData.collect(this) { event ->
+        if (event != null) {
             setupTransformExitTransition()
-            onEvent(navEvent)
+            onEvent(event)
         }
     }
 }

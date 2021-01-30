@@ -17,27 +17,43 @@
 
 package com.krossovochkin.filelist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class FileListViewModel(
+abstract class FileListViewModel : ViewModel() {
+
+    abstract val error: Flow<Exception>
+
+    abstract val navigation: Flow<FileListNavEvent>
+
+    abstract val entityItems: Flow<PagingData<ListItem>>
+
+    abstract val toolbarViewState: ToolbarViewState
+
+    abstract fun downloadFile(fileData: FiberyFileData)
+
+    abstract fun onBackPressed()
+
+    abstract fun onError(error: Exception)
+}
+
+internal class FileListViewModelImpl(
     getFileListInteractor: GetFileListInteractor,
     private val downloadFileInteractor: DownloadFileInteractor,
     private val fileListArgs: FileListFragment.Args
-) : ViewModel() {
+) : FileListViewModel() {
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -58,33 +74,38 @@ class FileListViewModel(
         }
     )
 
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
+    private val errorChannel = Channel<Exception>(Channel.BUFFERED)
+    override val error: Flow<Exception>
+        get() = errorChannel.receiveAsFlow()
+    private val navigationChannel = Channel<FileListNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<FileListNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
-    private val mutableNavigation = MutableLiveData<Event<FileListNavEvent>>()
-    val navigation: LiveData<Event<FileListNavEvent>> = mutableNavigation
-
-    val entityItems: Flow<PagingData<ListItem>>
+    override val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    val toolbarViewState: ToolbarViewState
+    override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = fileListArgs.parentEntityData.fieldSchema.displayName,
             bgColorInt = ColorUtils.getColor(fileListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 
-    fun onBackPressed() {
-        mutableNavigation.value = Event(FileListNavEvent.BackEvent)
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            navigationChannel.send(FileListNavEvent.BackEvent)
+        }
     }
 
-    fun downloadFile(fileData: FiberyFileData) {
+    override fun downloadFile(fileData: FiberyFileData) {
         viewModelScope.launch {
             downloadFileInteractor.execute(fileData)
         }
     }
 
-    fun onError(error: Exception) {
-        mutableError.postValue(Event(error))
+    override fun onError(error: Exception) {
+        viewModelScope.launch {
+            this@FileListViewModelImpl.errorChannel.send(error)
+        }
     }
 }

@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
@@ -32,6 +31,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.updateInsetMargins
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import by.krossovochkin.fiberyunofficial.entitycreate.R
 import by.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityCreateFragment(
     factoryProducer: () -> EntityCreateViewModelFactory
@@ -67,7 +67,7 @@ class EntityCreateFragment(
 
         initToolbar(
             toolbar = binding.entityCreateToolbar,
-            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
             onBackPressed = { parentListener.onBackPressed() }
         )
 

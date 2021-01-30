@@ -17,9 +17,8 @@
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
@@ -27,7 +26,6 @@ import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
@@ -38,41 +36,93 @@ import by.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsIn
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import by.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import java.text.DecimalFormat
 
-class EntityDetailsViewModel(
+abstract class EntityDetailsViewModel : ViewModel() {
+
+    abstract val progress: Flow<Boolean>
+
+    abstract val error: Flow<Exception>
+
+    abstract val navigation: Flow<EntityDetailsNavEvent>
+
+    abstract val items: Flow<List<ListItem>>
+
+    abstract val toolbarViewState: ToolbarViewState
+
+    abstract fun selectSingleSelectField(item: FieldSingleSelectItem)
+
+    abstract fun updateSingleSelectField(
+        fieldSchema: FiberyFieldSchema,
+        selectedValue: FieldData.EnumItemData?
+    )
+
+    abstract fun selectMultiSelectField(item: FieldMultiSelectItem)
+
+    abstract fun updateMultiSelectField(data: MultiSelectPickedData)
+
+    abstract fun selectEntityField(
+        fieldSchema: FiberyFieldSchema,
+        entityData: FiberyEntityData?,
+        itemView: View
+    )
+
+    abstract fun openEntity(entityData: FiberyEntityData, itemView: View)
+
+    abstract fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?)
+
+    abstract fun selectCollectionField(
+        entityTypeSchema: FiberyEntityTypeSchema,
+        fieldSchema: FiberyFieldSchema,
+        itemView: View
+    )
+
+    abstract fun onBackPressed()
+
+    abstract fun selectUrl(item: FieldUrlItem)
+
+    abstract fun selectEmail(item: FieldEmailItem)
+
+    abstract fun deleteEntity()
+}
+
+internal class EntityDetailsViewModelImpl(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
-) : ViewModel() {
+) : EntityDetailsViewModel() {
 
-    private val mutableProgress = MutableLiveData<Boolean>()
-    val progress: LiveData<Boolean> = mutableProgress
-
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
+    override val progress = MutableStateFlow(false)
+    private val errorChannel = Channel<Exception>(Channel.BUFFERED)
+    override val error: Flow<Exception>
+        get() = errorChannel.receiveAsFlow()
+    private val navigationChannel = Channel<EntityDetailsNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<EntityDetailsNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
         viewModel = this,
-        mutableProgress = mutableProgress,
-        mutableError = mutableError,
+        progress = progress,
+        errorChannel = errorChannel,
         load = {
             mapItems(getEntityDetailsInteractor.execute(entityDetailsArgs.entityData))
         }
     )
 
-    val items: LiveData<List<ListItem>> = listDelegate.items
+    override val items = listDelegate.items
 
-    private val mutableNavigation = MutableLiveData<Event<EntityDetailsNavEvent>>()
-    val navigation: LiveData<Event<EntityDetailsNavEvent>> = mutableNavigation
-
-    val toolbarViewState: ToolbarViewState
+    override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
             bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex),
@@ -309,19 +359,21 @@ class EntityDetailsViewModel(
         )
     }
 
-    fun selectSingleSelectField(item: FieldSingleSelectItem) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = item.fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
-                ),
-                singleSelectItem = item.singleSelectData
+    override fun selectSingleSelectField(item: FieldSingleSelectItem) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = item.fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
+                    singleSelectItem = item.singleSelectData
+                )
             )
-        )
+        }
     }
 
-    fun updateSingleSelectField(
+    override fun updateSingleSelectField(
         fieldSchema: FiberyFieldSchema,
         selectedValue: FieldData.EnumItemData?
     ) {
@@ -329,8 +381,8 @@ class EntityDetailsViewModel(
             return
         }
         load(
-            mutableProgress = mutableProgress,
-            mutableError = mutableError
+            progress = progress,
+            error = errorChannel
         ) {
             updateSingleSelectFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
@@ -343,24 +395,24 @@ class EntityDetailsViewModel(
         }
     }
 
-    fun selectMultiSelectField(item: FieldMultiSelectItem) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = item.fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
-                ),
-                multiSelectItem = item.multiSelectData
+    override fun selectMultiSelectField(item: FieldMultiSelectItem) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = item.fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
+                    multiSelectItem = item.multiSelectData
+                )
             )
-        )
+        }
     }
 
-    fun updateMultiSelectField(
-        data: MultiSelectPickedViewModel.MultiSelectPickedData
-    ) {
+    override fun updateMultiSelectField(data: MultiSelectPickedData) {
         load(
-            mutableProgress = mutableProgress,
-            mutableError = mutableError
+            progress = progress,
+            error = errorChannel
         ) {
             updateMultiSelectFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
@@ -374,29 +426,37 @@ class EntityDetailsViewModel(
         }
     }
 
-    fun selectEntityField(fieldSchema: FiberyFieldSchema, entityData: FiberyEntityData?, itemView: View) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntityFieldEditEvent(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
-                ),
-                currentEntity = entityData,
-                itemView = itemView
+    override fun selectEntityField(
+        fieldSchema: FiberyFieldSchema,
+        entityData: FiberyEntityData?,
+        itemView: View
+    ) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OnEntityFieldEditEvent(
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
+                    currentEntity = entityData,
+                    itemView = itemView
+                )
             )
-        )
+        }
     }
 
-    fun openEntity(entityData: FiberyEntityData, itemView: View) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntitySelectedEvent(entityData, itemView)
-        )
+    override fun openEntity(entityData: FiberyEntityData, itemView: View) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OnEntitySelectedEvent(entityData, itemView)
+            )
+        }
     }
 
-    fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
+    override fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
         load(
-            mutableProgress = mutableProgress,
-            mutableError = mutableError
+            progress = progress,
+            error = errorChannel
         ) {
             updateEntityFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
@@ -409,39 +469,51 @@ class EntityDetailsViewModel(
         }
     }
 
-    fun selectCollectionField(
+    override fun selectCollectionField(
         entityTypeSchema: FiberyEntityTypeSchema,
         fieldSchema: FiberyFieldSchema,
         itemView: View
     ) {
-        mutableNavigation.value = Event(
-            EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
-                entityTypeSchema = entityTypeSchema,
-                parentEntityData = ParentEntityData(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
-                ),
-                itemView = itemView
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
+                    entityTypeSchema = entityTypeSchema,
+                    parentEntityData = ParentEntityData(
+                        fieldSchema = fieldSchema,
+                        parentEntity = entityDetailsArgs.entityData
+                    ),
+                    itemView = itemView
+                )
             )
-        )
+        }
     }
 
-    fun onBackPressed() {
-        mutableNavigation.value = Event(EntityDetailsNavEvent.BackEvent)
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            navigationChannel.send(EntityDetailsNavEvent.BackEvent)
+        }
     }
 
-    fun selectUrl(item: FieldUrlItem) {
-        mutableNavigation.value = Event(EntityDetailsNavEvent.OpenUrlEvent(url = item.url))
+    override fun selectUrl(item: FieldUrlItem) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.OpenUrlEvent(url = item.url)
+            )
+        }
     }
 
-    fun selectEmail(item: FieldEmailItem) {
-        mutableNavigation.value = Event(EntityDetailsNavEvent.SendEmailEvent(email = item.email))
+    override fun selectEmail(item: FieldEmailItem) {
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityDetailsNavEvent.SendEmailEvent(email = item.email)
+            )
+        }
     }
 
-    fun deleteEntity() {
+    override fun deleteEntity() {
         load(
-            mutableProgress = mutableProgress,
-            mutableError = mutableError
+            progress = progress,
+            error = errorChannel
         ) {
             deleteEntityInteractor.execute(entityDetailsArgs.entityData)
             onBackPressed()

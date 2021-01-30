@@ -18,32 +18,52 @@ package by.krossovochkin.fiberyunofficial.applist.presentation
 
 import android.content.Context
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
-class AppListViewModel(
+abstract class AppListViewModel : ViewModel() {
+
+    abstract val progress: Flow<Boolean>
+
+    abstract val error: Flow<Exception>
+
+    abstract val navigation: Flow<AppListNavEvent>
+
+    abstract val appItems: Flow<List<ListItem>>
+
+    abstract fun getToolbarViewState(context: Context): ToolbarViewState
+
+    abstract fun select(item: ListItem, itemView: View)
+}
+
+internal class AppListViewModelImpl(
     private val getAppListInteractor: GetAppListInteractor,
     private val resProvider: ResProvider
-) : ViewModel() {
+) : AppListViewModel() {
 
-    private val mutableProgress = MutableLiveData<Boolean>()
-    val progress: LiveData<Boolean> = mutableProgress
-
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
+    override val progress = MutableStateFlow(false)
+    private val errorChannel = Channel<Exception>(Channel.BUFFERED)
+    override val error
+        get() = errorChannel.receiveAsFlow()
+    private val navigationChannel = Channel<AppListNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<AppListNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
         viewModel = this,
-        mutableProgress = mutableProgress,
-        mutableError = mutableError,
+        progress = progress,
+        errorChannel = errorChannel,
         load = {
             getAppListInteractor.execute()
                 .map { app ->
@@ -54,22 +74,19 @@ class AppListViewModel(
                 }
         }
     )
-    val appItems: LiveData<List<ListItem>> = listDelegate.items
+    override val appItems: Flow<List<ListItem>> = listDelegate.items
 
-    private val mutableNavigation = MutableLiveData<Event<AppListNavEvent>>()
-    val navigation: LiveData<Event<AppListNavEvent>> = mutableNavigation
-
-    fun select(item: ListItem, itemView: View) {
+    override fun select(item: ListItem, itemView: View) {
         if (item is AppListItem) {
-            mutableNavigation.value = Event(
-                AppListNavEvent.OnAppSelectedEvent(item.appData, itemView)
-            )
+            viewModelScope.launch {
+                navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
+            }
         } else {
             throw IllegalArgumentException()
         }
     }
 
-    fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
+    override fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
         title = resProvider.getString(R.string.app_list_title),
         bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
     )

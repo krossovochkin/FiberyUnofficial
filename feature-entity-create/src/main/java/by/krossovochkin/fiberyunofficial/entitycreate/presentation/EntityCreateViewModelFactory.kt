@@ -30,7 +30,7 @@ class EntityCreateViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == EntityCreateViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
-            EntityCreateViewModel(
+            EntityCreateViewModelImpl(
                 entityCreateArgs,
                 entityCreateInteractor,
                 resProvider

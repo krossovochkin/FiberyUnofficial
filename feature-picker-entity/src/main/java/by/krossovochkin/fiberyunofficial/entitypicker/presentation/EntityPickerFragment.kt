@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.DiffUtil
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.collect
 import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
@@ -109,7 +110,7 @@ class EntityPickerFragment(
 
         initErrorHandler(viewModel.error)
 
-        viewModel.entityCreateEnabled.observe(viewLifecycleOwner) { isEnabled ->
+        viewModel.entityCreateEnabled.collect(this) { isEnabled ->
             binding.entityCreateAction.isEnabled = isEnabled
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }

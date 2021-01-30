@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.applist.R
 import by.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import by.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
@@ -34,6 +33,7 @@ import by.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import by.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import by.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class AppListFragment(
     factoryProducer: () -> AppListViewModelFactory
@@ -60,12 +60,12 @@ class AppListFragment(
 
         initToolbar(
             toolbar = binding.appListToolbar,
-            toolbarData = MutableLiveData(viewModel.getToolbarViewState(requireContext()))
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext()))
         )
 
         initRecyclerView(
             recyclerView = binding.appListRecyclerView,
-            itemsLiveData = viewModel.appItems,
+            itemsFlow = viewModel.appItems,
             adapterDelegateViewBinding<AppListItem, ListItem, AppListItemBinding>(
                 viewBinding = { inflater, parent -> AppListItemBinding.inflate(inflater, parent, false) }
             ) {

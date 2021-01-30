@@ -28,7 +28,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
@@ -36,6 +35,7 @@ import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.OffsetItemDecoration
+import by.krossovochkin.fiberyunofficial.core.presentation.collect
 import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import by.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
@@ -58,6 +58,7 @@ import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetails
 import by.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldUrlBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import io.noties.markwon.Markwon
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityDetailsFragment(
     factoryProducer: () -> EntityDetailsViewModelFactory,
@@ -70,9 +71,15 @@ class EntityDetailsFragment(
 
     private val parentListener: ParentListener by parentListener()
 
-    private val entityPickedViewModel: EntityPickedViewModel by activityViewModels()
-    private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels()
-    private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels()
+    private val entityPickedViewModel: EntityPickedViewModel by activityViewModels {
+        factoryProducer()
+    }
+    private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels {
+        factoryProducer()
+    }
+    private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels {
+        factoryProducer()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,7 +151,7 @@ class EntityDetailsFragment(
 
         initToolbar(
             toolbar = binding.entityDetailsToolbar,
-            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
             onBackPressed = { viewModel.onBackPressed() },
             onMenuItemClicked = { menuId ->
                 if (menuId.itemId == R.id.action_delete) {
@@ -158,7 +165,7 @@ class EntityDetailsFragment(
 
         initRecyclerView(
             recyclerView = binding.entityDetailsRecyclerView,
-            itemsLiveData = viewModel.items,
+            itemsFlow = viewModel.items,
             adapterDelegateViewBinding<FieldHeaderItem, ListItem, EntityDetailsItemFieldHeaderBinding>(
                 viewBinding = { inflater, parent ->
                     EntityDetailsItemFieldHeaderBinding.inflate(inflater, parent, false)
@@ -325,20 +332,14 @@ class EntityDetailsFragment(
 
         initErrorHandler(viewModel.error)
 
-        entityPickedViewModel.pickedEntity.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { (parentEntityData, entity) ->
-                viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
-            }
+        entityPickedViewModel.observe.collect(this) { (parentEntityData, entity) ->
+            viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
         }
-        singleSelectPickedViewModel.pickedSingleSelect.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { (fieldSchema, item) ->
-                viewModel.updateSingleSelectField(fieldSchema, item)
-            }
+        singleSelectPickedViewModel.observe.collect(this) { (fieldSchema, item) ->
+            viewModel.updateSingleSelectField(fieldSchema, item)
         }
-        multiSelectPickedViewModel.pickedMultiSelect.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { data ->
-                viewModel.updateMultiSelectField(data)
-            }
+        multiSelectPickedViewModel.observe.collect(this) { data ->
+            viewModel.updateMultiSelectField(data)
         }
     }
 

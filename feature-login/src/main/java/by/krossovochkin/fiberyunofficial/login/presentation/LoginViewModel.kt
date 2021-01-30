@@ -16,29 +16,45 @@
  */
 package by.krossovochkin.fiberyunofficial.login.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
-class LoginViewModel(
+abstract class LoginViewModel : ViewModel() {
+
+    abstract val navigation: Flow<LoginNavEvent>
+
+    abstract fun login(account: String, token: String)
+}
+
+class LoginViewModelImpl(
     private val loginInteractor: LoginInteractor
-) : ViewModel() {
+) : LoginViewModel() {
 
-    private val mutableNavigation = MutableLiveData<Event<LoginNavEvent>>()
-    val navigation: LiveData<Event<LoginNavEvent>> = mutableNavigation
+    private val navigationChannel = Channel<LoginNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<LoginNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
     init {
         if (loginInteractor.isLoggedIn()) {
-            mutableNavigation.value = Event(LoginNavEvent.OnLoginSuccessEvent)
+            onLoginSuccess()
         }
     }
 
-    fun login(account: String, token: String) {
+    override fun login(account: String, token: String) {
         val isSuccessful = loginInteractor.login(account, token)
         if (isSuccessful) {
-            mutableNavigation.value = Event(LoginNavEvent.OnLoginSuccessEvent)
+            onLoginSuccess()
+        }
+    }
+
+    private fun onLoginSuccess() {
+        viewModelScope.launch {
+            navigationChannel.send(LoginNavEvent.OnLoginSuccessEvent)
         }
     }
 }

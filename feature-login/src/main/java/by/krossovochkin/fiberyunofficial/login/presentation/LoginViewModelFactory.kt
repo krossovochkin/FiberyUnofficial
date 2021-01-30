@@ -27,7 +27,7 @@ class LoginViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == LoginViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
-            LoginViewModel(
+            LoginViewModelImpl(
                 loginInteractor
             ) as T
         } else {

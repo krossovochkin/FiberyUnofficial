@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
@@ -38,6 +37,7 @@ import com.krossovochkin.commentlist.R
 import com.krossovochkin.commentlist.databinding.CommentListFragmentBinding
 import com.krossovochkin.commentlist.databinding.CommentListItemBinding
 import io.noties.markwon.Markwon
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class CommentListFragment(
     factoryProducer: () -> CommentListViewModelFactory
@@ -68,7 +68,7 @@ class CommentListFragment(
 
         initToolbar(
             toolbar = binding.commentListToolbar,
-            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
             onBackPressed = { viewModel.onBackPressed() }
         )
 

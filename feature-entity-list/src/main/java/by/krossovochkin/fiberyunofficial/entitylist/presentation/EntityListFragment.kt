@@ -25,13 +25,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import by.krossovochkin.fiberyunofficial.core.presentation.collect
 import by.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import by.krossovochkin.fiberyunofficial.core.presentation.initFab
 import by.krossovochkin.fiberyunofficial.core.presentation.initNavigation
@@ -45,6 +45,7 @@ import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListDialog
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListItemBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityListFragment(
     factoryProvider: () -> EntityListViewModelFactory
@@ -54,11 +55,15 @@ class EntityListFragment(
 
     private val binding by viewBinding(EntityListFragmentBinding::bind)
 
-    private val entityCreatedViewModel by activityViewModels<EntityCreatedViewModel>()
+    private val entityCreatedViewModel: EntityCreatedViewModel by activityViewModels {
+        factoryProvider()
+    }
+
+    private val filterPickedViewModel: FilterPickedViewModel by activityViewModels {
+        factoryProvider()
+    }
 
     private val parentListener: ParentListener by parentListener()
-
-    private val filterPickedViewModel: FilterPickedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +104,7 @@ class EntityListFragment(
         var filterView: View? = null
         initToolbar(
             toolbar = binding.entityListToolbar,
-            toolbarData = MutableLiveData(viewModel.toolbarViewState),
+            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
             onBackPressed = { viewModel.onBackPressed() },
             onMenuItemClicked = { item ->
                 when (item.itemId) {
@@ -176,16 +181,12 @@ class EntityListFragment(
 
         initErrorHandler(viewModel.error)
 
-        filterPickedViewModel.pickedFilterSelect.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                viewModel.onFilterSelected(filter = it.filter, params = it.params)
-            }
+        filterPickedViewModel.observe.collect(this) {
+            viewModel.onFilterSelected(filter = it.filter, params = it.params)
         }
 
-        entityCreatedViewModel.createdEntityId.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                viewModel.onEntityCreated(createdEntity = it.createdEntity)
-            }
+        entityCreatedViewModel.observe.collect(this) {
+            viewModel.onEntityCreated(createdEntity = it.createdEntity)
         }
     }
 

@@ -32,7 +32,7 @@ class EntityPickerViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == EntityPickerViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
-            EntityPickerViewModel(
+            EntityPickerViewModelImpl(
                 getEntityTypeSchemaInteractor,
                 getEntityListInteractor,
                 entityCreateInteractor,

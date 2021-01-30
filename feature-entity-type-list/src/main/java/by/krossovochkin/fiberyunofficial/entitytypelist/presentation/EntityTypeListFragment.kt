@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
@@ -37,6 +36,7 @@ import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import by.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityTypeListFragment(
     factoryProducer: () -> EntityTypeListViewModelFactory
@@ -72,13 +72,13 @@ class EntityTypeListFragment(
 
         initToolbar(
             toolbar = binding.entityTypeListToolbar,
-            toolbarData = MutableLiveData(viewModel.getToolbarViewState(requireContext())),
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext())),
             onBackPressed = { viewModel.onBackPressed() }
         )
 
         initRecyclerView(
             recyclerView = binding.entityTypeListRecyclerView,
-            itemsLiveData = viewModel.entityTypeItems,
+            itemsFlow = viewModel.entityTypeItems,
             adapterDelegateViewBinding<EntityTypeListItem, ListItem, EntityTypeListItemBinding>(
                 viewBinding = { inflater, parent ->
                     EntityTypeListItemBinding.inflate(inflater, parent, false)

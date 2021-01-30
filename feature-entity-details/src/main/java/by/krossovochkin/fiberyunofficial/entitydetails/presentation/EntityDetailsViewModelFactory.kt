@@ -32,10 +32,10 @@ class EntityDetailsViewModelFactory(
     private val deleteEntityInteractor: DeleteEntityInteractor,
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return if (modelClass == EntityDetailsViewModel::class.java) {
-            EntityDetailsViewModel(
+        return when (modelClass) {
+            EntityDetailsViewModel::class.java -> EntityDetailsViewModelImpl(
                 getEntityDetailsInteractor,
                 updateSingleSelectFieldInteractor,
                 updateMultiSelectFieldInteractor,
@@ -43,8 +43,10 @@ class EntityDetailsViewModelFactory(
                 deleteEntityInteractor,
                 entityDetailsArgs
             ) as T
-        } else {
-            throw IllegalArgumentException()
+            EntityPickedViewModel::class.java -> EntityPickedViewModel() as T
+            SingleSelectPickedViewModel::class.java -> SingleSelectPickedViewModel() as T
+            MultiSelectPickedViewModel::class.java -> MultiSelectPickedViewModel() as T
+            else -> throw IllegalArgumentException()
         }
     }
 }

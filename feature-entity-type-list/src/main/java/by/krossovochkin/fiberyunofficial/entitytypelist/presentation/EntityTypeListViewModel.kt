@@ -18,34 +18,56 @@ package by.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.content.Context
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
 import by.krossovochkin.fiberyunofficial.entitytypelist.R
 import by.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
-class EntityTypeListViewModel(
+abstract class EntityTypeListViewModel : ViewModel() {
+
+    abstract val progress: Flow<Boolean>
+
+    abstract val error: Flow<Exception>
+
+    abstract val navigation: Flow<EntityTypeListNavEvent>
+
+    abstract val entityTypeItems: Flow<List<ListItem>>
+
+    abstract fun getToolbarViewState(context: Context): ToolbarViewState
+
+    abstract fun select(item: ListItem, itemView: View)
+
+    abstract fun onBackPressed()
+}
+
+internal class EntityTypeListViewModelImpl(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
     private val args: EntityTypeListFragment.Args,
     private val resProvider: ResProvider
-) : ViewModel() {
+) : EntityTypeListViewModel() {
 
-    private val mutableProgress = MutableLiveData<Boolean>()
-    val progress: LiveData<Boolean> = mutableProgress
-
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
+    override val progress = MutableStateFlow(false)
+    private val errorChannel = Channel<Exception>(Channel.BUFFERED)
+    override val error: Flow<Exception>
+        get() = errorChannel.receiveAsFlow()
+    private val navigationChannel = Channel<EntityTypeListNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<EntityTypeListNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
         viewModel = this,
-        mutableProgress = mutableProgress,
-        mutableError = mutableError,
+        progress = progress,
+        errorChannel = errorChannel,
         load = {
             getEntityTypeListInteractor.execute(args.fiberyAppData)
                 .map { entityType ->
@@ -57,26 +79,27 @@ class EntityTypeListViewModel(
                 }
         }
     )
-    val entityTypeItems: LiveData<List<ListItem>> = listDelegate.items
+    override val entityTypeItems = listDelegate.items
 
-    private val mutableNavigation = MutableLiveData<Event<EntityTypeListNavEvent>>()
-    val navigation: LiveData<Event<EntityTypeListNavEvent>> = mutableNavigation
-
-    fun select(item: ListItem, itemView: View) {
+    override fun select(item: ListItem, itemView: View) {
         if (item is EntityTypeListItem) {
-            mutableNavigation.value = Event(
-                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
-            )
+            viewModelScope.launch {
+                navigationChannel.send(
+                    EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
+                )
+            }
         } else {
             throw IllegalArgumentException()
         }
     }
 
-    fun onBackPressed() {
-        mutableNavigation.value = Event(EntityTypeListNavEvent.BackEvent)
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            navigationChannel.send(EntityTypeListNavEvent.BackEvent)
+        }
     }
 
-    fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
+    override fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
         title = resProvider.getString(R.string.entity_type_list_title),
         bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary),
         hasBackButton = true

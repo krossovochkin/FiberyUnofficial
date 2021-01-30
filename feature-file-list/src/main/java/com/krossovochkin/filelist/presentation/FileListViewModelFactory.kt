@@ -29,7 +29,7 @@ class FileListViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == FileListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
-            FileListViewModel(
+            FileListViewModelImpl(
                 getFileListInteractor,
                 downloadFileInteractor,
                 fileListArgs

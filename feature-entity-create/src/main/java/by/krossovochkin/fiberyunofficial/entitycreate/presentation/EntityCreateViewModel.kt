@@ -16,31 +16,43 @@
  */
 package by.krossovochkin.fiberyunofficial.entitycreate.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
 import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import by.krossovochkin.fiberyunofficial.entitycreate.R
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class EntityCreateViewModel(
+abstract class EntityCreateViewModel : ViewModel() {
+
+    abstract val error: Flow<Exception>
+
+    abstract val navigation: Flow<EntityCreateNavEvent>
+
+    abstract val toolbarViewState: ToolbarViewState
+
+    abstract fun createEntity(name: String)
+}
+
+internal class EntityCreateViewModelImpl(
     private val entityCreateArgs: EntityCreateFragment.Args,
     private val entityCreateInteractor: EntityCreateInteractor,
     private val resProvider: ResProvider
-) : ViewModel() {
+) : EntityCreateViewModel() {
 
-    private val mutableNavigation = MutableLiveData<Event<EntityCreateNavEvent>>()
-    val navigation: LiveData<Event<EntityCreateNavEvent>> = mutableNavigation
+    private val errorChannel = Channel<Exception>(Channel.BUFFERED)
+    override val error: Flow<Exception>
+        get() = errorChannel.receiveAsFlow()
+    private val navigationChannel = Channel<EntityCreateNavEvent>(Channel.BUFFERED)
+    override val navigation: Flow<EntityCreateNavEvent>
+        get() = navigationChannel.receiveAsFlow()
 
-    private val mutableError = MutableLiveData<Event<Exception>>()
-    val error: LiveData<Event<Exception>> = mutableError
-
-    val toolbarViewState: ToolbarViewState
+    override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = resProvider.getString(
                 R.string.entity_create_toolbar_title,
@@ -50,20 +62,18 @@ class EntityCreateViewModel(
             hasBackButton = true
         )
 
-    fun createEntity(name: String) {
+    override fun createEntity(name: String) {
         viewModelScope.launch {
             try {
                 val createdEntity = entityCreateInteractor
                     .execute(entityCreateArgs.entityTypeSchema, name)
-                mutableNavigation.postValue(
-                    Event(
-                        EntityCreateNavEvent.OnEntityCreateSuccessEvent(
-                            createdEntity = createdEntity
-                        )
+                navigationChannel.send(
+                    EntityCreateNavEvent.OnEntityCreateSuccessEvent(
+                        createdEntity = createdEntity
                     )
                 )
             } catch (e: Exception) {
-                mutableError.postValue(Event(e))
+                errorChannel.send(e)
             }
         }
     }

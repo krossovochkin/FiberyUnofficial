@@ -17,30 +17,11 @@
 
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
 
-class FilterPickedViewModel : ViewModel() {
+class FilterPickedViewModel : BaseCallbackViewModel<FilterPickedData>()
 
-    private val mutablePickedFilterSelect = MutableLiveData<Event<FilterPickedData>>()
-    val pickedFilterSelect: LiveData<Event<FilterPickedData>> = mutablePickedFilterSelect
-
-    fun pickFilter(
-        filter: String,
-        params: String
-    ) {
-        mutablePickedFilterSelect.value = Event(
-            FilterPickedData(
-                filter = filter,
-                params = params
-            )
-        )
-    }
-
-    data class FilterPickedData(
-        val filter: String,
-        val params: String
-    )
-}
+data class FilterPickedData(
+    val filter: String,
+    val params: String
+)

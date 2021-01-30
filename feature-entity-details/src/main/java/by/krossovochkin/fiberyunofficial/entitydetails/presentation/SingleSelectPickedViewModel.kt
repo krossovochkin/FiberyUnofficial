@@ -16,21 +16,13 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
 
-class SingleSelectPickedViewModel : ViewModel() {
+class SingleSelectPickedViewModel : BaseCallbackViewModel<SingleSelectPickedData>()
 
-    private val mutablePickedSingleSelect =
-        MutableLiveData<Event<Pair<FiberyFieldSchema, FieldData.EnumItemData?>>>()
-    val pickedSingleSelect: LiveData<Event<Pair<FiberyFieldSchema, FieldData.EnumItemData?>>> =
-        mutablePickedSingleSelect
-
-    fun pickSingleSelect(fieldSchema: FiberyFieldSchema, enumItemData: FieldData.EnumItemData?) {
-        mutablePickedSingleSelect.value = Event(fieldSchema to enumItemData)
-    }
-}
+data class SingleSelectPickedData(
+    val fieldSchema: FiberyFieldSchema,
+    val selectedItem: FieldData.EnumItemData?
+)

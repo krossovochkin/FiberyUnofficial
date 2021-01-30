@@ -16,21 +16,10 @@
  */
 package by.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
 
-class EntityCreatedViewModel : ViewModel() {
-
-    private val mutableCreatedEntityId = MutableLiveData<Event<EntityCreatedData>>()
-    val createdEntityId: LiveData<Event<EntityCreatedData>> = mutableCreatedEntityId
-
-    fun createEntity(data: EntityCreatedData) {
-        mutableCreatedEntityId.value = Event(data)
-    }
-}
+class EntityCreatedViewModel : BaseCallbackViewModel<EntityCreatedData>()
 
 data class EntityCreatedData(
     val createdEntity: FiberyEntityData

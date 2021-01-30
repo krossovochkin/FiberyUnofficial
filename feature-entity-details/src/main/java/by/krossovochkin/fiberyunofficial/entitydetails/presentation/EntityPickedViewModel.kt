@@ -16,21 +16,13 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
 import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
 
-class EntityPickedViewModel : ViewModel() {
+class EntityPickedViewModel : BaseCallbackViewModel<EntityPickedData>()
 
-    private val mutablePickedEntity =
-        MutableLiveData<Event<Pair<ParentEntityData, FiberyEntityData?>>>()
-    val pickedEntity: LiveData<Event<Pair<ParentEntityData, FiberyEntityData?>>> =
-        mutablePickedEntity
-
-    fun pickEntity(parentEntityData: ParentEntityData, entityData: FiberyEntityData?) {
-        mutablePickedEntity.value = Event(parentEntityData to entityData)
-    }
-}
+data class EntityPickedData(
+    val parentEntity: ParentEntityData,
+    val entityData: FiberyEntityData?
+)

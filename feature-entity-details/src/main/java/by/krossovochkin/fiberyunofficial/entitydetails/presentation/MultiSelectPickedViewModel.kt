@@ -16,35 +16,14 @@
  */
 package by.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import by.krossovochkin.fiberyunofficial.core.domain.FieldData
-import by.krossovochkin.fiberyunofficial.core.presentation.Event
+import by.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
 
-class MultiSelectPickedViewModel : ViewModel() {
+class MultiSelectPickedViewModel : BaseCallbackViewModel<MultiSelectPickedData>()
 
-    private val mutablePickedMultiSelect = MutableLiveData<Event<MultiSelectPickedData>>()
-    val pickedMultiSelect: LiveData<Event<MultiSelectPickedData>> = mutablePickedMultiSelect
-
-    fun pickMultiSelect(
-        fieldSchema: FiberyFieldSchema,
-        addedItems: List<FieldData.EnumItemData>,
-        removedItems: List<FieldData.EnumItemData>
-    ) {
-        mutablePickedMultiSelect.value = Event(
-            MultiSelectPickedData(
-                fieldSchema = fieldSchema,
-                addedItems = addedItems,
-                removedItems = removedItems
-            )
-        )
-    }
-
-    data class MultiSelectPickedData(
-        val fieldSchema: FiberyFieldSchema,
-        val addedItems: List<FieldData.EnumItemData>,
-        val removedItems: List<FieldData.EnumItemData>
-    )
-}
+data class MultiSelectPickedData(
+    val fieldSchema: FiberyFieldSchema,
+    val addedItems: List<FieldData.EnumItemData>,
+    val removedItems: List<FieldData.EnumItemData>
+)
