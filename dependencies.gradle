@@ -8,37 +8,36 @@ v.android.versionCode = 10
 v.android.versionName = "0.14.0"
 
 v.plugin = [:]
-v.plugin.gradle_android = '7.0.0-alpha04'
-v.plugin.r8 = "2.1.75"
+v.plugin.gradle_android = '7.0.0-alpha15'
 
 v.core = [:]
-v.core.kotlin = "1.4.21"
-v.core.dagger = "2.30.1"
-v.core.date_time = "1.3.0"
+v.core.kotlin = "1.5.0"
+v.core.dagger = "2.35.1"
+v.core.date_time = "1.3.1"
 
 v.androidx = [:]
-v.androidx.core = "1.5.0-alpha05"
-v.androidx.appcompat = "1.3.0-alpha02"
-v.androidx.activity = "1.2.0-beta02"
-v.androidx.fragment = "1.3.0-beta02"
-v.androidx.constraint_layout = "2.1.0-alpha1"
-v.androidx.navigation = "2.3.2"
-v.androidx.lifecycle = "2.3.0-beta01"
-v.androidx.paging = "3.0.0-alpha10"
+v.androidx.core = "1.6.0-alpha03"
+v.androidx.appcompat = "1.3.0-rc01"
+v.androidx.activity = "1.3.0-alpha07"
+v.androidx.fragment = "1.3.3"
+v.androidx.constraint_layout = "2.1.0-beta02"
+v.androidx.navigation = "2.3.5"
+v.androidx.lifecycle = "2.4.0-alpha01"
+v.androidx.paging = "3.0.0"
 v.androidx.security = "1.1.0-alpha03"
 
 v.network = [:]
 v.network.retrofit = "2.9.0"
-v.network.moshi = "1.11.0"
+v.network.moshi = "1.12.0"
 
 v.ui = [:]
-v.ui.material = "1.3.0-alpha04"
+v.ui.material = "1.4.0-beta01"
 v.ui.adapter_delegates = "4.3.0"
-v.ui.markwon = "4.6.0"
+v.ui.markwon = "4.6.2"
 
 v.debug = [:]
-v.debug.facebook_soloader = "0.9.0"
-v.debug.facebook_flipper = "0.69.0"
+v.debug.facebook_soloader = "0.10.0"
+v.debug.facebook_flipper = "0.87.0"
 
 v.test = [:]
 v.test.junit = "4.12"
@@ -47,7 +46,6 @@ v.test.espresso = "3.2.0"
 
 def d = [:]
 d.plugin = [:]
-d.plugin.r8 = "com.android.tools:r8:${v.plugin.r8}"
 d.plugin.gradle_android = "com.android.tools.build:gradle:${v.plugin.gradle_android}"
 d.plugin.gradle_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${v.core.kotlin}"
 d.plugin.navigation = "androidx.navigation:navigation-safe-args-gradle-plugin:${v.androidx.navigation}"

@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import androidx.paging.map
 import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
@@ -68,5 +69,9 @@ private class DataSource<ValueT : Any>(
             is LoadParams.Append -> loadPage(params.key, params.loadSize)
             is LoadParams.Prepend -> LoadResult.Error(UnsupportedOperationException())
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ValueT>): Int {
+        return 0
     }
 }
