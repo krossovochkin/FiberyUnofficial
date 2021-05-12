@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath d.plugin.gradle_android
@@ -13,10 +14,10 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.17.0-RC2"
+    id "io.gitlab.arturbosch.detekt" version "1.16.0"
 }
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.17.0-RC2"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0"
 }
 task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     failFast = true
@@ -39,6 +40,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 }
 
