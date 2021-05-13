@@ -6,13 +6,16 @@ android {
         htmlReport true
 
         disable = [
+                "UnknownIssueId",
                 "ConvertToWebp",
                 "Overdraw",
                 "UnusedIds",
                 "SelectableText",
                 "UnusedResources",
                 "StopShip",
-                "DuplicateStrings"
+                "DuplicateStrings",
+                "UnsafeExperimentalUsageError",
+                "UnsafeExperimentalUsageWarning"
         ]
     }
 }

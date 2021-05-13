@@ -46,6 +46,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -96,9 +97,19 @@ fun <T : ListItem> Fragment.initRecyclerView(
     recyclerView: RecyclerView,
     itemsFlow: Flow<List<T>>,
     vararg adapterDelegates: AdapterDelegate<List<T>>,
-    itemDecoration: RecyclerView.ItemDecoration = DividerItemDecoration(context, VERTICAL)
+    itemDecoration: RecyclerView.ItemDecoration = DividerItemDecoration(context, VERTICAL),
+    diffCallback: DiffUtil.ItemCallback<T> = object : DiffUtil.ItemCallback<T>() {
+        override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
+            return oldItem.equals(newItem)
+        }
+    },
 ) {
     val adapter = ListDelegationAdapter(*adapterDelegates)
+    val differ = AsyncListDiffer(adapter, diffCallback)
 
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = adapter
@@ -107,7 +118,7 @@ fun <T : ListItem> Fragment.initRecyclerView(
 
     itemsFlow.collect(this) {
         adapter.items = it
-        adapter.notifyDataSetChanged()
+        differ.submitList(it)
     }
 }
 
