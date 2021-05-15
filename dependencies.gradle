@@ -4,7 +4,7 @@ v.android.compileSdkVersion = 30
 v.android.buildToolsVersion = "30.0.2"
 v.android.minSdkVersion = 23
 v.android.targetSdkVersion = 30
-v.android.versionCode = 11
+v.android.versionCode = 12
 v.android.versionName = "0.15.0"
 
 v.plugin = [:]
