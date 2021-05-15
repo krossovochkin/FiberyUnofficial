@@ -66,6 +66,7 @@ d.androidx.constraint_layout = "androidx.constraintlayout:constraintlayout:${v.a
 d.androidx.navigation_fragment = "androidx.navigation:navigation-fragment-ktx:${v.androidx.navigation}"
 d.androidx.navigation_ui = "androidx.navigation:navigation-ui-ktx:${v.androidx.navigation}"
 d.androidx.lifecycle_viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${v.androidx.lifecycle}"
+d.androidx.lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${v.androidx.lifecycle}"
 d.androidx.paging = "androidx.paging:paging-runtime-ktx:${v.androidx.paging}"
 d.androidx.security = "androidx.security:security-crypto:${v.androidx.security}"
 
