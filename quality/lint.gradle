@@ -7,6 +7,10 @@ android {
 
         disable = [
                 "UnknownIssueId",
+                "ObsoleteLintCustomCheck",
+                "UnsafeExperimentalUsageError",
+                "UnsafeExperimentalUsageWarning",
+
                 "ConvertToWebp",
                 "Overdraw",
                 "UnusedIds",
@@ -14,8 +18,6 @@ android {
                 "UnusedResources",
                 "StopShip",
                 "DuplicateStrings",
-                "UnsafeExperimentalUsageError",
-                "UnsafeExperimentalUsageWarning"
         ]
     }
 }
