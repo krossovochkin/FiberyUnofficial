@@ -19,15 +19,15 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import by.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import by.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FieldData
-import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.core.presentation.ResProvider
-import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
+import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="by.krossovochkin.fiberyunofficial">
+    package="com.krossovochkin.fiberyunofficial">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".App"
+        android:name="com.krossovochkin.fiberyunofficial.App"
         android:allowBackup="false"
         android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
+            android:name="com.krossovochkin.fiberyunofficial.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

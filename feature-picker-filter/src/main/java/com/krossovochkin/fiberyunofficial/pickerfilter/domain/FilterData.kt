@@ -17,8 +17,8 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.domain
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.core.domain.FieldData
 
 data class FilterData(
     val items: List<FilterItemData>,

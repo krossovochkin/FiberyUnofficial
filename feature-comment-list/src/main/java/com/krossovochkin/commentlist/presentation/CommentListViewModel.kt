@@ -20,11 +20,11 @@ package com.krossovochkin.commentlist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import by.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import by.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
-import by.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import com.krossovochkin.commentlist.domain.GetCommentListInteractor
+import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
+import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow

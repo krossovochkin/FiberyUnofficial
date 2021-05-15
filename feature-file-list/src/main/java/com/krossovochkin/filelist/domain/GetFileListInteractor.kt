@@ -1,8 +1,8 @@
 package com.krossovochkin.filelist.domain
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
-import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
+import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface GetFileListInteractor {
 

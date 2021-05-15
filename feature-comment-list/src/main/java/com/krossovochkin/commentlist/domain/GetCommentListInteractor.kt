@@ -1,8 +1,8 @@
 package com.krossovochkin.commentlist.domain
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyCommentData
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import by.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyCommentData
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 
 interface GetCommentListInteractor {
 

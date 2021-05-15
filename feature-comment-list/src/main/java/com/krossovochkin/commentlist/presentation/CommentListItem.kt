@@ -1,7 +1,7 @@
 package com.krossovochkin.commentlist.presentation
 
-import by.krossovochkin.fiberyunofficial.core.domain.FiberyCommentData
-import by.krossovochkin.fiberyunofficial.core.presentation.ListItem
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyCommentData
+import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
 
 data class CommentListItem(
     val authorName: String,

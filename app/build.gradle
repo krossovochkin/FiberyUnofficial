@@ -10,7 +10,7 @@ android {
     buildToolsVersion v.android.buildToolsVersion
 
     defaultConfig {
-        applicationId "by.krossovochkin.fiberyunofficial"
+        applicationId "com.krossovochkin.fiberyunofficial"
         minSdkVersion v.android.minSdkVersion
         targetSdkVersion v.android.targetSdkVersion
         versionCode v.android.versionCode
