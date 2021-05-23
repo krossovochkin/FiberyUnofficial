@@ -16,13 +16,16 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
+import android.os.Parcelable
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.core.domain.FieldData
+import kotlinx.parcelize.Parcelize
 
-class EntityPickedViewModel : BaseCallbackViewModel<EntityPickedData>()
+const val RESULT_KEY_MULTI_SELECT_PICKED = "multi_select_picked"
 
-data class EntityPickedData(
-    val parentEntity: ParentEntityData,
-    val entityData: FiberyEntityData?
-)
+@Parcelize
+data class MultiSelectPickedData(
+    val fieldSchema: FiberyFieldSchema,
+    val addedItems: List<FieldData.EnumItemData>,
+    val removedItems: List<FieldData.EnumItemData>
+) : Parcelable

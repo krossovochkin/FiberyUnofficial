@@ -16,14 +16,15 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
+import android.os.Parcelable
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
+import kotlinx.parcelize.Parcelize
 
-class MultiSelectPickedViewModel : BaseCallbackViewModel<MultiSelectPickedData>()
+const val RESULT_KEY_SINGLE_SELECT_PICKED = "single_select_picked"
 
-data class MultiSelectPickedData(
+@Parcelize
+data class SingleSelectPickedData(
     val fieldSchema: FiberyFieldSchema,
-    val addedItems: List<FieldData.EnumItemData>,
-    val removedItems: List<FieldData.EnumItemData>
-)
+    val selectedItem: FieldData.EnumItemData?
+) : Parcelable

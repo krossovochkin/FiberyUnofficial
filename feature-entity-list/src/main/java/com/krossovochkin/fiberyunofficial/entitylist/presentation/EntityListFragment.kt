@@ -23,7 +23,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -32,7 +32,6 @@ import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import com.krossovochkin.fiberyunofficial.core.presentation.collect
 import com.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import com.krossovochkin.fiberyunofficial.core.presentation.initFab
 import com.krossovochkin.fiberyunofficial.core.presentation.initNavigation
@@ -40,6 +39,7 @@ import com.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecycle
 import com.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import com.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import com.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import com.krossovochkin.fiberyunofficial.core.presentation.toResultParcelable
 import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListDialogSortBinding
@@ -55,19 +55,20 @@ class EntityListFragment(
 
     private val binding by viewBinding(EntityListFragmentBinding::bind)
 
-    private val entityCreatedViewModel: EntityCreatedViewModel by activityViewModels {
-        factoryProvider()
-    }
-
-    private val filterPickedViewModel: FilterPickedViewModel by activityViewModels {
-        factoryProvider()
-    }
-
     private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTransformEnterTransition()
+
+        setFragmentResultListener(RESULT_KEY_FILTER_PICKED) { _, bundle ->
+            val data = bundle.toResultParcelable<FilterPickedData>()
+            viewModel.onFilterSelected(filter = data.filter, params = data.params)
+        }
+        setFragmentResultListener(RESULT_KEY_ENTITY_CREATED) { _, bundle ->
+            val data = bundle.toResultParcelable<EntityCreatedData>()
+            viewModel.onEntityCreated(createdEntity = data.createdEntity)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -180,14 +181,6 @@ class EntityListFragment(
         }
 
         initErrorHandler(viewModel.error)
-
-        filterPickedViewModel.observe.collect(this) {
-            viewModel.onFilterSelected(filter = it.filter, params = it.params)
-        }
-
-        entityCreatedViewModel.observe.collect(this) {
-            viewModel.onEntityCreated(createdEntity = it.createdEntity)
-        }
     }
 
     private fun showUpdateSortDialog(

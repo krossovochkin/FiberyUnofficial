@@ -14,15 +14,15 @@
    limitations under the License.
 
  */
-package com.krossovochkin.fiberyunofficial.entitydetails.presentation
+package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
+import android.os.Parcelable
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import kotlinx.parcelize.Parcelize
 
-class SingleSelectPickedViewModel : BaseCallbackViewModel<SingleSelectPickedData>()
+const val RESULT_KEY_ENTITY_CREATED = "entity_created"
 
-data class SingleSelectPickedData(
-    val fieldSchema: FiberyFieldSchema,
-    val selectedItem: FieldData.EnumItemData?
-)
+@Parcelize
+data class EntityCreatedData(
+    val createdEntity: FiberyEntityData
+) : Parcelable

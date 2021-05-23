@@ -26,7 +26,7 @@ import android.view.View
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
@@ -36,7 +36,6 @@ import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
 import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import com.krossovochkin.fiberyunofficial.core.presentation.OffsetItemDecoration
-import com.krossovochkin.fiberyunofficial.core.presentation.collect
 import com.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
 import com.krossovochkin.fiberyunofficial.core.presentation.initNavigation
 import com.krossovochkin.fiberyunofficial.core.presentation.initProgressBar
@@ -44,6 +43,7 @@ import com.krossovochkin.fiberyunofficial.core.presentation.initRecyclerView
 import com.krossovochkin.fiberyunofficial.core.presentation.initToolbar
 import com.krossovochkin.fiberyunofficial.core.presentation.parentListener
 import com.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
+import com.krossovochkin.fiberyunofficial.core.presentation.toResultParcelable
 import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.krossovochkin.fiberyunofficial.entitydetails.R
 import com.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsFragmentBinding
@@ -71,19 +71,22 @@ class EntityDetailsFragment(
 
     private val parentListener: ParentListener by parentListener()
 
-    private val entityPickedViewModel: EntityPickedViewModel by activityViewModels {
-        factoryProducer()
-    }
-    private val singleSelectPickedViewModel: SingleSelectPickedViewModel by activityViewModels {
-        factoryProducer()
-    }
-    private val multiSelectPickedViewModel: MultiSelectPickedViewModel by activityViewModels {
-        factoryProducer()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTransformEnterTransition()
+
+        setFragmentResultListener(RESULT_KEY_ENTITY_PICKED) { _, bundle ->
+            val (parentEntityData, entity) = bundle.toResultParcelable<EntityPickedData>()
+            viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
+        }
+        setFragmentResultListener(RESULT_KEY_SINGLE_SELECT_PICKED) { _, bundle ->
+            val (fieldSchema, item) = bundle.toResultParcelable<SingleSelectPickedData>()
+            viewModel.updateSingleSelectField(fieldSchema, item)
+        }
+        setFragmentResultListener(RESULT_KEY_MULTI_SELECT_PICKED) { _, bundle ->
+            val data = bundle.toResultParcelable<MultiSelectPickedData>()
+            viewModel.updateMultiSelectField(data)
+        }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -331,16 +334,6 @@ class EntityDetailsFragment(
         )
 
         initErrorHandler(viewModel.error)
-
-        entityPickedViewModel.observe.collect(this) { (parentEntityData, entity) ->
-            viewModel.updateEntityField(parentEntityData.fieldSchema, entity)
-        }
-        singleSelectPickedViewModel.observe.collect(this) { (fieldSchema, item) ->
-            viewModel.updateSingleSelectField(fieldSchema, item)
-        }
-        multiSelectPickedViewModel.observe.collect(this) { data ->
-            viewModel.updateMultiSelectField(data)
-        }
     }
 
     data class Args(

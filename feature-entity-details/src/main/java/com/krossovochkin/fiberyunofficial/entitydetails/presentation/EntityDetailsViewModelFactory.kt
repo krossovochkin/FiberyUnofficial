@@ -34,8 +34,8 @@ class EntityDetailsViewModelFactory(
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return when (modelClass) {
-            EntityDetailsViewModel::class.java -> EntityDetailsViewModelImpl(
+        return if (modelClass == EntityDetailsViewModel::class.java) {
+            EntityDetailsViewModelImpl(
                 getEntityDetailsInteractor,
                 updateSingleSelectFieldInteractor,
                 updateMultiSelectFieldInteractor,
@@ -43,10 +43,8 @@ class EntityDetailsViewModelFactory(
                 deleteEntityInteractor,
                 entityDetailsArgs
             ) as T
-            EntityPickedViewModel::class.java -> EntityPickedViewModel() as T
-            SingleSelectPickedViewModel::class.java -> SingleSelectPickedViewModel() as T
-            MultiSelectPickedViewModel::class.java -> MultiSelectPickedViewModel() as T
-            else -> throw IllegalArgumentException()
+        } else {
+            throw IllegalArgumentException()
         }
     }
 }

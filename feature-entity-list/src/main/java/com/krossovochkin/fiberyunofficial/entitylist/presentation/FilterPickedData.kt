@@ -14,13 +14,16 @@
    limitations under the License.
 
  */
+
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-class EntityCreatedViewModel : BaseCallbackViewModel<EntityCreatedData>()
+const val RESULT_KEY_FILTER_PICKED = "filter_picked"
 
-data class EntityCreatedData(
-    val createdEntity: FiberyEntityData
-)
+@Parcelize
+data class FilterPickedData(
+    val filter: String,
+    val params: String
+) : Parcelable

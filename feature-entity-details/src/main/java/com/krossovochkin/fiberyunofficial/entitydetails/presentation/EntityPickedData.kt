@@ -14,14 +14,17 @@
    limitations under the License.
 
  */
+package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-package com.krossovochkin.fiberyunofficial.entitylist.presentation
+import android.os.Parcelable
+import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import kotlinx.parcelize.Parcelize
 
-import com.krossovochkin.fiberyunofficial.core.presentation.BaseCallbackViewModel
+const val RESULT_KEY_ENTITY_PICKED = "entity_picked"
 
-class FilterPickedViewModel : BaseCallbackViewModel<FilterPickedData>()
-
-data class FilterPickedData(
-    val filter: String,
-    val params: String
-)
+@Parcelize
+data class EntityPickedData(
+    val parentEntity: ParentEntityData,
+    val entityData: FiberyEntityData?
+) : Parcelable

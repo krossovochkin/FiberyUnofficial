@@ -17,12 +17,11 @@
 package com.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
@@ -33,20 +32,21 @@ import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FieldData
 import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.core.presentation.toResultBundle
 import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedData
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedViewModel
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedData
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedViewModel
+import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_ENTITY_PICKED
+import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_MULTI_SELECT_PICKED
+import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_SINGLE_SELECT_PICKED
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedData
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedViewModel
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedData
-import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedViewModel
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedData
-import com.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedViewModel
+import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_ENTITY_CREATED
+import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_FILTER_PICKED
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
 
@@ -194,8 +194,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onEntityCreateSuccess(
         createdEntity: FiberyEntityData
     ) {
-        ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-            .send(EntityCreatedData(createdEntity = createdEntity))
+        setFragmentResult(
+            RESULT_KEY_ENTITY_CREATED,
+            EntityCreatedData(createdEntity = createdEntity)
+        )
         onBackPressed()
     }
 
@@ -224,11 +226,15 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             if (entity == null) {
                 error("Can't add null entity to collection")
             }
-            ViewModelProvider(this@MainActivity).get<EntityCreatedViewModel>()
-                .send(EntityCreatedData(createdEntity = entity))
+            setFragmentResult(
+                RESULT_KEY_ENTITY_CREATED,
+                EntityCreatedData(createdEntity = entity)
+            )
         } else {
-            ViewModelProvider(this@MainActivity).get<EntityPickedViewModel>()
-                .send(EntityPickedData(parentEntityData, entity))
+            setFragmentResult(
+                RESULT_KEY_ENTITY_PICKED,
+                EntityPickedData(parentEntityData, entity)
+            )
         }
         onBackPressed()
     }
@@ -250,8 +256,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         fieldSchema: FiberyFieldSchema,
         item: FieldData.EnumItemData
     ) {
-        ViewModelProvider(this@MainActivity).get<SingleSelectPickedViewModel>()
-            .send(SingleSelectPickedData(fieldSchema, item))
+        setFragmentResult(
+            RESULT_KEY_SINGLE_SELECT_PICKED,
+            SingleSelectPickedData(fieldSchema, item)
+        )
         onBackPressed()
     }
 
@@ -273,8 +281,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
     ) {
-        ViewModelProvider(this@MainActivity).get<MultiSelectPickedViewModel>()
-            .send(MultiSelectPickedData(fieldSchema, addedItems, removedItems))
+        setFragmentResult(
+            RESULT_KEY_MULTI_SELECT_PICKED,
+            MultiSelectPickedData(fieldSchema, addedItems, removedItems)
+        )
         onBackPressed()
     }
 
@@ -298,8 +308,18 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     }
 
     override fun onFilterSelected(filter: String, params: String) {
-        ViewModelProvider(this@MainActivity).get<FilterPickedViewModel>()
-            .send(FilterPickedData(filter = filter, params = params))
+        setFragmentResult(
+            RESULT_KEY_FILTER_PICKED,
+            FilterPickedData(filter = filter, params = params)
+        )
         onBackPressed()
+    }
+
+    private fun setFragmentResult(requestKey: String, result: Parcelable) {
+        supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
+            .childFragmentManager.setFragmentResult(
+                requestKey,
+                result.toResultBundle()
+            )
     }
 }
