@@ -98,9 +98,7 @@ class PickerFilterViewModelImpl(
 
     override fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
         if (field == null) {
-            if (position in 0 until data.size) {
-                data.removeAt(position)
-            }
+            data.removeAt(position)
             update()
             return
         }

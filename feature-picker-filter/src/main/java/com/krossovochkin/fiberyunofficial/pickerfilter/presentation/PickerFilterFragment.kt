@@ -168,6 +168,9 @@ class PickerFilterFragment(
             )
         }
         this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            var isInitial = true
+
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
             override fun onItemSelected(
@@ -176,6 +179,10 @@ class PickerFilterFragment(
                 position: Int,
                 id: Long
             ) {
+                if (isInitial) {
+                    isInitial = false
+                    return
+                }
                 onSelection(position - 1)
             }
         }
