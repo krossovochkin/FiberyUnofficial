@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "io.gitlab.arturbosch.detekt"
 
@@ -7,7 +9,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         gradlePluginPortal()
     }
     dependencies {
@@ -22,8 +23,8 @@ buildscript {
 dependencies {
     detektPlugins d.plugin.gradle_detekt_formatting
 }
-task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
-    failFast = true
+task detektAll(type: Detekt) {
+    allRules = true
     parallel = true
     setSource(files(projectDir))
     include("**/*.kt")
@@ -43,7 +44,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 }
 
