@@ -23,7 +23,7 @@ class PickerSingleSelectViewModelFactory(
     private val args: PickerSingleSelectDialogFragment.Args
 ) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == PickerSingleSelectViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             PickerSingleSelectViewModel(

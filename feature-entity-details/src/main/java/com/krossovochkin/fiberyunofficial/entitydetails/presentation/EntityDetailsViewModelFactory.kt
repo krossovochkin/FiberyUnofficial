@@ -33,7 +33,7 @@ class EntityDetailsViewModelFactory(
     private val entityDetailsArgs: EntityDetailsFragment.Args
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EntityDetailsViewModel::class.java) {
             EntityDetailsViewModelImpl(
                 getEntityDetailsInteractor,

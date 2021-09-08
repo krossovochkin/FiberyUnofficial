@@ -24,7 +24,7 @@ class LoginViewModelFactory(
     private val loginInteractor: LoginInteractor
 ) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == LoginViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             LoginViewModelImpl(

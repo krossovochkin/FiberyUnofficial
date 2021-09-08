@@ -26,7 +26,7 @@ class EntityTypeListViewModelFactory(
     private val args: EntityTypeListFragment.Args,
     private val resProvider: ResProvider
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EntityTypeListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             EntityTypeListViewModelImpl(

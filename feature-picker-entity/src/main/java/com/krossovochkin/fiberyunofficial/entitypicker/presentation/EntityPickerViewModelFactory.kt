@@ -29,7 +29,7 @@ class EntityPickerViewModelFactory(
     private val entityPickerArgs: EntityPickerFragment.Args
 ) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EntityPickerViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             EntityPickerViewModelImpl(

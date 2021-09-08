@@ -24,6 +24,7 @@ import kotlinx.parcelize.Parcelize
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
+import java.util.Locale
 
 @Parcelize
 data class FiberyAppData(
@@ -67,7 +68,11 @@ data class FiberyFieldSchema(
         @SuppressLint("DefaultLocale")
         get() = name.substringAfterLast("/")
             .split("-")
-            .joinToString(separator = " ") { it.capitalize() }
+            .joinToString(separator = " ") { name ->
+                name.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                }
+            }
 }
 
 @JsonClass(generateAdapter = true)

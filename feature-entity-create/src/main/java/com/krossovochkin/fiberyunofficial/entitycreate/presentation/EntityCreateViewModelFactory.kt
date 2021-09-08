@@ -27,7 +27,7 @@ class EntityCreateViewModelFactory(
     private val resProvider: ResProvider
 ) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EntityCreateViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             EntityCreateViewModelImpl(

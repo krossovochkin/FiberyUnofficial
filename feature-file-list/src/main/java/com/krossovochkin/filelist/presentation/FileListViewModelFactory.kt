@@ -26,7 +26,7 @@ class FileListViewModelFactory(
     private val downloadFileInteractor: DownloadFileInteractor,
     private val fileListArgs: FileListFragment.Args
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == FileListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             FileListViewModelImpl(

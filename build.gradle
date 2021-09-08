@@ -1,3 +1,6 @@
+apply plugin: "com.github.ben-manes.versions"
+apply plugin: "io.gitlab.arturbosch.detekt"
+
 buildscript {
     apply from: 'dependencies.gradle'
 
@@ -5,19 +8,19 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         classpath d.plugin.gradle_android
         classpath d.plugin.gradle_kotlin
-        classpath d.plugin.navigation
+        classpath d.plugin.gradle_navigation
+        classpath d.plugin.gradle_versions
+        classpath d.plugin.gradle_detekt
     }
 }
 
-plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.16.0"
-}
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0"
+    detektPlugins d.plugin.gradle_detekt_formatting
 }
 task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     failFast = true
@@ -27,10 +30,10 @@ task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     include("**/*.kts")
     exclude("**/resources/**")
     exclude("**/build/**")
+    buildUponDefaultConfig = true
     config.from(files("$rootDir/quality/detekt.yml"))
-    buildUponDefaultConfig = false
     reports {
-        html.enabled = true
+        html.enabled = false
         xml.enabled = false
         txt.enabled = false
     }

@@ -24,7 +24,7 @@ class CommentListViewModelFactory(
     private val getCommentListInteractor: GetCommentListInteractor,
     private val commentListArgs: CommentListFragment.Args
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == CommentListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             CommentListViewModelImpl(

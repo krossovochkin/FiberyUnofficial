@@ -1,63 +1,25 @@
 complexity:
-  TooManyFunctions:
-    active: false
-  StringLiteralDuplication:
-    active: false
-  ComplexMethod:
-    active: false
-  LargeClass:
-    active: false
   LongParameterList:
+    active: false
+  TooManyFunctions:
     active: false
   LongMethod:
     active: false
-  LabeledExpression:
-    active: false
-
-comments:
-  UndocumentedPublicClass:
-    active: false
-  UndocumentedPublicFunction:
-    active: false
-  UndocumentedPublicProperty:
+  ComplexMethod:
     active: false
 
 exceptions:
   TooGenericExceptionThrown:
     active: false
-  TooGenericExceptionCaught:
-    active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: false
-  NotImplementedDeclaration:
+  TooGenericExceptionCaught:
     active: false
 
 formatting:
-  ImportOrdering:
-    active: false
   StringTemplate:
     active: false
 
-naming:
-  FunctionMaxLength:
-    active: false
-
 style:
-  ExpressionBodySyntax:
-    active: false
-  OptionalWhenBraces:
-    active: false
-  OptionalUnit:
-    active: false
   ReturnCount:
-    active: false
-  UseDataClass:
-    active: false
-
-potential-bugs:
-  LateinitUsage:
-    excludeAnnotatedProperties: ["Inject"]
-
-performance:
-  SpreadOperator:
     active: false
