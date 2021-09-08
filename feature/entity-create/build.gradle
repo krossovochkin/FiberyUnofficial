@@ -1,16 +1,13 @@
-apply from: "../feature_default.gradle"
+apply from: "$rootDir/feature_default.gradle"
 
 android {
-    resourcePrefix = "picker_entity_"
+    resourcePrefix = "entity_create_"
 }
 
 dependencies {
     implementation d.app.core
 
-    implementation d.ui.adapter_delegates_paging3
-
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit
     androidTestImplementation d.test.espresso
 }
-

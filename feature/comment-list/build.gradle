@@ -1,11 +1,14 @@
-apply from: "../feature_default.gradle"
+apply from: "$rootDir/feature_default.gradle"
 
 android {
-    resourcePrefix = "entity_create_"
+    resourcePrefix = "comment_list"
 }
 
 dependencies {
     implementation d.app.core
+
+    implementation d.ui.adapter_delegates_paging3
+    implementation d.ui.markwon
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

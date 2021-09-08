@@ -1,13 +1,11 @@
-apply from: "../feature_default.gradle"
+apply from: "$rootDir/feature_default.gradle"
 
 android {
-    resourcePrefix = "entity_type_list_"
+    resourcePrefix = "picker_multi_select_"
 }
 
 dependencies {
     implementation d.app.core
-
-    implementation d.ui.adapter_delegates
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

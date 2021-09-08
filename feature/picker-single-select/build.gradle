@@ -1,14 +1,11 @@
-apply from: "../feature_default.gradle"
+apply from: "$rootDir/feature_default.gradle"
 
 android {
-    resourcePrefix = "comment_list"
+    resourcePrefix = "picker_single_select_"
 }
 
 dependencies {
     implementation d.app.core
-
-    implementation d.ui.adapter_delegates_paging3
-    implementation d.ui.markwon
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

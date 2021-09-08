@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply from: '../quality/lint.gradle'
+apply from: "$rootDir/quality/lint.gradle"
 
 android {
     compileSdk v.android.compileSdk

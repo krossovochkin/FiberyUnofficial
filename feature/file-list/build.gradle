@@ -1,4 +1,4 @@
-apply from: "../feature_default.gradle"
+apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "file_list"
