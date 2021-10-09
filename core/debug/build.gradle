@@ -1,0 +1,7 @@
+apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    debugImplementation d.debug.facebook_soloader
+    debugImplementation d.debug.facebook_flipper
+    debugImplementation d.debug.facebook_flipper_network_plugin
+}

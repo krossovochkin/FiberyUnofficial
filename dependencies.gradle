@@ -97,6 +97,7 @@ d.test.espresso = "androidx.test.espresso:espresso-core:${v.test.espresso}"
 
 d.app = [:]
 d.app.core = project(":core")
+d.app.core_debug = project(":core:debug")
 d.app.feature_app_list = project(":feature:app-list")
 d.app.feature_entity_type_list = project(":feature:entity-type-list")
 d.app.feature_entity_list = project(":feature:entity-list")

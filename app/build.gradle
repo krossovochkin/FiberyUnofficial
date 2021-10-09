@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation d.app.core
+    implementation d.app.core_debug
     implementation d.app.feature_login
     implementation d.app.feature_app_list
     implementation d.app.feature_entity_type_list

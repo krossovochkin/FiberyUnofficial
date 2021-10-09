@@ -25,9 +25,7 @@ dependencies {
     implementation d.ui.adapter_delegates
     implementation d.ui.adapter_delegates_paging3
 
-    debugImplementation d.debug.facebook_soloader
-    debugImplementation d.debug.facebook_flipper
-    debugImplementation d.debug.facebook_flipper_network_plugin
+
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit
