@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickersingleselect
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectViewModelFactory
 import dagger.BindsInstance

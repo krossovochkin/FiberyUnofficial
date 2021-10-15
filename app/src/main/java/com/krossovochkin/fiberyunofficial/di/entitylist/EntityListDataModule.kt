@@ -17,13 +17,13 @@
 package com.krossovochkin.fiberyunofficial.di.entitylist
 
 import android.content.Context
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
 import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorageImpl
 import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListRepositoryImpl
 import com.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
+import com.krossovochkin.serialization.Serializer
 import dagger.Module
 import dagger.Provides
 

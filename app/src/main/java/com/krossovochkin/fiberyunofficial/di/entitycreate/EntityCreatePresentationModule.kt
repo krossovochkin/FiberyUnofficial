@@ -17,9 +17,9 @@
 package com.krossovochkin.fiberyunofficial.di.entitycreate
 
 import com.krossovochkin.core.presentation.resources.ResProvider
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModelFactory
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
 import dagger.Module
 import dagger.Provides
 

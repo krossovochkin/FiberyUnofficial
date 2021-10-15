@@ -22,9 +22,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 class PickerMultiSelectDialogFragment(
     factoryProducer: () -> PickerMultiSelectViewModelFactory
 ) : DialogFragment() {

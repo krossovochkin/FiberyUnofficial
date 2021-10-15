@@ -28,7 +28,7 @@ import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor

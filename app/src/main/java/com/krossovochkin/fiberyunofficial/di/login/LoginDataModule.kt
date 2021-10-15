@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.login
 
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.login.data.LoginRepositoryImpl
 import com.krossovochkin.fiberyunofficial.login.domain.LoginRepository
 import dagger.Module

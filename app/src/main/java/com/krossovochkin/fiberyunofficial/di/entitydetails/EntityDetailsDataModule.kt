@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitydetails
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.entitydetails.data.EntityDetailsRepositoryImpl
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import dagger.Module

@@ -1,6 +1,6 @@
 package com.krossovochkin.filelist.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
+import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 
 interface DownloadFileInteractor {
 

@@ -27,8 +27,8 @@ import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
 import kotlinx.coroutines.flow.MutableStateFlow

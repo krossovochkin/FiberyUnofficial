@@ -17,7 +17,7 @@
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
 import android.view.View
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 
 sealed class AppListNavEvent {
 

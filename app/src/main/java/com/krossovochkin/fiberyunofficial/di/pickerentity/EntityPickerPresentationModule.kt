@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickerentity
 
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment

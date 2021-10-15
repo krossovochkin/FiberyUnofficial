@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 
 sealed class EntityCreateNavEvent {
 

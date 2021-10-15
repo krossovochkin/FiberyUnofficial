@@ -1,0 +1,7 @@
+apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    implementation d.app.core_data_api
+    implementation d.app.core_domain
+    api d.app.feature_entity_create_domain
+}

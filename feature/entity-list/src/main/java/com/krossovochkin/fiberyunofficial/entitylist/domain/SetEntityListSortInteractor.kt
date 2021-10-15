@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 interface SetEntityListSortInteractor {
 

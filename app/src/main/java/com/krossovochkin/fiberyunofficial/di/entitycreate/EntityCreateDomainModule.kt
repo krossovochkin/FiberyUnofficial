@@ -16,9 +16,9 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitycreate
 
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractorImpl
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractorImpl
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateRepository
 import dagger.Module
 import dagger.Provides
 

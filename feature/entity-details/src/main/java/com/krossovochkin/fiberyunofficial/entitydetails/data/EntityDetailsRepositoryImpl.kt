@@ -16,21 +16,21 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.data
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyEntityResponseDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsQueryDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyEntityResponseDto
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityDetailsData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.EntityDetailsRepository
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime

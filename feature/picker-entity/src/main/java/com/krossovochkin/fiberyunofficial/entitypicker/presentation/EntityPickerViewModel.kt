@@ -23,8 +23,8 @@ import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor

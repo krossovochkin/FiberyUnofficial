@@ -16,17 +16,17 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.data
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.checkResultSuccess
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsQueryDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
 
 class EntityListRepositoryImpl(

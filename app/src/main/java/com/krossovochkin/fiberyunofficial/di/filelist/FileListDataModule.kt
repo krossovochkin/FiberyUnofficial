@@ -1,8 +1,8 @@
 package com.krossovochkin.fiberyunofficial.di.filelist
 
 import android.content.Context
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import com.krossovochkin.auth.AuthStorage
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.filelist.data.FileListRepositoryImpl
 import com.krossovochkin.filelist.domain.FileListRepository
 import dagger.Module

@@ -5,10 +5,13 @@ android {
 }
 
 dependencies {
-    implementation d.app.core
+    implementation d.app.core_data_api
+    implementation d.app.core_domain
     implementation d.app.core_presentation_result
     implementation d.app.core_presentation_viewbinding
     implementation d.app.core_presentation_flow
+    implementation d.app.core_data_auth
+    implementation d.androidx.constraint_layout
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

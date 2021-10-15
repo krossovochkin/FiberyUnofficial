@@ -16,10 +16,10 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.data
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.applist.domain.AppListRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 
 class AppListRepositoryImpl(
     private val fiberyApiRepository: FiberyApiRepository

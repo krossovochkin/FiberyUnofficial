@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
 import com.krossovochkin.fiberyunofficial.entitycreate.R
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow

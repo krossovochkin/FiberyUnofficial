@@ -1,0 +1,14 @@
+apply from: "$rootDir/feature_default.gradle"
+apply plugin: "kotlin-kapt"
+
+dependencies {
+    implementation d.network.retrofit
+    implementation d.app.core_data_serialization
+    implementation d.app.core_domain
+
+    implementation d.core.dagger
+    kapt d.core.dagger_compiler
+
+    implementation d.app.core_data_auth
+    implementation d.app.core_debug
+}

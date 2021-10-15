@@ -17,7 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 
 data class EntityListItem(
     val entityData: FiberyEntityData,

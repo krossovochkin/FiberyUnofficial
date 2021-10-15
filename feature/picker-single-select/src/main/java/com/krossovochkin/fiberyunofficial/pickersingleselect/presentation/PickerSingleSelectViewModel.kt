@@ -17,8 +17,8 @@
 package com.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
 import androidx.lifecycle.ViewModel
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.FieldData
 
 class PickerSingleSelectViewModel(
     private val args: PickerSingleSelectDialogFragment.Args

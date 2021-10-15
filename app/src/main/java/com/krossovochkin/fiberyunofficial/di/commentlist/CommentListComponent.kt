@@ -2,7 +2,7 @@ package com.krossovochkin.fiberyunofficial.di.commentlist
 
 import com.krossovochkin.commentlist.presentation.CommentListFragment
 import com.krossovochkin.commentlist.presentation.CommentListViewModelFactory
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope

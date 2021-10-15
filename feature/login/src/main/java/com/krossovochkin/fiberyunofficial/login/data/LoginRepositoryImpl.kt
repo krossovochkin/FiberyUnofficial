@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.login.data
 
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.login.domain.LoginRepository
 
 class LoginRepositoryImpl(

@@ -2,7 +2,7 @@ package com.krossovochkin.fiberyunofficial.di.commentlist
 
 import com.krossovochkin.commentlist.data.CommentListRepositoryImpl
 import com.krossovochkin.commentlist.domain.CommentListRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import dagger.Module
 import dagger.Provides
 

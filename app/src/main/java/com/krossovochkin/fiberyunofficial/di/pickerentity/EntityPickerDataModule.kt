@@ -16,10 +16,10 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickerentity
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.entitycreate.EntityCreateRepositoryImpl
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.entitycreatedata.EntityCreateRepositoryImpl
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateRepository
 import com.krossovochkin.fiberyunofficial.entitypicker.data.EntityPickerRepositoryImpl
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.EntityPickerRepository
 import dagger.Module

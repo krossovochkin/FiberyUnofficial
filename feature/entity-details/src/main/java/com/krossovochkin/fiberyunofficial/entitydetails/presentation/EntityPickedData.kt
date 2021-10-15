@@ -17,8 +17,8 @@
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.os.Parcelable
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import kotlinx.parcelize.Parcelize
 
 const val RESULT_KEY_ENTITY_PICKED = "entity_picked"

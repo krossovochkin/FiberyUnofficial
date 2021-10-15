@@ -16,9 +16,9 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.domain
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 
 interface GetEntityTypeSchemaInteractor {
 

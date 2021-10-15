@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitycreate
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModelFactory
 import dagger.BindsInstance

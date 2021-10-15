@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickerentity
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
 import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerViewModelFactory
 import dagger.BindsInstance

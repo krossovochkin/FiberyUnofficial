@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 
 interface DeleteEntityInteractor {
 

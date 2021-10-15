@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickermultiselect
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectViewModelFactory
 import dagger.BindsInstance

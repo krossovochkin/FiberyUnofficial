@@ -16,9 +16,9 @@
  */
 package com.krossovochkin.fiberyunofficial.di.applist
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.applist.data.AppListRepositoryImpl
 import com.krossovochkin.fiberyunofficial.applist.domain.AppListRepository
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import dagger.Module
 import dagger.Provides
 

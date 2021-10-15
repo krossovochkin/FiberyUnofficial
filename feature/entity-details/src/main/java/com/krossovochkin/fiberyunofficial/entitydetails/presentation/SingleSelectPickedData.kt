@@ -17,8 +17,8 @@
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.os.Parcelable
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.FieldData
 import kotlinx.parcelize.Parcelize
 
 const val RESULT_KEY_SINGLE_SELECT_PICKED = "single_select_picked"

@@ -17,8 +17,8 @@
 package com.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
 import androidx.lifecycle.ViewModel
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.FieldData
 
 class PickerMultiSelectViewModel(
     private val args: PickerMultiSelectDialogFragment.Args

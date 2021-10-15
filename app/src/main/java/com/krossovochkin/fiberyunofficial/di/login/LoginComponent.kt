@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.di.login
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import com.krossovochkin.auth.AuthStorage
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginViewModelFactory
 import dagger.Component
 import javax.inject.Scope

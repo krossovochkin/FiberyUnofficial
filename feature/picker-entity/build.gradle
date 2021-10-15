@@ -5,7 +5,8 @@ android {
 }
 
 dependencies {
-    implementation d.app.core
+    implementation d.app.core_data_api
+    implementation d.app.core_domain
     implementation d.app.core_presentation_resources
     implementation d.app.core_presentation_paging
     implementation d.app.core_presentation_result
@@ -16,6 +17,7 @@ dependencies {
     implementation d.app.core_presentation_ui_error
     implementation d.app.core_presentation_ui_fab
     implementation d.app.core_presentation_animation
+    implementation d.app.feature_entity_create_domain
 
     implementation d.ui.adapter_delegates_paging3
 

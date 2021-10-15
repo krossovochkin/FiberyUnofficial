@@ -17,7 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.os.Parcelable
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import kotlinx.parcelize.Parcelize
 
 const val RESULT_KEY_ENTITY_CREATED = "entity_created"

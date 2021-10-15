@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitytypelist
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.entitytypelist.data.EntityTypeListRepositoryImpl
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListRepository
 import dagger.Module

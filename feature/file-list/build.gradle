@@ -5,7 +5,9 @@ android {
 }
 
 dependencies {
-    implementation d.app.core
+    implementation d.app.core_data_api
+    implementation d.app.core_domain
+    implementation d.app.core_data_auth
     implementation d.app.core_presentation_resources
     implementation d.app.core_presentation_paging
     implementation d.app.core_presentation_result

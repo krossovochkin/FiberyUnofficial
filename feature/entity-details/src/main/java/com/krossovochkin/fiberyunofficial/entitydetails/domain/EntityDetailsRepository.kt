@@ -16,10 +16,10 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityDetailsData
-import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityDetailsData
+import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 
 interface EntityDetailsRepository {
 

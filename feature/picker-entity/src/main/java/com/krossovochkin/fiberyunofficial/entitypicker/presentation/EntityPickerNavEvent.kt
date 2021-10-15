@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 
 sealed class EntityPickerNavEvent {
 

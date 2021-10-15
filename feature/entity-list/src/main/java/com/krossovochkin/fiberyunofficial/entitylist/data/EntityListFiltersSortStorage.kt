@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.entitylist.data
 
 import android.content.Context
 import androidx.core.content.edit
-import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.krossovochkin.serialization.Serializer
 
 interface EntityListFiltersSortStorage {
 

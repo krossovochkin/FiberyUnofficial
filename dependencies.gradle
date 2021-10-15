@@ -27,6 +27,7 @@ v.androidx.navigation = "2.4.0-alpha10"
 v.androidx.lifecycle = "2.4.0-rc01"
 v.androidx.paging = "3.1.0-alpha04"
 v.androidx.security = "1.1.0-alpha03"
+v.androidx.recyclerview = "1.2.1"
 
 v.network = [:]
 v.network.retrofit = "2.9.0"
@@ -74,6 +75,7 @@ d.androidx.lifecycle_viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${v
 d.androidx.lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${v.androidx.lifecycle}"
 d.androidx.paging = "androidx.paging:paging-runtime-ktx:${v.androidx.paging}"
 d.androidx.security = "androidx.security:security-crypto:${v.androidx.security}"
+d.androidx.recyclerview = "androidx.recyclerview:recyclerview:${v.androidx.recyclerview}"
 
 d.network = [:]
 d.network.retrofit = "com.squareup.retrofit2:retrofit:${v.network.retrofit}"
@@ -98,8 +100,11 @@ d.test.android_junit = "androidx.test.ext:junit:${v.test.android_junit}"
 d.test.espresso = "androidx.test.espresso:espresso-core:${v.test.espresso}"
 
 d.app = [:]
-d.app.core = project(":core")
 d.app.core_debug = project(":core:debug")
+d.app.core_domain = project(":core:domain")
+d.app.core_data_serialization = project(":core:data:serialization")
+d.app.core_data_api = project(":core:data:api")
+d.app.core_data_auth = project(":core:data:auth")
 d.app.core_presentation_animation = project(":core:presentation:animation")
 d.app.core_presentation_color = project(":core:presentation:color")
 d.app.core_presentation_viewbinding = project(":core:presentation:viewbinding")
@@ -121,6 +126,8 @@ d.app.feature_entity_list = project(":feature:entity-list")
 d.app.feature_entity_details = project(":feature:entity-details")
 d.app.feature_login = project(":feature:login")
 d.app.feature_entity_create = project(":feature:entity-create")
+d.app.feature_entity_create_data = project(":feature:entity-create-data")
+d.app.feature_entity_create_domain = project(":feature:entity-create-domain")
 d.app.feature_entity_picker = project(":feature:picker-entity")
 d.app.feature_picker_single_select = project(":feature:picker-single-select")
 d.app.feature_picker_multi_select = project(":feature:picker-multi-select")

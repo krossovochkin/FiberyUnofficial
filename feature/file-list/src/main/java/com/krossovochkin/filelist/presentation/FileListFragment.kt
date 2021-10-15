@@ -33,8 +33,8 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.R
 import com.krossovochkin.filelist.databinding.FileListFragmentBinding
 import com.krossovochkin.filelist.databinding.FileListItemBinding

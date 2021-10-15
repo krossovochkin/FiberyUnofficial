@@ -7,5 +7,6 @@ dependencies {
     api d.app.core_presentation_flow
     api d.app.core_presentation_system
     api d.app.core_presentation_viewmodel
+    api d.androidx.recyclerview
     implementation d.ui.adapter_delegates
 }

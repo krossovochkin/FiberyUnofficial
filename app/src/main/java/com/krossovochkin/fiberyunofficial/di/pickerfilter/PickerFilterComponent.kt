@@ -17,8 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.di.pickerfilter
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
 import dagger.BindsInstance
@@ -27,7 +26,7 @@ import javax.inject.Scope
 
 interface PickerFilterParentComponent : GlobalDependencies {
 
-    fun serializer(): Serializer
+    fun serializer(): com.krossovochkin.serialization.Serializer
 }
 
 @PickerFilter

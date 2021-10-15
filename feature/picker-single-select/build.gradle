@@ -5,7 +5,9 @@ android {
 }
 
 dependencies {
-    implementation d.app.core
+    implementation d.androidx.appcompat
+    implementation d.app.core_data_api
+    implementation d.app.core_domain
     implementation d.app.core_presentation_result
 
     testImplementation d.test.junit

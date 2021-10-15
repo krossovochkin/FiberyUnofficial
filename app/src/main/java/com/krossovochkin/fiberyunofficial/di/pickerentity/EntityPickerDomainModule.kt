@@ -16,10 +16,10 @@
  */
 package com.krossovochkin.fiberyunofficial.di.pickerentity
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractorImpl
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractorImpl
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateRepository
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.EntityPickerRepository
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractorImpl
@@ -52,6 +52,8 @@ object EntityPickerDomainModule {
     fun createEntityInteractor(
         entityCreateRepository: EntityCreateRepository
     ): EntityCreateInteractor {
-        return EntityCreateInteractorImpl(entityCreateRepository)
+        return EntityCreateInteractorImpl(
+            entityCreateRepository
+        )
     }
 }

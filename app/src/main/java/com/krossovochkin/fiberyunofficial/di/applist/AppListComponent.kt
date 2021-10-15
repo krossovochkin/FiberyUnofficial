@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.di.applist
 
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModelFactory
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
 import dagger.Component
 import javax.inject.Scope
 

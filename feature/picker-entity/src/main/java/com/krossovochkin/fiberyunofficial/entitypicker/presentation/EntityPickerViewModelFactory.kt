@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
 

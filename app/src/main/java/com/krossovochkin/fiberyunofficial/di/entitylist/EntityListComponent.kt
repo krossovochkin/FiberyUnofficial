@@ -16,8 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitylist
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListViewModelFactory
 import dagger.BindsInstance
@@ -26,7 +25,7 @@ import javax.inject.Scope
 
 interface EntityListParentComponent : GlobalDependencies {
 
-    fun serializer(): Serializer
+    fun serializer(): com.krossovochkin.serialization.Serializer
 }
 
 @EntityList

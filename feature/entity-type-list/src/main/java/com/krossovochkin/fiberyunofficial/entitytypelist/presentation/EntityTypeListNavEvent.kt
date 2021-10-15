@@ -17,7 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.view.View
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 sealed class EntityTypeListNavEvent {
 

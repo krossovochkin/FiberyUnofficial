@@ -16,9 +16,9 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitycreate
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.entitycreate.EntityCreateRepositoryImpl
-import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.entitycreatedata.EntityCreateRepositoryImpl
+import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateRepository
 import dagger.Module
 import dagger.Provides
 

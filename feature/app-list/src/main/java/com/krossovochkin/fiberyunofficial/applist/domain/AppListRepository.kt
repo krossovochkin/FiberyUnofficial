@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 
 interface AppListRepository {
 

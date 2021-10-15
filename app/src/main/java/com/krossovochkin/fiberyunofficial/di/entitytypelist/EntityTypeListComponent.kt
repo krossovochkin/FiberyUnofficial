@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitytypelist
 
-import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
+import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModelFactory
 import dagger.BindsInstance

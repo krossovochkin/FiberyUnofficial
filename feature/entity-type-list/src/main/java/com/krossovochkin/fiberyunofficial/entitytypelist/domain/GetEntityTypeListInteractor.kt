@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 interface GetEntityTypeListInteractor {
 

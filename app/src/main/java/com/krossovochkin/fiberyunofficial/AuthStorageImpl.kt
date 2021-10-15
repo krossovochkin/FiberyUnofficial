@@ -20,7 +20,7 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
+import com.krossovochkin.auth.AuthStorage
 
 private const val PREFS_NAME = "AUTH"
 private const val MASTER_KEY_ALIAS = "fiberyunofficialauth"

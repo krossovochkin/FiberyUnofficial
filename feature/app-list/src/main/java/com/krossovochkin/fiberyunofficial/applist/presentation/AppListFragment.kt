@@ -32,7 +32,7 @@ import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AppListFragment(

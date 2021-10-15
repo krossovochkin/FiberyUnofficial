@@ -45,8 +45,11 @@ android {
 }
 
 dependencies {
-    implementation d.app.core
     implementation d.app.core_debug
+    implementation d.app.core_data_api
+    implementation d.app.core_data_auth
+    implementation d.app.core_data_serialization
+    implementation d.app.core_domain
     implementation d.app.core_presentation_resources
     implementation d.app.core_presentation_color
     implementation d.app.core_presentation_viewbinding
@@ -57,6 +60,7 @@ dependencies {
     implementation d.app.feature_entity_list
     implementation d.app.feature_entity_details
     implementation d.app.feature_entity_create
+    implementation d.app.feature_entity_create_data
     implementation d.app.feature_entity_picker
     implementation d.app.feature_picker_single_select
     implementation d.app.feature_picker_multi_select

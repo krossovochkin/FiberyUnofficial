@@ -5,16 +5,16 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import androidx.core.content.getSystemService
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommand
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandArgsQueryDto
-import com.krossovochkin.fiberyunofficial.core.data.api.dto.FiberyCommandBody
-import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.auth.AuthStorage
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsQueryDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.domain.FileListRepository
 
 private const val PARAM_ID = "\$id"

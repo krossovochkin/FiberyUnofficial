@@ -1,8 +1,8 @@
 package com.krossovochkin.commentlist.domain
 
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyCommentData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyCommentData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 
 interface CommentListRepository {
 

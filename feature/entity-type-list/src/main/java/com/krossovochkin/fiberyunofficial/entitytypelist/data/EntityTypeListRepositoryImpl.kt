@@ -16,10 +16,10 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.data
 
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.EntityTypeListRepository
 
 class EntityTypeListRepositoryImpl(

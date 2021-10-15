@@ -32,8 +32,8 @@ import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
