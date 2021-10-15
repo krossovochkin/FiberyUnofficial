@@ -17,9 +17,9 @@
 package com.krossovochkin.fiberyunofficial.core.data
 
 import android.content.Context
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.core.data.api.FiberyServiceApi
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 interface GlobalDependencies {
 

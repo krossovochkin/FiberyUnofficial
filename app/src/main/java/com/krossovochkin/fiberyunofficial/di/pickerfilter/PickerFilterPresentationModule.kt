@@ -17,9 +17,9 @@
 
 package com.krossovochkin.fiberyunofficial.di.pickerfilter
 
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
 import dagger.Module

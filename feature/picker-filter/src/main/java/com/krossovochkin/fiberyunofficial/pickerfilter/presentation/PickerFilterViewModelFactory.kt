@@ -19,9 +19,9 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 class PickerFilterViewModelFactory(
     private val pickerFilterArgs: PickerFilterFragment.Args,

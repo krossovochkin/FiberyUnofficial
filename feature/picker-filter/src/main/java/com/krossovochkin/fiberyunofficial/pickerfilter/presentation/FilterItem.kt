@@ -17,9 +17,9 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
+import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FieldData
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 
 data class EmptyFilterItem(

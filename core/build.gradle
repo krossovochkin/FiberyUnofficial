@@ -25,7 +25,8 @@ dependencies {
     implementation d.ui.adapter_delegates
     implementation d.ui.adapter_delegates_paging3
 
-
+    api d.app.core_presentation_resources
+    implementation d.app.core_debug
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

@@ -6,6 +6,7 @@ android {
 
 dependencies {
     implementation d.app.core
+    implementation d.app.core_presentation_result
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

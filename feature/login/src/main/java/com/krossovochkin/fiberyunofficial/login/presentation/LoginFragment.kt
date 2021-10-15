@@ -23,9 +23,9 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.krossovochkin.fiberyunofficial.core.presentation.collect
-import com.krossovochkin.fiberyunofficial.core.presentation.parentListener
-import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
+import com.krossovochkin.core.presentation.flow.collect
+import com.krossovochkin.core.presentation.result.parentListener
+import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.login.R
 import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
 

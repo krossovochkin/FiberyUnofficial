@@ -22,13 +22,13 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.list.ListItem
+import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.ui.fab.FabViewState
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import com.krossovochkin.fiberyunofficial.core.presentation.FabViewState
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
-import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
@@ -134,9 +134,10 @@ internal class EntityListViewModelImpl(
             }
         )
 
-    override fun getCreateFabViewState(context: Context) = FabViewState(
-        bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
-    )
+    override fun getCreateFabViewState(context: Context) =
+        FabViewState(
+            bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+        )
 
     override fun select(item: ListItem, itemView: View) {
         if (item is EntityListItem) {

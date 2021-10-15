@@ -18,8 +18,8 @@ package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 class EntityCreateViewModelFactory(
     private val entityCreateArgs: EntityCreateFragment.Args,

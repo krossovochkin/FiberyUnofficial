@@ -17,8 +17,8 @@
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import androidx.annotation.ColorInt
+import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
 
 data class EntityTypeListItem(
     val entityTypeData: FiberyEntityTypeSchema,

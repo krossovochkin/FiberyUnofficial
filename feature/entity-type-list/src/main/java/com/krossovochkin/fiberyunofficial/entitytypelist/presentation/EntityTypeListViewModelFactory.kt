@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 
 class EntityTypeListViewModelFactory(

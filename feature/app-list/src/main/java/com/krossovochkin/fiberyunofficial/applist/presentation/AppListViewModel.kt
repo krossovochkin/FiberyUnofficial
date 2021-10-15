@@ -20,12 +20,12 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.krossovochkin.core.presentation.list.ListItem
+import com.krossovochkin.core.presentation.list.ListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
-import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.presentation.common.ListViewModelDelegate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -86,8 +86,9 @@ internal class AppListViewModelImpl(
         }
     }
 
-    override fun getToolbarViewState(context: Context): ToolbarViewState = ToolbarViewState(
-        title = resProvider.getString(R.string.app_list_title),
-        bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
-    )
+    override fun getToolbarViewState(context: Context): ToolbarViewState =
+        ToolbarViewState(
+            title = resProvider.getString(R.string.app_list_title),
+            bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+        )
 }

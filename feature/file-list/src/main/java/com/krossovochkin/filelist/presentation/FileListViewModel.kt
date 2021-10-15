@@ -20,11 +20,11 @@ package com.krossovochkin.filelist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.list.ListItem
+import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyFileData
-import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.core.presentation.common.PaginatedListViewModelDelegate
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
 import kotlinx.coroutines.channels.Channel

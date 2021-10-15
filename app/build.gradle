@@ -47,6 +47,10 @@ android {
 dependencies {
     implementation d.app.core
     implementation d.app.core_debug
+    implementation d.app.core_presentation_resources
+    implementation d.app.core_presentation_color
+    implementation d.app.core_presentation_viewbinding
+    implementation d.app.core_presentation_result
     implementation d.app.feature_login
     implementation d.app.feature_app_list
     implementation d.app.feature_entity_type_list

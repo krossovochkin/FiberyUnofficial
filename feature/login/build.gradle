@@ -6,6 +6,9 @@ android {
 
 dependencies {
     implementation d.app.core
+    implementation d.app.core_presentation_result
+    implementation d.app.core_presentation_viewbinding
+    implementation d.app.core_presentation_flow
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

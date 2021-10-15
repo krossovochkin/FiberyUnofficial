@@ -6,6 +6,15 @@ android {
 
 dependencies {
     implementation d.app.core
+    implementation d.app.core_presentation_resources
+    implementation d.app.core_presentation_list
+    implementation d.app.core_presentation_result
+    implementation d.app.core_presentation_navigation
+    implementation d.app.core_presentation_viewbinding
+    implementation d.app.core_presentation_ui_progress
+    implementation d.app.core_presentation_ui_toolbar
+    implementation d.app.core_presentation_ui_error
+    implementation d.app.core_presentation_animation
 
     implementation d.ui.adapter_delegates
 

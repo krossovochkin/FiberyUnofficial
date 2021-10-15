@@ -16,7 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitytypelist
 
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModelFactory

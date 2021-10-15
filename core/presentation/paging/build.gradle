@@ -1,0 +1,10 @@
+apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    api d.androidx.fragment
+    api d.ui.material
+    api d.androidx.lifecycle_viewmodel
+    api d.core.kotlin_coroutines
+    api d.app.core_presentation_list
+    implementation d.ui.adapter_delegates_paging3
+}

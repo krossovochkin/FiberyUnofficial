@@ -1,0 +1,7 @@
+apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    api d.androidx.appcompat
+    api d.core.kotlin_coroutines
+    api d.app.core_presentation_flow
+}

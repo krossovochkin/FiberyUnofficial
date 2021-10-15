@@ -18,8 +18,8 @@ package com.krossovochkin.fiberyunofficial.applist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 
 class AppListViewModelFactory(
     private val getAppListInteractor: GetAppListInteractor,

@@ -17,11 +17,11 @@
 package com.krossovochkin.fiberyunofficial
 
 import android.content.Context
+import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.core.data.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.core.data.api.ApiModule
 import com.krossovochkin.fiberyunofficial.core.data.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.core.data.serialization.Serializer
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module

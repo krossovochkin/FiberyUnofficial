@@ -26,16 +26,16 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import com.krossovochkin.commentlist.R
 import com.krossovochkin.commentlist.databinding.CommentListFragmentBinding
 import com.krossovochkin.commentlist.databinding.CommentListItemBinding
+import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
+import com.krossovochkin.core.presentation.list.ListItem
+import com.krossovochkin.core.presentation.navigation.initNavigation
+import com.krossovochkin.core.presentation.paging.initPaginatedRecyclerView
+import com.krossovochkin.core.presentation.result.parentListener
+import com.krossovochkin.core.presentation.ui.error.initErrorHandler
+import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
+import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.core.presentation.ListItem
-import com.krossovochkin.fiberyunofficial.core.presentation.initErrorHandler
-import com.krossovochkin.fiberyunofficial.core.presentation.initNavigation
-import com.krossovochkin.fiberyunofficial.core.presentation.initPaginatedRecyclerView
-import com.krossovochkin.fiberyunofficial.core.presentation.initToolbar
-import com.krossovochkin.fiberyunofficial.core.presentation.parentListener
-import com.krossovochkin.fiberyunofficial.core.presentation.setupTransformEnterTransition
-import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 

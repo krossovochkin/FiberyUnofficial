@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.krossovochkin.core.presentation.result.toResultBundle
+import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import com.krossovochkin.fiberyunofficial.core.data.api.FiberyApiConstants
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyAppData
@@ -32,8 +34,6 @@ import com.krossovochkin.fiberyunofficial.core.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.core.domain.FieldData
 import com.krossovochkin.fiberyunofficial.core.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.core.presentation.toResultBundle
-import com.krossovochkin.fiberyunofficial.core.presentation.viewBinding
 import com.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedData

@@ -18,10 +18,10 @@ package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.core.domain.entitycreate.EntityCreateInteractor
-import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
-import com.krossovochkin.fiberyunofficial.core.presentation.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

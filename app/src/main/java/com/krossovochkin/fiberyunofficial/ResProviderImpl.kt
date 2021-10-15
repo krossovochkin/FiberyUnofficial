@@ -18,8 +18,8 @@ package com.krossovochkin.fiberyunofficial
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.krossovochkin.fiberyunofficial.core.presentation.ColorUtils
-import com.krossovochkin.fiberyunofficial.core.presentation.ResProvider
+import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.resources.ResProvider
 
 class ResProviderImpl(
     private val context: Context

@@ -1,0 +1,8 @@
+apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    api d.androidx.core
+    api d.ui.material
+    api d.androidx.fragment
+    api d.app.core_presentation_color
+}
