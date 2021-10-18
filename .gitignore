@@ -9,3 +9,4 @@
 .cxx
 /app/release/
 release-keystore-fibery-unofficial.jks
+**/build

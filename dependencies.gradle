@@ -10,6 +10,7 @@ v.plugin = [:]
 v.plugin.gradle_android = '7.2.0-alpha01'
 v.plugin.gradle_versions = "0.39.0"
 v.plugin.gradle_detekt = "1.18.1"
+v.plugin.gradle_dependencies_lint = "0.78.0"
 
 v.core = [:]
 v.core.kotlin = "1.5.30"
@@ -55,6 +56,7 @@ d.plugin.gradle_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${v.core.kot
 d.plugin.gradle_navigation = "androidx.navigation:navigation-safe-args-gradle-plugin:${v.androidx.navigation}"
 d.plugin.gradle_detekt = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${v.plugin.gradle_detekt}"
 d.plugin.gradle_detekt_formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:${v.plugin.gradle_detekt}"
+d.plugin.gradle_dependencies_lint = "com.autonomousapps:dependency-analysis-gradle-plugin:${v.plugin.gradle_dependencies_lint}"
 
 d.core = [:]
 d.core.kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${v.core.kotlin}"
