@@ -18,12 +18,11 @@ package com.krossovochkin.fiberyunofficial
 
 import android.content.Context
 import com.krossovochkin.auth.AuthStorage
-import com.krossovochkin.fiberyunofficial.api.ApiModule
+import com.krossovochkin.fiberyunofficial.di.api.ApiModule
+import com.krossovochkin.fiberyunofficial.di.auth.AuthModule
 import com.krossovochkin.serialization.Serializer
 import dagger.BindsInstance
 import dagger.Component
-import dagger.Module
-import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton
@@ -40,17 +39,5 @@ interface ApplicationComponent : GlobalDependencies {
         fun create(
             @BindsInstance context: Context
         ): ApplicationComponent
-    }
-}
-
-@Module
-object AuthModule {
-
-    @JvmStatic
-    @Provides
-    fun authStorage(
-        context: Context
-    ): AuthStorage {
-        return AuthStorageImpl(context.applicationContext)
     }
 }

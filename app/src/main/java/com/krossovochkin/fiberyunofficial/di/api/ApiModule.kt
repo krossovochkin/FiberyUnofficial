@@ -14,11 +14,14 @@
    limitations under the License.
 
  */
-package com.krossovochkin.fiberyunofficial.api
+package com.krossovochkin.fiberyunofficial.di.api
 
 import android.content.Context
 import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.addDebugNetworkInterceptor
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepositoryImpl
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.api.mapper.FiberyEntityTypeMapper
 import com.squareup.moshi.Moshi
 import dagger.Module
