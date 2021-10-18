@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial
 
 import android.content.Context
 import com.krossovochkin.auth.AuthStorage
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.api.ApiModule
 import com.krossovochkin.serialization.Serializer
 import dagger.BindsInstance
@@ -53,13 +52,5 @@ object AuthModule {
         context: Context
     ): AuthStorage {
         return AuthStorageImpl(context.applicationContext)
-    }
-
-    @JvmStatic
-    @Provides
-    fun resProvider(
-        context: Context
-    ): ResProvider {
-        return ResProviderImpl(context.applicationContext)
     }
 }

@@ -8,4 +8,5 @@ dependencies {
     api d.app.core_presentation_flow
     api d.app.core_presentation_system
     api d.app.core_presentation_color
+    api d.app.core_presentation_resources
 }

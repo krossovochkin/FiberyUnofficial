@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.flow.collect
+import com.krossovochkin.core.presentation.resources.resolveNativeColor
+import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.core.presentation.system.setupSystemBars
 import com.krossovochkin.core.presentation.system.updateInsetMargins
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +52,10 @@ internal inline fun Toolbar.initToolbar(
 ) {
     updateInsetMargins(activity, top = true)
 
-    val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(activity, state.bgColorInt)
+    val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(
+        activity,
+        activity.resolveNativeColor(state.bgColor)
+    )
     val contrastColor = ColorUtils.getContrastColor(backgroundColor)
 
     activity.setupSystemBars(
@@ -58,7 +63,7 @@ internal inline fun Toolbar.initToolbar(
         contrastColor = contrastColor
     )
 
-    this.title = state.title
+    this.title = activity.resolveNativeText(state.title)
     this.setTitleTextColor(contrastColor)
     this.setBackgroundColor(backgroundColor)
 

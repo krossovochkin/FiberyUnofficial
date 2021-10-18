@@ -20,9 +20,10 @@ package com.krossovochkin.filelist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
@@ -86,8 +87,8 @@ internal class FileListViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = fileListArgs.parentEntityData.fieldSchema.displayName,
-            bgColorInt = ColorUtils.getColor(fileListArgs.entityTypeSchema.meta.uiColorHex),
+            title = NativeText.Simple(fileListArgs.parentEntityData.fieldSchema.displayName),
+            bgColor = NativeColor.Hex(fileListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 

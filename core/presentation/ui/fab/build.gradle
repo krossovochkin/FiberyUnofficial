@@ -5,4 +5,5 @@ dependencies {
     api d.ui.material
     api d.app.core_presentation_system
     api d.app.core_presentation_color
+    api d.app.core_presentation_resources
 }

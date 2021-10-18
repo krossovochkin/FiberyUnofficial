@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.di.applist
 
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModelFactory
 import dagger.Module
@@ -29,12 +28,10 @@ object AppListPresentationModule {
     @Provides
     fun appListViewModelFactoryProducer(
         getAppListInteractor: GetAppListInteractor,
-        resProvider: ResProvider
     ): () -> AppListViewModelFactory {
         return {
             AppListViewModelFactory(
                 getAppListInteractor,
-                resProvider
             )
         }
     }

@@ -21,9 +21,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.commentlist.domain.GetCommentListInteractor
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -90,8 +91,8 @@ internal class CommentListViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = commentListArgs.parentEntityData.fieldSchema.displayName,
-            bgColorInt = ColorUtils.getColor(commentListArgs.entityTypeSchema.meta.uiColorHex),
+            title = NativeText.Simple(commentListArgs.parentEntityData.fieldSchema.displayName),
+            bgColor = NativeColor.Hex(commentListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 

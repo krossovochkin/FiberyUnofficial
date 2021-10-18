@@ -18,19 +18,16 @@ package com.krossovochkin.fiberyunofficial.applist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
 
 class AppListViewModelFactory(
     private val getAppListInteractor: GetAppListInteractor,
-    private val resProvider: ResProvider
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == AppListViewModel::class.java) {
             @Suppress("UNCHECKED_CAST")
             AppListViewModelImpl(
                 getAppListInteractor,
-                resProvider
             ) as T
         } else {
             throw IllegalArgumentException()

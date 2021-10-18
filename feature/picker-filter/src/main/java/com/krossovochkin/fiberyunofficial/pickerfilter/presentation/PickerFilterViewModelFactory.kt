@@ -19,14 +19,12 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.serialization.Serializer
 
 class PickerFilterViewModelFactory(
     private val pickerFilterArgs: PickerFilterFragment.Args,
     private val fiberyApiRepository: FiberyApiRepository,
-    private val resProvider: ResProvider,
     private val serializer: Serializer
 ) : ViewModelProvider.Factory {
 
@@ -36,7 +34,6 @@ class PickerFilterViewModelFactory(
             PickerFilterViewModelImpl(
                 pickerFilterArgs = pickerFilterArgs,
                 fiberyApiRepository = fiberyApiRepository,
-                resProvider = resProvider,
                 serializer = serializer
             ) as T
         } else {

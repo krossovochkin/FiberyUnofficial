@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.di.pickerfilter
 
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
@@ -32,7 +31,6 @@ object PickerFilterPresentationModule {
     @Provides
     fun pickerFilterViewModelFactoryProducer(
         fiberyApiRepository: FiberyApiRepository,
-        resProvider: ResProvider,
         argsProvider: PickerFilterFragment.ArgsProvider,
         serializer: Serializer
     ): () -> PickerFilterViewModelFactory {
@@ -40,7 +38,6 @@ object PickerFilterPresentationModule {
             PickerFilterViewModelFactory(
                 pickerFilterArgs = argsProvider.getPickerFilterArgs(),
                 fiberyApiRepository = fiberyApiRepository,
-                resProvider = resProvider,
                 serializer = serializer
             )
         }

@@ -18,13 +18,11 @@ package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 
 class EntityTypeListViewModelFactory(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
     private val args: EntityTypeListFragment.Args,
-    private val resProvider: ResProvider
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == EntityTypeListViewModel::class.java) {
@@ -32,7 +30,6 @@ class EntityTypeListViewModelFactory(
             EntityTypeListViewModelImpl(
                 getEntityTypeListInteractor,
                 args,
-                resProvider
             ) as T
         } else {
             throw IllegalArgumentException()

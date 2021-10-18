@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitytypelist
 
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModelFactory
@@ -31,13 +30,11 @@ object EntityTypeListPresentationModule {
     fun entityTypeListViewModelFactoryProducer(
         getEntityTypeListInteractor: GetEntityTypeListInteractor,
         entityTypeListArgsProvider: EntityTypeListFragment.ArgsProvider,
-        resProvider: ResProvider
     ): () -> EntityTypeListViewModelFactory {
         return {
             EntityTypeListViewModelFactory(
                 getEntityTypeListInteractor,
                 entityTypeListArgsProvider.getEntityTypeListArgs(),
-                resProvider
             )
         }
     }

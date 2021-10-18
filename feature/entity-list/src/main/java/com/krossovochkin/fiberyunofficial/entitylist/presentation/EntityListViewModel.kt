@@ -22,10 +22,10 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
-import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
@@ -86,7 +86,6 @@ internal class EntityListViewModelImpl(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val resProvider: ResProvider,
     private val entityListArgs: EntityListFragment.Args
 ) : EntityListViewModel() {
 
@@ -123,9 +122,11 @@ internal class EntityListViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = entityListArgs.parentEntityData?.fieldSchema?.displayName
-                ?: entityListArgs.entityTypeSchema.displayName,
-            bgColorInt = ColorUtils.getColor(entityListArgs.entityTypeSchema.meta.uiColorHex),
+            title = NativeText.Simple(
+                entityListArgs.parentEntityData?.fieldSchema?.displayName
+                    ?: entityListArgs.entityTypeSchema.displayName
+            ),
+            bgColor = NativeColor.Hex(entityListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true,
             menuResId = if (entityListArgs.parentEntityData == null) {
                 R.menu.entity_list_menu
@@ -136,7 +137,7 @@ internal class EntityListViewModelImpl(
 
     override fun getCreateFabViewState(context: Context) =
         FabViewState(
-            bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+            bgColor = NativeColor.Attribute(R.attr.colorPrimary)
         )
 
     override fun select(item: ListItem, itemView: View) {

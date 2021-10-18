@@ -19,9 +19,10 @@ package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
@@ -104,8 +105,8 @@ internal class EntityPickerViewModelImpl(
             .execute(entityPickerArgs.parentEntityData.fieldSchema)
         emit(
             ToolbarViewState(
-                title = entityType.displayName,
-                bgColorInt = ColorUtils.getColor(entityType.meta.uiColorHex),
+                title = NativeText.Simple(entityType.displayName),
+                bgColor = NativeColor.Hex(entityType.meta.uiColorHex),
                 hasBackButton = true,
                 menuResId = R.menu.picker_entity_menu,
                 searchActionItemId = R.id.action_search

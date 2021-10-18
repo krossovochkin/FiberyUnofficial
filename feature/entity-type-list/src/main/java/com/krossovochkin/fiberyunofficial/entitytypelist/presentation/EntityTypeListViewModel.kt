@@ -23,7 +23,8 @@ import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.list.ListViewModelDelegate
-import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
@@ -53,7 +54,6 @@ abstract class EntityTypeListViewModel : ViewModel() {
 internal class EntityTypeListViewModelImpl(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
     private val args: EntityTypeListFragment.Args,
-    private val resProvider: ResProvider
 ) : EntityTypeListViewModel() {
 
     override val progress = MutableStateFlow(false)
@@ -101,8 +101,8 @@ internal class EntityTypeListViewModelImpl(
 
     override fun getToolbarViewState(context: Context): ToolbarViewState =
         ToolbarViewState(
-            title = resProvider.getString(R.string.entity_type_list_title),
-            bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary),
+            title = NativeText.Resource(R.string.entity_type_list_title),
+            bgColor = NativeColor.Attribute(R.attr.colorPrimary),
             hasBackButton = true
         )
 }

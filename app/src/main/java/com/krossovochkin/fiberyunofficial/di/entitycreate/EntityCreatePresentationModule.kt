@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitycreate
 
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModelFactory
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
@@ -30,14 +29,12 @@ object EntityCreatePresentationModule {
     @Provides
     fun entityCreateViewModelFactoryProducer(
         entityCreateInteractor: EntityCreateInteractor,
-        resProvider: ResProvider,
         argsProvider: EntityCreateFragment.ArgsProvider
     ): () -> EntityCreateViewModelFactory {
         return {
             EntityCreateViewModelFactory(
                 argsProvider.getEntityCreateArgs(),
                 entityCreateInteractor,
-                resProvider
             )
         }
     }

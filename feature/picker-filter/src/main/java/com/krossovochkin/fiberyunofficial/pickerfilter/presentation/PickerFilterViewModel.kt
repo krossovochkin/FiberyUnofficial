@@ -19,9 +19,9 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
@@ -60,7 +60,6 @@ abstract class PickerFilterViewModel : ViewModel() {
 class PickerFilterViewModelImpl(
     private val pickerFilterArgs: PickerFilterFragment.Args,
     private val fiberyApiRepository: FiberyApiRepository,
-    private val resProvider: ResProvider,
     private val serializer: Serializer
 ) : PickerFilterViewModel() {
 
@@ -76,8 +75,8 @@ class PickerFilterViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = resProvider.getString(R.string.picker_filter_toolbar_title),
-            bgColorInt = ColorUtils.getColor(pickerFilterArgs.entityTypeSchema.meta.uiColorHex),
+            title = NativeText.Resource(R.string.picker_filter_toolbar_title),
+            bgColor = NativeColor.Hex(pickerFilterArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 

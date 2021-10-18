@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.system.updateInsetMargins
 
 inline fun Fragment.initFab(
@@ -28,10 +29,11 @@ internal inline fun FloatingActionButton.initFab(
     state: FabViewState,
     crossinline onClick: () -> Unit
 ) {
+    val bgColorInt = context.resolveNativeColor(state.bgColor)
     this.backgroundTintList = ColorStateList.valueOf(
-        ColorUtils.getDesaturatedColorIfNeeded(context, state.bgColorInt)
+        ColorUtils.getDesaturatedColorIfNeeded(context, bgColorInt)
     )
-    this.imageTintList = ColorStateList.valueOf(ColorUtils.getContrastColor(state.bgColorInt))
+    this.imageTintList = ColorStateList.valueOf(ColorUtils.getContrastColor(bgColorInt))
 
     this.setOnClickListener { onClick() }
 }

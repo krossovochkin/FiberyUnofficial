@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.di.entitylist
 
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
@@ -43,7 +42,6 @@ object EntityListPresentationModule {
         getEntityListSortInteractor: GetEntityListSortInteractor,
         addEntityRelationInteractor: AddEntityRelationInteractor,
         removeEntityRelationInteractor: RemoveEntityRelationInteractor,
-        resProvider: ResProvider,
         argsProvider: EntityListFragment.ArgsProvider
     ): () -> EntityListViewModelFactory {
         return {
@@ -55,7 +53,6 @@ object EntityListPresentationModule {
                 getEntityListSortInteractor,
                 removeEntityRelationInteractor,
                 addEntityRelationInteractor,
-                resProvider,
                 argsProvider.getEntityListArgs()
             )
         }

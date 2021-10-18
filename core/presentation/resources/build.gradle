@@ -1,1 +1,6 @@
 apply from: "$rootDir/feature_default.gradle"
+
+dependencies {
+    implementation d.app.core_presentation_color
+    implementation d.androidx.core
+}

@@ -18,8 +18,8 @@ package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.color.ColorUtils
-import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
@@ -42,7 +42,6 @@ abstract class EntityCreateViewModel : ViewModel() {
 internal class EntityCreateViewModelImpl(
     private val entityCreateArgs: EntityCreateFragment.Args,
     private val entityCreateInteractor: EntityCreateInteractor,
-    private val resProvider: ResProvider
 ) : EntityCreateViewModel() {
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
@@ -54,11 +53,11 @@ internal class EntityCreateViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = resProvider.getString(
+            title = NativeText.Arguments(
                 R.string.entity_create_toolbar_title,
                 entityCreateArgs.entityTypeSchema.displayName
             ),
-            bgColorInt = ColorUtils.getColor(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 

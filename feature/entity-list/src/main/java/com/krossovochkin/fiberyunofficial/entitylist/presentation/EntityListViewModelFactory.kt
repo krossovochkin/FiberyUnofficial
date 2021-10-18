@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
@@ -35,7 +34,6 @@ class EntityListViewModelFactory(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val resProvider: ResProvider,
     private val entityListArgs: EntityListFragment.Args
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -49,7 +47,6 @@ class EntityListViewModelFactory(
                 getEntityListSortInteractor,
                 removeEntityRelationInteractor,
                 addEntityRelationInteractor,
-                resProvider,
                 entityListArgs
             ) as T
         } else {

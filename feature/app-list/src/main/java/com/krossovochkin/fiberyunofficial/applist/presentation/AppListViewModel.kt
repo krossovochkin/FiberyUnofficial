@@ -22,7 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.list.ListViewModelDelegate
-import com.krossovochkin.core.presentation.resources.ResProvider
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
@@ -49,7 +50,6 @@ abstract class AppListViewModel : ViewModel() {
 
 internal class AppListViewModelImpl(
     private val getAppListInteractor: GetAppListInteractor,
-    private val resProvider: ResProvider
 ) : AppListViewModel() {
 
     override val progress = MutableStateFlow(false)
@@ -88,7 +88,7 @@ internal class AppListViewModelImpl(
 
     override fun getToolbarViewState(context: Context): ToolbarViewState =
         ToolbarViewState(
-            title = resProvider.getString(R.string.app_list_title),
-            bgColorInt = resProvider.getColorAttr(context, R.attr.colorPrimary)
+            title = NativeText.Resource(R.string.app_list_title),
+            bgColor = NativeColor.Attribute(R.attr.colorPrimary)
         )
 }

@@ -17,15 +17,12 @@
 package com.krossovochkin.fiberyunofficial
 
 import android.content.Context
-import com.krossovochkin.core.presentation.resources.ResProvider
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 
 interface GlobalDependencies {
 
     fun context(): Context
-
-    fun resProvider(): ResProvider
 
     fun fiberyServiceApi(): FiberyServiceApi
 

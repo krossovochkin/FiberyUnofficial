@@ -19,9 +19,10 @@ package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.list.ListViewModelDelegate
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.core.presentation.viewmodel.load
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
@@ -124,8 +125,10 @@ internal class EntityDetailsViewModelImpl(
 
     override val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
-            title = "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}",
-            bgColorInt = ColorUtils.getColor(entityDetailsArgs.entityData.schema.meta.uiColorHex),
+            title = NativeText.Simple(
+                "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}"
+            ),
+            bgColor = NativeColor.Hex(entityDetailsArgs.entityData.schema.meta.uiColorHex),
             menuResId = R.menu.entity_details_menu,
             hasBackButton = true
         )

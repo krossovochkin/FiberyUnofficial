@@ -16,9 +16,8 @@
  */
 package com.krossovochkin.core.presentation.ui.fab
 
-import androidx.annotation.ColorInt
+import com.krossovochkin.core.presentation.resources.NativeColor
 
 data class FabViewState(
-    @ColorInt
-    val bgColorInt: Int
+    val bgColor: NativeColor
 )

@@ -16,14 +16,14 @@
  */
 package com.krossovochkin.core.presentation.ui.toolbar
 
-import androidx.annotation.ColorInt
 import androidx.annotation.IdRes
 import androidx.annotation.MenuRes
+import com.krossovochkin.core.presentation.resources.NativeColor
+import com.krossovochkin.core.presentation.resources.NativeText
 
 data class ToolbarViewState(
-    val title: String,
-    @ColorInt
-    val bgColorInt: Int,
+    val title: NativeText,
+    val bgColor: NativeColor,
     @MenuRes
     val menuResId: Int? = null,
     @IdRes
