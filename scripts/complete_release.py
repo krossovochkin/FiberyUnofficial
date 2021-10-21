@@ -20,7 +20,7 @@ data = '''[
         "q/limit": 1
       },
       "params": {
-          "$name": "0.14.0"
+          "$name": "{version}"
       }
     }
   }
