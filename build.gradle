@@ -1,8 +1,6 @@
-import io.gitlab.arturbosch.detekt.Detekt
-
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "io.gitlab.arturbosch.detekt"
-apply plugin: "com.autonomousapps.dependency-analysis"
+apply from: "$rootDir/quality/deps_lint.gradle"
 
 buildscript {
     apply from: 'dependencies.gradle'
@@ -25,7 +23,8 @@ buildscript {
 dependencies {
     detektPlugins d.plugin.gradle_detekt_formatting
 }
-task detektAll(type: Detekt) {
+//noinspection UnnecessaryQualifiedReference
+task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     allRules = true
     parallel = true
     setSource(files(projectDir))

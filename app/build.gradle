@@ -52,6 +52,7 @@ dependencies {
     implementation d.app.core_domain
     implementation d.app.core_presentation_viewbinding
     implementation d.app.core_presentation_result
+
     implementation d.app.feature_login
     implementation d.app.feature_app_list
     implementation d.app.feature_entity_type_list
@@ -70,7 +71,6 @@ dependencies {
     kapt d.core.dagger_compiler
 
     implementation d.androidx.navigation_fragment
-    implementation d.androidx.navigation_ui
     implementation d.androidx.security
 
     testImplementation d.test.junit

@@ -5,18 +5,22 @@ android {
 }
 
 dependencies {
-    implementation d.app.core_data_api
-    implementation d.app.core_domain
+    api d.core.kotlin_coroutines
+    api d.androidx.appcompat
+    api d.androidx.recyclerview
+    api d.androidx.constraint_layout
+    api d.app.core_data_api
+    api d.app.core_domain
+    api d.app.core_presentation_list
+    api d.app.core_presentation_ui_toolbar
+    implementation d.androidx.fragment
     implementation d.app.core_presentation_resources
-    implementation d.app.core_presentation_list
     implementation d.app.core_presentation_result
     implementation d.app.core_presentation_navigation
     implementation d.app.core_presentation_viewbinding
+    implementation d.app.core_presentation_viewmodel
     implementation d.app.core_presentation_ui_progress
-    implementation d.app.core_presentation_ui_toolbar
     implementation d.app.core_presentation_ui_error
-
-    implementation d.ui.adapter_delegates
 
     testImplementation d.test.junit
     androidTestImplementation d.test.android_junit

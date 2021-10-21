@@ -3,6 +3,6 @@ apply from: "$rootDir/feature_default.gradle"
 dependencies {
     api d.androidx.fragment
     api d.core.kotlin_coroutines
-    api d.app.core_presentation_animation
-    api d.app.core_presentation_flow
+    implementation d.app.core_presentation_animation
+    implementation d.app.core_presentation_flow
 }

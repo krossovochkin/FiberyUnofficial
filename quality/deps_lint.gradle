@@ -1,0 +1,85 @@
+apply plugin: "com.autonomousapps.dependency-analysis"
+
+dependencyAnalysis {
+    strictMode(false)
+    dependencies {
+        bundle("adapter-delegates") {
+            includeDependency("com.hannesdorfmann:adapterdelegates4")
+            includeDependency("com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding")
+        }
+        bundle("serialization") {
+            includeDependency(":core:data:serialization")
+            includeDependency("com.squareup.retrofit2:converter-moshi")
+            includeDependency("com.squareup.moshi:moshi")
+        }
+        bundle("domain") {
+            includeDependency(":core:domain")
+            includeDependency("com.jakewharton.threetenabp:threetenabp")
+            includeDependency("org.threeten:threetenbp")
+        }
+        bundle("network") {
+            includeDependency("com.squareup.retrofit2:retrofit")
+            includeDependency("com.squareup.okhttp3:okhttp")
+        }
+        bundle("viewmodel") {
+            includeDependency(":core:presentation:viewmodel")
+            includeGroup("androidx.lifecycle")
+        }
+        bundle("coroutines") {
+            includeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm")
+            includeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+        }
+        bundle("paging") {
+            includeDependency(":core:presentation:list")
+            includeDependency(":adapter-delegates-paging3")
+            includeDependency(":core:presentation:paging")
+            includeDependency("com.hannesdorfmann:adapterdelegates4")
+            includeDependency("androidx.paging:paging-common")
+        }
+        bundle("fragment") {
+            includeGroup("androidx.fragment")
+        }
+    }
+    issues {
+        all {
+            ignoreKtx(true)
+            onAny {
+                severity("fail")
+            }
+        }
+        // ignore unused kapt as serialization module provides these as api
+        project(":core:data:serialization") {
+            onUnusedDependencies {
+                exclude("com.squareup.retrofit2:converter-moshi")
+            }
+            onUnusedAnnotationProcessors {
+                exclude("com.squareup.moshi:moshi-kotlin-codegen")
+            }
+            onRedundantPlugins {
+                exclude("kotlin-kapt")
+            }
+        }
+
+        // ignore as paging serves as an api proxy of this lib
+        project(":core:presentation:paging") {
+            onIncorrectConfiguration {
+                exclude(":adapter-delegates-paging3")
+            }
+        }
+
+        // temporarily ignore viewmodel issues, might be issue with plugin
+        project(":core:presentation:viewmodel") {
+            onIncorrectConfiguration {
+                exclude("androidx.lifecycle:lifecycle-viewmodel-ktx")
+            }
+        }
+        project(":feature:picker-filter") {
+            onUnusedDependencies {
+                exclude(":core:presentation:viewmodel")
+            }
+            onIncorrectConfiguration {
+                exclude("androidx.lifecycle:lifecycle-viewmodel-ktx", "androidx.lifecycle:lifecycle-viewmodel")
+            }
+        }
+    }
+}

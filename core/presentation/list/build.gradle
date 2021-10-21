@@ -2,11 +2,10 @@ apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
     api d.androidx.fragment
-    api d.ui.material
-    api d.core.kotlin_coroutines
-    api d.app.core_presentation_flow
-    api d.app.core_presentation_system
-    api d.app.core_presentation_viewmodel
     api d.androidx.recyclerview
-    implementation d.ui.adapter_delegates
+    api d.core.kotlin_coroutines
+    api d.ui.adapter_delegates
+    implementation d.app.core_presentation_flow
+    implementation d.app.core_presentation_system
+    implementation d.app.core_presentation_viewmodel
 }

@@ -1,6 +1,6 @@
 apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
-    implementation d.app.core_data_serialization
     api d.core.date_time
+    implementation d.app.core_data_serialization
 }

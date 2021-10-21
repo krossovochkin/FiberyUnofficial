@@ -2,10 +2,7 @@ apply from: "$rootDir/feature_default.gradle"
 apply plugin: "kotlin-kapt"
 
 dependencies {
-    implementation d.network.retrofit
-    implementation d.app.core_data_serialization
-    implementation d.app.core_domain
-
-    implementation d.app.core_data_auth
-    implementation d.app.core_debug
+    api d.network.retrofit
+    api d.app.core_data_serialization
+    api d.app.core_domain
 }

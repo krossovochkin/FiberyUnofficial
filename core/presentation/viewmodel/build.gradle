@@ -2,4 +2,5 @@ apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
     api d.androidx.lifecycle_viewmodel
+    api d.core.kotlin_coroutines
 }

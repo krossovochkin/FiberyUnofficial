@@ -2,5 +2,6 @@ apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
     api d.androidx.paging
+    api d.androidx.recyclerview
     api d.ui.adapter_delegates
 }

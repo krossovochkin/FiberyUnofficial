@@ -1,5 +1,5 @@
 apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
-    implementation d.app.core_domain
+    api d.app.core_domain
 }
