@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
@@ -28,8 +29,10 @@ import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
+import com.krossovochkin.fiberyunofficial.pickerfilter.domain.EmptyFilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData
+import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilterItemData
 import com.krossovochkin.serialization.Serializer
 import kotlinx.coroutines.channels.Channel
@@ -46,11 +49,15 @@ abstract class PickerFilterViewModel : ViewModel() {
 
     abstract val toolbarViewState: ToolbarViewState
 
+    abstract fun onMergeTypeSelected(type: FilterMergeType)
+
     abstract fun onFieldSelected(position: Int, field: FiberyFieldSchema?)
 
     abstract fun onConditionSelected(position: Int, condition: FilterCondition?)
 
     abstract fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData?)
+
+    abstract fun onAddFilterClicked()
 
     abstract fun applyFilter()
 
@@ -69,6 +76,7 @@ class PickerFilterViewModelImpl(
     override val navigation: Flow<PickerFilterNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
+    private var mergeType: FilterMergeType = FilterMergeType.ALL
     private val data: MutableList<FilterItemData> = mutableListOf()
 
     private var supportedFields = listOf<FiberyFieldSchema>()
@@ -89,10 +97,24 @@ class PickerFilterViewModelImpl(
                 }
 
             (pickerFilterArgs.filter to pickerFilterArgs.params).fromJson()
-                ?.let { data.add(it) }
+                .let { (filterMergeType, items) ->
+                    mergeType = filterMergeType
+                    data.clear()
+                    data.addAll(items)
+                }
+
+            if (data.isEmpty()) {
+                data.add(EmptyFilterItemData)
+            }
 
             update()
         }
+    }
+
+    override fun onMergeTypeSelected(type: FilterMergeType) {
+        mergeType = type
+
+        update()
     }
 
     override fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
@@ -141,13 +163,20 @@ class PickerFilterViewModelImpl(
         update()
     }
 
+    override fun onAddFilterClicked() {
+        data.add(EmptyFilterItemData)
+        update()
+    }
+
     override fun applyFilter() {
         val (filter, params) = if (data.isEmpty()) {
             "" to ""
         } else {
-            val item = data.first() as SingleSelectFilterItemData
-            item.toJson()
+            (mergeType to data).toJson()
         }
+
+        Log.e("HELLO", "filter: $filter")
+        Log.e("HELLO", "params: $params")
 
         viewModelScope.launch {
             navigationChannel.send(
@@ -168,18 +197,42 @@ class PickerFilterViewModelImpl(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private suspend fun Pair<String, String>.fromJson(): FilterItemData? {
+    private suspend fun Pair<String, String>.fromJson(): Pair<FilterMergeType, List<FilterItemData>> {
         return runCatching {
             val (filter, params) = this
             val filterData: List<Any> = serializer.jsonToList(filter, Any::class.java)
-            val paramsData: Map<String, Any> = serializer
-                .jsonToMap(params, String::class.java, Any::class.java)
+
+            val paramsData: Map<String, String> = serializer
+                .jsonToMap(params, String::class.java, String::class.java)
+
+            val mergeType = if (filterData.isEmpty()) {
+                FilterMergeType.ALL
+            } else {
+                FilterMergeType.values().find { it.value == filterData.first() }!!
+            }
+
+            val items = filterData.drop(1).mapIndexed { index: Int, filterItem: Any ->
+                (serializer.listToJson(
+                    filterItem as List<Any>,
+                    Any::class.java
+                ) to paramsData["\$where${index + 1}"]!!).fromItemJson()!!
+            }
+
+            mergeType to items
+        }.getOrNull() ?: (mergeType to emptyList())
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun Pair<String, String>.fromItemJson(): FilterItemData? {
+        return runCatching {
+            val (filter, params) = this
+            val filterData: List<Any> = serializer.jsonToList(filter, Any::class.java)
 
             val fieldName = (filterData[1] as List<Any>)[0] as String
             val field = supportedFields.find { it.name == fieldName }!!
             val condition = FilterCondition.values().find { it.value == filterData[0] as String }!!
             val items = fiberyApiRepository.getEnumValues(field.type)
-            val selectedItem = items.find { it.id == paramsData["\$where1"] }
+            val selectedItem = items.find { it.id == params }
 
             SingleSelectFilterItemData(
                 field = field,
@@ -190,15 +243,25 @@ class PickerFilterViewModelImpl(
         }.getOrNull()
     }
 
-    private fun FilterItemData.toJson(): Pair<String, String> {
+    private fun Pair<FilterMergeType, List<FilterItemData>>.toJson(): Pair<String, String> {
+        val (mergeType, items) = this
+        val itemsJsons = items.mapIndexed { index, data -> data.toJson(index + 1) }
+
+        val filterJson = "[\"${mergeType.value}\", ${itemsJsons.joinToString { it.first }}]"
+        val paramsJson = "{${itemsJsons.joinToString { it.second }}}"
+
+        return filterJson to paramsJson
+    }
+
+    private fun FilterItemData.toJson(index: Int): Pair<String, String> {
         return if (this is SingleSelectFilterItemData) {
             val itemCondition = this.condition!!.value
             val itemFieldName = this.field.name
             val itemId = this.selectedItem!!.id
 
             val filter =
-                "[\"$itemCondition\",[\"$itemFieldName\", \"${FiberyApiConstants.Field.ID.value}\"],\"\$where1\"]"
-            val params = "{\"\$where1\": \"$itemId\"}"
+                "[\"$itemCondition\",[\"$itemFieldName\", \"${FiberyApiConstants.Field.ID.value}\"],\"\$where$index\"]"
+            val params = "\"\$where$index\": \"$itemId\""
 
             filter to params
         } else {
@@ -208,34 +271,34 @@ class PickerFilterViewModelImpl(
 
     private fun update() {
         viewModelScope.launch {
-            items.emit(map(data))
-        }
-    }
-
-    private fun map(data: List<FilterItemData>): List<ListItem> {
-        return if (data.isEmpty()) {
-            listOf(
-                EmptyFilterItem(
-                    fields = supportedFields
-                )
+            items.emit(
+                listOf(FilterMergeTypeItem(mergeType)) +
+                    data.map(::map) +
+                    AddFilterItem
             )
-        } else {
-            data.map(::map)
         }
     }
 
     private fun map(data: FilterItemData): ListItem {
-        return if (data is SingleSelectFilterItemData) {
-            SingleSelectFilterItem(
-                fields = supportedFields,
-                field = data.field,
-                conditions = FilterCondition.values().toList(),
-                condition = data.condition,
-                values = data.items,
-                selectedValue = data.selectedItem
-            )
-        } else {
-            TODO("implement")
+        return when {
+            data is SingleSelectFilterItemData -> {
+                SingleSelectFilterItem(
+                    fields = supportedFields,
+                    field = data.field,
+                    conditions = FilterCondition.values().toList(),
+                    condition = data.condition,
+                    values = data.items,
+                    selectedValue = data.selectedItem
+                )
+            }
+            data === EmptyFilterItemData -> {
+                EmptyFilterItem(
+                    fields = supportedFields
+                )
+            }
+            else -> {
+                TODO("implement")
+            }
         }
     }
 }

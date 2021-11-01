@@ -1,8 +1,6 @@
 apply from: "$rootDir/feature_default.gradle"
-apply plugin: "kotlin-kapt"
 
 dependencies {
     api d.network.retrofit_moshi
     api d.network.moshi
-    kapt d.network.moshi_codegen
 }

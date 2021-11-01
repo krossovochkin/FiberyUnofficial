@@ -36,8 +36,11 @@ import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemAddBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemEmptyBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemMergeTypeBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
+import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerFilterFragment(
@@ -84,6 +87,30 @@ class PickerFilterFragment(
         initRecyclerView(
             recyclerView = binding.recyclerView,
             itemsFlow = viewModel.items,
+            adapterDelegateViewBinding<FilterMergeTypeItem, ListItem, PickerFilterItemMergeTypeBinding>(
+                viewBinding = { inflater, parent ->
+                    PickerFilterItemMergeTypeBinding.inflate(inflater, parent, false)
+                }
+            ) {
+                bind {
+                    binding.mergeTypeSpinner.setup(
+                        items = FilterMergeType.values().map { it.value },
+                        selectedItem = item.type.value
+                    ) { viewModel.onMergeTypeSelected(item.type) }
+                }
+                onViewRecycled { binding.mergeTypeSpinner.recycle() }
+            },
+            adapterDelegateViewBinding<AddFilterItem, ListItem, PickerFilterItemAddBinding>(
+                viewBinding = { inflater, parent ->
+                    PickerFilterItemAddBinding.inflate(inflater, parent, false)
+                }
+            ) {
+              bind {
+                  binding.addButton.setOnClickListener {
+                      viewModel.onAddFilterClicked()
+                  }
+              }
+            },
             adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
                 viewBinding = { inflater, parent ->
                     PickerFilterItemEmptyBinding.inflate(inflater, parent, false)
@@ -94,7 +121,7 @@ class PickerFilterFragment(
                         items = item.fields.map { it.displayName }
                     ) { position ->
                         viewModel.onFieldSelected(
-                            absoluteAdapterPosition,
+                            absoluteAdapterPosition - 1,
                             item.fields.getOrNull(position)
                         )
                     }
@@ -112,7 +139,7 @@ class PickerFilterFragment(
                         selectedItem = item.field.displayName
                     ) { position ->
                         viewModel.onFieldSelected(
-                            absoluteAdapterPosition,
+                            absoluteAdapterPosition - 1,
                             item.fields.getOrNull(position)
                         )
                     }
@@ -122,7 +149,7 @@ class PickerFilterFragment(
                         selectedItem = item.condition?.displayText
                     ) { position ->
                         viewModel.onConditionSelected(
-                            absoluteAdapterPosition,
+                            absoluteAdapterPosition - 1,
                             item.conditions.getOrNull(position)
                         )
                     }
@@ -132,7 +159,7 @@ class PickerFilterFragment(
                         selectedItem = item.selectedValue?.title
                     ) { position ->
                         viewModel.onSingleSelectValueSelected(
-                            absoluteAdapterPosition,
+                            absoluteAdapterPosition - 1,
                             item.values.getOrNull(position)
                         )
                     }
@@ -169,8 +196,6 @@ class PickerFilterFragment(
         }
         this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
-            var isInitial = true
-
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
             override fun onItemSelected(
@@ -179,10 +204,6 @@ class PickerFilterFragment(
                 position: Int,
                 id: Long
             ) {
-                if (isInitial) {
-                    isInitial = false
-                    return
-                }
                 onSelection(position - 1)
             }
         }

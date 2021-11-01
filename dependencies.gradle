@@ -7,7 +7,7 @@ v.android.versionCode = 16
 v.android.versionName = "0.16.1"
 
 v.plugin = [:]
-v.plugin.gradle_android = '7.2.0-alpha01'
+v.plugin.gradle_android = '7.2.0-alpha03'
 v.plugin.gradle_versions = "0.39.0"
 v.plugin.gradle_detekt = "1.18.1"
 v.plugin.gradle_dependencies_lint = "0.78.0"

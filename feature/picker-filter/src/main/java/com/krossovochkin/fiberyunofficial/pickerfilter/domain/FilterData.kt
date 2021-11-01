@@ -25,9 +25,11 @@ data class FilterData(
     val type: FilterMergeType = FilterMergeType.ALL
 )
 
-enum class FilterMergeType {
-    ALL,
-    ANY
+enum class FilterMergeType(
+    val value: String,
+) {
+    ALL("and"),
+    ANY("or"),
 }
 
 enum class FilterCondition(
@@ -39,6 +41,8 @@ enum class FilterCondition(
 }
 
 interface FilterItemData
+
+object EmptyFilterItemData : FilterItemData
 
 data class SingleSelectFilterItemData(
     val field: FiberyFieldSchema,

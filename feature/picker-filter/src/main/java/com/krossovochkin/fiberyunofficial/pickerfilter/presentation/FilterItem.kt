@@ -21,6 +21,13 @@ import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
+import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
+
+object AddFilterItem : ListItem
+
+data class FilterMergeTypeItem(
+    val type: FilterMergeType
+) : ListItem
 
 data class EmptyFilterItem(
     val fields: List<FiberyFieldSchema>

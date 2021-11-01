@@ -5,4 +5,6 @@ dependencies {
     api d.network.retrofit
     api d.app.core_data_serialization
     api d.app.core_domain
+    api d.network.retrofit_moshi
+    kapt d.network.moshi_codegen
 }

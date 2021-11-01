@@ -2,4 +2,5 @@
     <string name="picker_filter_apply_action">Apply</string>
     <string name="picker_filter_toolbar_title">Filter</string>
     <string name="picker_filter_root_transition_name" translatable="false">picker_filter_root_transition_name</string>
+    <string name="picker_filter_add_filter">Add filter</string>
 </resources>
