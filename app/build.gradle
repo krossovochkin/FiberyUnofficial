@@ -71,7 +71,6 @@ dependencies {
     implementation d.core.dagger
     kapt d.core.dagger_compiler
     implementation d.network.retrofit_moshi
-    kapt d.network.moshi_codegen
 
     implementation d.androidx.navigation_fragment
     implementation d.androidx.security

@@ -52,12 +52,6 @@ dependencyAnalysis {
             onUnusedDependencies {
                 exclude("com.squareup.retrofit2:converter-moshi")
             }
-            onUnusedAnnotationProcessors {
-                exclude("com.squareup.moshi:moshi-kotlin-codegen")
-            }
-            onRedundantPlugins {
-                exclude("kotlin-kapt")
-            }
         }
 
         // ignore as paging serves as an api proxy of this lib

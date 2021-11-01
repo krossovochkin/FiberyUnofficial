@@ -9,7 +9,6 @@ dependencies {
     api d.androidx.appcompat
     api d.androidx.recyclerview
     api d.androidx.constraint_layout
-    api d.app.core_data_api
     api d.app.core_domain
     api d.app.core_data_serialization
     api d.app.core_presentation_list
@@ -23,7 +22,6 @@ dependencies {
     implementation d.app.core_presentation_animation
     implementation d.app.core_presentation_system
 
-    testImplementation d.test.junit
     androidTestImplementation d.test.android_junit
     androidTestImplementation d.test.espresso
 }
