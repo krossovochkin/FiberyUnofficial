@@ -20,11 +20,6 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.domain
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 
-data class FilterData(
-    val items: List<FilterItemData>,
-    val type: FilterMergeType = FilterMergeType.ALL
-)
-
 enum class FilterMergeType(
     val value: String,
 ) {

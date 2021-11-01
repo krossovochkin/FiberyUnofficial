@@ -23,7 +23,6 @@ import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.domain.EmptySortItemData
@@ -58,7 +57,6 @@ abstract class PickerSortViewModel : ViewModel() {
 
 class PickerSortViewModelImpl(
     private val pickerSortArgs: PickerSortFragment.Args,
-    private val fiberyApiRepository: FiberyApiRepository,
     private val serializer: Serializer
 ) : PickerSortViewModel() {
 

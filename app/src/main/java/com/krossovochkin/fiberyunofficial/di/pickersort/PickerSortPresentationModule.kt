@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.di.pickersort
 
-import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModelFactory
 import com.krossovochkin.serialization.Serializer
@@ -30,14 +29,12 @@ object PickerSortPresentationModule {
     @JvmStatic
     @Provides
     fun pickerSortiewModelFactoryProducer(
-        fiberyApiRepository: FiberyApiRepository,
         argsProvider: PickerSortFragment.ArgsProvider,
         serializer: Serializer
     ): () -> PickerSortViewModelFactory {
         return {
             PickerSortViewModelFactory(
                 pickerSortArgs = argsProvider.getPickerSortArgs(),
-                fiberyApiRepository = fiberyApiRepository,
                 serializer = serializer
             )
         }

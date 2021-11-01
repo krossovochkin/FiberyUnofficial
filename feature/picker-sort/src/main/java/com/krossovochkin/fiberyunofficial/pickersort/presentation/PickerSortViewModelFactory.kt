@@ -19,12 +19,10 @@ package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.serialization.Serializer
 
 class PickerSortViewModelFactory(
     private val pickerSortArgs: PickerSortFragment.Args,
-    private val fiberyApiRepository: FiberyApiRepository,
     private val serializer: Serializer
 ) : ViewModelProvider.Factory {
 
@@ -33,7 +31,6 @@ class PickerSortViewModelFactory(
         return if (modelClass == PickerSortViewModel::class.java) {
             PickerSortViewModelImpl(
                 pickerSortArgs = pickerSortArgs,
-                fiberyApiRepository = fiberyApiRepository,
                 serializer = serializer
             ) as T
         } else {

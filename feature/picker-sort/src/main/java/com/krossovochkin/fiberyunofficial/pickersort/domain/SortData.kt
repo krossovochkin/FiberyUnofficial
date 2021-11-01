@@ -17,17 +17,17 @@
 
 package com.krossovochkin.fiberyunofficial.pickersort.domain
 
+import androidx.annotation.StringRes
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
-
-data class SortData(
-    val items: List<SortItemData>,
-)
+import com.krossovochkin.fiberyunofficial.pickersort.R
 
 enum class SortCondition(
+    @StringRes
+    val displayNameResId: Int,
     val value: String
 ) {
-    ASCENDING(value = "q/asc"),
-    DESCENDING(value = "q/desc")
+    ASCENDING(displayNameResId = R.string.picker_sort_ascending, value = "q/asc"),
+    DESCENDING(displayNameResId = R.string.picker_sort_descending, value = "q/desc")
 }
 
 interface SortItemData

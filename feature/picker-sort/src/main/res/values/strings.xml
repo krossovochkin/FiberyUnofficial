@@ -3,4 +3,6 @@
     <string name="picker_sort_toolbar_title">Sort</string>
     <string name="picker_sort_root_transition_name" translatable="false">picker_sort_root_transition_name</string>
     <string name="picker_sort_add_sort">Add sort</string>
+    <string name="picker_sort_ascending">Ascending</string>
+    <string name="picker_sort_descending">Descending</string>
 </resources>

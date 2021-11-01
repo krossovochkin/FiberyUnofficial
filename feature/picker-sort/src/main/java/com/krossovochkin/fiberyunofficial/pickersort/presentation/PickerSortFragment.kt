@@ -127,8 +127,8 @@ class PickerSortFragment(
                     }
 
                     binding.conditionSpinner.setup(
-                        items = item.conditions.map { it.value },
-                        selectedItem = item.condition?.value
+                        items = item.conditions.map { getString(it.displayNameResId) },
+                        selectedItem = item.condition?.let { getString(it.displayNameResId) }
                     ) { position ->
                         viewModel.onConditionSelected(
                             absoluteAdapterPosition,
