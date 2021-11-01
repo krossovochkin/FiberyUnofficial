@@ -35,6 +35,7 @@ import com.krossovochkin.fiberyunofficial.di.pickerentity.DaggerEntityPickerComp
 import com.krossovochkin.fiberyunofficial.di.pickerfilter.DaggerPickerFilterComponent
 import com.krossovochkin.fiberyunofficial.di.pickermultiselect.DaggerPickerMultiSelectComponent
 import com.krossovochkin.fiberyunofficial.di.pickersingleselect.DaggerPickerSingleSelectComponent
+import com.krossovochkin.fiberyunofficial.di.pickersort.DaggerPickerSortComponent
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragmentArgs
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
@@ -52,6 +53,8 @@ import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerM
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragmentArgs
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragmentArgs
+import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment
+import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragmentArgs
 import com.krossovochkin.filelist.presentation.FileListFragment
 import com.krossovochkin.filelist.presentation.FileListFragmentArgs
 
@@ -91,6 +94,9 @@ class MainActivityFragmentFactory(
             PickerFilterFragment::class.java.canonicalName -> {
                 instantiatePickerFilterFragment()
             }
+            PickerSortFragment::class.java.canonicalName -> {
+                instantiatePickerSortFragment()
+            }
             FileListFragment::class.java.canonicalName -> {
                 instantiateFileListFragment()
             }
@@ -114,6 +120,26 @@ class MainActivityFragmentFactory(
                                 entityTypeSchema = args.entityTypeSchema,
                                 filter = args.filter,
                                 params = args.params
+                            )
+                        }
+                    )
+                    .viewModelFactoryProducer()
+            )
+        }
+    }
+
+    private fun instantiatePickerSortFragment(): Fragment {
+        return instantiate { argsExtractor ->
+            PickerSortFragment(
+                factoryProvider = DaggerPickerSortComponent.factory()
+                    .create(
+                        pickerSortParentComponent = mainActivityComponent,
+                        argsProvider = {
+                            val args = PickerSortFragmentArgs
+                                .fromBundle(argsExtractor.extract())
+                            PickerSortFragment.Args(
+                                entityTypeSchema = args.entityTypeSchema,
+                                sort = args.sort
                             )
                         }
                     )

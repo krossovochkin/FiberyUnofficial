@@ -1,7 +1,7 @@
 apply from: "$rootDir/feature_default.gradle"
 
 android {
-    resourcePrefix = "picker_filter_"
+    resourcePrefix = "picker_sort_"
 }
 
 dependencies {

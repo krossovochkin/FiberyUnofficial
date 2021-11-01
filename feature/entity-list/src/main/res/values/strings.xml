@@ -12,4 +12,5 @@
     <string name="entity_list_list_transition_name" translatable="false">entity_list_list_transition_name_%1$d</string>
     <string name="entity_list_create_fab_transition_name" translatable="false">entity_list_create_fab_transition_name</string>
     <string name="entity_list_filter_transition_name" translatable="false">entity_list_filter_transition_name</string>
+    <string name="entity_list_sort_transition_name" translatable="false">entity_list_sort_transition_name</string>
 </resources>

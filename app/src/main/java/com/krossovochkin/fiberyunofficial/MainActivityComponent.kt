@@ -29,6 +29,7 @@ import com.krossovochkin.fiberyunofficial.di.pickerentity.EntityPickerParentComp
 import com.krossovochkin.fiberyunofficial.di.pickerfilter.PickerFilterParentComponent
 import com.krossovochkin.fiberyunofficial.di.pickermultiselect.PickerMultiSelectParentComponent
 import com.krossovochkin.fiberyunofficial.di.pickersingleselect.PickerSingleSelectParentComponent
+import com.krossovochkin.fiberyunofficial.di.pickersort.PickerSortParentComponent
 import dagger.Component
 import javax.inject.Scope
 
@@ -47,6 +48,7 @@ interface MainActivityComponent :
     PickerSingleSelectParentComponent,
     PickerMultiSelectParentComponent,
     PickerFilterParentComponent,
+    PickerSortParentComponent,
     FileListParentComponent,
     CommentListParentComponent {
 

@@ -47,6 +47,8 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFrag
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedData
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_ENTITY_CREATED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_FILTER_PICKED
+import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SORT_PICKED
+import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
 
@@ -311,6 +313,31 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         setFragmentResult(
             RESULT_KEY_FILTER_PICKED,
             FilterPickedData(filter = filter, params = params)
+        )
+        onBackPressed()
+    }
+
+    override fun onSortEdit(
+        entityTypeSchema: FiberyEntityTypeSchema,
+        sort: String,
+        view: View
+    ) {
+        binding.navHostFragment.findNavController().navigate(
+            EntityListFragmentDirections
+                .actionEntityListToPickerSortFragment(
+                    entityTypeSchema = entityTypeSchema,
+                    sort = sort
+                ),
+            FragmentNavigatorExtras(
+                view to getString(R.string.picker_sort_root_transition_name)
+            )
+        )
+    }
+
+    override fun onSortSelected(sort: String) {
+        setFragmentResult(
+            RESULT_KEY_SORT_PICKED,
+            SortPickedData(sort = sort)
         )
         onBackPressed()
     }

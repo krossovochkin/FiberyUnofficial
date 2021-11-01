@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_entityList_to_pickerFilterFragment"
             app:destination="@id/pickerFilterFragment" />
+        <action
+            android:id="@+id/action_entityList_to_pickerSortFragment"
+            app:destination="@id/pickerSortFragment" />
     </fragment>
     <fragment
         android:id="@+id/entityDetails"
@@ -145,6 +148,17 @@
             app:argType="string" />
         <argument
             android:name="params"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickerSortFragment"
+        android:name="com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment"
+        android:label="PickerSortFragment">
+        <argument
+            android:name="entityTypeSchema"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="sort"
             app:argType="string" />
     </fragment>
     <fragment

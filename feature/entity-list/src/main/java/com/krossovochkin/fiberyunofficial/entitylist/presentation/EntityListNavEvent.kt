@@ -39,7 +39,9 @@ sealed class EntityListNavEvent {
     ) : EntityListNavEvent()
 
     data class OnSortSelectedEvent(
-        val sort: String
+        val entityTypeSchema: FiberyEntityTypeSchema,
+        val sort: String,
+        val view: View
     ) : EntityListNavEvent()
 
     data class OnCreateEntityEvent(

@@ -20,7 +20,6 @@ package com.krossovochkin.fiberyunofficial.entitylist.presentation
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -42,7 +41,6 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.R
-import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListDialogSortBinding
 import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListItemBinding
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,6 +67,10 @@ class EntityListFragment(
             val data = bundle.toResultParcelable<EntityCreatedData>()
             viewModel.onEntityCreated(createdEntity = data.createdEntity)
         }
+        setFragmentResultListener(RESULT_KEY_SORT_PICKED) { _, bundle ->
+            val data = bundle.toResultParcelable<SortPickedData>()
+            viewModel.onSortSelected(sort = data.sort)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,7 +96,11 @@ class EntityListFragment(
                     )
                 }
                 is EntityListNavEvent.OnSortSelectedEvent -> {
-                    showUpdateSortDialog(event.sort)
+                    parentListener.onSortEdit(
+                        entityTypeSchema = event.entityTypeSchema,
+                        sort = event.sort,
+                        view = event.view
+                    )
                 }
                 is EntityListNavEvent.OnCreateEntityEvent -> {
                     onCreateEntity(event.entityType, event.parentEntityData, event.view)
@@ -103,6 +109,7 @@ class EntityListFragment(
         }
 
         var filterView: View? = null
+        var sortView: View? = null
         initToolbar(
             toolbar = binding.entityListToolbar,
             toolbarData = MutableStateFlow(viewModel.toolbarViewState),
@@ -114,7 +121,7 @@ class EntityListFragment(
                         true
                     }
                     R.id.action_sort -> {
-                        viewModel.onSortClicked()
+                        viewModel.onSortClicked(sortView!!)
                         true
                     }
                     else -> error("Unknown menu item: $item")
@@ -124,6 +131,9 @@ class EntityListFragment(
                 filterView = requireView().findViewById(R.id.action_filter)
                 filterView?.transitionName = requireContext()
                     .getString(R.string.entity_list_filter_transition_name)
+                sortView = requireView().findViewById(R.id.action_sort)
+                sortView?.transitionName = requireContext()
+                    .getString(R.string.entity_list_sort_transition_name)
             }
         )
 
@@ -183,25 +193,6 @@ class EntityListFragment(
         initErrorHandler(viewModel.error)
     }
 
-    private fun showUpdateSortDialog(
-        sort: String
-    ) {
-        val binding = EntityListDialogSortBinding.inflate(layoutInflater)
-        binding.sortTextInput.setText(sort)
-
-        AlertDialog.Builder(requireContext())
-            .setView(binding.root)
-            .setTitle(getString(R.string.entity_list_dialog_sort_title))
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel.onSortSelected(
-                    sort = binding.sortTextInput.text.toString()
-                )
-            }
-            .create()
-            .show()
-    }
-
     private fun onCreateEntity(
         entityType: FiberyEntityTypeSchema,
         parentEntityData: ParentEntityData?,
@@ -234,6 +225,12 @@ class EntityListFragment(
             entityTypeSchema: FiberyEntityTypeSchema,
             filter: String,
             params: String,
+            view: View
+        )
+
+        fun onSortEdit(
+            entityTypeSchema: FiberyEntityTypeSchema,
+            sort: String,
             view: View
         )
 

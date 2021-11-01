@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
@@ -174,9 +173,6 @@ class PickerFilterViewModelImpl(
         } else {
             (mergeType to data).toJson()
         }
-
-        Log.e("HELLO", "filter: $filter")
-        Log.e("HELLO", "params: $params")
 
         viewModelScope.launch {
             navigationChannel.send(

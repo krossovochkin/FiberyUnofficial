@@ -1,0 +1,6 @@
+<resources>
+    <string name="picker_sort_apply_action">Apply</string>
+    <string name="picker_sort_toolbar_title">Sort</string>
+    <string name="picker_sort_root_transition_name" translatable="false">picker_sort_root_transition_name</string>
+    <string name="picker_sort_add_sort">Add sort</string>
+</resources>

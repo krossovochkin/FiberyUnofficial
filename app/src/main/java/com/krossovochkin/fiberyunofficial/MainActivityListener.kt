@@ -28,6 +28,7 @@ import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
+import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment
 import com.krossovochkin.filelist.presentation.FileListFragment
 
 interface MainActivityListener :
@@ -41,5 +42,6 @@ interface MainActivityListener :
     PickerSingleSelectDialogFragment.ParentListener,
     PickerMultiSelectDialogFragment.ParentListener,
     PickerFilterFragment.ParentListener,
+    PickerSortFragment.ParentListener,
     FileListFragment.ParentListener,
     CommentListFragment.ParentListener

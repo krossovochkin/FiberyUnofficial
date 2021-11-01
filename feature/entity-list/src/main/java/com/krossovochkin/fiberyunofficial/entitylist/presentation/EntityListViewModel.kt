@@ -67,7 +67,7 @@ abstract class EntityListViewModel : ViewModel() {
 
     abstract fun onFilterSelected(filter: String, params: String)
 
-    abstract fun onSortClicked()
+    abstract fun onSortClicked(view: View)
 
     abstract fun onSortSelected(sort: String)
 
@@ -204,11 +204,13 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onSortClicked() {
+    override fun onSortClicked(view: View) {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnSortSelectedEvent(
-                    sort = getEntityListSortInteractor.execute(entityListArgs.entityTypeSchema)
+                    entityTypeSchema = entityListArgs.entityTypeSchema,
+                    sort = getEntityListSortInteractor.execute(entityListArgs.entityTypeSchema),
+                    view = view
                 )
             )
         }
