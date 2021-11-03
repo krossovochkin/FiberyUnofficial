@@ -3,8 +3,8 @@ v.android = [:]
 v.android.compileSdk = 31
 v.android.minSdk = 23
 v.android.targetSdk = 31
-v.android.versionCode = 17
-v.android.versionName = "0.17.0"
+v.android.versionCode = 18
+v.android.versionName = "0.17.1"
 
 v.plugin = [:]
 v.plugin.gradle_android = '7.2.0-alpha03'
