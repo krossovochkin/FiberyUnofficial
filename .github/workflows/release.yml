@@ -25,11 +25,11 @@ jobs:
           sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
       - name: Test
         run: ./gradlew detektAll lintDebug testDebug
-     # - name: Push changes
-     #   uses: actions-js/push@master
-     #   with:
-     #     message: v${{ github.event.inputs.version }}
-     #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push changes
+        uses: actions-js/push@master
+        with:
+          message: v${{ github.event.inputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare keystore
         run: |
           echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
