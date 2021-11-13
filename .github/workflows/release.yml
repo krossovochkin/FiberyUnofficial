@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
       - name: set up JDK
         uses: actions/setup-java@v1
         with:
@@ -30,6 +33,7 @@ jobs:
         with:
           message: v${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'master'
       - name: Prepare keystore
         run: |
           echo "${{ secrets.RELEASE_KEY_STORE }}" >> keystore_base64.txt
