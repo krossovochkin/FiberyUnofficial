@@ -38,6 +38,8 @@ import com.krossovochkin.core.presentation.ui.fab.initFab
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.R
@@ -61,7 +63,7 @@ class EntityListFragment(
 
         setFragmentResultListener(RESULT_KEY_FILTER_PICKED) { _, bundle ->
             val data = bundle.toResultParcelable<FilterPickedData>()
-            viewModel.onFilterSelected(filter = data.filter, params = data.params)
+            viewModel.onFilterSelected(filter = data.filter)
         }
         setFragmentResultListener(RESULT_KEY_ENTITY_CREATED) { _, bundle ->
             val data = bundle.toResultParcelable<EntityCreatedData>()
@@ -91,7 +93,6 @@ class EntityListFragment(
                     parentListener.onFilterEdit(
                         entityTypeSchema = event.entityTypeSchema,
                         filter = event.filter,
-                        params = event.params,
                         view = event.view
                     )
                 }
@@ -223,14 +224,13 @@ class EntityListFragment(
 
         fun onFilterEdit(
             entityTypeSchema: FiberyEntityTypeSchema,
-            filter: String,
-            params: String,
+            filter: FiberyEntityFilterData,
             view: View
         )
 
         fun onSortEdit(
             entityTypeSchema: FiberyEntityTypeSchema,
-            sort: String,
+            sort: FiberyEntitySortData,
             view: View
         )
 

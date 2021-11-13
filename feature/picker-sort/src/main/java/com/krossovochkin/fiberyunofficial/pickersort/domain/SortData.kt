@@ -18,16 +18,34 @@
 package com.krossovochkin.fiberyunofficial.pickersort.domain
 
 import androidx.annotation.StringRes
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 
 enum class SortCondition(
     @StringRes
     val displayNameResId: Int,
-    val value: String
+    val value: FiberyEntitySortData.Item.Condition
 ) {
-    ASCENDING(displayNameResId = R.string.picker_sort_ascending, value = "q/asc"),
-    DESCENDING(displayNameResId = R.string.picker_sort_descending, value = "q/desc")
+    ASCENDING(
+        displayNameResId = R.string.picker_sort_ascending,
+        value = FiberyEntitySortData.Item.Condition.ASCENDING
+    ),
+    DESCENDING(
+        displayNameResId = R.string.picker_sort_descending,
+        value = FiberyEntitySortData.Item.Condition.DESCENDING
+    )
+
+    ;
+
+    companion object {
+        fun fromCondition(condition: FiberyEntitySortData.Item.Condition): SortCondition {
+            return when (condition) {
+                FiberyEntitySortData.Item.Condition.ASCENDING -> ASCENDING
+                FiberyEntitySortData.Item.Condition.DESCENDING -> DESCENDING
+            }
+        }
+    }
 }
 
 interface SortItemData

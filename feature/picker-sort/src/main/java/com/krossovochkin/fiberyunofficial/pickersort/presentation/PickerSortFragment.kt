@@ -33,6 +33,7 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragmentBinding
@@ -187,7 +188,7 @@ class PickerSortFragment(
 
     data class Args(
         val entityTypeSchema: FiberyEntityTypeSchema,
-        val sort: String,
+        val sort: FiberyEntitySortData,
     )
 
     fun interface ArgsProvider {
@@ -197,7 +198,7 @@ class PickerSortFragment(
 
     interface ParentListener {
 
-        fun onSortSelected(sort: String)
+        fun onSortSelected(sort: FiberyEntitySortData)
 
         fun onBackPressed()
     }

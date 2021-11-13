@@ -7,7 +7,7 @@ v.android.versionCode = 18
 v.android.versionName = "0.17.1"
 
 v.plugin = [:]
-v.plugin.gradle_android = '7.2.0-alpha03'
+v.plugin.gradle_android = '7.2.0-alpha04'
 v.plugin.gradle_versions = "0.39.0"
 v.plugin.gradle_detekt = "1.18.1"
 v.plugin.gradle_dependencies_lint = "0.78.0"
@@ -83,6 +83,7 @@ d.network = [:]
 d.network.retrofit = "com.squareup.retrofit2:retrofit:${v.network.retrofit}"
 d.network.retrofit_moshi = "com.squareup.retrofit2:converter-moshi:${v.network.retrofit}"
 d.network.moshi = "com.squareup.moshi:moshi:${v.network.moshi}"
+d.network.moshi_adapters = "com.squareup.moshi:moshi-adapters:${v.network.moshi}"
 d.network.moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:${v.network.moshi}"
 
 d.ui = [:]

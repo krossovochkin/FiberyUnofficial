@@ -17,22 +17,56 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.domain
 
+import androidx.annotation.StringRes
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.pickerfilter.R
 
 enum class FilterMergeType(
-    val value: String,
+    @StringRes
+    val displayNameResId: Int,
+    val value: FiberyEntityFilterData.MergeType,
 ) {
-    ALL("and"),
-    ANY("or"),
+    ALL(R.string.picker_filter_all, FiberyEntityFilterData.MergeType.ALL),
+    ANY(R.string.picker_filter_any, FiberyEntityFilterData.MergeType.ANY)
+
+    ;
+
+    companion object {
+        fun fromMergeType(mergeType: FiberyEntityFilterData.MergeType): FilterMergeType {
+            return when (mergeType) {
+                FiberyEntityFilterData.MergeType.ALL -> ALL
+                FiberyEntityFilterData.MergeType.ANY -> ANY
+            }
+        }
+    }
 }
 
 enum class FilterCondition(
-    val displayText: String,
-    val value: String
+    @StringRes
+    val displayStringResId: Int,
+    val value: FiberyEntityFilterData.Item.Condition
 ) {
-    EQUALS(displayText = "=", value = "="),
-    NOT_EQUALS(displayText = "≠", value = "!=")
+    EQUALS(
+        displayStringResId = R.string.picker_filter_equals,
+        value = FiberyEntityFilterData.Item.Condition.EQUALS
+    ),
+    NOT_EQUALS(
+        displayStringResId = R.string.picker_filter_not_equals,
+        value = FiberyEntityFilterData.Item.Condition.NOT_EQUALS
+    )
+
+    ;
+
+    companion object {
+        fun fromCondition(condition: FiberyEntityFilterData.Item.Condition): FilterCondition {
+            return when (condition) {
+                FiberyEntityFilterData.Item.Condition.EQUALS -> EQUALS
+                FiberyEntityFilterData.Item.Condition.NOT_EQUALS -> NOT_EQUALS
+            }
+        }
+    }
 }
 
 interface FilterItemData

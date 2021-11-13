@@ -3,4 +3,8 @@
     <string name="picker_filter_toolbar_title">Filter</string>
     <string name="picker_filter_root_transition_name" translatable="false">picker_filter_root_transition_name</string>
     <string name="picker_filter_add_filter">Add filter</string>
+    <string name="picker_filter_all">all</string>
+    <string name="picker_filter_any">any</string>
+    <string name="picker_filter_equals">is</string>
+    <string name="picker_filter_not_equals">is not</string>
 </resources>

@@ -11,6 +11,7 @@ dependencyAnalysis {
             includeDependency(":core:data:serialization")
             includeDependency("com.squareup.retrofit2:converter-moshi")
             includeDependency("com.squareup.moshi:moshi")
+            includeDependency("com.squareup.moshi:moshi-adapters")
         }
         bundle("domain") {
             includeDependency(":core:domain")

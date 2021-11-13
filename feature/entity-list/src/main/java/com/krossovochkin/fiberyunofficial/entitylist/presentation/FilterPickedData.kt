@@ -18,12 +18,12 @@
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.os.Parcelable
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import kotlinx.parcelize.Parcelize
 
 const val RESULT_KEY_FILTER_PICKED = "filter_picked"
 
 @Parcelize
 data class FilterPickedData(
-    val filter: String,
-    val params: String
+    val filter: FiberyEntityFilterData
 ) : Parcelable

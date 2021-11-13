@@ -57,6 +57,69 @@ data class FiberyEntityTypeMetaData(
 
 @JsonClass(generateAdapter = true)
 @Parcelize
+data class FiberyEntitySortData(
+    val items: List<Item>
+) : Parcelable {
+
+    @JsonClass(generateAdapter = true)
+    @Parcelize
+    data class Item(
+        val field: FiberyFieldSchema,
+        val condition: Condition,
+    ) : Parcelable {
+
+        enum class Condition(
+            val value: String
+        ) {
+            ASCENDING(value = "q/asc"),
+            DESCENDING(value = "q/desc")
+        }
+    }
+}
+
+@JsonClass(generateAdapter = true)
+@Parcelize
+data class FiberyEntityFilterData(
+    val mergeType: MergeType,
+    val items: List<Item>
+) : Parcelable {
+
+    enum class MergeType(
+        val value: String
+    ) {
+        ALL("and"),
+        ANY("or")
+    }
+
+    sealed class Item(
+        val type: Type
+    ) : Parcelable {
+        abstract val field: FiberyFieldSchema
+        abstract val condition: Condition
+
+        enum class Type {
+            SINGLE_SELECT
+        }
+
+        enum class Condition(
+            val value: String
+        ) {
+            EQUALS("="),
+            NOT_EQUALS("!=")
+        }
+
+        @JsonClass(generateAdapter = true)
+        @Parcelize
+        data class SingleSelectItem(
+            override val field: FiberyFieldSchema,
+            override val condition: Condition,
+            val param: FieldData.EnumItemData
+        ) : Item(Type.SINGLE_SELECT)
+    }
+}
+
+@JsonClass(generateAdapter = true)
+@Parcelize
 data class FiberyFieldSchema(
     val name: String,
     val type: String,
@@ -217,6 +280,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @JsonClass(generateAdapter = true)
     @Parcelize
     data class EnumItemData(
         val id: String,

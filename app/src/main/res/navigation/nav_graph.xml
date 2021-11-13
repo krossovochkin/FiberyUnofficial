@@ -145,10 +145,7 @@
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
         <argument
             android:name="filter"
-            app:argType="string" />
-        <argument
-            android:name="params"
-            app:argType="string" />
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData" />
     </fragment>
     <fragment
         android:id="@+id/pickerSortFragment"
@@ -159,7 +156,7 @@
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
         <argument
             android:name="sort"
-            app:argType="string" />
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData" />
     </fragment>
     <fragment
         android:id="@+id/fileListFragment"

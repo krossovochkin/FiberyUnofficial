@@ -16,13 +16,14 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 interface SetEntityListSortInteractor {
 
     suspend fun execute(
         entityType: FiberyEntityTypeSchema,
-        sort: String
+        sort: FiberyEntitySortData
     )
 }
 
@@ -32,7 +33,7 @@ class SetEntityListSortInteractorImpl(
 
     override suspend fun execute(
         entityType: FiberyEntityTypeSchema,
-        sort: String
+        sort: FiberyEntitySortData
     ) {
         entityListRepository.setEntityListSort(entityType, sort)
     }

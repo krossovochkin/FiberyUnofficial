@@ -18,11 +18,12 @@
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.os.Parcelable
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import kotlinx.parcelize.Parcelize
 
 const val RESULT_KEY_SORT_PICKED = "sort_picked"
 
 @Parcelize
 data class SortPickedData(
-    val sort: String,
+    val sort: FiberyEntitySortData,
 ) : Parcelable

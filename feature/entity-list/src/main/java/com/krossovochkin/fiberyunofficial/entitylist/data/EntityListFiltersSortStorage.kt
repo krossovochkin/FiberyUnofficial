@@ -18,29 +18,22 @@ package com.krossovochkin.fiberyunofficial.entitylist.data
 
 import android.content.Context
 import androidx.core.content.edit
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.serialization.Serializer
 
 interface EntityListFiltersSortStorage {
 
-    fun setFilter(entityType: String, filter: String, params: String)
+    fun setFilter(entityType: String, filter: FiberyEntityFilterData)
 
-    fun setSort(entityType: String, sort: String)
+    fun setSort(entityType: String, sort: FiberyEntitySortData)
 
-    fun getFilter(entityType: String): List<Any>?
+    fun getFilter(entityType: String): FiberyEntityFilterData?
 
-    fun getParams(entityType: String): Map<String, Any>?
-
-    fun getSort(entityType: String): List<Any>?
-
-    fun getRawFilter(entityType: String): String
-
-    fun getRawParams(entityType: String): String
-
-    fun getRawSort(entityType: String): String
+    fun getSort(entityType: String): FiberyEntitySortData?
 }
 
 private const val KEY_PREFS_FILTERS = "ENTITY_LIST_FILTERS"
-private const val KEY_PREFS_PARAMS = "ENTITY_LIST_PARAMS"
 private const val KEY_PREFS_SORT = "ENTITY_LIST_SORT"
 
 class EntityListFiltersSortStorageImpl(
@@ -49,54 +42,59 @@ class EntityListFiltersSortStorageImpl(
 ) : EntityListFiltersSortStorage {
 
     private val filterPrefs = context.getSharedPreferences(KEY_PREFS_FILTERS, Context.MODE_PRIVATE)
-    private val paramsPrefs = context.getSharedPreferences(KEY_PREFS_PARAMS, Context.MODE_PRIVATE)
     private val sortPrefs = context.getSharedPreferences(KEY_PREFS_SORT, Context.MODE_PRIVATE)
+    private val filterPolymorphicData = listOf(
+        Serializer.PolymorphicData(
+            FiberyEntityFilterData.Item::class.java,
+            "type",
+            mapOf(
+                FiberyEntityFilterData.Item.SingleSelectItem::class.java to
+                    FiberyEntityFilterData.Item.Type.SINGLE_SELECT.name
+            )
+        )
+    )
 
-    override fun setFilter(entityType: String, filter: String, params: String) {
-        filterPrefs.edit { putString(entityType, filter) }
-        paramsPrefs.edit { putString(entityType, params) }
+    override fun setFilter(entityType: String, filter: FiberyEntityFilterData) {
+        filterPrefs.edit {
+            putString(
+                entityType,
+                serializer.polymorphicObjToJson(
+                    filter,
+                    FiberyEntityFilterData::class.java,
+                    filterPolymorphicData
+                )
+            )
+        }
     }
 
-    override fun setSort(entityType: String, sort: String) {
-        sortPrefs.edit { putString(entityType, sort) }
+    override fun setSort(entityType: String, sort: FiberyEntitySortData) {
+        sortPrefs.edit {
+            putString(
+                entityType,
+                serializer.objToJson(sort, FiberyEntitySortData::class.java)
+            )
+        }
     }
 
-    override fun getFilter(entityType: String): List<Any>? {
-        val json = getRawFilter(entityType)
+    override fun getFilter(entityType: String): FiberyEntityFilterData? {
+        val json = filterPrefs.getString(entityType, "").orEmpty()
         return if (json.isNotEmpty()) {
-            serializer.jsonToList(json, Any::class.java)
+            serializer.jsonToPolymorphicObj(
+                json,
+                FiberyEntityFilterData::class.java,
+                filterPolymorphicData
+            )
         } else {
             null
         }
     }
 
-    override fun getRawFilter(entityType: String): String {
-        return filterPrefs.getString(entityType, "").orEmpty()
-    }
-
-    override fun getParams(entityType: String): Map<String, Any>? {
-        val json = getRawParams(entityType)
+    override fun getSort(entityType: String): FiberyEntitySortData? {
+        val json = sortPrefs.getString(entityType, "").orEmpty()
         return if (json.isNotEmpty()) {
-            serializer.jsonToMap(json, String::class.java, Any::class.java)
+            serializer.jsonToObj(json, FiberyEntitySortData::class.java)
         } else {
             null
         }
-    }
-
-    override fun getRawParams(entityType: String): String {
-        return paramsPrefs.getString(entityType, "").orEmpty()
-    }
-
-    override fun getSort(entityType: String): List<Any>? {
-        val json = getRawSort(entityType)
-        return if (json.isNotEmpty()) {
-            serializer.jsonToList(json, Any::class.java)
-        } else {
-            null
-        }
-    }
-
-    override fun getRawSort(entityType: String): String {
-        return sortPrefs.getString(entityType, "").orEmpty()
     }
 }

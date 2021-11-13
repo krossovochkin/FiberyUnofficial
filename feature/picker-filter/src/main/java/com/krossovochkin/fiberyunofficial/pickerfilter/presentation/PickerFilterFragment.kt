@@ -33,6 +33,7 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
@@ -69,10 +70,7 @@ class PickerFilterFragment(
         ) { event ->
             when (event) {
                 is PickerFilterNavEvent.ApplyFilterEvent -> {
-                    parentListener.onFilterSelected(
-                        filter = event.filter,
-                        params = event.params
-                    )
+                    parentListener.onFilterSelected(filter = event.filter)
                 }
                 PickerFilterNavEvent.BackEvent -> parentListener.onBackPressed()
             }
@@ -94,8 +92,8 @@ class PickerFilterFragment(
             ) {
                 bind {
                     binding.mergeTypeSpinner.setup(
-                        items = FilterMergeType.values().map { it.value },
-                        selectedItem = item.type.value
+                        items = FilterMergeType.values().map { getString(it.displayNameResId) },
+                        selectedItem = getString(item.type.displayNameResId)
                     ) { viewModel.onMergeTypeSelected(item.type) }
                 }
                 onViewRecycled { binding.mergeTypeSpinner.recycle() }
@@ -105,11 +103,11 @@ class PickerFilterFragment(
                     PickerFilterItemAddBinding.inflate(inflater, parent, false)
                 }
             ) {
-              bind {
-                  binding.addButton.setOnClickListener {
-                      viewModel.onAddFilterClicked()
-                  }
-              }
+                bind {
+                    binding.addButton.setOnClickListener {
+                        viewModel.onAddFilterClicked()
+                    }
+                }
             },
             adapterDelegateViewBinding<EmptyFilterItem, ListItem, PickerFilterItemEmptyBinding>(
                 viewBinding = { inflater, parent ->
@@ -145,8 +143,8 @@ class PickerFilterFragment(
                     }
 
                     binding.conditionSpinner.setup(
-                        items = item.conditions.map { it.displayText },
-                        selectedItem = item.condition?.displayText
+                        items = item.conditions.map { getString(it.displayStringResId) },
+                        selectedItem = item.condition?.let { getString(it.displayStringResId) }
                     ) { position ->
                         viewModel.onConditionSelected(
                             absoluteAdapterPosition - 1,
@@ -216,8 +214,7 @@ class PickerFilterFragment(
 
     data class Args(
         val entityTypeSchema: FiberyEntityTypeSchema,
-        val filter: String,
-        val params: String
+        val filter: FiberyEntityFilterData
     )
 
     fun interface ArgsProvider {
@@ -227,7 +224,7 @@ class PickerFilterFragment(
 
     interface ParentListener {
 
-        fun onFilterSelected(filter: String, params: String)
+        fun onFilterSelected(filter: FiberyEntityFilterData)
 
         fun onBackPressed()
     }

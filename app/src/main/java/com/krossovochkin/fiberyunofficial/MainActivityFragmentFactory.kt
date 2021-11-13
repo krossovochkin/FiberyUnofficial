@@ -118,8 +118,7 @@ class MainActivityFragmentFactory(
                                 .fromBundle(argsExtractor.extract())
                             PickerFilterFragment.Args(
                                 entityTypeSchema = args.entityTypeSchema,
-                                filter = args.filter,
-                                params = args.params
+                                filter = args.filter
                             )
                         }
                     )

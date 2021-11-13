@@ -16,14 +16,14 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 interface SetEntityListFilterInteractor {
 
     suspend fun execute(
         entityType: FiberyEntityTypeSchema,
-        filter: String,
-        params: String
+        filter: FiberyEntityFilterData
     )
 }
 
@@ -33,9 +33,8 @@ class SetEntityListFilterInteractorImpl(
 
     override suspend fun execute(
         entityType: FiberyEntityTypeSchema,
-        filter: String,
-        params: String
+        filter: FiberyEntityFilterData
     ) {
-        entityListRepository.setEntityListFilter(entityType, filter, params)
+        entityListRepository.setEntityListFilter(entityType, filter)
     }
 }

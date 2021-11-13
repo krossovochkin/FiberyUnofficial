@@ -17,11 +17,12 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+
 sealed class PickerFilterNavEvent {
 
     data class ApplyFilterEvent(
-        val filter: String,
-        val params: String
+        val filter: FiberyEntityFilterData
     ) : PickerFilterNavEvent()
 
     object BackEvent : PickerFilterNavEvent()

@@ -20,7 +20,6 @@ package com.krossovochkin.fiberyunofficial.di.pickerfilter
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
-import com.krossovochkin.serialization.Serializer
 import dagger.Module
 import dagger.Provides
 
@@ -32,13 +31,11 @@ object PickerFilterPresentationModule {
     fun pickerFilterViewModelFactoryProducer(
         fiberyApiRepository: FiberyApiRepository,
         argsProvider: PickerFilterFragment.ArgsProvider,
-        serializer: Serializer
     ): () -> PickerFilterViewModelFactory {
         return {
             PickerFilterViewModelFactory(
                 pickerFilterArgs = argsProvider.getPickerFilterArgs(),
                 fiberyApiRepository = fiberyApiRepository,
-                serializer = serializer
             )
         }
     }

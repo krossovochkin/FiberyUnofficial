@@ -23,13 +23,13 @@ import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.domain.EmptySortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SelectedSortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortItemData
-import com.krossovochkin.serialization.Serializer
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +57,6 @@ abstract class PickerSortViewModel : ViewModel() {
 
 class PickerSortViewModelImpl(
     private val pickerSortArgs: PickerSortFragment.Args,
-    private val serializer: Serializer
 ) : PickerSortViewModel() {
 
     override val items = MutableStateFlow<List<ListItem>>(emptyList())
@@ -81,10 +80,15 @@ class PickerSortViewModelImpl(
         viewModelScope.launch {
             supportedFields = pickerSortArgs.entityTypeSchema.fields
 
-            pickerSortArgs.sort.fromJson()
+            pickerSortArgs.sort.items
                 .let { items ->
                     data.clear()
-                    data.addAll(items)
+                    data.addAll(items.map { item ->
+                        SelectedSortItemData(
+                            field = item.field,
+                            condition = SortCondition.fromCondition(item.condition)
+                        )
+                    })
                 }
 
             if (data.isEmpty()) {
@@ -137,11 +141,19 @@ class PickerSortViewModelImpl(
     }
 
     override fun applySort() {
-        val sort = if (data.isEmpty()) {
-            ""
-        } else {
-            data.toJson()
-        }
+        val sort = FiberyEntitySortData(
+            items = data.mapNotNull { item ->
+                if (item is SelectedSortItemData) {
+                    val condition = item.condition?.value ?: return@mapNotNull null
+                    FiberyEntitySortData.Item(
+                        field = item.field,
+                        condition = condition
+                    )
+                } else {
+                    null
+                }
+            }
+        )
 
         viewModelScope.launch {
             navigationChannel.send(
@@ -157,45 +169,6 @@ class PickerSortViewModelImpl(
             navigationChannel.send(
                 PickerSortNavEvent.BackEvent
             )
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun String.fromJson(): List<SortItemData> {
-        return runCatching {
-            val sort = this
-            val sortData: List<List<List<Any>>> =
-                serializer.jsonToList(sort, Any::class.java) as List<List<List<Any>>>
-
-            sortData.map { sortItem: List<Any> ->
-                val fieldName = (sortItem.first() as List<Any>).first() as String
-                val conditionName = sortItem[1] as String
-                SelectedSortItemData(
-                    field = supportedFields.find { it.name == fieldName }!!,
-                    condition = SortCondition.values().find { it.value == conditionName }!!
-                )
-            }
-        }.getOrNull() ?: emptyList()
-    }
-
-    private fun List<SortItemData>.toJson(): String {
-        if (this.isEmpty()) {
-            return ""
-        }
-
-        val itemsJsons = this.map { data -> data.toJson() }
-
-        return "[${itemsJsons.joinToString()}]"
-    }
-
-    private fun SortItemData.toJson(): String {
-        return if (this is SelectedSortItemData) {
-            val itemCondition = this.condition!!.value
-            val itemFieldName = this.field.name
-
-            "[[\"$itemFieldName\"], \"$itemCondition\"]"
-        } else {
-            TODO("implement")
         }
     }
 

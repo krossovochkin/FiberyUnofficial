@@ -16,20 +16,21 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 
 interface GetEntityListSortInteractor {
 
     fun execute(
         entityTypeSchema: FiberyEntityTypeSchema
-    ): String
+    ): FiberyEntitySortData
 }
 
 class GetEntityListSortInteractorImpl(
     private val entityListRepository: EntityListRepository
 ) : GetEntityListSortInteractor {
 
-    override fun execute(entityTypeSchema: FiberyEntityTypeSchema): String {
+    override fun execute(entityTypeSchema: FiberyEntityTypeSchema): FiberyEntitySortData {
         return entityListRepository.getEntityListSort(entityTypeSchema)
     }
 }

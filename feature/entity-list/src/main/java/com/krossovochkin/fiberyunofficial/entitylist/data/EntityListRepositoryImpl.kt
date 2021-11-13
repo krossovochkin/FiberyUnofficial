@@ -25,14 +25,18 @@ import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsQueryDto
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
 import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.domain.EntityListRepository
+import com.krossovochkin.serialization.Serializer
 
 class EntityListRepositoryImpl(
     private val fiberyServiceApi: FiberyServiceApi,
     private val fiberyApiRepository: FiberyApiRepository,
-    private val entityListFiltersSortStorage: EntityListFiltersSortStorage
+    private val entityListFiltersSortStorage: EntityListFiltersSortStorage,
+    private val serializer: Serializer,
 ) : EntityListRepository {
 
     override suspend fun getEntityList(
@@ -70,13 +74,19 @@ class EntityListRepositoryImpl(
                                 publicIdType
                             ),
                             where = entityListFiltersSortStorage.getFilter(entityType.name)
+                                ?.toFilterJson()
+                                ?.let { serializer.jsonToList(it, Any::class.java) }
                                 ?: EntityListFilters.filtersMap[entityType.name],
                             orderBy = entityListFiltersSortStorage.getSort(entityType.name)
+                                ?.toJson()
+                                ?.let { serializer.jsonToList(it, Any::class.java) }
                                 ?: EntityListFilters.orderMap[entityType.name],
                             offset = offset,
                             limit = pageSize
                         ),
-                        params = entityListFiltersSortStorage.getParams(entityType.name)
+                        params = entityListFiltersSortStorage.getFilter(entityType.name)
+                            ?.toParamsJson()
+                            ?.let { serializer.jsonToMap(it, String::class.java, Any::class.java) }
                             ?: EntityListFilters.params[entityType.name]
                     )
                 )
@@ -158,23 +168,26 @@ class EntityListRepositoryImpl(
 
     override fun setEntityListFilter(
         entityType: FiberyEntityTypeSchema,
-        filter: String,
-        params: String
+        filter: FiberyEntityFilterData
     ) {
-        entityListFiltersSortStorage.setFilter(entityType.name, filter, params)
+        entityListFiltersSortStorage.setFilter(entityType.name, filter)
     }
 
-    override fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String) {
+    override fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: FiberyEntitySortData) {
         entityListFiltersSortStorage.setSort(entityType.name, sort)
     }
 
-    override fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String> {
-        return entityListFiltersSortStorage.getRawFilter(entityType.name) to
-            entityListFiltersSortStorage.getRawParams(entityType.name)
+    override fun getEntityListFilter(entityType: FiberyEntityTypeSchema): FiberyEntityFilterData {
+        return entityListFiltersSortStorage.getFilter(entityType.name)
+            ?: FiberyEntityFilterData(
+                mergeType = FiberyEntityFilterData.MergeType.ALL,
+                items = emptyList()
+            )
     }
 
-    override fun getEntityListSort(entityType: FiberyEntityTypeSchema): String {
-        return entityListFiltersSortStorage.getRawSort(entityType.name)
+    override fun getEntityListSort(entityType: FiberyEntityTypeSchema): FiberyEntitySortData {
+        return entityListFiltersSortStorage.getSort(entityType.name)
+            ?: FiberyEntitySortData(items = emptyList())
     }
 
     override suspend fun removeRelation(
@@ -229,6 +242,62 @@ class EntityListRepositoryImpl(
         return requireNotNull(
             this.fields.find { it.meta.isUiTitle }
         ) { "title field name is missing: $this" }.name
+    }
+
+    private fun FiberyEntitySortData.toJson(): String {
+        if (this.items.isEmpty()) {
+            return ""
+        }
+
+        val itemsJsons = this.items.map { data -> data.toJson() }
+
+        return "[${itemsJsons.joinToString()}]"
+    }
+
+    private fun FiberyEntitySortData.Item.toJson(): String {
+        val itemCondition = this.condition.value
+        val itemFieldName = this.field.name
+
+        return "[[\"$itemFieldName\"], \"$itemCondition\"]"
+    }
+
+    private fun FiberyEntityFilterData.toFilterJson(): String {
+        val (mergeType, items) = this
+        val itemsJsons = items.mapIndexed { index, data -> data.toFilterJson(index + 1) }
+
+        return "[\"${mergeType.value}\", ${itemsJsons.joinToString()}]"
+    }
+
+    private fun FiberyEntityFilterData.Item.toFilterJson(index: Int): String {
+        return if (this is FiberyEntityFilterData.Item.SingleSelectItem) {
+            val itemCondition = this.condition.value
+            val itemFieldName = this.field.name
+
+            val filter =
+                "[\"$itemCondition\",[\"$itemFieldName\", \"${FiberyApiConstants.Field.ID.value}\"],\"\$where$index\"]"
+            filter
+        } else {
+            TODO("implement")
+        }
+    }
+
+    private fun FiberyEntityFilterData.toParamsJson(): String {
+        val (_, items) = this
+        val itemsJsons = items.mapIndexed { index, data -> data.toParamsJson(index + 1) }
+
+        return "{${itemsJsons.joinToString()}}"
+    }
+
+    private fun FiberyEntityFilterData.Item.toParamsJson(index: Int): String {
+        return if (this is FiberyEntityFilterData.Item.SingleSelectItem) {
+            val itemId = this.param.id
+
+            val params = "\"\$where$index\": \"$itemId\""
+
+            params
+        } else {
+            TODO("implement")
+        }
     }
 
     companion object {

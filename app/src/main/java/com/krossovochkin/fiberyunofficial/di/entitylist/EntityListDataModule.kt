@@ -35,12 +35,14 @@ object EntityListDataModule {
     fun entityListRepository(
         fiberyServiceApi: FiberyServiceApi,
         fiberyApiRepository: FiberyApiRepository,
-        entityListFiltersSortStorage: EntityListFiltersSortStorage
+        entityListFiltersSortStorage: EntityListFiltersSortStorage,
+        serializer: Serializer,
     ): EntityListRepository {
         return EntityListRepositoryImpl(
             fiberyServiceApi,
             fiberyApiRepository,
-            entityListFiltersSortStorage
+            entityListFiltersSortStorage,
+            serializer,
         )
     }
 

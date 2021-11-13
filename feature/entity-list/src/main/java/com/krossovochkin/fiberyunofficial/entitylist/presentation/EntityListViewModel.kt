@@ -29,6 +29,8 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
@@ -65,11 +67,11 @@ abstract class EntityListViewModel : ViewModel() {
 
     abstract fun onFilterClicked(view: View)
 
-    abstract fun onFilterSelected(filter: String, params: String)
+    abstract fun onFilterSelected(filter: FiberyEntityFilterData)
 
     abstract fun onSortClicked(view: View)
 
-    abstract fun onSortSelected(sort: String)
+    abstract fun onSortSelected(sort: FiberyEntitySortData)
 
     abstract fun onCreateEntityClicked(view: View)
 
@@ -176,14 +178,14 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onFilterSelected(filter: String, params: String) {
+    override fun onFilterSelected(filter: FiberyEntityFilterData) {
         viewModelScope.launch {
-            setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter, params)
+            setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter)
             paginatedListDelegate.invalidate()
         }
     }
 
-    override fun onSortSelected(sort: String) {
+    override fun onSortSelected(sort: FiberyEntitySortData) {
         viewModelScope.launch {
             setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
             paginatedListDelegate.invalidate()
@@ -192,12 +194,10 @@ internal class EntityListViewModelImpl(
 
     override fun onFilterClicked(view: View) {
         viewModelScope.launch {
-            val (filter, params) = getEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema)
             navigationChannel.send(
                 EntityListNavEvent.OnFilterSelectedEvent(
                     entityTypeSchema = entityListArgs.entityTypeSchema,
-                    filter = filter,
-                    params = params,
+                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema),
                     view = view
                 )
             )

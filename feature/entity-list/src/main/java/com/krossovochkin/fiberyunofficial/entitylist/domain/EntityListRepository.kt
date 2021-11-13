@@ -17,6 +17,8 @@
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 
@@ -29,13 +31,13 @@ interface EntityListRepository {
         parentEntityData: ParentEntityData?
     ): List<FiberyEntityData>
 
-    fun setEntityListFilter(entityType: FiberyEntityTypeSchema, filter: String, params: String)
+    fun setEntityListFilter(entityType: FiberyEntityTypeSchema, filter: FiberyEntityFilterData)
 
-    fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: String)
+    fun setEntityListSort(entityType: FiberyEntityTypeSchema, sort: FiberyEntitySortData)
 
-    fun getEntityListFilter(entityType: FiberyEntityTypeSchema): Pair<String, String>
+    fun getEntityListFilter(entityType: FiberyEntityTypeSchema): FiberyEntityFilterData
 
-    fun getEntityListSort(entityType: FiberyEntityTypeSchema): String
+    fun getEntityListSort(entityType: FiberyEntityTypeSchema): FiberyEntitySortData
 
     suspend fun removeRelation(
         parentEntityData: ParentEntityData,

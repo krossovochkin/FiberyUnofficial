@@ -31,6 +31,8 @@ import com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDi
 import com.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
@@ -292,8 +294,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onFilterEdit(
         entityTypeSchema: FiberyEntityTypeSchema,
-        filter: String,
-        params: String,
+        filter: FiberyEntityFilterData,
         view: View
     ) {
         binding.navHostFragment.findNavController().navigate(
@@ -301,7 +302,6 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                 .actionEntityListToPickerFilterFragment(
                     entityTypeSchema = entityTypeSchema,
                     filter = filter,
-                    params = params
                 ),
             FragmentNavigatorExtras(
                 view to getString(R.string.picker_filter_root_transition_name)
@@ -309,17 +309,17 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         )
     }
 
-    override fun onFilterSelected(filter: String, params: String) {
+    override fun onFilterSelected(filter: FiberyEntityFilterData) {
         setFragmentResult(
             RESULT_KEY_FILTER_PICKED,
-            FilterPickedData(filter = filter, params = params)
+            FilterPickedData(filter = filter)
         )
         onBackPressed()
     }
 
     override fun onSortEdit(
         entityTypeSchema: FiberyEntityTypeSchema,
-        sort: String,
+        sort: FiberyEntitySortData,
         view: View
     ) {
         binding.navHostFragment.findNavController().navigate(
@@ -334,7 +334,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         )
     }
 
-    override fun onSortSelected(sort: String) {
+    override fun onSortSelected(sort: FiberyEntitySortData) {
         setFragmentResult(
             RESULT_KEY_SORT_PICKED,
             SortPickedData(sort = sort)

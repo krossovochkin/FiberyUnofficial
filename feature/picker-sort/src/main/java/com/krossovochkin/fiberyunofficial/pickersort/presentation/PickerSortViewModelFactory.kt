@@ -19,11 +19,9 @@ package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.krossovochkin.serialization.Serializer
 
 class PickerSortViewModelFactory(
     private val pickerSortArgs: PickerSortFragment.Args,
-    private val serializer: Serializer
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -31,7 +29,6 @@ class PickerSortViewModelFactory(
         return if (modelClass == PickerSortViewModel::class.java) {
             PickerSortViewModelImpl(
                 pickerSortArgs = pickerSortArgs,
-                serializer = serializer
             ) as T
         } else {
             throw IllegalArgumentException()

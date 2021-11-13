@@ -17,10 +17,12 @@
 
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
+
 sealed class PickerSortNavEvent {
 
     data class ApplySortEvent(
-        val sort: String,
+        val sort: FiberyEntitySortData
     ) : PickerSortNavEvent()
 
     object BackEvent : PickerSortNavEvent()
