@@ -9,6 +9,6 @@
         android:id="@+id/appTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?textAppearanceBody1" />
+        android:textAppearance="?textAppearanceBodyLarge" />
 
 </FrameLayout>

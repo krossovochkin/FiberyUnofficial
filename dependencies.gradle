@@ -35,7 +35,7 @@ v.network.retrofit = "2.9.0"
 v.network.moshi = "1.12.0"
 
 v.ui = [:]
-v.ui.material = "1.5.0-alpha04"
+v.ui.material = "1.5.0-beta01"
 v.ui.adapter_delegates = "4.3.0"
 v.ui.markwon = "4.6.2"
 

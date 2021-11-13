@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="EntityDetailsFieldTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">?android:textColorSecondary</item>
+    <style name="EntityDetailsFieldTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">?colorOnSecondary</item>
     </style>
 
-    <style name="EntityDetailsFieldText" parent="TextAppearance.MaterialComponents.Body1" />
+    <style name="EntityDetailsFieldText" parent="TextAppearance.Material3.BodyLarge" />
 
 </resources>
