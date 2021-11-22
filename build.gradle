@@ -1,5 +1,6 @@
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "io.gitlab.arturbosch.detekt"
+apply plugin: "kover"
 apply from: "$rootDir/quality/deps_lint.gradle"
 
 buildscript {
@@ -17,6 +18,7 @@ buildscript {
         classpath d.plugin.gradle_versions
         classpath d.plugin.gradle_detekt
         classpath d.plugin.gradle_dependencies_lint
+        classpath d.plugin.gradle_kover
     }
 }
 

@@ -22,6 +22,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.krossovochkin.core.presentation.result.toResultBundle
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
         supportFragmentManager.fragmentFactory = MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContentView(binding.root)
     }
 
