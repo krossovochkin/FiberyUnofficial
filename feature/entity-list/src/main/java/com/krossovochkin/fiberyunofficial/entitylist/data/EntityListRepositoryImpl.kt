@@ -76,18 +76,18 @@ class EntityListRepositoryImpl(
                             where = entityListFiltersSortStorage.getFilter(entityType.name)
                                 ?.toFilterJson()
                                 ?.let { serializer.jsonToList(it, Any::class.java) }
-                                ?: EntityListFilters.filtersMap[entityType.name],
+                                ?: emptyList(),
                             orderBy = entityListFiltersSortStorage.getSort(entityType.name)
                                 ?.toJson()
                                 ?.let { serializer.jsonToList(it, Any::class.java) }
-                                ?: EntityListFilters.orderMap[entityType.name],
+                                ?: emptyList(),
                             offset = offset,
                             limit = pageSize
                         ),
                         params = entityListFiltersSortStorage.getFilter(entityType.name)
                             ?.toParamsJson()
                             ?.let { serializer.jsonToMap(it, String::class.java, Any::class.java) }
-                            ?: EntityListFilters.params[entityType.name]
+                            ?: emptyMap()
                     )
                 )
             )
