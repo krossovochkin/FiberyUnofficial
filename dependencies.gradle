@@ -47,6 +47,8 @@ v.debug.facebook_flipper = "0.117.0"
 
 v.test = [:]
 v.test.junit = "4.13.2"
+v.test.truth = "1.1.3"
+v.test.mockito = "4.0.0"
 v.test.android_junit = "1.1.4-alpha03"
 v.test.espresso = "3.5.0-alpha03"
 
@@ -103,6 +105,9 @@ d.debug.facebook_flipper_network_plugin = "com.facebook.flipper:flipper-network-
 
 d.test = [:]
 d.test.junit = "junit:junit:${v.test.junit}"
+d.test.truth = "com.google.truth:truth:${v.test.truth}"
+d.test.coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${v.core.kotlin_coroutines}"
+d.test.mockito = "org.mockito.kotlin:mockito-kotlin:${v.test.mockito}"
 d.test.android_junit = "androidx.test.ext:junit:${v.test.android_junit}"
 d.test.espresso = "androidx.test.espresso:espresso-core:${v.test.espresso}"
 
@@ -142,6 +147,9 @@ d.app.feature_picker_filter = project(":feature:picker-filter")
 d.app.feature_picker_sort = project(":feature:picker-sort")
 d.app.feature_file_list = project(":feature:file-list")
 d.app.feature_comment_list = project(":feature:comment-list")
+d.app.test_core = project(":test:core")
+d.app.test_domain = project(":test:domain")
+d.app.test_api = project(":test:api")
 
 ext.v = v
 ext.d = d

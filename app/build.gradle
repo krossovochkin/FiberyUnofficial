@@ -75,8 +75,4 @@ dependencies {
     implementation d.androidx.navigation_fragment
     implementation d.androidx.security
     implementation d.androidx.splashscreen
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
 }

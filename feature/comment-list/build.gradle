@@ -22,8 +22,4 @@ dependencies {
     implementation d.app.core_presentation_viewmodel
     implementation d.app.core_presentation_ui_error
     implementation d.app.core_presentation_animation
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
 }

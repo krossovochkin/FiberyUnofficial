@@ -10,8 +10,4 @@ dependencies {
     implementation d.androidx.appcompat
     implementation d.app.core_presentation_result
     implementation d.app.core_presentation_viewmodel
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
 }

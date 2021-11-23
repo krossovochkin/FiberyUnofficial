@@ -29,6 +29,7 @@ dependencyAnalysis {
         bundle("coroutines") {
             includeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm")
             includeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+            includeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-test")
         }
         bundle("paging") {
             includeDependency(":core:presentation:list")
@@ -46,6 +47,10 @@ dependencyAnalysis {
             ignoreKtx(true)
             onAny {
                 severity("fail")
+            }
+            onUsedTransitiveDependencies {
+                // ignore transitive usage of mockito-core
+                exclude("org.mockito:mockito-core")
             }
         }
         // ignore unused kapt as serialization module provides these as api

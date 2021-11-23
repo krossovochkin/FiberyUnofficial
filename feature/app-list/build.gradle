@@ -23,6 +23,10 @@ dependencies {
     implementation d.app.core_presentation_ui_error
 
     testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
+    testImplementation d.test.truth
+    testImplementation d.test.coroutines
+    testImplementation d.test.mockito
+    testImplementation d.app.test_core
+    testImplementation d.app.test_domain
+    testImplementation d.app.test_api
 }

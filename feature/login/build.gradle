@@ -13,8 +13,4 @@ dependencies {
     implementation d.app.core_presentation_viewbinding
     implementation d.app.core_presentation_viewmodel
     implementation d.app.core_presentation_flow
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
 }

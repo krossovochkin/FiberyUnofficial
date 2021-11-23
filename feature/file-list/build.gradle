@@ -24,8 +24,4 @@ dependencies {
     implementation d.app.core_presentation_ui_fab
     implementation d.app.core_presentation_animation
     implementation d.app.core_presentation_color
-
-    testImplementation d.test.junit
-    androidTestImplementation d.test.android_junit
-    androidTestImplementation d.test.espresso
 }
