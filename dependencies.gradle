@@ -3,7 +3,7 @@ v.android = [:]
 v.android.compileSdk = 31
 v.android.minSdk = 23
 v.android.targetSdk = 31
-v.android.versionCode = 21
+v.android.versionCode = 22
 v.android.versionName = "0.18.0"
 
 v.plugin = [:]
