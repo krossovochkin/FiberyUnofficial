@@ -60,6 +60,7 @@ dependencies {
     implementation d.app.feature_entity_details
     implementation d.app.feature_entity_create
     implementation d.app.feature_entity_create_data
+    implementation d.app.feature_entity_create_domain
     implementation d.app.feature_entity_picker
     implementation d.app.feature_picker_single_select
     implementation d.app.feature_picker_multi_select
@@ -72,6 +73,9 @@ dependencies {
     kapt d.core.dagger_compiler
     implementation d.network.retrofit_moshi
 
+    implementation d.androidx.appcompat
+    implementation d.androidx.constraint_layout
+    implementation d.androidx.fragment
     implementation d.androidx.navigation_fragment
     implementation d.androidx.security
     implementation d.androidx.splashscreen

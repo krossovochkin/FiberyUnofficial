@@ -9,7 +9,9 @@ import com.krossovochkin.test.core.TestObserver
 import com.krossovochkin.test.core.runBlockingAndroidTest
 import com.krossovochkin.test.core.test
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import org.junit.Test
 import org.mockito.kotlin.mock
 
@@ -45,6 +47,7 @@ internal class AppListViewModelImplTest {
             .assertNavigation(count = 0)
 
         advanceTimeBy(LOAD_TIME_MILLIS)
+        runCurrent()
 
         observers
             .assertProgress(count = 2, latestValue = false)
@@ -67,6 +70,7 @@ internal class AppListViewModelImplTest {
             .assertNavigation(count = 0)
 
         advanceTimeBy(LOAD_TIME_MILLIS)
+        runCurrent()
 
         observers
             .assertProgress(count = 2, latestValue = false)
@@ -89,6 +93,7 @@ internal class AppListViewModelImplTest {
             .assertNavigation(count = 0)
 
         advanceTimeBy(LOAD_TIME_MILLIS)
+        runCurrent()
 
         observers
             .assertProgress(count = 2, latestValue = false)
@@ -111,6 +116,7 @@ internal class AppListViewModelImplTest {
             .assertNavigation(count = 0)
 
         advanceTimeBy(LOAD_TIME_MILLIS)
+        runCurrent()
 
         observers
             .assertProgress(count = 2, latestValue = false)
@@ -143,7 +149,7 @@ internal class AppListViewModelImplTest {
     ) {
         constructor(
             viewModel: AppListViewModel,
-            scope: TestCoroutineScope
+            scope: TestScope
         ) : this(
             viewModel.progress.test(scope),
             viewModel.appItems.test(scope),

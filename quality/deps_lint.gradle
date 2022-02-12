@@ -1,7 +1,6 @@
 apply plugin: "com.autonomousapps.dependency-analysis"
 
 dependencyAnalysis {
-    strictMode(false)
     dependencies {
         bundle("adapter-delegates") {
             includeDependency("com.hannesdorfmann:adapterdelegates4")
@@ -17,6 +16,9 @@ dependencyAnalysis {
             includeDependency(":core:domain")
             includeDependency("com.jakewharton.threetenabp:threetenabp")
             includeDependency("org.threeten:threetenbp")
+        }
+        bundle("navigation") {
+            includeGroup("androidx.navigation")
         }
         bundle("network") {
             includeDependency("com.squareup.retrofit2:retrofit")
@@ -49,36 +51,25 @@ dependencyAnalysis {
                 severity("fail")
             }
             onUsedTransitiveDependencies {
-                // ignore transitive usage of mockito-core
-                exclude("org.mockito:mockito-core")
+                severity("ignore")
             }
-        }
-        // ignore unused kapt as serialization module provides these as api
-        project(":core:data:serialization") {
-            onUnusedDependencies {
-                exclude("com.squareup.retrofit2:converter-moshi")
+            project(":core:presentation:paging") {
+                onIncorrectConfiguration {
+                    exclude(":adapter-delegates-paging3")
+                }
             }
-        }
-
-        // ignore as paging serves as an api proxy of this lib
-        project(":core:presentation:paging") {
-            onIncorrectConfiguration {
-                exclude(":adapter-delegates-paging3")
+            project(":core:presentation:viewmodel") {
+                onIncorrectConfiguration {
+                    exclude("androidx.lifecycle:lifecycle-viewmodel-ktx")
+                }
             }
-        }
-
-        // temporarily ignore viewmodel issues, might be issue with plugin
-        project(":core:presentation:viewmodel") {
-            onIncorrectConfiguration {
-                exclude("androidx.lifecycle:lifecycle-viewmodel-ktx")
-            }
-        }
-        project(":feature:picker-filter") {
-            onUnusedDependencies {
-                exclude(":core:presentation:viewmodel")
-            }
-            onIncorrectConfiguration {
-                exclude("androidx.lifecycle:lifecycle-viewmodel-ktx", "androidx.lifecycle:lifecycle-viewmodel")
+            project(":feature:app-list") {
+                onUnusedDependencies {
+                    exclude(
+                            "org.mockito.kotlin:mockito-kotlin",
+                            "com.google.truth:truth"
+                    )
+                }
             }
         }
     }

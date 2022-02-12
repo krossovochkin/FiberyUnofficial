@@ -1,14 +1,13 @@
 package com.krossovochkin.test.core
 
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
 
 class TestObserver<T>(
-    scope: CoroutineScope,
+    scope: TestScope,
     flow: Flow<T>
 ) {
     private val values = mutableListOf<T>()

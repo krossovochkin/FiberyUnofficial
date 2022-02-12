@@ -48,7 +48,8 @@ fun Activity.setupSystemBars(
     } else {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.decorView.windowInsetsController
-                ?.setSystemBarsAppearance(0,
+                ?.setSystemBarsAppearance(
+                    0,
                     WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
                 )
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

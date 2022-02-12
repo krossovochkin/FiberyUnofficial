@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.krossovochkin.fiberyfunofficial.test.domain.FiberyAppDataBuilder
 import com.krossovochkin.fiberyunofficial.api.TestFiberyApiRepository
 import com.krossovochkin.fiberyunofficial.applist.domain.AppListRepository
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class AppListRepositoryImplTest {
@@ -15,7 +15,7 @@ class AppListRepositoryImplTest {
     )
 
     @Test
-    fun `returns list of apps`() = runBlockingTest {
+    fun `returns list of apps`() = runTest {
         assertThat(repository.getAppList())
             .isEqualTo(
                 listOf(

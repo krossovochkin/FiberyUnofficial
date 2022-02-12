@@ -2,7 +2,7 @@ package com.krossovochkin.fiberyunofficial.applist.domain
 
 import com.google.common.truth.Truth.assertThat
 import com.krossovochkin.fiberyfunofficial.test.domain.FiberyAppDataBuilder
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class GetAppListInteractorImplTest {
@@ -14,7 +14,7 @@ class GetAppListInteractorImplTest {
     )
 
     @Test
-    fun `if repository has no data then returns empty list`() = runBlockingTest {
+    fun `if repository has no data then returns empty list`() = runTest {
         assertThat(repository.getAppList())
             .isEmpty()
 
@@ -23,7 +23,7 @@ class GetAppListInteractorImplTest {
     }
 
     @Test
-    fun `if repository has data then returns that data`() = runBlockingTest {
+    fun `if repository has data then returns that data`() = runTest {
         val appList = listOf(
             FiberyAppDataBuilder().apply {
                 name = "App 1"

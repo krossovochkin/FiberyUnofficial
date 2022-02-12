@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="EntityDetailsFieldTitle" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textColor">?colorOnSecondary</item>
-    </style>
+    <style name="EntityDetailsFieldTitle" parent="TextAppearance.Material3.TitleMedium" />
 
     <style name="EntityDetailsFieldText" parent="TextAppearance.Material3.BodyLarge" />
 

@@ -88,11 +88,11 @@ class PickerSortFragment(
                     PickerSortItemAddBinding.inflate(inflater, parent, false)
                 }
             ) {
-              bind {
-                  binding.addButton.setOnClickListener {
-                      viewModel.onAddSortClicked()
-                  }
-              }
+                bind {
+                    binding.addButton.setOnClickListener {
+                        viewModel.onAddSortClicked()
+                    }
+                }
             },
             adapterDelegateViewBinding<EmptySortItem, ListItem, PickerSortItemEmptyBinding>(
                 viewBinding = { inflater, parent ->

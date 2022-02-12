@@ -97,18 +97,20 @@ class PickerFilterViewModelImpl(
                 .let { filter ->
                     mergeType = FilterMergeType.fromMergeType(filter.mergeType)
                     data.clear()
-                    data.addAll(filter.items.mapNotNull { item ->
-                        if (item is FiberyEntityFilterData.Item.SingleSelectItem) {
-                            SingleSelectFilterItemData(
-                                field = item.field,
-                                condition = FilterCondition.fromCondition(item.condition),
-                                items = fiberyApiRepository.getEnumValues(item.field.type),
-                                selectedItem = item.param
-                            )
-                        } else {
-                            null
+                    data.addAll(
+                        filter.items.mapNotNull { item ->
+                            if (item is FiberyEntityFilterData.Item.SingleSelectItem) {
+                                SingleSelectFilterItemData(
+                                    field = item.field,
+                                    condition = FilterCondition.fromCondition(item.condition),
+                                    items = fiberyApiRepository.getEnumValues(item.field.type),
+                                    selectedItem = item.param
+                                )
+                            } else {
+                                null
+                            }
                         }
-                    })
+                    )
                 }
 
             if (data.isEmpty()) {

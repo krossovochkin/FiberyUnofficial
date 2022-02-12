@@ -83,12 +83,14 @@ class PickerSortViewModelImpl(
             pickerSortArgs.sort.items
                 .let { items ->
                     data.clear()
-                    data.addAll(items.map { item ->
-                        SelectedSortItemData(
-                            field = item.field,
-                            condition = SortCondition.fromCondition(item.condition)
-                        )
-                    })
+                    data.addAll(
+                        items.map { item ->
+                            SelectedSortItemData(
+                                field = item.field,
+                                condition = SortCondition.fromCondition(item.condition)
+                            )
+                        }
+                    )
                 }
 
             if (data.isEmpty()) {

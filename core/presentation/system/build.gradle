@@ -1,8 +1,6 @@
 apply from: "$rootDir/feature_default.gradle"
 
 dependencies {
-    api d.androidx.fragment
-    api d.androidx.activity
     implementation d.app.core_presentation_color
     implementation d.androidx.constraint_layout
 }
