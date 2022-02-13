@@ -68,6 +68,7 @@ data class FiberyEntitySortData(
         val condition: Condition,
     ) : Parcelable {
 
+        @JsonClass(generateAdapter = false)
         enum class Condition(
             val value: String
         ) {
@@ -84,6 +85,7 @@ data class FiberyEntityFilterData(
     val items: List<Item>
 ) : Parcelable {
 
+    @JsonClass(generateAdapter = false)
     enum class MergeType(
         val value: String
     ) {
@@ -97,10 +99,12 @@ data class FiberyEntityFilterData(
         abstract val field: FiberyFieldSchema
         abstract val condition: Condition
 
+        @JsonClass(generateAdapter = false)
         enum class Type {
             SINGLE_SELECT
         }
 
+        @JsonClass(generateAdapter = false)
         enum class Condition(
             val value: String
         ) {
