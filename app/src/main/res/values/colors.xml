@@ -2,4 +2,5 @@
 <resources>
     <color name="colorPrimary">#FDDA65</color>
     <color name="colorPrimaryVariant">#FDDA65</color>
+    <color name="navigationBar">#B3FFFFFF</color>
 </resources>
