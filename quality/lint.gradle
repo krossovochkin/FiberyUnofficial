@@ -18,6 +18,8 @@ android {
                 "UnusedResources",
                 "StopShip",
                 "DuplicateStrings",
+
+                "MonochromeLauncherIcon",
         ]
     }
 }
