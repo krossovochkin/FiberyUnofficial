@@ -1,10 +1,14 @@
 apply from: "$rootDir/feature_default.gradle"
 apply plugin: "kotlin-kapt"
 
+android {
+    namespace 'com.krossovochkin.fiberyunofficial.api'
+}
+
 dependencies {
-    api d.network.retrofit
-    api d.app.core_data_serialization
-    api d.app.core_domain
-    api d.network.retrofit_moshi
-    kapt d.network.moshi_codegen
+    api libs.retrofit
+    api project(":core:data:serialization")
+    api project(":core:domain")
+    api libs.converter.moshi
+    kapt libs.moshi.kotlin.codegen
 }

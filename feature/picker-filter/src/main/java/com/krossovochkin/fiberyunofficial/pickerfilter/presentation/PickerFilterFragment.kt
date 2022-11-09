@@ -172,7 +172,7 @@ class PickerFilterFragment(
         )
 
         binding.applyAction.setOnClickListener { viewModel.applyFilter() }
-        binding.applyAction.updateInsetMargins(requireActivity(), bottom = true)
+        binding.applyAction.updateInsetMargins(bottom = true)
     }
 
     private inline fun Spinner.setup(

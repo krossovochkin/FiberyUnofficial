@@ -50,7 +50,7 @@ internal inline fun Toolbar.initToolbar(
     crossinline onMenuItemClicked: (MenuItem) -> Boolean = { false },
     crossinline onSearchQueryChanged: (String) -> Unit = {}
 ) {
-    updateInsetMargins(activity, top = true)
+    updateInsetMargins(top = true)
 
     val backgroundColor = ColorUtils.getDesaturatedColorIfNeeded(
         activity,

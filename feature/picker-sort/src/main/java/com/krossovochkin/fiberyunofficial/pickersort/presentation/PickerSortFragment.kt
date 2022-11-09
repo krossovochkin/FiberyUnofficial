@@ -146,7 +146,7 @@ class PickerSortFragment(
         )
 
         binding.applyAction.setOnClickListener { viewModel.applySort() }
-        binding.applyAction.updateInsetMargins(requireActivity(), bottom = true)
+        binding.applyAction.updateInsetMargins(bottom = true)
     }
 
     private inline fun Spinner.setup(

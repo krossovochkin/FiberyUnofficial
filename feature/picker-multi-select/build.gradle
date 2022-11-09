@@ -2,12 +2,13 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "picker_multi_select_"
+    namespace 'com.krossovochkin.fiberyunofficial.pickermultiselect'
 }
 
 dependencies {
-    api d.app.core_domain
-    implementation d.androidx.fragment
-    implementation d.androidx.appcompat
-    implementation d.app.core_presentation_result
-    implementation d.app.core_presentation_viewmodel
+    api project(":core:domain")
+    implementation libs.fragment.ktx
+    implementation libs.appcompat
+    implementation project(":core:presentation:result")
+    implementation project(":core:presentation:viewmodel")
 }

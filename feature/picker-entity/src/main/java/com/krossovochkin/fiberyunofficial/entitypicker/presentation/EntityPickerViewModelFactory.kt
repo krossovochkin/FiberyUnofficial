@@ -30,16 +30,13 @@ class EntityPickerViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == EntityPickerViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            EntityPickerViewModelImpl(
-                getEntityTypeSchemaInteractor,
-                getEntityListInteractor,
-                entityCreateInteractor,
-                entityPickerArgs
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == EntityPickerViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return EntityPickerViewModelImpl(
+            getEntityTypeSchemaInteractor,
+            getEntityListInteractor,
+            entityCreateInteractor,
+            entityPickerArgs
+        ) as T
     }
 }

@@ -2,31 +2,32 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "app_list_"
+    namespace 'com.krossovochkin.fiberyunofficial.applist'
 }
 
 dependencies {
-    api d.core.kotlin_coroutines
-    api d.androidx.appcompat
-    api d.androidx.recyclerview
-    api d.androidx.constraint_layout
-    api d.app.core_data_api
-    api d.app.core_domain
-    api d.app.core_presentation_list
-    api d.app.core_presentation_ui_toolbar
-    implementation d.androidx.fragment
-    implementation d.app.core_presentation_resources
-    implementation d.app.core_presentation_result
-    implementation d.app.core_presentation_navigation
-    implementation d.app.core_presentation_viewbinding
-    implementation d.app.core_presentation_viewmodel
-    implementation d.app.core_presentation_ui_progress
-    implementation d.app.core_presentation_ui_error
+    api libs.kotlinx.coroutines.core
+    api libs.appcompat
+    api libs.recyclerview
+    api libs.constraintlayout
+    api project(":core:data:api")
+    api project(":core:domain")
+    api project(":core:presentation:list")
+    api project(":core:presentation:ui:toolbar")
+    implementation libs.fragment.ktx
+    implementation project(":core:presentation:resources")
+    implementation project(":core:presentation:result")
+    implementation project(":core:presentation:navigation")
+    implementation project(":core:presentation:viewbinding")
+    implementation project(":core:presentation:viewmodel")
+    implementation project(":core:presentation:ui:progress")
+    implementation project(":core:presentation:ui:error")
 
-    testImplementation d.test.junit
-    testImplementation d.test.truth
-    testImplementation d.test.coroutines
-    testImplementation d.test.mockito
-    testImplementation d.app.test_core
-    testImplementation d.app.test_domain
-    testImplementation d.app.test_api
+    testImplementation libs.junit.junit
+    testImplementation libs.truth
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockito.kotlin
+    testImplementation project(":test:core")
+    testImplementation project(":test:domain")
+    testImplementation project(":test:api")
 }

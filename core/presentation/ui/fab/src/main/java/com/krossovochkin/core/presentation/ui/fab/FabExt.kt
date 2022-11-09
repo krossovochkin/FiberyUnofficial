@@ -19,7 +19,7 @@ inline fun Fragment.initFab(
         state = state,
         onClick = onClick
     )
-    fab.updateInsetMargins(requireActivity(), bottom = true)
+    fab.updateInsetMargins(bottom = true)
     fab.transitionName = transitionName
 }
 

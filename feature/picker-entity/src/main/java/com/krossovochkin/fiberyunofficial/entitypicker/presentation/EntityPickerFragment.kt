@@ -114,7 +114,7 @@ class EntityPickerFragment(
             binding.entityCreateAction.isEnabled = isEnabled
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
-        binding.entityCreateAction.updateInsetMargins(requireActivity(), bottom = true)
+        binding.entityCreateAction.updateInsetMargins(bottom = true)
     }
 
     data class Args(

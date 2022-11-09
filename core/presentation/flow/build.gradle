@@ -1,7 +1,10 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.presentation.flow'
+}
 
 dependencies {
-    api d.androidx.fragment
-    api d.core.kotlin_coroutines
-    implementation d.androidx.lifecycle_runtime
+    api libs.fragment.ktx
+    api libs.kotlinx.coroutines.core
+    implementation libs.lifecycle.runtime.ktx
 }

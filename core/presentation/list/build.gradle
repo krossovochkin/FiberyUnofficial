@@ -1,11 +1,14 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.presentation.list'
+}
 
 dependencies {
-    api d.androidx.fragment
-    api d.androidx.recyclerview
-    api d.core.kotlin_coroutines
-    api d.ui.adapter_delegates
-    implementation d.app.core_presentation_flow
-    implementation d.app.core_presentation_system
-    implementation d.app.core_presentation_viewmodel
+    api libs.fragment.ktx
+    api libs.recyclerview
+    api libs.kotlinx.coroutines.core
+    api libs.adapterdelegates4.kotlin.dsl.viewbinding
+    implementation project(":core:presentation:flow")
+    implementation project(":core:presentation:system")
+    implementation project(":core:presentation:viewmodel")
 }

@@ -26,12 +26,9 @@ class PickerSortViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == PickerSortViewModel::class.java) {
-            PickerSortViewModelImpl(
-                pickerSortArgs = pickerSortArgs,
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == PickerSortViewModel::class.java)
+        return PickerSortViewModelImpl(
+            pickerSortArgs = pickerSortArgs,
+        ) as T
     }
 }

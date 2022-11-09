@@ -5,7 +5,7 @@ complexity:
     active: false
   LongMethod:
     active: false
-  ComplexMethod:
+  CyclomaticComplexMethod:
     active: false
 
 exceptions:
@@ -17,6 +17,8 @@ exceptions:
     active: false
 
 formatting:
+  ImportOrdering:
+    active: false
   StringTemplate:
     active: false
 

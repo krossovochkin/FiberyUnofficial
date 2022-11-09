@@ -77,18 +77,15 @@ internal class AppListViewModelImpl(
     override val appItems: Flow<List<ListItem>> = listDelegate.items
 
     override fun select(item: ListItem, itemView: View) {
-        if (item is AppListItem) {
-            viewModelScope.launch {
-                navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
-            }
-        } else {
-            throw IllegalArgumentException()
+        require(item is AppListItem)
+        viewModelScope.launch {
+            navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
         }
     }
 
     override fun getToolbarViewState(context: Context): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.app_list_title),
-            bgColor = NativeColor.Attribute(R.attr.colorPrimary)
+            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
 }

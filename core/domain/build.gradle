@@ -1,9 +1,13 @@
 apply from: "$rootDir/feature_default.gradle"
 apply plugin: "kotlin-kapt"
 
+android {
+    namespace 'com.krossovochkin.fiberyunofficial.domain'
+}
+
 dependencies {
-    api d.core.date_time
-    implementation d.app.core_data_serialization
-    implementation d.network.retrofit_moshi
-    kapt d.network.moshi_codegen
+    api libs.threetenabp
+    implementation project(":core:data:serialization")
+    implementation libs.converter.moshi
+    kapt libs.moshi.kotlin.codegen
 }

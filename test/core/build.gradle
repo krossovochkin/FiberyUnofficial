@@ -1,6 +1,9 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.test.core'
+}
 
 dependencies {
-    api d.test.coroutines
-    implementation d.test.truth
+    api libs.kotlinx.coroutines.test
+    implementation libs.truth
 }

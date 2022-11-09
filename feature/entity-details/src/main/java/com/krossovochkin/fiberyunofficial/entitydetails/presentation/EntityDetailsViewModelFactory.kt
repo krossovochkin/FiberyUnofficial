@@ -34,17 +34,14 @@ class EntityDetailsViewModelFactory(
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == EntityDetailsViewModel::class.java) {
-            EntityDetailsViewModelImpl(
-                getEntityDetailsInteractor,
-                updateSingleSelectFieldInteractor,
-                updateMultiSelectFieldInteractor,
-                updateEntityFieldInteractor,
-                deleteEntityInteractor,
-                entityDetailsArgs
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == EntityDetailsViewModel::class.java)
+        return EntityDetailsViewModelImpl(
+            getEntityDetailsInteractor,
+            updateSingleSelectFieldInteractor,
+            updateMultiSelectFieldInteractor,
+            updateEntityFieldInteractor,
+            deleteEntityInteractor,
+            entityDetailsArgs
+        ) as T
     }
 }

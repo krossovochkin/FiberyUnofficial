@@ -1,9 +1,12 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.presentation.ui.error'
+}
 
 dependencies {
-    api d.androidx.fragment
-    api d.core.kotlin_coroutines
-    implementation d.androidx.lifecycle_runtime
-    implementation d.ui.material
-    implementation d.app.core_presentation_flow
+    api libs.fragment.ktx
+    api libs.kotlinx.coroutines.core
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.material
+    implementation project(":core:presentation:flow")
 }

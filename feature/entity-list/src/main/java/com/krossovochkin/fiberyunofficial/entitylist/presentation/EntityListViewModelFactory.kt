@@ -38,19 +38,16 @@ class EntityListViewModelFactory(
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == EntityListViewModel::class.java) {
-            EntityListViewModelImpl(
-                getEntityListInteractor,
-                setEntityListFilterInteractor,
-                setEntityListSortInteractor,
-                getEntityListFilterInteractor,
-                getEntityListSortInteractor,
-                removeEntityRelationInteractor,
-                addEntityRelationInteractor,
-                entityListArgs
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == EntityListViewModel::class.java)
+        return EntityListViewModelImpl(
+            getEntityListInteractor,
+            setEntityListFilterInteractor,
+            setEntityListSortInteractor,
+            getEntityListFilterInteractor,
+            getEntityListSortInteractor,
+            removeEntityRelationInteractor,
+            addEntityRelationInteractor,
+            entityListArgs
+        ) as T
     }
 }

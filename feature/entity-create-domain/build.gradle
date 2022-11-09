@@ -1,5 +1,8 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.fiberyunofficial.entitycreatedomain'
+}
 
 dependencies {
-    api d.app.core_domain
+    api project(":core:domain")
 }

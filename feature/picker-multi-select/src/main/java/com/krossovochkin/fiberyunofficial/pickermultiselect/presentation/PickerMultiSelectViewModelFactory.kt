@@ -24,13 +24,10 @@ class PickerMultiSelectViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == PickerMultiSelectViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            PickerMultiSelectViewModel(
-                args
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == PickerMultiSelectViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return PickerMultiSelectViewModel(
+            args
+        ) as T
     }
 }

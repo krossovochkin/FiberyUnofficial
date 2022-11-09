@@ -115,11 +115,8 @@ internal class EntityPickerViewModelImpl(
     }
 
     override fun select(item: ListItem) {
-        if (item is EntityPickerItem) {
-            onEntityPicked(item.entityData)
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(item is EntityPickerItem)
+        onEntityPicked(item.entityData)
     }
 
     override fun onBackPressed() {

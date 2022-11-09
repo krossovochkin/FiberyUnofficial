@@ -6,14 +6,8 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.annotation.ColorInt
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.doOnPreDraw
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
-import androidx.core.view.updatePadding
 import com.krossovochkin.core.presentation.color.ColorUtils
+import dev.chrisbanes.insetter.applyInsetter
 
 @Suppress("DEPRECATION")
 fun Activity.setupSystemBars(
@@ -80,20 +74,15 @@ fun Activity.setupSystemBars(
 }
 
 fun View.updateInsetMargins(
-    activity: Activity,
     top: Boolean = false,
     bottom: Boolean = false
 ) {
-    doOnPreDraw {
-        val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)
-            ?.getInsets(WindowInsetsCompat.Type.systemBars())
-        this.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            if (top) {
-                updateMargins(top = insets?.top ?: 0)
-            }
-            if (bottom) {
-                updateMargins(bottom = insets?.bottom ?: 0)
-            }
+    applyInsetter {
+        type(statusBars = true) {
+            margin(top = top)
+        }
+        type(navigationBars = true) {
+            margin(bottom = bottom)
         }
     }
 }
@@ -101,14 +90,9 @@ fun View.updateInsetMargins(
 fun View.updateInsetPaddings(
     bottom: Boolean = false
 ) {
-    val originalPaddingBottom = paddingBottom
-    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        val systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        if (bottom) {
-            v.updatePadding(bottom = originalPaddingBottom + systemInsets.bottom)
+    applyInsetter {
+        type(navigationBars = true) {
+            padding(bottom = bottom)
         }
-
-        insets
     }
-    requestApplyInsets()
 }

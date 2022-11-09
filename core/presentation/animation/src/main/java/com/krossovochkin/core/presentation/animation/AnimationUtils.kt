@@ -19,6 +19,7 @@ package com.krossovochkin.core.presentation.animation
 import android.graphics.Color
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import com.google.android.material.R
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.krossovochkin.core.presentation.color.ColorUtils

@@ -35,9 +35,7 @@ class EntityCreateRepositoryImpl(
         entityTypeSchema: FiberyEntityTypeSchema,
         name: String
     ): FiberyEntityData {
-        if (name.isEmpty()) {
-            throw IllegalArgumentException("name should not be null")
-        }
+        require(name.isNotEmpty()) { "name should not be null" }
 
         val titleFieldName = requireNotNull(
             entityTypeSchema.fields.find { it.meta.isUiTitle }

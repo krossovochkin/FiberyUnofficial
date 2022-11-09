@@ -1,8 +1,11 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.debug'
+}
 
 dependencies {
-    debugImplementation d.debug.facebook_soloader
-    debugImplementation d.debug.facebook_flipper
-    debugImplementation d.debug.facebook_flipper_network_plugin
-    implementation d.network.retrofit
+    debugImplementation libs.soloader
+    debugImplementation libs.flipper
+    debugImplementation libs.flipper.network.plugin
+    implementation libs.retrofit
 }

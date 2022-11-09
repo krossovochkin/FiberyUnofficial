@@ -1,7 +1,10 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.fiberyunofficial.entitycreatedata'
+}
 
 dependencies {
-    api d.app.core_data_api
-    api d.app.core_domain
-    api d.app.feature_entity_create_domain
+    api project(":core:data:api")
+    api project(":core:domain")
+    api project(":feature:entity-create-domain")
 }

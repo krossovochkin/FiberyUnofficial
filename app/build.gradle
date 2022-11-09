@@ -6,14 +6,14 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply from: '../quality/lint.gradle'
 
 android {
-    compileSdk v.android.compileSdk
+    compileSdk libs.versions.android.compile.sdk.get().toInteger()
 
     defaultConfig {
         applicationId "com.krossovochkin.fiberyunofficial"
-        minSdk v.android.minSdk
-        targetSdk v.android.targetSdk
-        versionCode v.android.versionCode
-        versionName v.android.versionName
+        minSdk libs.versions.android.min.sdk.get().toInteger()
+        targetSdk libs.versions.android.target.sdk.get().toInteger()
+        versionCode libs.versions.android.version.code.get().toInteger()
+        versionName libs.versions.android.version.name.get()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,41 +42,42 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace 'com.krossovochkin.fiberyunofficial'
 }
 
 dependencies {
-    implementation d.app.core_debug
-    implementation d.app.core_data_api
-    implementation d.app.core_data_auth
-    implementation d.app.core_data_serialization
-    implementation d.app.core_domain
-    implementation d.app.core_presentation_viewbinding
-    implementation d.app.core_presentation_result
+    implementation project(":core:debug")
+    implementation project(":core:data:api")
+    implementation project(":core:data:auth")
+    implementation project(":core:data:serialization")
+    implementation project(":core:domain")
+    implementation project(":core:presentation:viewbinding")
+    implementation project(":core:presentation:result")
 
-    implementation d.app.feature_login
-    implementation d.app.feature_app_list
-    implementation d.app.feature_entity_type_list
-    implementation d.app.feature_entity_list
-    implementation d.app.feature_entity_details
-    implementation d.app.feature_entity_create
-    implementation d.app.feature_entity_create_data
-    implementation d.app.feature_entity_create_domain
-    implementation d.app.feature_entity_picker
-    implementation d.app.feature_picker_single_select
-    implementation d.app.feature_picker_multi_select
-    implementation d.app.feature_picker_filter
-    implementation d.app.feature_picker_sort
-    implementation d.app.feature_file_list
-    implementation d.app.feature_comment_list
+    implementation project(":feature:login")
+    implementation project(":feature:app-list")
+    implementation project(":feature:entity-type-list")
+    implementation project(":feature:entity-list")
+    implementation project(":feature:entity-details")
+    implementation project(":feature:entity-create")
+    implementation project(":feature:entity-create-data")
+    implementation project(":feature:entity-create-domain")
+    implementation project(":feature:picker-entity")
+    implementation project(":feature:picker-single-select")
+    implementation project(":feature:picker-multi-select")
+    implementation project(":feature:picker-filter")
+    implementation project(":feature:picker-sort")
+    implementation project(":feature:file-list")
+    implementation project(":feature:comment-list")
 
-    implementation d.core.dagger
-    kapt d.core.dagger_compiler
-    implementation d.network.retrofit_moshi
+    implementation libs.dagger
+    kapt libs.dagger.compiler
+    implementation libs.converter.moshi
 
-    implementation d.androidx.appcompat
-    implementation d.androidx.constraint_layout
-    implementation d.androidx.fragment
-    implementation d.androidx.navigation_fragment
-    implementation d.androidx.security
-    implementation d.androidx.splashscreen
+    implementation libs.appcompat
+    implementation libs.constraintlayout
+    implementation libs.fragment.ktx
+    implementation libs.navigation.fragment.ktx
+    implementation libs.security.crypto
+    implementation libs.core.splashscreen
 }

@@ -1,11 +1,14 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.presentation.paging'
+}
 
 dependencies {
-    api d.androidx.fragment
-    api d.androidx.recyclerview
-    api d.core.kotlin_coroutines
-    api d.ui.adapter_delegates_paging3
-    api d.app.core_presentation_list
-    api d.app.core_presentation_viewmodel
-    implementation d.app.core_presentation_system
+    api libs.fragment.ktx
+    api libs.recyclerview
+    api libs.kotlinx.coroutines.core
+    api project(":adapter-delegates-paging3")
+    api project(":core:presentation:list")
+    api project(":core:presentation:viewmodel")
+    implementation project(":core:presentation:system")
 }

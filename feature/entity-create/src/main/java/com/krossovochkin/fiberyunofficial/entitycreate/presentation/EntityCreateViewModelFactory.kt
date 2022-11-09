@@ -26,14 +26,11 @@ class EntityCreateViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == EntityCreateViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            EntityCreateViewModelImpl(
-                entityCreateArgs,
-                entityCreateInteractor,
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == EntityCreateViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return EntityCreateViewModelImpl(
+            entityCreateArgs,
+            entityCreateInteractor,
+        ) as T
     }
 }

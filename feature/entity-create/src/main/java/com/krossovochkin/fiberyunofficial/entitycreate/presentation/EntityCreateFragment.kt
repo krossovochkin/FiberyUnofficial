@@ -76,7 +76,7 @@ class EntityCreateFragment(
         binding.entityCreateButton.setOnClickListener {
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
-        binding.entityCreateButton.updateInsetMargins(requireActivity(), bottom = true)
+        binding.entityCreateButton.updateInsetMargins(bottom = true)
     }
 
     data class Args(

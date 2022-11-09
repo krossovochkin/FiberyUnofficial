@@ -1,7 +1,10 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.hannesdorfmann.adapterdelegates4'
+}
 
 dependencies {
-    api d.androidx.paging
-    api d.androidx.recyclerview
-    api d.ui.adapter_delegates
+    api libs.paging.runtime.ktx
+    api libs.recyclerview
+    api libs.adapterdelegates4.kotlin.dsl.viewbinding
 }

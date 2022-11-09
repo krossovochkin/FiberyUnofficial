@@ -4,13 +4,13 @@ apply plugin: 'kotlin-parcelize'
 apply from: "$rootDir/quality/lint.gradle"
 
 android {
-    compileSdk v.android.compileSdk
+    compileSdk libs.versions.android.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk v.android.minSdk
-        targetSdk v.android.targetSdk
-        versionCode v.android.versionCode
-        versionName v.android.versionName
+        minSdk libs.versions.android.min.sdk.get().toInteger()
+        targetSdk libs.versions.android.target.sdk.get().toInteger()
+        versionCode libs.versions.android.version.code.get().toInteger()
+        versionName libs.versions.android.version.name.get()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'

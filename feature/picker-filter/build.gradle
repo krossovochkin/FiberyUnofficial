@@ -2,23 +2,24 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "picker_filter_"
+    namespace 'com.krossovochkin.fiberyunofficial.pickerfilter'
 }
 
 dependencies {
-    api d.core.kotlin_coroutines
-    api d.androidx.appcompat
-    api d.androidx.recyclerview
-    api d.androidx.constraint_layout
-    api d.app.core_data_api
-    api d.app.core_domain
-    api d.app.core_presentation_list
-    api d.app.core_presentation_viewmodel
-    api d.app.core_presentation_ui_toolbar
-    implementation d.androidx.fragment
-    implementation d.app.core_presentation_resources
-    implementation d.app.core_presentation_result
-    implementation d.app.core_presentation_navigation
-    implementation d.app.core_presentation_viewbinding
-    implementation d.app.core_presentation_animation
-    implementation d.app.core_presentation_system
+    api libs.kotlinx.coroutines.core
+    api libs.appcompat
+    api libs.recyclerview
+    api libs.constraintlayout
+    api project(":core:data:api")
+    api project(":core:domain")
+    api project(":core:presentation:list")
+    api project(":core:presentation:viewmodel")
+    api project(":core:presentation:ui:toolbar")
+    implementation libs.fragment.ktx
+    implementation project(":core:presentation:resources")
+    implementation project(":core:presentation:result")
+    implementation project(":core:presentation:navigation")
+    implementation project(":core:presentation:viewbinding")
+    implementation project(":core:presentation:animation")
+    implementation project(":core:presentation:system")
 }

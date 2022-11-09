@@ -82,14 +82,11 @@ internal class EntityTypeListViewModelImpl(
     override val entityTypeItems = listDelegate.items
 
     override fun select(item: ListItem, itemView: View) {
-        if (item is EntityTypeListItem) {
-            viewModelScope.launch {
-                navigationChannel.send(
-                    EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
-                )
-            }
-        } else {
-            throw IllegalArgumentException()
+        require(item is EntityTypeListItem)
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
+            )
         }
     }
 
@@ -102,7 +99,7 @@ internal class EntityTypeListViewModelImpl(
     override fun getToolbarViewState(context: Context): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.entity_type_list_title),
-            bgColor = NativeColor.Attribute(R.attr.colorPrimary),
+            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary),
             hasBackButton = true
         )
 }

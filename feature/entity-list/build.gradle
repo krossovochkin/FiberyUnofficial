@@ -2,27 +2,28 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "entity_list_"
+    namespace 'com.krossovochkin.fiberyunofficial.entitylist'
 }
 
 dependencies {
-    api d.core.kotlin_coroutines
-    api d.androidx.constraint_layout
-    api d.androidx.appcompat
-    api d.androidx.recyclerview
-    api d.ui.material
-    api d.app.core_data_api
-    api d.app.core_domain
-    api d.app.core_data_serialization
-    api d.app.core_presentation_ui_toolbar
-    api d.app.core_presentation_ui_fab
-    implementation d.androidx.fragment
-    implementation d.app.core_presentation_resources
-    implementation d.app.core_presentation_paging
-    implementation d.app.core_presentation_result
-    implementation d.app.core_presentation_navigation
-    implementation d.app.core_presentation_viewbinding
-    implementation d.app.core_presentation_viewmodel
-    implementation d.app.core_presentation_ui_error
-    implementation d.app.core_presentation_animation
-    implementation d.app.core_presentation_color
+    api libs.kotlinx.coroutines.core
+    api libs.constraintlayout
+    api libs.appcompat
+    api libs.recyclerview
+    api libs.material
+    api project(":core:data:api")
+    api project(":core:domain")
+    api project(":core:data:serialization")
+    api project(":core:presentation:ui:toolbar")
+    api project(":core:presentation:ui:fab")
+    implementation libs.fragment.ktx
+    implementation project(":core:presentation:resources")
+    implementation project(":core:presentation:paging")
+    implementation project(":core:presentation:result")
+    implementation project(":core:presentation:navigation")
+    implementation project(":core:presentation:viewbinding")
+    implementation project(":core:presentation:viewmodel")
+    implementation project(":core:presentation:ui:error")
+    implementation project(":core:presentation:animation")
+    implementation project(":core:presentation:color")
 }

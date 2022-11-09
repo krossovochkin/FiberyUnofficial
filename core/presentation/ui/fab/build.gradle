@@ -1,9 +1,12 @@
 apply from: "$rootDir/feature_default.gradle"
+android {
+    namespace 'com.krossovochkin.core.presentation.ui.fab'
+}
 
 dependencies {
-    api d.androidx.fragment
-    api d.ui.material
-    api d.app.core_presentation_resources
-    implementation d.app.core_presentation_system
-    implementation d.app.core_presentation_color
+    api libs.fragment.ktx
+    api libs.material
+    api project(":core:presentation:resources")
+    implementation project(":core:presentation:system")
+    implementation project(":core:presentation:color")
 }

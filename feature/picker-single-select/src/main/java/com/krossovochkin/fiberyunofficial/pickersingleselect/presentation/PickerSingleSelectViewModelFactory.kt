@@ -24,13 +24,10 @@ class PickerSingleSelectViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == PickerSingleSelectViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            PickerSingleSelectViewModel(
-                args
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == PickerSingleSelectViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return PickerSingleSelectViewModel(
+            args
+        ) as T
     }
 }

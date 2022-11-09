@@ -1,29 +1,25 @@
-apply plugin: "com.github.ben-manes.versions"
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: "kover"
 apply from: "$rootDir/quality/deps_lint.gradle"
 
 buildscript {
-    apply from: 'dependencies.gradle'
-
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
     }
     dependencies {
-        classpath d.plugin.gradle_android
-        classpath d.plugin.gradle_kotlin
-        classpath d.plugin.gradle_navigation
-        classpath d.plugin.gradle_versions
-        classpath d.plugin.gradle_detekt
-        classpath d.plugin.gradle_dependencies_lint
-        classpath d.plugin.gradle_kover
+        classpath libs.gradle.plugin.android
+        classpath libs.gradle.plugin.kotlin
+        classpath libs.gradle.plugin.navigation.safe.args
+        classpath libs.gradle.plugin.detekt
+        classpath libs.gradle.plugin.dependency.analysis
+        classpath libs.kover
     }
 }
 
 dependencies {
-    detektPlugins d.plugin.gradle_detekt_formatting
+    detektPlugins libs.detekt.formatting
 }
 //noinspection UnnecessaryQualifiedReference
 task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {

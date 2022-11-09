@@ -27,15 +27,12 @@ class FileListViewModelFactory(
     private val fileListArgs: FileListFragment.Args
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == FileListViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            FileListViewModelImpl(
-                getFileListInteractor,
-                downloadFileInteractor,
-                fileListArgs
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == FileListViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return FileListViewModelImpl(
+            getFileListInteractor,
+            downloadFileInteractor,
+            fileListArgs
+        ) as T
     }
 }

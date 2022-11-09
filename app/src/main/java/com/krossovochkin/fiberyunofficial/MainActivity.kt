@@ -54,6 +54,15 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SOR
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
+import com.krossovochkin.commentlist.R as CommentListR
+import com.krossovochkin.fiberyunofficial.entitycreate.R as EntityCreateR
+import com.krossovochkin.fiberyunofficial.entitydetails.R as EntityDetailsR
+import com.krossovochkin.fiberyunofficial.entitylist.R as EntityListR
+import com.krossovochkin.fiberyunofficial.entitypicker.R as PickerEntityR
+import com.krossovochkin.fiberyunofficial.entitytypelist.R as EntityTypeListR
+import com.krossovochkin.fiberyunofficial.pickerfilter.R as PickerFilterR
+import com.krossovochkin.fiberyunofficial.pickersort.R as PickerSortR
+import com.krossovochkin.filelist.R as FileListR
 
 class MainActivity : AppCompatActivity(), MainActivityListener {
 
@@ -75,11 +84,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     }
 
     override fun onAppSelected(fiberyAppData: FiberyAppData, itemView: View) {
+        val key = getString(EntityTypeListR.string.entity_type_list_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
             AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData),
-            FragmentNavigatorExtras(
-                itemView to getString(R.string.entity_type_list_root_transition_name)
-            )
+            FragmentNavigatorExtras(itemView to key)
         )
     }
 
@@ -88,13 +96,14 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityTypeList -> {
+                val key =
+                    getString(EntityListR.string.entity_list_root_transition_name)
                 EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
                     entityType = entityTypeSchema,
                     parentEntityData = null
-                ) to FragmentNavigatorExtras(
-                    itemView to getString(R.string.entity_list_root_transition_name)
-                )
+                ) to FragmentNavigatorExtras(itemView to key)
             }
+
             else -> error("Unknown current direction: $id")
         }
         navController.navigate(directions, extras)
@@ -111,31 +120,31 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             R.id.entityDetails -> {
                 when (entityTypeSchema.name) {
                     FiberyApiConstants.Type.FILE.value -> {
+                        val key = getString(FileListR.string.file_list_root_transition_name)
                         EntityDetailsFragmentDirections.actionEntityDetailsToFileListFragment(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
-                        ) to FragmentNavigatorExtras(
-                            itemView to getString(R.string.file_list_root_transition_name)
-                        )
+                        ) to FragmentNavigatorExtras(itemView to key)
                     }
+
                     FiberyApiConstants.Type.COMMENT.value -> {
+                        val key = getString(CommentListR.string.comment_list_root_transition_name)
                         EntityDetailsFragmentDirections.actionEntityDetailsToCommentListFragment(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
-                        ) to FragmentNavigatorExtras(
-                            itemView to getString(R.string.comment_list_root_transition_name)
-                        )
+                        ) to FragmentNavigatorExtras(itemView to key)
                     }
+
                     else -> {
+                        val key = getString(EntityListR.string.entity_list_root_transition_name)
                         EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
-                        ) to FragmentNavigatorExtras(
-                            itemView to getString(R.string.entity_list_root_transition_name)
-                        )
+                        ) to FragmentNavigatorExtras(itemView to key)
                     }
                 }
             }
+
             else -> error("Unknown current direction: $id")
         }
         navController.navigate(directions, extras)
@@ -145,19 +154,23 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
             R.id.entityList -> {
+                val key = getString(
+                    EntityDetailsR.string.entity_details_root_transition_name,
+                    entity.id
+                )
                 EntityListFragmentDirections.actionEntityListToEntityDetails(entity) to
-                    FragmentNavigatorExtras(
-                        itemView to
-                            getString(R.string.entity_details_root_transition_name, entity.id)
-                    )
+                    FragmentNavigatorExtras(itemView to key)
             }
+
             R.id.entityDetails -> {
+                val key = getString(
+                    EntityDetailsR.string.entity_details_root_transition_name,
+                    entity.id
+                )
                 EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity) to
-                    FragmentNavigatorExtras(
-                        itemView to
-                            getString(R.string.entity_details_root_transition_name, entity.id)
-                    )
+                    FragmentNavigatorExtras(itemView to key)
             }
+
             else -> error("Unknown current direction: $id")
         }
         navController.navigate(directions, extras)
@@ -174,25 +187,24 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         view: View
     ) {
         if (parentEntityData == null) {
+            val key =
+                getString(EntityCreateR.string.entity_create_root_transition_name)
             binding.navHostFragment.findNavController().navigate(
                 EntityListFragmentDirections
                     .actionEntityListToEntityCreateFragment(
                         entityType = entityType
                     ),
-                FragmentNavigatorExtras(
-                    view to getString(R.string.entity_create_root_transition_name)
-                )
+                FragmentNavigatorExtras(view to key)
             )
         } else {
+            val key = getString(PickerEntityR.string.picker_entity_root_transition_name)
             binding.navHostFragment.findNavController().navigate(
                 EntityListFragmentDirections
                     .actionEntityListToEntityPickerFragment(
                         parentEntityData = parentEntityData,
                         currentEntity = null
                     ),
-                FragmentNavigatorExtras(
-                    view to getString(R.string.picker_entity_root_transition_name)
-                )
+                FragmentNavigatorExtras(view to key)
             )
         }
     }
@@ -212,15 +224,14 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         entity: FiberyEntityData?,
         itemView: View
     ) {
+        val key = getString(PickerEntityR.string.picker_entity_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
             EntityDetailsFragmentDirections
                 .actionEntityDetailsToEntityPickerFragment(
                     parentEntityData = parentEntityData,
                     currentEntity = entity
                 ),
-            FragmentNavigatorExtras(
-                itemView to getString(R.string.picker_entity_root_transition_name)
-            )
+            FragmentNavigatorExtras(itemView to key)
         )
     }
 
@@ -299,15 +310,15 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         filter: FiberyEntityFilterData,
         view: View
     ) {
+        val key =
+            getString(PickerFilterR.string.picker_filter_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
             EntityListFragmentDirections
                 .actionEntityListToPickerFilterFragment(
                     entityTypeSchema = entityTypeSchema,
                     filter = filter,
                 ),
-            FragmentNavigatorExtras(
-                view to getString(R.string.picker_filter_root_transition_name)
-            )
+            FragmentNavigatorExtras(view to key)
         )
     }
 
@@ -324,15 +335,15 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         sort: FiberyEntitySortData,
         view: View
     ) {
+        val key =
+            getString(PickerSortR.string.picker_sort_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
             EntityListFragmentDirections
                 .actionEntityListToPickerSortFragment(
                     entityTypeSchema = entityTypeSchema,
                     sort = sort
                 ),
-            FragmentNavigatorExtras(
-                view to getString(R.string.picker_sort_root_transition_name)
-            )
+            FragmentNavigatorExtras(view to key)
         )
     }
 

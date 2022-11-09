@@ -139,18 +139,15 @@ internal class EntityListViewModelImpl(
 
     override fun getCreateFabViewState(context: Context) =
         FabViewState(
-            bgColor = NativeColor.Attribute(R.attr.colorPrimary)
+            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
 
     override fun select(item: ListItem, itemView: View) {
-        if (item is EntityListItem) {
-            viewModelScope.launch {
-                navigationChannel.send(
-                    EntityListNavEvent.OnEntitySelectedEvent(item.entityData, itemView)
-                )
-            }
-        } else {
-            throw IllegalArgumentException()
+        require(item is EntityListItem)
+        viewModelScope.launch {
+            navigationChannel.send(
+                EntityListNavEvent.OnEntitySelectedEvent(item.entityData, itemView)
+            )
         }
     }
 

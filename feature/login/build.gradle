@@ -2,15 +2,16 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     resourcePrefix = "login_"
+    namespace 'com.krossovochkin.fiberyunofficial.login'
 }
 
 dependencies {
-    api d.core.kotlin_coroutines
-    api d.androidx.constraint_layout
-    api d.app.core_data_auth
-    implementation d.androidx.fragment
-    implementation d.app.core_presentation_result
-    implementation d.app.core_presentation_viewbinding
-    implementation d.app.core_presentation_viewmodel
-    implementation d.app.core_presentation_flow
+    api libs.kotlinx.coroutines.core
+    api libs.constraintlayout
+    api project(":core:data:auth")
+    implementation libs.fragment.ktx
+    implementation project(":core:presentation:result")
+    implementation project(":core:presentation:viewbinding")
+    implementation project(":core:presentation:viewmodel")
+    implementation project(":core:presentation:flow")
 }

@@ -24,13 +24,10 @@ class AppListViewModelFactory(
     private val getAppListInteractor: GetAppListInteractor,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == AppListViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            AppListViewModelImpl(
-                getAppListInteractor,
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == AppListViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return AppListViewModelImpl(
+            getAppListInteractor,
+        ) as T
     }
 }

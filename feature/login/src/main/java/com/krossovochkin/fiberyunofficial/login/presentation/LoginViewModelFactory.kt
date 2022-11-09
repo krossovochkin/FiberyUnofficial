@@ -25,13 +25,10 @@ class LoginViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass == LoginViewModel::class.java) {
-            @Suppress("UNCHECKED_CAST")
-            LoginViewModelImpl(
-                loginInteractor
-            ) as T
-        } else {
-            throw IllegalArgumentException()
-        }
+        require(modelClass == LoginViewModel::class.java)
+        @Suppress("UNCHECKED_CAST")
+        return LoginViewModelImpl(
+            loginInteractor
+        ) as T
     }
 }

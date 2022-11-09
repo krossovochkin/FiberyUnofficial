@@ -22,10 +22,7 @@ jobs:
       - name: Setup Gradle
         run: chmod +x gradlew
       - name: Setup version
-        run: |
-          VERSION_CODE=$(grep "v.android.versionCode = *" dependencies.gradle | sed 's/[^0-9]//g' | awk '{ sum = $1 + 1 }; END { print sum }')
-          sed -i "s/v\.android\.versionCode = [0-9]*/v\.android\.versionCode = $VERSION_CODE/" dependencies.gradle
-          sed -i "s/v\.android\.versionName = \"[0-9]*\.[0-9]*\.[0-9]*\"/v\.android\.versionName = \"${{ github.event.inputs.version }}\"/" dependencies.gradle
+        run: ./scripts/update_version.sh ${{ github.event.inputs.version }}
       - name: Test
         run: ./gradlew detektAll lintDebug testDebug
       - name: Push changes
