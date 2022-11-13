@@ -5,6 +5,5 @@ android {
 
 dependencies {
     implementation project(":core:presentation:color")
-    implementation libs.constraintlayout
     implementation libs.insetter
 }

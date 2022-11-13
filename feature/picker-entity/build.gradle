@@ -22,7 +22,6 @@ dependencies {
     implementation project(":core:presentation:viewbinding")
     implementation project(":core:presentation:viewmodel")
     implementation project(":core:presentation:ui:error")
-    implementation project(":core:presentation:ui:fab")
     implementation project(":core:presentation:animation")
     implementation project(":core:presentation:flow")
     implementation project(":core:presentation:system")
