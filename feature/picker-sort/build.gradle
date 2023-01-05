@@ -21,7 +21,4 @@ dependencies {
     implementation project(":core:presentation:viewbinding")
     implementation project(":core:presentation:animation")
     implementation project(":core:presentation:system")
-
-    androidTestImplementation libs.androidx.test.ext.junit
-    androidTestImplementation libs.espresso.core
 }
