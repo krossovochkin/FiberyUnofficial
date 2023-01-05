@@ -22,3 +22,8 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew detektAll lintDebug testDebug buildHealth
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-health-report.txt
+          path: build/reports/dependency-analysis/build-health-report.txt
+          retention-days: 1
