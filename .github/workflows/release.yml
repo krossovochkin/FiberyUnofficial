@@ -20,6 +20,8 @@ jobs:
       - name: Setup Gradle
         run: chmod +x gradlew
       - name: Setup version
+        run: chmod +x scripts/update_version.sh
+      - name: Update version
         run: ./scripts/update_version.sh ${{ github.event.inputs.version }}
       - name: Test
         run: ./gradlew detektAll lintDebug testDebug
