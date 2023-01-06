@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepclasseswithmembers class com.krossovochkin.fiberyunofficial.domain.*
+-keep class com.krossovochkin.fiberyunofficial.domain.** { *; }
 
 ### MOSHI
 
