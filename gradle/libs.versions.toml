@@ -12,12 +12,7 @@ android-version-code = "27"
 
 android-version-name = "0.19.2"
 
-kotlin = "1.8.0"
-##  ⬆ = "1.8.10"
-##  ⬆ = "1.8.20-Beta"
-##  ⬆ = "1.8.20-RC"
-##  ⬆ = "1.8.20-RC2"
-##  ⬆ = "1.8.20"
+kotlin = "1.8.20"
 
 google-dagger = "2.45"
 
