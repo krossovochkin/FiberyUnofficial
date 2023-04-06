@@ -40,7 +40,7 @@ kotlinx-coroutines = "1.7.0-Beta"
 
 junit-junit = "4.13.2"
 
-google-android-material = "1.10.0-alpha01"
+google-android-material = "1.9.0-beta01"
 
 androidx-test-ext-junit = "1.1.5"
 
