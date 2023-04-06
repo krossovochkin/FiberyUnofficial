@@ -20,6 +20,7 @@ android {
                 "DuplicateStrings",
 
                 "MonochromeLauncherIcon",
+                "GradleDependency",
         ]
     }
 }
