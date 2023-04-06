@@ -27,6 +27,11 @@ android {
         viewBinding = true
     }
 
+    compileOptions {
+        sourceCompatibility = 17
+        targetCompatibility = 17
+    }
+
     kotlin {
         jvmToolchain(17)
     }
