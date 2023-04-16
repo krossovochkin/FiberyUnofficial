@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/login_account_hint"
         android:padding="@dimen/base_x4"
-        app:layout_constraintBottom_toTopOf="@+id/accountTextInput"
+        app:layout_constraintBottom_toTopOf="@+id/tokenTextInput"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
