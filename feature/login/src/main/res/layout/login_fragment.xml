@@ -5,13 +5,32 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/accountTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/login_account_hint"
+        android:padding="@dimen/base_x4"
+        app:layout_constraintBottom_toTopOf="@+id/accountTextInput"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/accountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tokenTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/login_token_hint"
         android:padding="@dimen/base_x4"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/accountTextInput">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tokenEditText"
