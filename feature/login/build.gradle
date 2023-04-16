@@ -8,8 +8,10 @@ android {
 dependencies {
     api libs.kotlinx.coroutines.core
     api libs.constraintlayout
+    api libs.material
     api project(":core:data:auth")
     implementation libs.fragment.ktx
+    implementation project(":core:presentation:resources")
     implementation project(":core:presentation:result")
     implementation project(":core:presentation:viewbinding")
     implementation project(":core:presentation:viewmodel")
