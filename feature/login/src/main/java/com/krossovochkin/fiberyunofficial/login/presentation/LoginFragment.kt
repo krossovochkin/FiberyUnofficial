@@ -49,10 +49,10 @@ class LoginFragment(
             }
         }
 
-        binding.extractButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             viewModel.login(
-                binding.accountEditText.text,
-                binding.tokenEditText.text,
+                binding.accountTextInput.editText.text,
+                binding.tokenTextInput.editText.text,
             )
         }
     }
