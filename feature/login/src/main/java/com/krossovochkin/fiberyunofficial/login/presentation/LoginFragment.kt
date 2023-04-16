@@ -51,8 +51,8 @@ class LoginFragment(
 
         binding.loginButton.setOnClickListener {
             viewModel.login(
-                binding.accountTextInput.editText.text,
-                binding.tokenTextInput.editText.text,
+                binding.accountTextInput.editText?.text?.toString() ?: "",
+                binding.tokenTextInput.editText?.text?.toString() ?: "",
             )
         }
     }
