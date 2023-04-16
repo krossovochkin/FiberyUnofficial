@@ -19,8 +19,6 @@ package com.krossovochkin.fiberyunofficial.login.presentation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.flow.collect
