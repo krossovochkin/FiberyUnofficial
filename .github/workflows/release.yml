@@ -17,6 +17,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
       - name: Setup Gradle
         run: chmod +x gradlew
       - name: Setup version
