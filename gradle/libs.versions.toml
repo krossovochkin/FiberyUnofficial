@@ -18,6 +18,8 @@ google-dagger = "2.45"
 
 retrofit2 = "2.9.0"
 
+okhttp3 = "3.9.0"
+
 androidx-navigation = "2.6.0-alpha09"
 
 androidx-paging = "3.2.0-alpha04"
@@ -46,6 +48,8 @@ androidx-test-ext-junit = "1.1.5"
 
 androidx-test-espresso = "3.5.1"
 
+androidx-test = "1.4.0"
+
 androidx-core = "1.11.0-alpha02"
 
 androidx-lifecycle = "2.6.1"
@@ -54,7 +58,7 @@ detekt = "1.22.0"
 
 gradle-plugin-dependency-analysis = "1.19.0"
 
-gradle-plugin-android = "8.1.0-alpha11"
+gradle-plugin-android = "8.2.0-alpha01"
 
 kover = "0.6.1"
 
@@ -132,6 +136,8 @@ flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-netwo
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
 
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
+
 moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
 
 threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", version.ref = "threetenabp" }
@@ -153,6 +159,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
+
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test" }
+
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test" }
 
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 

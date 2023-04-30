@@ -58,7 +58,9 @@ object FiberyApiConstants {
         CREATION_DATE("fibery/creation-date"),
         COMMENT_AUTHOR("comment/author"),
         COMMENT_SECRET("comment/document-secret"),
-        USER_NAME("user/name")
+        USER_NAME("user/name"),
+        DOCUMENTS("documents/documents"),
+        WHITEBOARDS("whiteboards/whiteboards")
     }
 
     enum class Format(

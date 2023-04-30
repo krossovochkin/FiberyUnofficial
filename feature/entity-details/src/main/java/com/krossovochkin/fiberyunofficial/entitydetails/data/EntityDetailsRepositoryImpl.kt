@@ -146,7 +146,11 @@ class EntityDetailsRepositoryImpl(
         entityData: FiberyEntityData
     ): List<Any> {
         return entityData.schema.fields
-            .filter { fieldSchema -> fieldSchema.meta.isCollection }
+            .filter { fieldSchema ->
+                fieldSchema.meta.isCollection &&
+                    fieldSchema.name != FiberyApiConstants.Field.DOCUMENTS.value &&
+                    fieldSchema.name != FiberyApiConstants.Field.WHITEBOARDS.value
+            }
             .map { fieldSchema ->
                 mapOf(
                     fieldSchema.name.wrapCollectionCount() to listOf(

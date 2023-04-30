@@ -53,6 +53,17 @@ dependencyAnalysis {
             onUsedTransitiveDependencies {
                 severity("ignore")
             }
+            project(":app") {
+                onUnusedDependencies {
+                    exclude(
+                        "com.google.dagger:dagger-compiler",
+                        "androidx.test:rules:1.4.0"
+                    )
+                }
+                onIncorrectConfiguration {
+                    exclude("com.squareup.okhttp3:okhttp")
+                }
+            }
             project(":core:presentation:paging") {
                 onIncorrectConfiguration {
                     exclude(":adapter-delegates-paging3")

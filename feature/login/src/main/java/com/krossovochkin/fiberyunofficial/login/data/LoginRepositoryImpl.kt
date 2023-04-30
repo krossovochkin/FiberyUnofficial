@@ -24,8 +24,7 @@ class LoginRepositoryImpl(
 ) : LoginRepository {
 
     override fun saveLogin(account: String, token: String) {
-        authStorage.saveAccount(account)
-        authStorage.saveToken(token)
+        authStorage.saveLogin(account = account, token = token)
     }
 
     override fun getToken(): String {

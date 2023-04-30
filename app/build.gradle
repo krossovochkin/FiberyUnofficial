@@ -7,6 +7,7 @@ apply from: '../quality/lint.gradle'
 
 android {
     compileSdk libs.versions.android.compile.sdk.get().toInteger()
+    testBuildType "debug"
 
     defaultConfig {
         applicationId "com.krossovochkin.fiberyunofficial"
@@ -14,7 +15,7 @@ android {
         targetSdk libs.versions.android.target.sdk.get().toInteger()
         versionCode libs.versions.android.version.code.get().toInteger()
         versionName libs.versions.android.version.name.get()
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.krossovochkin.fiberyunofficial.FiberyTestRunner"
     }
 
     signingConfigs {
@@ -49,6 +50,20 @@ android {
 
     packagingOptions {
         exclude 'META-INF/versions/9/previous-compilation-data.bin'
+    }
+
+    testOptions {
+        animationsDisabled = true
+
+        managedDevices {
+            devices {
+                pixel2api30 (com.android.build.api.dsl.ManagedVirtualDevice) {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+        }
     }
 
     namespace 'com.krossovochkin.fiberyunofficial'
@@ -89,4 +104,11 @@ dependencies {
     implementation libs.navigation.fragment.ktx
     implementation libs.security.crypto
     implementation libs.core.splashscreen
+
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.test.ext.junit
+	androidTestImplementation libs.okhttp3
+    kaptAndroidTest libs.dagger.compiler
 }

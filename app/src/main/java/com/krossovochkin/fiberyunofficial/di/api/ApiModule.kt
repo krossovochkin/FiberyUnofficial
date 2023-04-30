@@ -40,16 +40,9 @@ object ApiModule {
     @JvmStatic
     @Provides
     fun fiberyServiceApi(
-        authStorage: AuthStorage
+        retrofit: Retrofit
     ): FiberyServiceApi {
-        return retrofit(
-            okHttpClient = okHttpClient(
-                authorizationInterceptor = authorizationInterceptor(
-                    authStorage = authStorage
-                )
-            ),
-            authStorage = authStorage
-        ).create()
+        return retrofit.create()
     }
 
     @Singleton
@@ -75,7 +68,10 @@ object ApiModule {
         return com.krossovochkin.serialization.MoshiSerializer(Moshi.Builder().build())
     }
 
-    private fun retrofit(
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun retrofit(
         okHttpClient: OkHttpClient,
         authStorage: AuthStorage
     ): Retrofit {
@@ -86,7 +82,10 @@ object ApiModule {
             .build()
     }
 
-    private fun okHttpClient(
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun okHttpClient(
         authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
@@ -95,7 +94,10 @@ object ApiModule {
             .build()
     }
 
-    private fun authorizationInterceptor(
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun authorizationInterceptor(
         authStorage: AuthStorage
     ): Interceptor {
         return Interceptor { chain ->

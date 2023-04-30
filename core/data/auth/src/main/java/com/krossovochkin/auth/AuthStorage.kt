@@ -18,11 +18,9 @@ package com.krossovochkin.auth
 
 interface AuthStorage {
 
-    fun saveAccount(account: String)
+    fun saveLogin(account: String, token: String)
 
     fun getAccount(): String
-
-    fun saveToken(token: String)
 
     fun getToken(): String
 }

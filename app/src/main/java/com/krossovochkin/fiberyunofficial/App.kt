@@ -19,9 +19,9 @@ package com.krossovochkin.fiberyunofficial
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 
-class App : Application() {
+open class App : Application() {
 
-    val applicationComponent: ApplicationComponent by lazy {
+    open val applicationComponent: ApplicationComponent by lazy {
         DaggerApplicationComponent.factory()
             .create(
                 context = this

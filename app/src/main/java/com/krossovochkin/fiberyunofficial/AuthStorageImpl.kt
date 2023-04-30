@@ -44,18 +44,17 @@ class AuthStorageImpl(
     private var account: String = prefs.getString(KEY_ACCOUNT, "")!!
     private var token: String = prefs.getString(KEY_TOKEN, "")!!
 
-    override fun saveAccount(account: String) {
-        prefs.edit { putString(KEY_ACCOUNT, account) }
+    override fun saveLogin(account: String, token: String) {
         this.account = account
+        this.token = token
+        prefs.edit {
+            putString(KEY_ACCOUNT, account)
+            putString(KEY_TOKEN, token)
+        }
     }
 
     override fun getAccount(): String {
         return this.account
-    }
-
-    override fun saveToken(token: String) {
-        prefs.edit { putString(KEY_TOKEN, token) }
-        this.token = token
     }
 
     override fun getToken(): String {
