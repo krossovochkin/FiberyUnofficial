@@ -12,6 +12,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
       - run: chmod +x gradlew
       - run: ./gradlew refreshVersions
       - uses: peter-evans/create-pull-request@v4
