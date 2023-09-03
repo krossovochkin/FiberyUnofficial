@@ -1,5 +1,5 @@
 apply from: "$rootDir/feature_default.gradle"
-apply plugin: "kotlin-kapt"
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     namespace 'com.krossovochkin.fiberyunofficial.api'
@@ -10,5 +10,5 @@ dependencies {
     api project(":core:data:serialization")
     api project(":core:domain")
     api libs.converter.moshi
-    kapt libs.moshi.kotlin.codegen
+    ksp libs.moshi.kotlin.codegen
 }

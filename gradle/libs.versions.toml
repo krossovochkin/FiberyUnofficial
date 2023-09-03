@@ -14,6 +14,8 @@ android-version-name = "0.20.1"
 
 kotlin = "1.9.10"
 
+ksp = "1.9.10-1.0.13"
+
 google-dagger = "2.48"
 
 retrofit2 = "2.9.0"
@@ -50,7 +52,7 @@ androidx-test-espresso = "3.6.0-alpha01"
 
 androidx-test = "1.6.0-alpha04"
 
-androidx-test-rules = "1.5.0"
+androidx-test-rules = "1.6.0-alpha01"
 
 androidx-core = "1.12.0-rc01"
 
@@ -68,7 +70,7 @@ adapter-delegates = "4.3.2"
 
 soloader = "0.10.5"
 
-flipper = "0.215.0"
+flipper = "0.215.1"
 
 threetenabp = "1.4.6"
 
@@ -85,6 +87,8 @@ insetter = "0.6.1"
 gradle-plugin-android = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-plugin-android" }
 
 gradle-plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+gradle-plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 gradle-plugin-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
 

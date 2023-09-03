@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply from: '../quality/lint.gradle'
 
@@ -95,7 +95,7 @@ dependencies {
     implementation project(":feature:comment-list")
 
     implementation libs.dagger
-    kapt libs.dagger.compiler
+    ksp libs.dagger.compiler
     implementation libs.converter.moshi
 
     implementation libs.appcompat
@@ -110,5 +110,5 @@ dependencies {
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.ext.junit
 	androidTestImplementation libs.okhttp3
-    kaptAndroidTest libs.dagger.compiler
+    kspAndroidTest libs.dagger.compiler
 }
