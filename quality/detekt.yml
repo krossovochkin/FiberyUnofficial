@@ -25,3 +25,5 @@ formatting:
 style:
   ReturnCount:
     active: false
+  OptionalWhenBraces:
+    active: false

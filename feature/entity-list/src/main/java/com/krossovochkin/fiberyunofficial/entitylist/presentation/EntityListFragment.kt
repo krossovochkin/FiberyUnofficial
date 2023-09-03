@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -150,6 +151,7 @@ class EntityListFragment(
                     }
                 }
 
+                @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                     return oldItem.equals(newItem)
                 }

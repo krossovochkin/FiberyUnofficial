@@ -286,8 +286,7 @@ internal class EntityDetailsViewModelImpl(
         return listOf(
             FieldTextItem(
                 title = field.title,
-                text = field.unit?.let
-                { "$formattedValue $it" } ?: formattedValue
+                text = field.unit?.let { "$formattedValue $it" } ?: formattedValue
             )
         )
     }

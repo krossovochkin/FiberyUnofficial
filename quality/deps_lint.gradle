@@ -57,7 +57,7 @@ dependencyAnalysis {
                 onUnusedDependencies {
                     exclude(
                         "com.google.dagger:dagger-compiler",
-                        "androidx.test:rules:1.4.0"
+                        "androidx.test:rules"
                     )
                 }
                 onIncorrectConfiguration {
@@ -80,6 +80,11 @@ dependencyAnalysis {
                             "org.mockito.kotlin:mockito-kotlin",
                             "com.google.truth:truth"
                     )
+                }
+            }
+            project(":core:domain") {
+                onUnusedDependencies {
+                    exclude(":core:data:serialization")
                 }
             }
         }

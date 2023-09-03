@@ -9,6 +9,5 @@ dependencies {
     api libs.kotlinx.coroutines.core
     api project(":adapter-delegates-paging3")
     api project(":core:presentation:list")
-    api project(":core:presentation:viewmodel")
     implementation project(":core:presentation:system")
 }

@@ -17,6 +17,7 @@
 
 package com.krossovochkin.filelist.presentation
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -87,6 +88,7 @@ class FileListFragment(
                     }
                 }
 
+                @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                     return oldItem.equals(newItem)
                 }

@@ -1,5 +1,6 @@
 package com.krossovochkin.core.presentation.list
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -23,6 +24,7 @@ fun <T : ListItem> Fragment.initRecyclerView(
             return oldItem === newItem
         }
 
+        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
             return oldItem.equals(newItem)
         }

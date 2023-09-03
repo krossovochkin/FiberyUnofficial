@@ -13,7 +13,6 @@ dependencies {
     api project(":core:data:api")
     api project(":core:domain")
     api project(":core:presentation:list")
-    api project(":core:presentation:viewmodel")
     api project(":core:presentation:ui:toolbar")
     implementation libs.fragment.ktx
     implementation project(":core:presentation:resources")

@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             RESULT_KEY_ENTITY_CREATED,
             EntityCreatedData(createdEntity = createdEntity)
         )
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onEntityFieldEdit(
@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
                 EntityPickedData(parentEntityData, entity)
             )
         }
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onSingleSelectFieldEdit(
@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             RESULT_KEY_SINGLE_SELECT_PICKED,
             SingleSelectPickedData(fieldSchema, item)
         )
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onMultiSelectFieldEdit(
@@ -302,7 +302,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             RESULT_KEY_MULTI_SELECT_PICKED,
             MultiSelectPickedData(fieldSchema, addedItems, removedItems)
         )
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onFilterEdit(
@@ -327,7 +327,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             RESULT_KEY_FILTER_PICKED,
             FilterPickedData(filter = filter)
         )
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onSortEdit(
@@ -352,7 +352,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             RESULT_KEY_SORT_PICKED,
             SortPickedData(sort = sort)
         )
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
     }
 
     private fun setFragmentResult(requestKey: String, result: Parcelable) {

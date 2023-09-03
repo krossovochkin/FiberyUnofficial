@@ -29,7 +29,7 @@ class AppTest {
     @Test
     fun goldenPathTest() {
         val accountName = "krossovochkin"
-        val token = System.getenv()["FIBERY_API_TOKEN"]
+        val token = System.getenv()["FIBERY_API_TOKEN"]!!
 
         IdlingRegistry.getInstance().register(
             (InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as TestApp)

@@ -16,6 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -92,6 +93,7 @@ class EntityPickerFragment(
                     }
                 }
 
+                @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                     return oldItem.equals(newItem)
                 }

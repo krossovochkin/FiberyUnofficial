@@ -17,6 +17,7 @@
 
 package com.krossovochkin.commentlist.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -86,6 +87,7 @@ class CommentListFragment(
                     }
                 }
 
+                @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
                     return oldItem.equals(newItem)
                 }
