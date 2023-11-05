@@ -62,6 +62,7 @@ dependencyAnalysis {
                 }
                 onIncorrectConfiguration {
                     exclude("com.squareup.okhttp3:okhttp")
+                    exclude("org.jetbrains.kotlin:kotlin-stdlib")
                 }
             }
             project(":core:presentation:paging") {
@@ -72,6 +73,16 @@ dependencyAnalysis {
             project(":core:presentation:viewmodel") {
                 onIncorrectConfiguration {
                     exclude("androidx.lifecycle:lifecycle-viewmodel-ktx")
+                }
+            }
+            project(":core:presentation:flow") {
+                onIncorrectConfiguration {
+                    exclude("org.jetbrains.kotlin:kotlin-stdlib")
+                }
+            }
+            project(":core:presentation:navigation") {
+                onIncorrectConfiguration {
+                    exclude("org.jetbrains.kotlin:kotlin-stdlib")
                 }
             }
             project(":feature:app-list") {
