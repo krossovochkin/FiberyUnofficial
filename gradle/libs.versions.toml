@@ -8,9 +8,9 @@ android-min-sdk = "23"
 
 android-target-sdk = "34"
 
-android-version-code = "34"
+android-version-code = "35"
 
-android-version-name = "0.22.0"
+android-version-name = "0.23.0"
 
 kotlin = "1.9.22"
 
