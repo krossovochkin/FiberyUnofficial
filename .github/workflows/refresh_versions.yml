@@ -16,4 +16,4 @@ jobs:
         uses: android-actions/setup-android@v3
       - run: chmod +x gradlew
       - run: ./gradlew refreshVersions
-      - uses: peter-evans/create-pull-request@v4
+      - uses: peter-evans/create-pull-request@v6
