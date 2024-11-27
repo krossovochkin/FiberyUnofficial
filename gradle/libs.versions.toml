@@ -2,81 +2,82 @@
 
 [versions]
 
-android-compile-sdk = "34"
+android-compile-sdk = "35"
 
 android-min-sdk = "23"
 
-android-target-sdk = "34"
+android-target-sdk = "35"
 
 android-version-code = "35"
 
 android-version-name = "0.23.0"
 
-kotlin = "1.9.22"
+kotlin = "2.0.21"
 
-ksp = "1.9.22-1.0.17"
+ksp = "2.0.21-1.0.28"
 
-google-dagger = "2.50"
+google-dagger = "2.52"
 
-retrofit2 = "2.9.0"
+retrofit2 = "2.11.0"
 
 okhttp3 = "4.11.0"
 
-androidx-navigation = "2.8.0-alpha01"
+androidx-navigation = "2.9.0-alpha03"
 
-androidx-paging = "3.3.0-alpha02"
+androidx-paging = "3.3.4"
 
-androidx-recyclerview = "1.4.0-alpha01"
+androidx-recyclerview = "1.4.0-rc01"
 
-androidx-appcompat = "1.7.0-alpha03"
+androidx-appcompat = "1.7.0"
 
-androidx-constraintlayout = "2.2.0-alpha13"
+androidx-constraintlayout = "2.2.0"
 
-androidx-fragment = "1.7.0-alpha09"
+androidx-fragment = "1.8.5"
 
 androidx-security-crypto = "1.1.0-alpha06"
 
-androidx-core-splashscreen = "1.1.0-alpha02"
+androidx-core-splashscreen = "1.2.0-alpha02"
 
 moshi = "1.15.1"
 
-kotlinx-coroutines = "1.7.3"
+kotlinx-coroutines = "1.9.0"
 
 junit-junit = "4.13.2"
 
-google-android-material = "1.12.0-alpha03"
+google-android-material = "1.13.0-alpha08"
 
-androidx-test-ext-junit = "1.2.0-alpha03"
+androidx-test-ext-junit = "1.2.1"
 
-androidx-test-espresso = "3.6.0-alpha03"
+androidx-test-espresso = "3.6.1"
 
-androidx-test = "1.6.0-alpha06"
+androidx-test = "1.6.2"
 
-androidx-test-rules = "1.6.0-alpha03"
+androidx-test-rules = "1.6.1"
 
-androidx-core = "1.13.0-alpha04"
+androidx-core = "1.15.0"
 
-androidx-lifecycle = "2.8.0-alpha01"
+androidx-lifecycle = "2.9.0-alpha07"
 
-detekt = "1.23.5"
+detekt = "1.23.7"
 
 gradle-plugin-dependency-analysis = "1.29.0"
+##                             ⬆ = "2.5.0"
 
-gradle-plugin-android = "8.4.0-alpha07"
+gradle-plugin-android = "8.9.0-alpha03"
 
 kover = "0.6.1"
 
 adapter-delegates = "4.3.2"
 
-soloader = "0.11.0"
+soloader = "0.12.1"
 
-flipper = "0.246.0"
+flipper = "0.273.0"
 
-threetenabp = "1.4.6"
+threetenabp = "1.4.8"
 
-truth = "1.3.0"
+truth = "1.4.4"
 
-mockito-kotlin = "5.2.1"
+mockito-kotlin = "5.4.0"
 
 markwon = "4.6.2"
 
