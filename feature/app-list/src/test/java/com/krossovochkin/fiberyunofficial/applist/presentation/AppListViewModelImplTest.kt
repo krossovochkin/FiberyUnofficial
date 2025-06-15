@@ -13,22 +13,24 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Test
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 
 internal class AppListViewModelImplTest {
 
-    private val interactor = object : GetAppListInteractor {
-        var appList: List<FiberyAppData> = emptyList()
-        var exception: Exception? = null
+    private var appList: List<FiberyAppData> = emptyList()
+    private var exception: Exception? = null
 
-        override suspend fun execute(): List<FiberyAppData> {
+    private val interactor: GetAppListInteractor = mock {
+        onBlocking { execute() } doSuspendableAnswer {
             delay(LOAD_TIME_MILLIS)
             if (exception != null) {
                 throw exception!!
             }
-            return appList
+            appList
         }
     }
+
     private val viewModel: AppListViewModel by lazy {
         AppListViewModelImpl(
             getAppListInteractor = interactor
@@ -37,7 +39,7 @@ internal class AppListViewModelImplTest {
 
     @Test
     fun `if load successful and list is empty then emits empty list`() = runBlockingAndroidTest {
-        interactor.appList = emptyList()
+        appList = emptyList()
         val observers = TestObservers(viewModel, this)
 
         observers
@@ -60,7 +62,7 @@ internal class AppListViewModelImplTest {
 
     @Test
     fun `if load successful and list not empty then emits loaded list`() = runBlockingAndroidTest {
-        interactor.appList = APP_LIST_DATA
+        appList = APP_LIST_DATA
         val observers = TestObservers(viewModel, this)
 
         observers
@@ -83,7 +85,7 @@ internal class AppListViewModelImplTest {
 
     @Test
     fun `if load error then emits error`() = runBlockingAndroidTest {
-        interactor.exception = ERROR
+        exception = ERROR
         val observers = TestObservers(viewModel, this)
 
         observers
@@ -106,7 +108,7 @@ internal class AppListViewModelImplTest {
 
     @Test
     fun `on item click sends app click event`() = runBlockingAndroidTest {
-        interactor.appList = APP_LIST_DATA
+        appList = APP_LIST_DATA
         val observers = TestObservers(viewModel, this)
 
         observers

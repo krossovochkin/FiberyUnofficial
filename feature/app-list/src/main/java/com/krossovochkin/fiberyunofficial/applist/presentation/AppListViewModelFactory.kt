@@ -19,8 +19,9 @@ package com.krossovochkin.fiberyunofficial.applist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
+import javax.inject.Inject
 
-class AppListViewModelFactory(
+class AppListViewModelFactory @Inject constructor(
     private val getAppListInteractor: GetAppListInteractor,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -16,18 +16,19 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import javax.inject.Inject
 
-interface GetAppListInteractor {
+class GetAppListInteractor @Inject constructor(
+    private val fiberyApiRepository: FiberyApiRepository
+) {
 
-    suspend fun execute(): List<FiberyAppData>
-}
-
-class GetAppListInteractorImpl(
-    private val appListRepository: AppListRepository
-) : GetAppListInteractor {
-
-    override suspend fun execute(): List<FiberyAppData> {
-        return appListRepository.getAppList()
+    suspend fun execute(): List<FiberyAppData> {
+        return fiberyApiRepository.getTypeSchemas()
+            .filter { it.meta.isDomain && it.name != FiberyApiConstants.Type.USER.value }
+            .map { FiberyAppData(name = it.appName) }
+            .distinct()
     }
 }

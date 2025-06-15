@@ -14,6 +14,10 @@ dependencies {
     api project(":core:domain")
     api project(":core:presentation:list")
     api project(":core:presentation:ui:toolbar")
+
+    implementation libs.dagger
+    //ksp libs.dagger.compiler
+
     implementation libs.fragment.ktx
     implementation project(":core:presentation:resources")
     implementation project(":core:presentation:result")

@@ -1,22 +1,22 @@
-package com.krossovochkin.fiberyunofficial.applist.data
+package com.krossovochkin.fiberyunofficial.applist.domain
 
 import com.google.common.truth.Truth.assertThat
 import com.krossovochkin.fiberyfunofficial.test.domain.FiberyAppDataBuilder
 import com.krossovochkin.fiberyunofficial.api.TestFiberyApiRepository
-import com.krossovochkin.fiberyunofficial.applist.domain.AppListRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class AppListRepositoryImplTest {
+class GetAppListInteractorTest {
 
     private val api = TestFiberyApiRepository()
-    private val repository: AppListRepository = AppListRepositoryImpl(
+
+    private val interactor: GetAppListInteractor = GetAppListInteractor(
         fiberyApiRepository = api
     )
 
     @Test
     fun `returns list of apps`() = runTest {
-        assertThat(repository.getAppList())
+        assertThat(interactor.execute())
             .isEqualTo(
                 listOf(
                     FiberyAppDataBuilder().apply {

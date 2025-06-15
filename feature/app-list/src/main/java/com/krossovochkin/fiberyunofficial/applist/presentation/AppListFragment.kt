@@ -33,13 +33,14 @@ import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AppListFragment(
-    factoryProducer: () -> AppListViewModelFactory
+    factoryProducer: Lazy<AppListViewModelFactory>,
 ) : Fragment(R.layout.app_list_fragment) {
 
-    private val viewModel: AppListViewModel by viewModels { factoryProducer() }
+    private val viewModel: AppListViewModel by viewModels { factoryProducer.get() }
 
     private val parentListener: ParentListener by parentListener()
 

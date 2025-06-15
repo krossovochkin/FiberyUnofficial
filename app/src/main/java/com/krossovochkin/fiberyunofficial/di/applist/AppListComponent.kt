@@ -19,22 +19,18 @@ package com.krossovochkin.fiberyunofficial.di.applist
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModelFactory
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface AppListParentComponent : GlobalDependencies
 
 @AppList
 @Component(
-    modules = [
-        AppListDataModule::class,
-        AppListDomainModule::class,
-        AppListPresentationModule::class
-    ],
     dependencies = [AppListParentComponent::class]
 )
 interface AppListComponent {
 
-    fun viewModelFactoryProducer(): () -> AppListViewModelFactory
+    fun viewModelFactory(): Lazy<AppListViewModelFactory>
 
     @Component.Factory
     interface Factory {
