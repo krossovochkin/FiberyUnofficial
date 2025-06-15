@@ -12,58 +12,57 @@ android-version-code = "36"
 
 android-version-name = "0.24.0"
 
-kotlin = "2.0.21"
+kotlin = "2.1.21"
 
-ksp = "2.0.21-1.0.28"
+ksp = "2.1.21-2.0.2"
 
-google-dagger = "2.52"
+google-dagger = "2.56.2"
 
-retrofit2 = "2.11.0"
+retrofit2 = "3.0.0"
 
-okhttp3 = "4.11.0"
+okhttp3 = "4.12.0"
 
-androidx-navigation = "2.9.0-alpha03"
+androidx-navigation = "2.9.0"
 
-androidx-paging = "3.3.4"
+androidx-paging = "3.3.6"
 
-androidx-recyclerview = "1.4.0-rc01"
+androidx-recyclerview = "1.4.0"
 
-androidx-appcompat = "1.7.0"
+androidx-appcompat = "1.7.1"
 
-androidx-constraintlayout = "2.2.0"
+androidx-constraintlayout = "2.2.1"
 
-androidx-fragment = "1.8.5"
+androidx-fragment = "1.8.8"
 
-androidx-security-crypto = "1.1.0-alpha06"
+androidx-security-crypto = "1.1.0-beta01"
 
-androidx-core-splashscreen = "1.2.0-alpha02"
+androidx-core-splashscreen = "1.2.0-beta02"
 
-moshi = "1.15.1"
+moshi = "1.15.2"
 
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.2"
 
 junit-junit = "4.13.2"
 
-google-android-material = "1.13.0-alpha08"
+google-android-material = "1.14.0-alpha01"
 
-androidx-test-ext-junit = "1.2.1"
+androidx-test-ext-junit = "1.3.0-alpha03"
 
-androidx-test-espresso = "3.6.1"
+androidx-test-espresso = "3.7.0-alpha03"
 
-androidx-test = "1.6.2"
+androidx-test = "1.7.0-alpha03"
 
-androidx-test-rules = "1.6.1"
+androidx-test-rules = "1.7.0-alpha03"
 
-androidx-core = "1.15.0"
+androidx-core = "1.16.0"
 
-androidx-lifecycle = "2.9.0-alpha07"
+androidx-lifecycle = "2.9.1"
 
-detekt = "1.23.7"
+detekt = "1.23.8"
 
 gradle-plugin-dependency-analysis = "1.29.0"
-##                             ⬆ = "2.5.0"
 
-gradle-plugin-android = "8.9.0-alpha03"
+gradle-plugin-android = "8.10.1"
 
 kover = "0.6.1"
 
@@ -73,7 +72,7 @@ soloader = "0.12.1"
 
 flipper = "0.273.0"
 
-threetenabp = "1.4.8"
+threetenabp = "1.4.9"
 
 truth = "1.4.4"
 
