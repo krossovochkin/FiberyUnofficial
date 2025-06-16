@@ -5,7 +5,6 @@ plugins {
 
 rootProject.name = 'FiberyUnofficial'
 include ':app'
-include ':core:debug'
 include ':core:domain'
 include ':core:data:serialization'
 include ':core:data:api'

@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial.di.api
 
 import android.content.Context
 import com.krossovochkin.auth.AuthStorage
-import com.krossovochkin.fiberyunofficial.addDebugNetworkInterceptor
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepositoryImpl
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
@@ -90,7 +89,6 @@ object ApiModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(authorizationInterceptor)
-            .addDebugNetworkInterceptor()
             .build()
     }
 
