@@ -68,10 +68,6 @@ kover = "0.6.1"
 
 adapter-delegates = "4.3.2"
 
-soloader = "0.12.1"
-
-flipper = "0.273.0"
-
 threetenabp = "1.4.9"
 
 truth = "1.4.4"
@@ -123,12 +119,6 @@ navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fr
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx-security-crypto" }
 
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-core-splashscreen" }
-
-soloader = { group = "com.facebook.soloader", name = "soloader", version.ref = "soloader" }
-
-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
-
-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
 

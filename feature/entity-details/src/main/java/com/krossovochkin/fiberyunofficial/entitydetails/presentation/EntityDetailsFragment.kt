@@ -19,7 +19,6 @@ package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.net.Uri
 import android.os.Bundle
 import android.text.util.Linkify
 import android.view.View
@@ -59,6 +58,7 @@ import com.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetail
 import com.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetailsItemFieldUrlBinding
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.core.net.toUri
 
 class EntityDetailsFragment(
     factoryProducer: () -> EntityDetailsViewModelFactory,
@@ -134,14 +134,14 @@ class EntityDetailsFragment(
                     )
                 }
                 is EntityDetailsNavEvent.OpenUrlEvent -> {
-                    Intent(Intent.ACTION_VIEW).setData(Uri.parse(event.url)).let { intent ->
+                    Intent(Intent.ACTION_VIEW).setData(event.url.toUri()).let { intent ->
                         intent.resolveActivity(requireContext().packageManager)?.let {
                             startActivity(intent)
                         }
                     }
                 }
                 is EntityDetailsNavEvent.SendEmailEvent -> {
-                    Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto://"))
+                    Intent(Intent.ACTION_SENDTO).setData("mailto://".toUri())
                         .apply { putExtra(Intent.EXTRA_EMAIL, event.email) }
                         .let { intent ->
                             intent.resolveActivity(requireContext().packageManager)?.let {

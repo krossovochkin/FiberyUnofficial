@@ -8,6 +8,7 @@ import android.view.WindowInsetsController
 import androidx.annotation.ColorInt
 import com.krossovochkin.core.presentation.color.ColorUtils
 import dev.chrisbanes.insetter.applyInsetter
+import androidx.core.graphics.toColorInt
 
 @Suppress("DEPRECATION")
 fun Activity.setupSystemBars(
@@ -26,9 +27,9 @@ fun Activity.setupSystemBars(
     this.window.navigationBarColor = when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> Color.TRANSPARENT
         ColorUtils.isDarkMode(this) || Build.VERSION.SDK_INT < Build.VERSION_CODES.O -> {
-            Color.parseColor("#B3000000")
+            "#B3000000".toColorInt()
         }
-        else -> Color.parseColor("#B3FFFFFF")
+        else -> "#B3FFFFFF".toColorInt()
     }
 
     if (ColorUtils.isDarkMode(this)) {

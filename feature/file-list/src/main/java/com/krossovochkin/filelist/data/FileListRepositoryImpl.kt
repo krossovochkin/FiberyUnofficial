@@ -2,7 +2,6 @@ package com.krossovochkin.filelist.data
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import android.os.Environment
 import androidx.core.content.getSystemService
 import com.krossovochkin.auth.AuthStorage
@@ -16,6 +15,7 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.domain.FileListRepository
+import androidx.core.net.toUri
 
 private const val PARAM_ID = "\$id"
 
@@ -92,7 +92,7 @@ class FileListRepositoryImpl(
             .enqueue(
                 DownloadManager
                     .Request(
-                        Uri.parse("https://${authStorage.getAccount()}.fibery.io/api/files/${data.secret}")
+                        "https://${authStorage.getAccount()}.fibery.io/api/files/${data.secret}".toUri()
                     )
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                     .addRequestHeader("Authorization", "Token ${authStorage.getToken()}")

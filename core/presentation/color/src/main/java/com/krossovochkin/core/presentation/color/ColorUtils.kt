@@ -23,6 +23,7 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.toColorInt
 
 private const val DARKEN_COLOR_RATIO = 0.8f
 private const val DESATURATE_COLOR_RATIO = 0.6f
@@ -39,7 +40,7 @@ object ColorUtils {
 
     @ColorInt
     fun getColor(colorHex: String): Int {
-        val color = Color.parseColor(colorHex)
+        val color = colorHex.toColorInt()
         return if (Color.alpha(color) == 0) {
             Color.WHITE
         } else {
