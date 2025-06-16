@@ -2,7 +2,6 @@ package com.krossovochkin.filelist.data
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import android.os.Environment
 import androidx.core.content.getSystemService
 import com.krossovochkin.auth.AuthStorage
