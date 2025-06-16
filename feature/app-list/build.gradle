@@ -10,10 +10,12 @@ dependencies {
     api libs.appcompat
     api libs.recyclerview
     api libs.constraintlayout
+    api libs.dagger
     api project(":core:data:api")
     api project(":core:domain")
     api project(":core:presentation:list")
     api project(":core:presentation:ui:toolbar")
+
     implementation libs.fragment.ktx
     implementation project(":core:presentation:resources")
     implementation project(":core:presentation:result")

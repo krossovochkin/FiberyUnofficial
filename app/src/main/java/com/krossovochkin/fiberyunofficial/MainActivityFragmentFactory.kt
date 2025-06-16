@@ -290,7 +290,7 @@ class MainActivityFragmentFactory(
         return AppListFragment(
             factoryProducer = DaggerAppListComponent.factory()
                 .create(appListParentComponent = mainActivityComponent)
-                .viewModelFactoryProducer()
+                .viewModelFactory()
         )
     }
 
