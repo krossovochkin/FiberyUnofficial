@@ -5,5 +5,6 @@ android {
 
 dependencies {
     api libs.dagger
+    api project(":core:data:api")
     api project(":core:domain")
 }
