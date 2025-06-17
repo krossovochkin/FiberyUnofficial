@@ -4,6 +4,7 @@ android {
 }
 
 dependencies {
+    api libs.dagger
     api project(":core:data:api")
     api project(":core:domain")
     api project(":feature:entity-create-domain")

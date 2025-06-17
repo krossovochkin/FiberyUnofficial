@@ -21,22 +21,20 @@ import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerM
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerMultiSelectParentComponent : GlobalDependencies
 
 @PickerMultiSelect
 @Component(
-    modules = [
-        PickerMultiSelectPresentationModule::class
-    ],
     dependencies = [
         PickerMultiSelectParentComponent::class
     ]
 )
 interface PickerMultiSelectComponent {
 
-    fun viewModelFactoryProducer(): () -> PickerMultiSelectViewModelFactory
+    fun viewModelFactoryProducer(): Lazy<PickerMultiSelectViewModelFactory>
 
     @Component.Factory
     interface Factory {

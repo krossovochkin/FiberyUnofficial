@@ -20,6 +20,7 @@ import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginViewModelFactory
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface LoginParentComponent : GlobalDependencies {
@@ -29,16 +30,11 @@ interface LoginParentComponent : GlobalDependencies {
 
 @Login
 @Component(
-    modules = [
-        LoginDataModule::class,
-        LoginDomainModule::class,
-        LoginPresentationModule::class
-    ],
     dependencies = [LoginParentComponent::class]
 )
 interface LoginComponent {
 
-    fun viewModelFactoryProducer(): () -> LoginViewModelFactory
+    fun viewModelFactory(): Lazy<LoginViewModelFactory>
 
     @Component.Factory
     interface Factory {

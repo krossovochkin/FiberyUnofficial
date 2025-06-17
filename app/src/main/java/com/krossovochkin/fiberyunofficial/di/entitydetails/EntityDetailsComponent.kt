@@ -21,24 +21,20 @@ import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetai
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityDetailsParentComponent : GlobalDependencies
 
 @EntityDetails
 @Component(
-    modules = [
-        EntityDetailsDataModule::class,
-        EntityDetailsDomainModule::class,
-        EntityDetailsPresentationModule::class
-    ],
     dependencies = [
         EntityDetailsParentComponent::class
     ]
 )
 interface EntityDetailsComponent {
 
-    fun viewModelFactoryProducer(): () -> EntityDetailsViewModelFactory
+    fun viewModelFactory(): Lazy<EntityDetailsViewModelFactory>
 
     @Component.Factory
     interface Factory {

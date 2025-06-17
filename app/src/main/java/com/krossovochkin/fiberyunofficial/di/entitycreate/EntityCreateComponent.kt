@@ -21,22 +21,18 @@ import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreate
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityCreateParentComponent : GlobalDependencies
 
 @EntityCreate
 @Component(
-    modules = [
-        EntityCreateDataModule::class,
-        EntityCreateDomainModule::class,
-        EntityCreatePresentationModule::class
-    ],
     dependencies = [EntityCreateParentComponent::class]
 )
 interface EntityCreateComponent {
 
-    fun viewModelFactoryProducer(): () -> EntityCreateViewModelFactory
+    fun viewModelFactory(): Lazy<EntityCreateViewModelFactory>
 
     fun inject(fragment: EntityCreateFragment)
 

@@ -21,24 +21,20 @@ import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPicker
 import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityPickerParentComponent : GlobalDependencies
 
 @EntityPicker
 @Component(
-    modules = [
-        EntityPickerDataModule::class,
-        EntityPickerDomainModule::class,
-        EntityPickerPresentationModule::class
-    ],
     dependencies = [
         EntityPickerParentComponent::class
     ]
 )
 interface EntityPickerComponent {
 
-    fun viewModelFactoryProducer(): () -> EntityPickerViewModelFactory
+    fun viewModelFactory(): Lazy<EntityPickerViewModelFactory>
 
     @Component.Factory
     interface Factory {

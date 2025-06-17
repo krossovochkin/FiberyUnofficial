@@ -6,6 +6,7 @@ android {
 }
 
 dependencies {
+    api libs.dagger
     api libs.recyclerview
     api libs.constraintlayout
     api libs.appcompat

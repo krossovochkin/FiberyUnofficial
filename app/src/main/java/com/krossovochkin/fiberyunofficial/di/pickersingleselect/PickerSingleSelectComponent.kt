@@ -21,22 +21,20 @@ import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.Picker
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerSingleSelectParentComponent : GlobalDependencies
 
 @PickerSingleSelect
 @Component(
-    modules = [
-        PickerSingleSelectPresentationModule::class
-    ],
     dependencies = [
         PickerSingleSelectParentComponent::class
     ]
 )
 interface PickerSingleSelectComponent {
 
-    fun viewModelFactoryProducer(): () -> PickerSingleSelectViewModelFactory
+    fun viewModelFactory(): Lazy<PickerSingleSelectViewModelFactory>
 
     @Component.Factory
     interface Factory {

@@ -5,24 +5,20 @@ import com.krossovochkin.commentlist.presentation.CommentListViewModelFactory
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface CommentListParentComponent : GlobalDependencies
 
 @CommentList
 @Component(
-    modules = [
-        CommentListDataModule::class,
-        CommentListDomainModule::class,
-        CommentListPresentationModule::class
-    ],
     dependencies = [
         CommentListParentComponent::class
     ]
 )
 interface CommentListComponent {
 
-    fun viewModelFactoryProducer(): () -> CommentListViewModelFactory
+    fun viewModelFactory(): Lazy<CommentListViewModelFactory>
 
     @Component.Factory
     interface Factory {

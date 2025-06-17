@@ -37,14 +37,15 @@ import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import dagger.Lazy
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class CommentListFragment(
-    factoryProducer: () -> CommentListViewModelFactory
+    viewModelFactory: Lazy<CommentListViewModelFactory>
 ) : Fragment(R.layout.comment_list_fragment) {
 
-    private val viewModel: CommentListViewModel by viewModels { factoryProducer() }
+    private val viewModel: CommentListViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(CommentListFragmentBinding::bind)
 

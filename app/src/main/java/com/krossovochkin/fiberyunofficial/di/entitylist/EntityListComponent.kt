@@ -21,6 +21,7 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFrag
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityListParentComponent : GlobalDependencies {
@@ -30,18 +31,13 @@ interface EntityListParentComponent : GlobalDependencies {
 
 @EntityList
 @Component(
-    modules = [
-        EntityListDataModule::class,
-        EntityListDomainModule::class,
-        EntityListPresentationModule::class
-    ],
     dependencies = [
         EntityListParentComponent::class
     ]
 )
 interface EntityListComponent {
 
-    fun viewModelFactoryProducer(): () -> EntityListViewModelFactory
+    fun viewModelFactory(): Lazy<EntityListViewModelFactory>
 
     @Component.Factory
     interface Factory {

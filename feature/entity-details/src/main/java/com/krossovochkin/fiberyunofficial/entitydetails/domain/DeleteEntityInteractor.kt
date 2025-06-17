@@ -16,18 +16,34 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import javax.inject.Inject
 
-interface DeleteEntityInteractor {
+class DeleteEntityInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
-    suspend fun execute(entity: FiberyEntityData)
-}
-
-class DeleteEntityInteractorImpl(
-    private val entityDetailsRepository: EntityDetailsRepository
-) : DeleteEntityInteractor {
-
-    override suspend fun execute(entity: FiberyEntityData) {
-        entityDetailsRepository.deleteEntity(entity)
+    suspend fun execute(entity: FiberyEntityData) {
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_DELETE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entity.schema.name,
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to entity.id
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
     }
 }

@@ -31,13 +31,14 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityCreateFragment(
-    factoryProducer: () -> EntityCreateViewModelFactory
+    viewModelFactory: Lazy<EntityCreateViewModelFactory>
 ) : Fragment(R.layout.entity_create_fragment) {
 
-    private val viewModel: EntityCreateViewModel by viewModels { factoryProducer() }
+    private val viewModel: EntityCreateViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 

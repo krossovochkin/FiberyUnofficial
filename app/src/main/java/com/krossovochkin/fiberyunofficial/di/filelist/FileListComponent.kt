@@ -6,6 +6,7 @@ import com.krossovochkin.filelist.presentation.FileListFragment
 import com.krossovochkin.filelist.presentation.FileListViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface FileListParentComponent : GlobalDependencies {
@@ -15,18 +16,13 @@ interface FileListParentComponent : GlobalDependencies {
 
 @FileList
 @Component(
-    modules = [
-        FileListDataModule::class,
-        FileListDomainModule::class,
-        FileListPresentationModule::class
-    ],
     dependencies = [
         FileListParentComponent::class
     ]
 )
 interface FileListComponent {
 
-    fun viewModelFactoryProducer(): () -> FileListViewModelFactory
+    fun viewModelFactory(): Lazy<FileListViewModelFactory>
 
     @Component.Factory
     interface Factory {
