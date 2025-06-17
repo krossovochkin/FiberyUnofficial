@@ -22,6 +22,7 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilter
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerFilterParentComponent : GlobalDependencies {
@@ -31,16 +32,13 @@ interface PickerFilterParentComponent : GlobalDependencies {
 
 @PickerFilter
 @Component(
-    modules = [
-        PickerFilterPresentationModule::class
-    ],
     dependencies = [
         PickerFilterParentComponent::class
     ]
 )
 interface PickerFilterComponent {
 
-    fun viewModelFactoryProducer(): () -> PickerFilterViewModelFactory
+    fun viewModelFactoryProducer(): Lazy<PickerFilterViewModelFactory>
 
     @Component.Factory
     interface Factory {

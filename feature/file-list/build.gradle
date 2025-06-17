@@ -6,6 +6,7 @@ android {
 }
 
 dependencies {
+    api libs.dagger
     api libs.kotlinx.coroutines.core
     api libs.constraintlayout
     api libs.appcompat

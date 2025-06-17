@@ -16,28 +16,40 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import javax.inject.Inject
 
-interface RemoveEntityRelationInteractor {
+class RemoveEntityRelationInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
         childEntity: FiberyEntityData
-    )
-}
-
-class RemoveEntityRelationInteractorImpl(
-    private val entityListRepository: EntityListRepository
-) : RemoveEntityRelationInteractor {
-
-    override suspend fun execute(
-        parentEntityData: ParentEntityData,
-        childEntity: FiberyEntityData
     ) {
-        entityListRepository.removeRelation(
-            parentEntityData = parentEntityData,
-            childEntity = childEntity
-        )
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
+                        args = FiberyCommandArgsDto(
+                            type = parentEntityData.parentEntity.schema.name,
+                            field = parentEntityData.fieldSchema.name,
+                            items = listOf(mapOf(FiberyApiConstants.Field.ID.value to childEntity.id)),
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
     }
 }

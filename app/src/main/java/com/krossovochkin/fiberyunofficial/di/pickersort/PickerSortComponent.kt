@@ -22,6 +22,7 @@ import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFrag
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
+import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerSortParentComponent : GlobalDependencies {
@@ -31,16 +32,13 @@ interface PickerSortParentComponent : GlobalDependencies {
 
 @PickerSort
 @Component(
-    modules = [
-        PickerSortPresentationModule::class
-    ],
     dependencies = [
         PickerSortParentComponent::class
     ]
 )
 interface PickerSortComponent {
 
-    fun viewModelFactoryProducer(): () -> PickerSortViewModelFactory
+    fun viewModelFactory(): Lazy<PickerSortViewModelFactory>
 
     @Component.Factory
     interface Factory {

@@ -16,31 +16,61 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import javax.inject.Inject
 
-interface UpdateMultiSelectFieldInteractor {
+class UpdateMultiSelectFieldInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
         addedItems: List<FieldData.EnumItemData>,
         removedItems: List<FieldData.EnumItemData>
-    )
-}
-
-class UpdateMultiSelectFieldInteractorImpl(
-    private val entityDetailsRepository: EntityDetailsRepository
-) : UpdateMultiSelectFieldInteractor {
-
-    override suspend fun execute(
-        parentEntityData: ParentEntityData,
-        addedItems: List<FieldData.EnumItemData>,
-        removedItems: List<FieldData.EnumItemData>
     ) {
-        return entityDetailsRepository.updateMultiSelectField(
-            parentEntityData = parentEntityData,
-            addedItems = addedItems,
-            removedItems = removedItems
-        )
+        val commands = mutableListOf<FiberyCommandBody>()
+        if (addedItems.isNotEmpty()) {
+            commands.add(
+                FiberyCommandBody(
+                    command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
+                    args = FiberyCommandArgsDto(
+                        type = parentEntityData.parentEntity.schema.name,
+                        field = parentEntityData.fieldSchema.name,
+                        items = addedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
+                        )
+                    )
+                )
+            )
+        }
+        if (removedItems.isNotEmpty()) {
+            commands.add(
+                FiberyCommandBody(
+                    command = FiberyCommand.QUERY_REMOVE_COLLECTION_ITEM.value,
+                    args = FiberyCommandArgsDto(
+                        type = parentEntityData.parentEntity.schema.name,
+                        field = parentEntityData.fieldSchema.name,
+                        items = removedItems.map { mapOf(FiberyApiConstants.Field.ID.value to it.id) },
+                        entity = mapOf(
+                            FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
+                        )
+                    )
+                )
+            )
+        }
+
+        if (commands.isEmpty()) {
+            return
+        }
+
+        fiberyServiceApi.sendCommand(body = commands).checkResultSuccess()
     }
 }

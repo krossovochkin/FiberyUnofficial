@@ -6,6 +6,7 @@ android {
 }
 
 dependencies {
+    api libs.dagger
     api project(":core:domain")
     implementation libs.fragment.ktx
     implementation libs.appcompat
