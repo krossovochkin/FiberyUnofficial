@@ -42,13 +42,14 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterI
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemMergeTypeBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerFilterFragment(
-    factoryProvider: () -> PickerFilterViewModelFactory
+    viewModelFactory: Lazy<PickerFilterViewModelFactory>
 ) : Fragment(R.layout.picker_filter_fragment) {
 
-    private val viewModel: PickerFilterViewModel by viewModels { factoryProvider() }
+    private val viewModel: PickerFilterViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
