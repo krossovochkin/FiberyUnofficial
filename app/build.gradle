@@ -83,7 +83,6 @@ dependencies {
     implementation project(":feature:entity-list")
     implementation project(":feature:entity-details")
     implementation project(":feature:entity-create")
-    implementation project(":feature:entity-create-data")
     implementation project(":feature:entity-create-domain")
     implementation project(":feature:picker-entity")
     implementation project(":feature:picker-single-select")
