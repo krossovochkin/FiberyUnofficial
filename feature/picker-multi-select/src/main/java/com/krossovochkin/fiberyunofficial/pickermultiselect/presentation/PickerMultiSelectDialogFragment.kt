@@ -25,11 +25,13 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import dagger.Lazy
+
 class PickerMultiSelectDialogFragment(
-    factoryProducer: () -> PickerMultiSelectViewModelFactory
+    viewModelFactory: Lazy<PickerMultiSelectViewModelFactory>
 ) : DialogFragment() {
 
-    private val viewModel: PickerMultiSelectViewModel by viewModels { factoryProducer() }
+    private val viewModel: PickerMultiSelectViewModel by viewModels { viewModelFactory.get() }
 
     private val parentListener: ParentListener by parentListener()
 

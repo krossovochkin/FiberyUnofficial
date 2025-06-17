@@ -16,29 +16,78 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsQueryDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import javax.inject.Inject
 
-interface GetEntityListInteractor {
+private const val WHERE_1 = "\$where1"
+
+class GetEntityListInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+    private val fiberyApiRepository: FiberyApiRepository
+) {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
         offset: Int,
         pageSize: Int,
         searchQuery: String
-    ): List<FiberyEntityData>
-}
-
-class GetEntityListInteractorImpl(
-    private val entityPickerRepository: EntityPickerRepository
-) : GetEntityListInteractor {
-
-    override suspend fun execute(
-        parentEntityData: ParentEntityData,
-        offset: Int,
-        pageSize: Int,
-        searchQuery: String
     ): List<FiberyEntityData> {
-        return entityPickerRepository.getEntityList(parentEntityData, offset, pageSize, searchQuery)
+        val entityType = fiberyApiRepository.getTypeSchema(parentEntityData.fieldSchema.type)
+        val uiTitleType = entityType.getUiTitle()
+        val idType = FiberyApiConstants.Field.ID.value
+        val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
+
+        val dto = fiberyServiceApi.getEntities(
+            listOf(
+                FiberyCommandBody(
+                    command = FiberyCommand.QUERY_ENTITY.value,
+                    args = FiberyCommandArgsDto(
+                        FiberyCommandArgsQueryDto(
+                            from = entityType.name,
+                            select = listOf(
+                                uiTitleType,
+                                idType,
+                                publicIdType
+                            ),
+                            where = listOf(
+                                FiberyApiConstants.Operator.CONTAINS.value,
+                                listOf(uiTitleType),
+                                WHERE_1
+                            ),
+                            offset = offset,
+                            limit = pageSize
+                        ),
+                        params = mapOf(WHERE_1 to searchQuery)
+                    )
+                )
+            )
+        ).first()
+
+        return dto.result.map {
+            val title = requireNotNull(it[uiTitleType]) { "title is missing" } as String
+            val id = requireNotNull(it[idType]) { "id is missing" } as String
+            val publicId = requireNotNull(it[publicIdType]) { "publicId is missing" } as String
+            FiberyEntityData(
+                id = id,
+                publicId = publicId,
+                title = title,
+                schema = entityType
+            )
+        }
+    }
+
+    private fun FiberyEntityTypeSchema.getUiTitle(): String {
+        return requireNotNull(
+            this.fields.find { it.meta.isUiTitle }
+        ) { "title field name is missing: $this" }.name
     }
 }

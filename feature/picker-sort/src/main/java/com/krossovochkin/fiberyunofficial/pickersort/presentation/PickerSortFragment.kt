@@ -40,13 +40,14 @@ import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragm
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemAddBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemEmptyBinding
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerSortFragment(
-    factoryProvider: () -> PickerSortViewModelFactory
+    viewModelFactory: Lazy<PickerSortViewModelFactory>
 ) : Fragment(R.layout.picker_sort_fragment) {
 
-    private val viewModel: PickerSortViewModel by viewModels { factoryProvider() }
+    private val viewModel: PickerSortViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(PickerSortFragmentBinding::bind)
 

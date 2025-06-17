@@ -38,12 +38,13 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
+import dagger.Lazy
 
 class EntityPickerFragment(
-    factoryProducer: () -> EntityPickerViewModelFactory
+    viewModelFactory: Lazy<EntityPickerViewModelFactory>
 ) : Fragment(R.layout.picker_entity_fragment) {
 
-    private val viewModel: EntityPickerViewModel by viewModels { factoryProducer() }
+    private val viewModel: EntityPickerViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 
