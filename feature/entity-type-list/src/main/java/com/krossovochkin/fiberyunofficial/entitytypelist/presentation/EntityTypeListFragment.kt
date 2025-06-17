@@ -36,13 +36,14 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityTypeListFragment(
-    factoryProducer: () -> EntityTypeListViewModelFactory
+    viewModelFactory: Lazy<EntityTypeListViewModelFactory>
 ) : Fragment(R.layout.entity_type_list_fragment) {
 
-    private val viewModel: EntityTypeListViewModel by viewModels { factoryProducer() }
+    private val viewModel: EntityTypeListViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
