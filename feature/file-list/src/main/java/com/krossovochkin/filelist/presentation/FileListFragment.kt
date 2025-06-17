@@ -39,13 +39,14 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.R
 import com.krossovochkin.filelist.databinding.FileListFragmentBinding
 import com.krossovochkin.filelist.databinding.FileListItemBinding
+import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FileListFragment(
-    factoryProducer: () -> FileListViewModelFactory
+    viewModelFactory: Lazy<FileListViewModelFactory>
 ) : Fragment(R.layout.file_list_fragment) {
 
-    private val viewModel: FileListViewModel by viewModels { factoryProducer() }
+    private val viewModel: FileListViewModel by viewModels { viewModelFactory.get() }
 
     private val binding by viewBinding(FileListFragmentBinding::bind)
 
