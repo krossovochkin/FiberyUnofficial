@@ -42,10 +42,13 @@ import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class CommentListFragment(
-    viewModelFactory: Lazy<CommentListViewModelFactory>
+    viewModelFactory: CommentListViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.comment_list_fragment) {
 
-    private val viewModel: CommentListViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: CommentListViewModel by viewModels {
+        CommentListViewModel.provideFactory(viewModelFactory, argsProvider.getCommentListArgs())
+    }
 
     private val binding by viewBinding(CommentListFragmentBinding::bind)
 

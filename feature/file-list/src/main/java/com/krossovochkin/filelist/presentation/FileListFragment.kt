@@ -43,10 +43,16 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FileListFragment(
-    viewModelFactory: Lazy<FileListViewModelFactory>
+    viewModelFactory: FileListViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.file_list_fragment) {
 
-    private val viewModel: FileListViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: FileListViewModel by viewModels {
+        FileListViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getFileListArgs()
+        )
+    }
 
     private val binding by viewBinding(FileListFragmentBinding::bind)
 

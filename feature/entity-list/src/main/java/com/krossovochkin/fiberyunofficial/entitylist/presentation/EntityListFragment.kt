@@ -50,10 +50,16 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityListFragment(
-    viewModelFactory: Lazy<EntityListViewModelFactory>
+    viewModelFactory: EntityListViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.entity_list_fragment) {
 
-    private val viewModel: EntityListViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: EntityListViewModel by viewModels {
+        EntityListViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getEntityListArgs()
+        )
+    }
 
     private val binding by viewBinding(EntityListFragmentBinding::bind)
 

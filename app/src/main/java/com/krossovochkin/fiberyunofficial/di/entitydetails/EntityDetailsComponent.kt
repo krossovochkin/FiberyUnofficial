@@ -17,9 +17,7 @@
 package com.krossovochkin.fiberyunofficial.di.entitydetails
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragment
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModelFactory
-import dagger.BindsInstance
+import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModel
 import dagger.Component
 import dagger.Lazy
 import javax.inject.Scope
@@ -34,14 +32,13 @@ interface EntityDetailsParentComponent : GlobalDependencies
 )
 interface EntityDetailsComponent {
 
-    fun viewModelFactory(): Lazy<EntityDetailsViewModelFactory>
+    fun viewModelFactory(): Lazy<EntityDetailsViewModel.Factory>
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            entityDetailsParentComponent: EntityDetailsParentComponent,
-            @BindsInstance argsProvider: EntityDetailsFragment.ArgsProvider
+            entityDetailsParentComponent: EntityDetailsParentComponent
         ): EntityDetailsComponent
     }
 }

@@ -17,12 +17,33 @@
 package com.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class PickerMultiSelectViewModel(
-    private val args: PickerMultiSelectDialogFragment.Args
+class PickerMultiSelectViewModel @AssistedInject constructor(
+    @Assisted private val args: PickerMultiSelectDialogFragment.Args
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(args: PickerMultiSelectDialogFragment.Args): PickerMultiSelectViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: PickerMultiSelectDialogFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
 
     val item: FieldData.MultiSelectFieldData
         get() = args.item

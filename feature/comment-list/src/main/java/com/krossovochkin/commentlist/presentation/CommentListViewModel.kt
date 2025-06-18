@@ -18,6 +18,7 @@
 package com.krossovochkin.commentlist.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.commentlist.domain.GetCommentListInteractor
@@ -26,6 +27,9 @@ import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,25 +38,27 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
-abstract class CommentListViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<CommentListNavEvent>
-
-    abstract val entityItems: Flow<PagingData<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun onBackPressed()
-
-    abstract fun onError(error: Exception)
-}
-
-internal class CommentListViewModelImpl(
+class CommentListViewModel @AssistedInject constructor(
     getCommentListInteractor: GetCommentListInteractor,
-    private val commentListArgs: CommentListFragment.Args
-) : CommentListViewModel() {
+    @Assisted private val commentListArgs: CommentListFragment.Args
+) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(commentListArgs: CommentListFragment.Args): CommentListViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            commentListArgs: CommentListFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(commentListArgs) as T
+            }
+        }
+    }
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -80,31 +86,31 @@ internal class CommentListViewModelImpl(
     )
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<CommentListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<CommentListNavEvent>
+    val navigation: Flow<CommentListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
-    override val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(commentListArgs.parentEntityData.fieldSchema.displayName),
             bgColor = NativeColor.Hex(commentListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(CommentListNavEvent.BackEvent)
         }
     }
 
-    override fun onError(error: Exception) {
+    fun onError(error: Exception) {
         viewModelScope.launch {
-            this@CommentListViewModelImpl.errorChannel.send(error)
+            this@CommentListViewModel.errorChannel.send(error)
         }
     }
 }

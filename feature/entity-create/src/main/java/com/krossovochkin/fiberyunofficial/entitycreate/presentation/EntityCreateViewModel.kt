@@ -17,41 +17,51 @@
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class EntityCreateViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityCreateNavEvent>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun createEntity(name: String)
-}
-
-internal class EntityCreateViewModelImpl(
-    private val entityCreateArgs: EntityCreateFragment.Args,
+class EntityCreateViewModel @AssistedInject constructor(
     private val entityCreateInteractor: EntityCreateInteractor,
-) : EntityCreateViewModel() {
+    @Assisted private val entityCreateArgs: EntityCreateFragment.Args,
+) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(entityCreateArgs: EntityCreateFragment.Args): EntityCreateViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: EntityCreateFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<EntityCreateNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityCreateNavEvent>
+    val navigation: Flow<EntityCreateNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Arguments(
                 R.string.entity_create_toolbar_title,
@@ -61,7 +71,7 @@ internal class EntityCreateViewModelImpl(
             hasBackButton = true
         )
 
-    override fun createEntity(name: String) {
+    fun createEntity(name: String) {
         viewModelScope.launch {
             try {
                 val createdEntity = entityCreateInteractor

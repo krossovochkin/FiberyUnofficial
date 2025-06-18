@@ -18,6 +18,7 @@
 package com.krossovochkin.filelist.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.core.presentation.list.ListItem
@@ -28,33 +29,36 @@ import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class FileListViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<FileListNavEvent>
-
-    abstract val entityItems: Flow<PagingData<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun downloadFile(fileData: FiberyFileData)
-
-    abstract fun onBackPressed()
-
-    abstract fun onError(error: Exception)
-}
-
-internal class FileListViewModelImpl(
+class FileListViewModel @AssistedInject constructor(
     getFileListInteractor: GetFileListInteractor,
     private val downloadFileInteractor: DownloadFileInteractor,
-    private val fileListArgs: FileListFragment.Args
-) : FileListViewModel() {
+    @Assisted private val fileListArgs: FileListFragment.Args
+) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(args: FileListFragment.Args): FileListViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: FileListFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -76,37 +80,37 @@ internal class FileListViewModelImpl(
     )
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<FileListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<FileListNavEvent>
+    val navigation: Flow<FileListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
-    override val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(fileListArgs.parentEntityData.fieldSchema.displayName),
             bgColor = NativeColor.Hex(fileListArgs.entityTypeSchema.meta.uiColorHex),
             hasBackButton = true
         )
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(FileListNavEvent.BackEvent)
         }
     }
 
-    override fun downloadFile(fileData: FiberyFileData) {
+    fun downloadFile(fileData: FiberyFileData) {
         viewModelScope.launch {
             downloadFileInteractor.execute(fileData)
         }
     }
 
-    override fun onError(error: Exception) {
+    fun onError(error: Exception) {
         viewModelScope.launch {
-            this@FileListViewModelImpl.errorChannel.send(error)
+            this@FileListViewModel.errorChannel.send(error)
         }
     }
 }

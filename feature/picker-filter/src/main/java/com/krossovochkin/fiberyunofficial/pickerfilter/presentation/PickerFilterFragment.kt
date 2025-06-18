@@ -46,10 +46,16 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerFilterFragment(
-    viewModelFactory: Lazy<PickerFilterViewModelFactory>
+    viewModelFactory: PickerFilterViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.picker_filter_fragment) {
 
-    private val viewModel: PickerFilterViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: PickerFilterViewModel by viewModels {
+        PickerFilterViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getPickerFilterArgs()
+        )
+    }
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 

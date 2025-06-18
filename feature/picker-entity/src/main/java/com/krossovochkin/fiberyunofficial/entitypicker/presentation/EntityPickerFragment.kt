@@ -41,10 +41,16 @@ import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityI
 import dagger.Lazy
 
 class EntityPickerFragment(
-    viewModelFactory: Lazy<EntityPickerViewModelFactory>
+    viewModelFactory: EntityPickerViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.picker_entity_fragment) {
 
-    private val viewModel: EntityPickerViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: EntityPickerViewModel by viewModels {
+        EntityPickerViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getEntityPickerArgs()
+        )
+    }
 
     private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 

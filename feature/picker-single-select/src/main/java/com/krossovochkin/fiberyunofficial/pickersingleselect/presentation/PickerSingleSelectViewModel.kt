@@ -17,12 +17,33 @@
 package com.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class PickerSingleSelectViewModel(
-    private val args: PickerSingleSelectDialogFragment.Args
+class PickerSingleSelectViewModel @AssistedInject constructor(
+    @Assisted private val args: PickerSingleSelectDialogFragment.Args
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(args: PickerSingleSelectDialogFragment.Args): PickerSingleSelectViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: PickerSingleSelectDialogFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
 
     val item: FieldData.SingleSelectFieldData
         get() = args.item

@@ -110,7 +110,7 @@ class MainActivityFragmentFactory(
     private fun instantiatePickerFilterFragment(): Fragment {
         return instantiate { argsExtractor ->
             PickerFilterFragment(
-                factoryProvider = DaggerPickerFilterComponent.factory()
+                viewModelFactory = DaggerPickerFilterComponent.factory()
                     .create(
                         pickerFilterParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -122,7 +122,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -130,7 +130,7 @@ class MainActivityFragmentFactory(
     private fun instantiatePickerSortFragment(): Fragment {
         return instantiate { argsExtractor ->
             PickerSortFragment(
-                factoryProvider = DaggerPickerSortComponent.factory()
+                viewModelFactory = DaggerPickerSortComponent.factory()
                     .create(
                         pickerSortParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -142,7 +142,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -150,7 +150,7 @@ class MainActivityFragmentFactory(
     private fun instantiatePickerMultiSelectFragment(): Fragment {
         return instantiate { argsExtractor ->
             PickerMultiSelectDialogFragment(
-                factoryProducer = DaggerPickerMultiSelectComponent.factory()
+                viewModelFactory = DaggerPickerMultiSelectComponent.factory()
                     .create(
                         pickerMultiSelectParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -162,7 +162,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -170,7 +170,7 @@ class MainActivityFragmentFactory(
     private fun instantiatePickerSingleSelectFragment(): Fragment {
         return instantiate { argsExtractor ->
             PickerSingleSelectDialogFragment(
-                factoryProducer = DaggerPickerSingleSelectComponent.factory()
+                viewModelFactory = DaggerPickerSingleSelectComponent.factory()
                     .create(
                         pickerSingleSelectParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -182,7 +182,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -190,7 +190,7 @@ class MainActivityFragmentFactory(
     private fun instantiateEntityPickerFragment(): Fragment {
         return instantiate { argsExtractor ->
             EntityPickerFragment(
-                factoryProducer = DaggerEntityPickerComponent.factory()
+                viewModelFactory = DaggerEntityPickerComponent.factory()
                     .create(
                         entityPickerParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -202,7 +202,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -210,7 +210,7 @@ class MainActivityFragmentFactory(
     private fun instantiateEntityCreateFragment(): Fragment {
         return instantiate { argsExtractor ->
             EntityCreateFragment(
-                factoryProducer = DaggerEntityCreateComponent.factory()
+                viewModelFactory = DaggerEntityCreateComponent.factory()
                     .create(
                         entityCreateParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -221,7 +221,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -236,12 +236,12 @@ class MainActivityFragmentFactory(
             }
 
             EntityDetailsFragment(
-                factoryProducer = DaggerEntityDetailsComponent.factory()
+                viewModelFactory = DaggerEntityDetailsComponent.factory()
                     .create(
                         entityDetailsParentComponent = mainActivityComponent,
                         argsProvider = argsProvider
                     )
-                    .viewModelFactoryProducer(),
+                    .viewModelFactory(),
                 argsProvider = argsProvider
             )
         }
@@ -262,7 +262,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -270,7 +270,7 @@ class MainActivityFragmentFactory(
     private fun instantiateEntityTypeListFragment(): Fragment {
         return instantiate { argsExtractor ->
             EntityTypeListFragment(
-                factoryProducer = DaggerEntityTypeListComponent.factory()
+                viewModelFactory = DaggerEntityTypeListComponent.factory()
                     .create(
                         entityTypeListParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -281,14 +281,14 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
 
     private fun instantiateAppListFragment(): AppListFragment {
         return AppListFragment(
-            factoryProducer = DaggerAppListComponent.factory()
+            viewModelFactory = DaggerAppListComponent.factory()
                 .create(appListParentComponent = mainActivityComponent)
                 .viewModelFactory()
         )
@@ -296,16 +296,16 @@ class MainActivityFragmentFactory(
 
     private fun instantiateLoginFragment(): LoginFragment {
         return LoginFragment(
-            factoryProducer = DaggerLoginComponent.factory()
+            viewModelFactory = DaggerLoginComponent.factory()
                 .create(loginParentComponent = mainActivityComponent)
-                .viewModelFactoryProducer()
+                .viewModelFactory()
         )
     }
 
     private fun instantiateFileListFragment(): Fragment {
         return instantiate { argsExtractor ->
             FileListFragment(
-                factoryProducer = DaggerFileListComponent.factory()
+                viewModelFactory = DaggerFileListComponent.factory()
                     .create(
                         fileListParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -317,7 +317,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }
@@ -325,7 +325,7 @@ class MainActivityFragmentFactory(
     private fun instantiateCommentListFragment(): Fragment {
         return instantiate { argsExtractor ->
             CommentListFragment(
-                factoryProducer = DaggerCommentListComponent.factory()
+                viewModelFactory = DaggerCommentListComponent.factory()
                     .create(
                         commentListParentComponent = mainActivityComponent,
                         argsProvider = {
@@ -337,7 +337,7 @@ class MainActivityFragmentFactory(
                             )
                         }
                     )
-                    .viewModelFactoryProducer()
+                    .viewModelFactory()
             )
         }
     }

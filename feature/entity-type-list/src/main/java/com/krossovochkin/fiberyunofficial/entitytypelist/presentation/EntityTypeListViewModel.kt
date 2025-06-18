@@ -19,6 +19,7 @@ package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.color.ColorUtils
 import com.krossovochkin.core.presentation.list.ListItem
@@ -28,40 +29,43 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class EntityTypeListViewModel : ViewModel() {
-
-    abstract val progress: Flow<Boolean>
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityTypeListNavEvent>
-
-    abstract val entityTypeItems: Flow<List<ListItem>>
-
-    abstract fun getToolbarViewState(context: Context): ToolbarViewState
-
-    abstract fun select(item: ListItem, itemView: View)
-
-    abstract fun onBackPressed()
-}
-
-internal class EntityTypeListViewModelImpl(
+class EntityTypeListViewModel @AssistedInject constructor(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
-    private val args: EntityTypeListFragment.Args,
-) : EntityTypeListViewModel() {
+    @Assisted private val args: EntityTypeListFragment.Args,
+) : ViewModel() {
 
-    override val progress = MutableStateFlow(false)
+    @AssistedFactory
+    interface Factory {
+        fun create(args: EntityTypeListFragment.Args): EntityTypeListViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: EntityTypeListFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
+
+    val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<EntityTypeListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityTypeListNavEvent>
+    val navigation: Flow<EntityTypeListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
@@ -79,9 +83,9 @@ internal class EntityTypeListViewModelImpl(
                 }
         }
     )
-    override val entityTypeItems = listDelegate.items
+    val entityTypeItems = listDelegate.items
 
-    override fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem, itemView: View) {
         require(item is EntityTypeListItem)
         viewModelScope.launch {
             navigationChannel.send(
@@ -90,13 +94,13 @@ internal class EntityTypeListViewModelImpl(
         }
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(EntityTypeListNavEvent.BackEvent)
         }
     }
 
-    override fun getToolbarViewState(context: Context): ToolbarViewState =
+    fun getToolbarViewState(context: Context): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.entity_type_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary),
