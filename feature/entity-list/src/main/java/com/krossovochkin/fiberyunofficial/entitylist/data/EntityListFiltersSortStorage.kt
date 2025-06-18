@@ -21,25 +21,15 @@ import androidx.core.content.edit
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.serialization.Serializer
-
-interface EntityListFiltersSortStorage {
-
-    fun setFilter(entityType: String, filter: FiberyEntityFilterData)
-
-    fun setSort(entityType: String, sort: FiberyEntitySortData)
-
-    fun getFilter(entityType: String): FiberyEntityFilterData?
-
-    fun getSort(entityType: String): FiberyEntitySortData?
-}
+import javax.inject.Inject
 
 private const val KEY_PREFS_FILTERS = "ENTITY_LIST_FILTERS"
 private const val KEY_PREFS_SORT = "ENTITY_LIST_SORT"
 
-class EntityListFiltersSortStorageImpl(
+class EntityListFiltersSortStorage @Inject constructor(
     context: Context,
     private val serializer: Serializer
-) : EntityListFiltersSortStorage {
+) {
 
     private val filterPrefs = context.getSharedPreferences(KEY_PREFS_FILTERS, Context.MODE_PRIVATE)
     private val sortPrefs = context.getSharedPreferences(KEY_PREFS_SORT, Context.MODE_PRIVATE)
@@ -54,7 +44,7 @@ class EntityListFiltersSortStorageImpl(
         )
     )
 
-    override fun setFilter(entityType: String, filter: FiberyEntityFilterData) {
+    fun setFilter(entityType: String, filter: FiberyEntityFilterData) {
         filterPrefs.edit {
             putString(
                 entityType,
@@ -67,7 +57,7 @@ class EntityListFiltersSortStorageImpl(
         }
     }
 
-    override fun setSort(entityType: String, sort: FiberyEntitySortData) {
+    fun setSort(entityType: String, sort: FiberyEntitySortData) {
         sortPrefs.edit {
             putString(
                 entityType,
@@ -76,7 +66,7 @@ class EntityListFiltersSortStorageImpl(
         }
     }
 
-    override fun getFilter(entityType: String): FiberyEntityFilterData? {
+    fun getFilter(entityType: String): FiberyEntityFilterData? {
         val json = filterPrefs.getString(entityType, "").orEmpty()
         return if (json.isNotEmpty()) {
             serializer.jsonToPolymorphicObj(
@@ -89,7 +79,7 @@ class EntityListFiltersSortStorageImpl(
         }
     }
 
-    override fun getSort(entityType: String): FiberyEntitySortData? {
+    fun getSort(entityType: String): FiberyEntitySortData? {
         val json = sortPrefs.getString(entityType, "").orEmpty()
         return if (json.isNotEmpty()) {
             serializer.jsonToObj(json, FiberyEntitySortData::class.java)

@@ -19,7 +19,7 @@ package com.krossovochkin.fiberyunofficial.di.pickersort
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment
-import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModelFactory
+import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -38,14 +38,13 @@ interface PickerSortParentComponent : GlobalDependencies {
 )
 interface PickerSortComponent {
 
-    fun viewModelFactory(): Lazy<PickerSortViewModelFactory>
+    fun viewModelFactory(): PickerSortViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            pickerSortParentComponent: PickerSortParentComponent,
-            @BindsInstance argsProvider: PickerSortFragment.ArgsProvider
+            pickerSortParentComponent: PickerSortParentComponent
         ): PickerSortComponent
     }
 }

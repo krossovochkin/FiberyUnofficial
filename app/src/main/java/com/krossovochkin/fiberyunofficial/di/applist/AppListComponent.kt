@@ -17,9 +17,9 @@
 package com.krossovochkin.fiberyunofficial.di.applist
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModelFactory
+import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
 import dagger.Component
-import dagger.Lazy
+import javax.inject.Provider
 import javax.inject.Scope
 
 interface AppListParentComponent : GlobalDependencies
@@ -30,7 +30,7 @@ interface AppListParentComponent : GlobalDependencies
 )
 interface AppListComponent {
 
-    fun viewModelFactory(): Lazy<AppListViewModelFactory>
+    fun viewModelProvider(): Provider<AppListViewModel>
 
     @Component.Factory
     interface Factory {

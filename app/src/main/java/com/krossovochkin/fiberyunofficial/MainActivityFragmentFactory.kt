@@ -113,16 +113,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerPickerFilterComponent.factory()
                     .create(
                         pickerFilterParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = PickerFilterFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            PickerFilterFragment.Args(
-                                entityTypeSchema = args.entityTypeSchema,
-                                filter = args.filter
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = PickerFilterFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    PickerFilterFragment.Args(
+                        entityTypeSchema = args.entityTypeSchema,
+                        filter = args.filter
+                    )
+                }
             )
         }
     }
@@ -133,16 +133,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerPickerSortComponent.factory()
                     .create(
                         pickerSortParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = PickerSortFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            PickerSortFragment.Args(
-                                entityTypeSchema = args.entityTypeSchema,
-                                sort = args.sort
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = PickerSortFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    PickerSortFragment.Args(
+                        entityTypeSchema = args.entityTypeSchema,
+                        sort = args.sort
+                    )
+                }
             )
         }
     }
@@ -153,16 +153,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerPickerMultiSelectComponent.factory()
                     .create(
                         pickerMultiSelectParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = PickerMultiSelectDialogFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            PickerMultiSelectDialogFragment.Args(
-                                item = args.item,
-                                parentEntityData = args.parentEntityData
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = PickerMultiSelectDialogFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    PickerMultiSelectDialogFragment.Args(
+                        item = args.item,
+                        parentEntityData = args.parentEntityData
+                    )
+                }
             )
         }
     }
@@ -173,16 +173,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerPickerSingleSelectComponent.factory()
                     .create(
                         pickerSingleSelectParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = PickerSingleSelectDialogFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            PickerSingleSelectDialogFragment.Args(
-                                item = args.item,
-                                parentEntityData = args.parentEntityData
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = PickerSingleSelectDialogFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    PickerSingleSelectDialogFragment.Args(
+                        item = args.item,
+                        parentEntityData = args.parentEntityData
+                    )
+                }
             )
         }
     }
@@ -193,16 +193,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerEntityPickerComponent.factory()
                     .create(
                         entityPickerParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = EntityPickerFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            EntityPickerFragment.Args(
-                                parentEntityData = args.parentEntityData,
-                                entity = args.currentEntity
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = EntityPickerFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    EntityPickerFragment.Args(
+                        parentEntityData = args.parentEntityData,
+                        entity = args.currentEntity
+                    )
+                }
             )
         }
     }
@@ -213,36 +213,33 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerEntityCreateComponent.factory()
                     .create(
                         entityCreateParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = EntityCreateFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            EntityCreateFragment.Args(
-                                entityTypeSchema = args.entityType
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = EntityCreateFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    EntityCreateFragment.Args(
+                        entityTypeSchema = args.entityType
+                    )
+                }
             )
         }
     }
 
     private fun instantiateEntityDetailsFragment(): Fragment {
         return instantiate { argsExtractor ->
-            val argsProvider = EntityDetailsFragment.ArgsProvider {
-                val args = EntityDetailsFragmentArgs.fromBundle(argsExtractor.extract())
-                EntityDetailsFragment.Args(
-                    entityData = args.entity
-                )
-            }
-
             EntityDetailsFragment(
                 viewModelFactory = DaggerEntityDetailsComponent.factory()
                     .create(
                         entityDetailsParentComponent = mainActivityComponent,
-                        argsProvider = argsProvider
                     )
                     .viewModelFactory(),
-                argsProvider = argsProvider
+                argsProvider = {
+                    val args = EntityDetailsFragmentArgs.fromBundle(argsExtractor.extract())
+                    EntityDetailsFragment.Args(
+                        entityData = args.entity
+                    )
+                }
             )
         }
     }
@@ -250,19 +247,19 @@ class MainActivityFragmentFactory(
     private fun instantiateEntityListFragment(): Fragment {
         return instantiate { argsExtractor ->
             EntityListFragment(
-                DaggerEntityListComponent.factory()
+                viewModelFactory = DaggerEntityListComponent.factory()
                     .create(
                         entityListParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = EntityListFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            EntityListFragment.Args(
-                                entityTypeSchema = args.entityType,
-                                parentEntityData = args.parentEntityData
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = EntityListFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    EntityListFragment.Args(
+                        entityTypeSchema = args.entityType,
+                        parentEntityData = args.parentEntityData
+                    )
+                }
             )
         }
     }
@@ -273,32 +270,32 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerEntityTypeListComponent.factory()
                     .create(
                         entityTypeListParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = EntityTypeListFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            EntityTypeListFragment.Args(
-                                fiberyAppData = args.fiberyApp
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = EntityTypeListFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    EntityTypeListFragment.Args(
+                        fiberyAppData = args.fiberyApp
+                    )
+                }
             )
         }
     }
 
     private fun instantiateAppListFragment(): AppListFragment {
         return AppListFragment(
-            viewModelFactory = DaggerAppListComponent.factory()
+            viewModelProvider = DaggerAppListComponent.factory()
                 .create(appListParentComponent = mainActivityComponent)
-                .viewModelFactory()
+                .viewModelProvider()
         )
     }
 
     private fun instantiateLoginFragment(): LoginFragment {
         return LoginFragment(
-            viewModelFactory = DaggerLoginComponent.factory()
+            viewModelProvider = DaggerLoginComponent.factory()
                 .create(loginParentComponent = mainActivityComponent)
-                .viewModelFactory()
+                .viewModelProvider()
         )
     }
 
@@ -308,16 +305,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerFileListComponent.factory()
                     .create(
                         fileListParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = FileListFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            FileListFragment.Args(
-                                entityTypeSchema = args.entityType,
-                                parentEntityData = args.parentEntityData
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = FileListFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    FileListFragment.Args(
+                        entityTypeSchema = args.entityType,
+                        parentEntityData = args.parentEntityData
+                    )
+                }
             )
         }
     }
@@ -328,16 +325,16 @@ class MainActivityFragmentFactory(
                 viewModelFactory = DaggerCommentListComponent.factory()
                     .create(
                         commentListParentComponent = mainActivityComponent,
-                        argsProvider = {
-                            val args = CommentListFragmentArgs
-                                .fromBundle(argsExtractor.extract())
-                            CommentListFragment.Args(
-                                entityTypeSchema = args.entityType,
-                                parentEntityData = args.parentEntityData
-                            )
-                        }
                     )
-                    .viewModelFactory()
+                    .viewModelFactory(),
+                argsProvider = {
+                    val args = CommentListFragmentArgs
+                        .fromBundle(argsExtractor.extract())
+                    CommentListFragment.Args(
+                        entityTypeSchema = args.entityType,
+                        parentEntityData = args.parentEntityData
+                    )
+                }
             )
         }
     }

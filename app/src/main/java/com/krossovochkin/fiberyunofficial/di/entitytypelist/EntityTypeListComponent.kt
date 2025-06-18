@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.di.entitytypelist
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragment
-import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModelFactory
+import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -34,14 +34,13 @@ interface EntityTypeListParentComponent : GlobalDependencies
 )
 interface EntityTypeListComponent {
 
-    fun viewModelFactory(): Lazy<EntityTypeListViewModelFactory>
+    fun viewModelFactory(): EntityTypeListViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            entityTypeListParentComponent: EntityTypeListParentComponent,
-            @BindsInstance argsProvider: EntityTypeListFragment.ArgsProvider
+            entityTypeListParentComponent: EntityTypeListParentComponent
         ): EntityTypeListComponent
     }
 }

@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.di.pickermultiselect
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
-import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectViewModelFactory
+import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -34,14 +34,13 @@ interface PickerMultiSelectParentComponent : GlobalDependencies
 )
 interface PickerMultiSelectComponent {
 
-    fun viewModelFactoryProducer(): Lazy<PickerMultiSelectViewModelFactory>
+    fun viewModelFactory(): PickerMultiSelectViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            pickerMultiSelectParentComponent: PickerMultiSelectParentComponent,
-            @BindsInstance argsProvider: PickerMultiSelectDialogFragment.ArgsProvider
+            pickerMultiSelectParentComponent: PickerMultiSelectParentComponent
         ): PickerMultiSelectComponent
     }
 }

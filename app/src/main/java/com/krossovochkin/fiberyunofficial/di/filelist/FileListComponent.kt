@@ -3,7 +3,7 @@ package com.krossovochkin.fiberyunofficial.di.filelist
 import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.filelist.presentation.FileListFragment
-import com.krossovochkin.filelist.presentation.FileListViewModelFactory
+import com.krossovochkin.filelist.presentation.FileListViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -22,14 +22,13 @@ interface FileListParentComponent : GlobalDependencies {
 )
 interface FileListComponent {
 
-    fun viewModelFactory(): Lazy<FileListViewModelFactory>
+    fun viewModelFactory(): FileListViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            fileListParentComponent: FileListParentComponent,
-            @BindsInstance argsProvider: FileListFragment.ArgsProvider
+            fileListParentComponent: FileListParentComponent
         ): FileListComponent
     }
 }

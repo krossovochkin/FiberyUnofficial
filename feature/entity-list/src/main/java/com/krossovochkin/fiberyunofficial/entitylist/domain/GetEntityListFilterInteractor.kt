@@ -19,8 +19,9 @@ package com.krossovochkin.fiberyunofficial.entitylist.domain
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
+import javax.inject.Inject
 
-class GetEntityListFilterInteractor(
+class GetEntityListFilterInteractor @Inject constructor(
     private val entityListFiltersSortStorage: EntityListFiltersSortStorage,
 ) {
 
