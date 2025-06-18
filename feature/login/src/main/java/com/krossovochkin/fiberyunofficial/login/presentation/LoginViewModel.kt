@@ -17,26 +17,33 @@
 package com.krossovochkin.fiberyunofficial.login.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Provider
 
-abstract class LoginViewModel : ViewModel() {
-
-    abstract val navigation: Flow<LoginNavEvent>
-
-    abstract fun login(account: String, token: String)
-}
-
-class LoginViewModelImpl(
+class LoginViewModel @Inject constructor(
     private val loginInteractor: LoginInteractor
-) : LoginViewModel() {
+) : ViewModel() {
+
+    companion object {
+        fun provideFactory(
+            viewModelProvider: Provider<LoginViewModel>
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return viewModelProvider.get() as T
+            }
+        }
+    }
 
     private val navigationChannel = Channel<LoginNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<LoginNavEvent>
+    val navigation: Flow<LoginNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     init {
@@ -45,7 +52,7 @@ class LoginViewModelImpl(
         }
     }
 
-    override fun login(account: String, token: String) {
+    fun login(account: String, token: String) {
         val isSuccessful = loginInteractor.login(account, token)
         if (isSuccessful) {
             onLoginSuccess()

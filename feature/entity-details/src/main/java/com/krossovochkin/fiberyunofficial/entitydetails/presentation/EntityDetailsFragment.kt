@@ -59,14 +59,18 @@ import com.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetail
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.core.net.toUri
-import dagger.Lazy
 
 class EntityDetailsFragment(
-    viewModelFactory: Lazy<EntityDetailsViewModelFactory>,
+    viewModelFactory: EntityDetailsViewModel.Factory,
     private val argsProvider: ArgsProvider
 ) : Fragment(R.layout.entity_details_fragment) {
 
-    private val viewModel: EntityDetailsViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: EntityDetailsViewModel by viewModels {
+        EntityDetailsViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getEntityDetailsArgs()
+        )
+    }
 
     private val binding by viewBinding(EntityDetailsFragmentBinding::bind)
 

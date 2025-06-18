@@ -28,10 +28,16 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import dagger.Lazy
 
 class PickerMultiSelectDialogFragment(
-    viewModelFactory: Lazy<PickerMultiSelectViewModelFactory>
+    viewModelFactory: PickerMultiSelectViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : DialogFragment() {
 
-    private val viewModel: PickerMultiSelectViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: PickerMultiSelectViewModel by viewModels {
+        PickerMultiSelectViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getPickerMultiSelectArgs()
+        )
+    }
 
     private val parentListener: ParentListener by parentListener()
 

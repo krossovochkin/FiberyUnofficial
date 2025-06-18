@@ -35,10 +35,16 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityCreateFragment(
-    viewModelFactory: Lazy<EntityCreateViewModelFactory>
+    viewModelFactory: EntityCreateViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.entity_create_fragment) {
 
-    private val viewModel: EntityCreateViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: EntityCreateViewModel by viewModels {
+        EntityCreateViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getEntityCreateArgs()
+        )
+    }
 
     private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 

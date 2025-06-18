@@ -20,6 +20,7 @@ package com.krossovochkin.fiberyunofficial.entitylist.presentation
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.core.presentation.list.ListItem
@@ -39,48 +40,16 @@ import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInt
 import com.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class EntityListViewModel : ViewModel() {
-
-    abstract val progress: Flow<Boolean>
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityListNavEvent>
-
-    abstract val entityItems: Flow<PagingData<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun getCreateFabViewState(context: Context): FabViewState
-
-    abstract fun select(item: ListItem, itemView: View)
-
-    abstract fun removeRelation(item: EntityListItem)
-
-    abstract fun onBackPressed()
-
-    abstract fun onFilterClicked(view: View)
-
-    abstract fun onFilterSelected(filter: FiberyEntityFilterData)
-
-    abstract fun onSortClicked(view: View)
-
-    abstract fun onSortSelected(sort: FiberyEntitySortData)
-
-    abstract fun onCreateEntityClicked(view: View)
-
-    abstract fun onEntityCreated(createdEntity: FiberyEntityData)
-
-    abstract fun onError(error: Exception)
-}
-
-internal class EntityListViewModelImpl(
+class EntityListViewModel @AssistedInject constructor(
     getEntityListInteractor: GetEntityListInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
@@ -88,15 +57,32 @@ internal class EntityListViewModelImpl(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val entityListArgs: EntityListFragment.Args
-) : EntityListViewModel() {
+    @Assisted private val entityListArgs: EntityListFragment.Args
+) : ViewModel() {
 
-    override val progress = MutableStateFlow(false)
+    @AssistedFactory
+    interface Factory {
+        fun create(args: EntityListFragment.Args): EntityListViewModel
+    }
+
+    companion object {
+        fun provideFactory(
+            factory: Factory,
+            args: EntityListFragment.Args
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory.create(args) as T
+            }
+        }
+    }
+
+    val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<EntityListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityListNavEvent>
+    val navigation: Flow<EntityListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
@@ -119,10 +105,10 @@ internal class EntityListViewModelImpl(
         }
     )
 
-    override val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(
                 entityListArgs.parentEntityData?.fieldSchema?.displayName
@@ -137,12 +123,12 @@ internal class EntityListViewModelImpl(
             }
         )
 
-    override fun getCreateFabViewState(context: Context) =
+    fun getCreateFabViewState(context: Context) =
         FabViewState(
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
 
-    override fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem, itemView: View) {
         require(item is EntityListItem)
         viewModelScope.launch {
             navigationChannel.send(
@@ -151,7 +137,7 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun removeRelation(item: EntityListItem) {
+    fun removeRelation(item: EntityListItem) {
         if (entityListArgs.parentEntityData == null) {
             error("Can't remove relation from top-level entity list")
         }
@@ -169,27 +155,27 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(EntityListNavEvent.BackEvent)
         }
     }
 
-    override fun onFilterSelected(filter: FiberyEntityFilterData) {
+    fun onFilterSelected(filter: FiberyEntityFilterData) {
         viewModelScope.launch {
             setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter)
             paginatedListDelegate.invalidate()
         }
     }
 
-    override fun onSortSelected(sort: FiberyEntitySortData) {
+    fun onSortSelected(sort: FiberyEntitySortData) {
         viewModelScope.launch {
             setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
             paginatedListDelegate.invalidate()
         }
     }
 
-    override fun onFilterClicked(view: View) {
+    fun onFilterClicked(view: View) {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnFilterSelectedEvent(
@@ -201,7 +187,7 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onSortClicked(view: View) {
+    fun onSortClicked(view: View) {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnSortSelectedEvent(
@@ -213,7 +199,7 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onCreateEntityClicked(view: View) {
+    fun onCreateEntityClicked(view: View) {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnCreateEntityEvent(
@@ -225,7 +211,7 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onEntityCreated(createdEntity: FiberyEntityData) {
+    fun onEntityCreated(createdEntity: FiberyEntityData) {
         if (entityListArgs.parentEntityData == null) {
             paginatedListDelegate.invalidate()
             return
@@ -245,9 +231,9 @@ internal class EntityListViewModelImpl(
         }
     }
 
-    override fun onError(error: Exception) {
+    fun onError(error: Exception) {
         viewModelScope.launch {
-            this@EntityListViewModelImpl.errorChannel.send(error)
+            this@EntityListViewModel.errorChannel.send(error)
         }
     }
 }

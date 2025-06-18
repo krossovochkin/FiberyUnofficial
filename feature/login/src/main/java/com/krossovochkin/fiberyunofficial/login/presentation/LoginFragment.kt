@@ -27,12 +27,15 @@ import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.login.R
 import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
 import dagger.Lazy
+import javax.inject.Provider
 
 class LoginFragment(
-    viewModelFactory : Lazy<LoginViewModelFactory>
+    viewModelProvider: Provider<LoginViewModel>,
 ) : Fragment(R.layout.login_fragment) {
 
-    private val viewModel: LoginViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: LoginViewModel by viewModels {
+        LoginViewModel.provideFactory(viewModelProvider)
+    }
 
     private val binding by viewBinding(LoginFragmentBinding::bind)
 

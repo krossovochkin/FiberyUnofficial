@@ -44,10 +44,16 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerSortFragment(
-    viewModelFactory: Lazy<PickerSortViewModelFactory>
+    viewModelFactory: PickerSortViewModel.Factory,
+    argsProvider: ArgsProvider
 ) : Fragment(R.layout.picker_sort_fragment) {
 
-    private val viewModel: PickerSortViewModel by viewModels { viewModelFactory.get() }
+    private val viewModel: PickerSortViewModel by viewModels {
+        PickerSortViewModel.provideFactory(
+            viewModelFactory,
+            argsProvider.getPickerSortArgs()
+        )
+    }
 
     private val binding by viewBinding(PickerSortFragmentBinding::bind)
 
