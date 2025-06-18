@@ -19,7 +19,7 @@ package com.krossovochkin.fiberyunofficial.di.pickerfilter
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
-import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModelFactory
+import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -38,14 +38,13 @@ interface PickerFilterParentComponent : GlobalDependencies {
 )
 interface PickerFilterComponent {
 
-    fun viewModelFactoryProducer(): Lazy<PickerFilterViewModelFactory>
+    fun viewModelFactory(): PickerFilterViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            pickerFilterParentComponent: PickerFilterParentComponent,
-            @BindsInstance argsProvider: PickerFilterFragment.ArgsProvider
+            pickerFilterParentComponent: PickerFilterParentComponent
         ): PickerFilterComponent
     }
 }

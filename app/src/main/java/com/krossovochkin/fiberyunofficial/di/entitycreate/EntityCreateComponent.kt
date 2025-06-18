@@ -18,10 +18,9 @@ package com.krossovochkin.fiberyunofficial.di.entitycreate
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
-import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModelFactory
+import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModel
 import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityCreateParentComponent : GlobalDependencies
@@ -32,7 +31,7 @@ interface EntityCreateParentComponent : GlobalDependencies
 )
 interface EntityCreateComponent {
 
-    fun viewModelFactory(): Lazy<EntityCreateViewModelFactory>
+    fun viewModelFactory(): EntityCreateViewModel.Factory
 
     fun inject(fragment: EntityCreateFragment)
 
@@ -40,8 +39,7 @@ interface EntityCreateComponent {
     interface Factory {
 
         fun create(
-            entityCreateParentComponent: EntityCreateParentComponent,
-            @BindsInstance argsProvider: EntityCreateFragment.ArgsProvider
+            entityCreateParentComponent: EntityCreateParentComponent
         ): EntityCreateComponent
     }
 }

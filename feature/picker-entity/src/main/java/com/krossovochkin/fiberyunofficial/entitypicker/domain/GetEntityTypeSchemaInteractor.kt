@@ -19,8 +19,9 @@ package com.krossovochkin.fiberyunofficial.entitypicker.domain
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import javax.inject.Inject
 
-class GetEntityTypeSchemaInteractor(
+class GetEntityTypeSchemaInteractor @Inject constructor(
     private val fiberyApiRepository: FiberyApiRepository
 ) {
 

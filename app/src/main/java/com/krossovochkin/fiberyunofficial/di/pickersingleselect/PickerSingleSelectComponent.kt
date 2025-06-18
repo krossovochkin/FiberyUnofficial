@@ -18,7 +18,7 @@ package com.krossovochkin.fiberyunofficial.di.pickersingleselect
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
-import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectViewModelFactory
+import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Lazy
@@ -34,14 +34,13 @@ interface PickerSingleSelectParentComponent : GlobalDependencies
 )
 interface PickerSingleSelectComponent {
 
-    fun viewModelFactory(): Lazy<PickerSingleSelectViewModelFactory>
+    fun viewModelFactory(): PickerSingleSelectViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            pickerSingleSelectParentComponent: PickerSingleSelectParentComponent,
-            @BindsInstance argsProvider: PickerSingleSelectDialogFragment.ArgsProvider
+            pickerSingleSelectParentComponent: PickerSingleSelectParentComponent
         ): PickerSingleSelectComponent
     }
 }

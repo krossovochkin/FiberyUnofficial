@@ -32,7 +32,7 @@ interface EntityDetailsParentComponent : GlobalDependencies
 )
 interface EntityDetailsComponent {
 
-    fun viewModelFactory(): Lazy<EntityDetailsViewModel.Factory>
+    fun viewModelFactory(): EntityDetailsViewModel.Factory
 
     @Component.Factory
     interface Factory {

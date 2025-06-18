@@ -1,7 +1,7 @@
 package com.krossovochkin.fiberyunofficial.di.commentlist
 
 import com.krossovochkin.commentlist.presentation.CommentListFragment
-import com.krossovochkin.commentlist.presentation.CommentListViewModelFactory
+import com.krossovochkin.commentlist.presentation.CommentListViewModel
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import dagger.BindsInstance
 import dagger.Component
@@ -18,14 +18,13 @@ interface CommentListParentComponent : GlobalDependencies
 )
 interface CommentListComponent {
 
-    fun viewModelFactory(): Lazy<CommentListViewModelFactory>
+    fun viewModelFactory(): CommentListViewModel.Factory
 
     @Component.Factory
     interface Factory {
 
         fun create(
-            commentListParentComponent: CommentListParentComponent,
-            @BindsInstance argsProvider: CommentListFragment.ArgsProvider
+            commentListParentComponent: CommentListParentComponent
         ): CommentListComponent
     }
 }
