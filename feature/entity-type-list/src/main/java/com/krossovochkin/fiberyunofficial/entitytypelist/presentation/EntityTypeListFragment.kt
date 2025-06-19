@@ -36,7 +36,6 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityTypeListFragment(
@@ -79,7 +78,7 @@ class EntityTypeListFragment(
 
         initToolbar(
             toolbar = binding.entityTypeListToolbar,
-            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext())),
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState()),
             onBackPressed = { viewModel.onBackPressed() }
         )
 

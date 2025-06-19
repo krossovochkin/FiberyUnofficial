@@ -18,11 +18,8 @@
 package com.krossovochkin.fiberyunofficial.di.pickersort
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerSortParentComponent : GlobalDependencies {

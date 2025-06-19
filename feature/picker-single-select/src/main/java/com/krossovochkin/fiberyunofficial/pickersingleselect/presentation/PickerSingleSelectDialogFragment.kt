@@ -25,7 +25,6 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-import dagger.Lazy
 
 class PickerSingleSelectDialogFragment(
     viewModelFactory: PickerSingleSelectViewModel.Factory,

@@ -42,7 +42,6 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterI
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemMergeTypeBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerFilterFragment(

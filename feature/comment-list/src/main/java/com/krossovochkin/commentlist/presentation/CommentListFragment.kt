@@ -37,7 +37,6 @@ import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-import dagger.Lazy
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 

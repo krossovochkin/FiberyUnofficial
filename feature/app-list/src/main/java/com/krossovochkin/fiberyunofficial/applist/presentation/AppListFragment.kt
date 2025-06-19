@@ -63,7 +63,7 @@ class AppListFragment(
 
         initToolbar(
             toolbar = binding.appListToolbar,
-            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext()))
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState())
         )
 
         initRecyclerView(

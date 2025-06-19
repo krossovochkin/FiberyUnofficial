@@ -18,11 +18,8 @@
 package com.krossovochkin.fiberyunofficial.di.pickerfilter
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterFragment
 import com.krossovochkin.fiberyunofficial.pickerfilter.presentation.PickerFilterViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerFilterParentComponent : GlobalDependencies {

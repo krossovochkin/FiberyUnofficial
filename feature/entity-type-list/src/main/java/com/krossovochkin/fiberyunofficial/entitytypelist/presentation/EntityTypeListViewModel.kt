@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -100,7 +99,7 @@ class EntityTypeListViewModel @AssistedInject constructor(
         }
     }
 
-    fun getToolbarViewState(context: Context): ToolbarViewState =
+    fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.entity_type_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary),

@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -123,7 +122,7 @@ class EntityListViewModel @AssistedInject constructor(
             }
         )
 
-    fun getCreateFabViewState(context: Context) =
+    fun getCreateFabViewState() =
         FabViewState(
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )

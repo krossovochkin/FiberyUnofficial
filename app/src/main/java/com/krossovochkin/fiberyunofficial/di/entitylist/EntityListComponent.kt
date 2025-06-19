@@ -17,11 +17,8 @@
 package com.krossovochkin.fiberyunofficial.di.entitylist
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragment
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityListParentComponent : GlobalDependencies {

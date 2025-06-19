@@ -39,7 +39,6 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.R
 import com.krossovochkin.filelist.databinding.FileListFragmentBinding
 import com.krossovochkin.filelist.databinding.FileListItemBinding
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FileListFragment(

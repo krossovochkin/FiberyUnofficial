@@ -7,6 +7,7 @@ android {
 
 dependencies {
     api libs.dagger
+    ksp libs.dagger.compiler
     api libs.recyclerview
     api libs.constraintlayout
     api libs.appcompat

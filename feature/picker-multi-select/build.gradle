@@ -7,6 +7,7 @@ android {
 
 dependencies {
     api libs.dagger
+    ksp libs.dagger.compiler
     api project(":core:domain")
     implementation libs.fragment.ktx
     implementation libs.appcompat

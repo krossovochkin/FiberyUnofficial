@@ -11,6 +11,7 @@ dependencies {
     api libs.appcompat
     api libs.material
     api libs.dagger
+    ksp libs.dagger.compiler
     api project(":core:domain")
     api project(":core:presentation:ui:toolbar")
     api project(":feature:entity-create-domain")
