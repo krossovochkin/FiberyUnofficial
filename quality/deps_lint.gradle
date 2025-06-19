@@ -98,6 +98,11 @@ dependencyAnalysis {
                     exclude(":core:data:serialization")
                 }
             }
+            project(":feature:entity-create-domain") {
+                onUnusedDependencies {
+                    exclude("com.google.dagger:dagger")
+                }
+            }
         }
     }
 }
