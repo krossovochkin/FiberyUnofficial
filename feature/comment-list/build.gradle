@@ -8,6 +8,7 @@ android {
 dependencies {
     api libs.kotlinx.coroutines.core
     api libs.dagger
+    ksp libs.dagger.compiler
     api libs.appcompat
     api libs.recyclerview
     api libs.constraintlayout

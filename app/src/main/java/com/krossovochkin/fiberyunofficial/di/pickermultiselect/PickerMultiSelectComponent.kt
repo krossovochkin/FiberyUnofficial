@@ -17,11 +17,8 @@
 package com.krossovochkin.fiberyunofficial.di.pickermultiselect
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerMultiSelectParentComponent : GlobalDependencies

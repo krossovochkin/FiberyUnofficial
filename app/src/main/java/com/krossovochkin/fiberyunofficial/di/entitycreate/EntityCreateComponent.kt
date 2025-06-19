@@ -19,7 +19,6 @@ package com.krossovochkin.fiberyunofficial.di.entitycreate
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment
 import com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateViewModel
-import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
 

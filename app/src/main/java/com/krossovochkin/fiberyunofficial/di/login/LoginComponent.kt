@@ -20,7 +20,6 @@ import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginViewModel
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Provider
 import javax.inject.Scope
 

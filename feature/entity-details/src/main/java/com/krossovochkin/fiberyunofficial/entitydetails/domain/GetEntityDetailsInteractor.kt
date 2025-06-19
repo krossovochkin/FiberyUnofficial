@@ -141,7 +141,7 @@ class GetEntityDetailsInteractor @Inject constructor(
         return entityData.schema.fields
             .filter { fieldSchema ->
                 fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum &&
-                        !fieldSchema.meta.isCollection
+                    !fieldSchema.meta.isCollection
             }
             .map { fieldSchema ->
                 mapOf(
@@ -159,8 +159,8 @@ class GetEntityDetailsInteractor @Inject constructor(
         return entityData.schema.fields
             .filter { fieldSchema ->
                 fieldSchema.meta.isRelation &&
-                        !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum &&
-                        !fieldSchema.meta.isCollection
+                    !fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum &&
+                    !fieldSchema.meta.isCollection
             }
             .map { fieldSchema ->
                 val titleFieldName = fiberyApiRepository.getTypeSchema(fieldSchema.type)
@@ -181,8 +181,8 @@ class GetEntityDetailsInteractor @Inject constructor(
         return entityData.schema.fields
             .filter { fieldSchema ->
                 fieldSchema.meta.isCollection &&
-                        fieldSchema.name != FiberyApiConstants.Field.DOCUMENTS.value &&
-                        fieldSchema.name != FiberyApiConstants.Field.WHITEBOARDS.value
+                    fieldSchema.name != FiberyApiConstants.Field.DOCUMENTS.value &&
+                    fieldSchema.name != FiberyApiConstants.Field.WHITEBOARDS.value
             }
             .map { fieldSchema ->
                 mapOf(
@@ -210,8 +210,6 @@ class GetEntityDetailsInteractor @Inject constructor(
             }
     }
 
-
-
     private suspend fun mapEntityDetailsFields(
         result: Map<String, Any>,
         titleFieldName: String,
@@ -235,34 +233,44 @@ class GetEntityDetailsInteractor @Inject constructor(
                     FiberyApiConstants.FieldType.TEXT.value -> {
                         mapTextFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.URL.value -> {
                         mapUrlFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.EMAIL.value -> {
                         mapEmailFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.NUMBER_INT.value,
                     FiberyApiConstants.FieldType.NUMBER_DECIMAL.value -> {
                         mapNumberFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.CHECKBOX.value -> {
                         mapCheckboxFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.DATE.value -> {
                         mapDateFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.DATE_TIME.value -> {
                         mapDateTimeFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.DATE_RANGE.value -> {
                         mapDateRangeFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.DATE_TIME_RANGE.value -> {
                         mapDateTimeRangeFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     FiberyApiConstants.FieldType.COLLABORATION_DOCUMENT.value -> {
                         mapRichTextFieldData(fieldSchema = fieldSchema, data = it)
                     }
+
                     else -> {
                         mapEntityDetailsEntityFields(
                             data = it,
@@ -284,18 +292,21 @@ class GetEntityDetailsInteractor @Inject constructor(
                     data = data
                 )
             }
+
             fiberyApiRepository.getTypeSchema(fieldSchema.type).meta.isEnum -> {
                 mapSingleSelectFieldData(
                     fieldSchema = fieldSchema,
                     data = data
                 )
             }
+
             fieldSchema.meta.isRelation -> {
                 mapRelationFieldData(
                     fieldSchema = fieldSchema,
                     dataEntry = data
                 )
             }
+
             else -> {
                 null
             }
@@ -458,7 +469,7 @@ class GetEntityDetailsInteractor @Inject constructor(
             @Suppress("UNCHECKED_CAST")
             (data.value as? Map<String, Any>)
                 ?.get(FiberyApiConstants.Field.DOCUMENT_SECRET.value)
-                    as? String
+                as? String
         ) { "rich text secret is missing" }
         val documentDto = runCatching { fiberyServiceApi.getDocument(secret) }.getOrNull()
 
@@ -496,9 +507,9 @@ class GetEntityDetailsInteractor @Inject constructor(
 
         @Suppress("UNCHECKED_CAST")
         val selectedValues = (
-                (data.value as? Map<String, Any>)
-                    ?.get(FiberyApiConstants.Field.ID.value) as? List<Map<String, String>>
-                )
+            (data.value as? Map<String, Any>)
+                ?.get(FiberyApiConstants.Field.ID.value) as? List<Map<String, String>>
+            )
             ?.map { it[FiberyApiConstants.Field.ID.value] }
             ?.map { id -> values.first { value -> value.id == id } }
             ?: emptyList()

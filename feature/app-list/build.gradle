@@ -11,6 +11,7 @@ dependencies {
     api libs.recyclerview
     api libs.constraintlayout
     api libs.dagger
+    ksp libs.dagger.compiler
     api project(":core:data:api")
     api project(":core:domain")
     api project(":core:presentation:list")

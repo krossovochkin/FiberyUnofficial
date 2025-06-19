@@ -26,7 +26,6 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.login.R
 import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
-import dagger.Lazy
 import javax.inject.Provider
 
 class LoginFragment(

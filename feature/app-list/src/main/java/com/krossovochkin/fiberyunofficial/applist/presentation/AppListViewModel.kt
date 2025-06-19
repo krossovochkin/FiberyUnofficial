@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -82,7 +81,7 @@ class AppListViewModel @Inject constructor(
         }
     }
 
-    fun getToolbarViewState(context: Context): ToolbarViewState =
+    fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.app_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)

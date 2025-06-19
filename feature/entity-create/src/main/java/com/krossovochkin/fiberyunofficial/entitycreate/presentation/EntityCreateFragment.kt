@@ -31,7 +31,6 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityCreateFragment(

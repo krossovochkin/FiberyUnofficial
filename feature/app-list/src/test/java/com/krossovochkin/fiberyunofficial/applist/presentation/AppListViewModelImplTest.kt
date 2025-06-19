@@ -32,7 +32,7 @@ internal class AppListViewModelImplTest {
     }
 
     private val viewModel: AppListViewModel by lazy {
-        AppListViewModelImpl(
+        AppListViewModel(
             getAppListInteractor = interactor
         )
     }

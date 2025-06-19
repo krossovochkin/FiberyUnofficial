@@ -40,7 +40,6 @@ import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragm
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemAddBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemEmptyBinding
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class PickerSortFragment(

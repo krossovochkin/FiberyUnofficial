@@ -19,7 +19,6 @@ package com.krossovochkin.fiberyunofficial.di.entitydetails
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsViewModel
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityDetailsParentComponent : GlobalDependencies

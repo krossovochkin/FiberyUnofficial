@@ -2,11 +2,8 @@ package com.krossovochkin.fiberyunofficial.di.filelist
 
 import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.filelist.presentation.FileListFragment
 import com.krossovochkin.filelist.presentation.FileListViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface FileListParentComponent : GlobalDependencies {

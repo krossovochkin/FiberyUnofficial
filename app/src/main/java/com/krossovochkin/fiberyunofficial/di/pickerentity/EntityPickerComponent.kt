@@ -17,11 +17,8 @@
 package com.krossovochkin.fiberyunofficial.di.pickerentity
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment
 import com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface EntityPickerParentComponent : GlobalDependencies

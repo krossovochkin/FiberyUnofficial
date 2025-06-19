@@ -17,11 +17,8 @@
 package com.krossovochkin.fiberyunofficial.di.pickersingleselect
 
 import com.krossovochkin.fiberyunofficial.GlobalDependencies
-import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectDialogFragment
 import com.krossovochkin.fiberyunofficial.pickersingleselect.presentation.PickerSingleSelectViewModel
-import dagger.BindsInstance
 import dagger.Component
-import dagger.Lazy
 import javax.inject.Scope
 
 interface PickerSingleSelectParentComponent : GlobalDependencies

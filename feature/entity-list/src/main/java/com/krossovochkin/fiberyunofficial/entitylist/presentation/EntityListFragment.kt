@@ -46,7 +46,6 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitylist.databinding.EntityListItemBinding
-import dagger.Lazy
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class EntityListFragment(
@@ -193,7 +192,7 @@ class EntityListFragment(
 
         initFab(
             fab = binding.entityListCreateFab,
-            state = viewModel.getCreateFabViewState(requireContext()),
+            state = viewModel.getCreateFabViewState(),
             transitionName = requireContext()
                 .getString(R.string.entity_list_create_fab_transition_name)
         ) {

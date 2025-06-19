@@ -38,7 +38,6 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
-import dagger.Lazy
 
 class EntityPickerFragment(
     viewModelFactory: EntityPickerViewModel.Factory,
