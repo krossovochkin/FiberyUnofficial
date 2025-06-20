@@ -16,28 +16,21 @@
  */
 package com.krossovochkin.fiberyunofficial.di.applist
 
-import com.krossovochkin.fiberyunofficial.GlobalDependencies
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListViewModel
-import dagger.Component
+import dagger.Subcomponent
 import javax.inject.Provider
 import javax.inject.Scope
 
-interface AppListParentComponent : GlobalDependencies
-
 @AppList
-@Component(
-    dependencies = [AppListParentComponent::class]
-)
+@Subcomponent
 interface AppListComponent {
 
     fun viewModelProvider(): Provider<AppListViewModel>
 
-    @Component.Factory
+    @Subcomponent.Factory
     interface Factory {
 
-        fun create(
-            appListParentComponent: AppListParentComponent
-        ): AppListComponent
+        fun create(): AppListComponent
     }
 }
 

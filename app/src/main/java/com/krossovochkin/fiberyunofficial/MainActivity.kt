@@ -54,6 +54,7 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SOR
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
 import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
 import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import com.krossovochkin.commentlist.R as CommentListR
 import com.krossovochkin.fiberyunofficial.entitycreate.R as EntityCreateR
 import com.krossovochkin.fiberyunofficial.entitydetails.R as EntityDetailsR
@@ -64,6 +65,7 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.R as PickerFilterR
 import com.krossovochkin.fiberyunofficial.pickersort.R as PickerSortR
 import com.krossovochkin.filelist.R as FileListR
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityListener {
 
     private val mainActivityComponent: MainActivityComponent by lazy {

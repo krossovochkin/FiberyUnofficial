@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentFactory
 import com.krossovochkin.commentlist.presentation.CommentListFragment
 import com.krossovochkin.commentlist.presentation.CommentListFragmentArgs
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment
-import com.krossovochkin.fiberyunofficial.di.applist.DaggerAppListComponent
 import com.krossovochkin.fiberyunofficial.di.commentlist.DaggerCommentListComponent
 import com.krossovochkin.fiberyunofficial.di.entitycreate.DaggerEntityCreateComponent
 import com.krossovochkin.fiberyunofficial.di.entitydetails.DaggerEntityDetailsComponent
@@ -285,8 +284,8 @@ class MainActivityFragmentFactory(
 
     private fun instantiateAppListFragment(): AppListFragment {
         return AppListFragment(
-            viewModelProvider = DaggerAppListComponent.factory()
-                .create(appListParentComponent = mainActivityComponent)
+            mainActivityComponent.appListComponentFactory()
+                .create()
                 .viewModelProvider()
         )
     }

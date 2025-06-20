@@ -25,6 +25,8 @@ import com.krossovochkin.fiberyunofficial.api.mapper.FiberyEntityTypeMapper
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -32,6 +34,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
 object ApiModule {
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/applist_nav"
+    app:startDestination="@id/appList">
+
+    <fragment
+        android:id="@+id/appList"
+        android:name="com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragment"
+        android:label="fragment_apps"
+        tools:layout="@layout/app_list_fragment">
+    </fragment>
+
+</navigation>
