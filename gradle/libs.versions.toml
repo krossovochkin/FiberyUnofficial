@@ -88,6 +88,8 @@ gradle-plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devt
 
 gradle-plugin-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
 
+gradle-hilt = { group = "com.google.dagger", name="hilt-android-gradle-plugin", version.ref="google-dagger" }
+
 gradle-plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 
 gradle-plugin-dependency-analysis = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "gradle-plugin-dependency-analysis" }
@@ -102,9 +104,9 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 
 adapterdelegates4-kotlin-dsl-viewbinding = { group = "com.hannesdorfmann", name = "adapterdelegates4-kotlin-dsl-viewbinding", version.ref = "adapter-delegates" }
 
-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "google-dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "google-dagger" }
 
-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "google-dagger" }
+dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
 
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit2" }
 

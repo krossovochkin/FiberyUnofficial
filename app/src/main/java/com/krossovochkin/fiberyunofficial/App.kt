@@ -18,7 +18,9 @@ package com.krossovochkin.fiberyunofficial
 
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 open class App : Application() {
 
     open val applicationComponent: ApplicationComponent by lazy {

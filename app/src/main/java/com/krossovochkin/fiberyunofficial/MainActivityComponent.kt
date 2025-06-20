@@ -17,7 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial
 
-import com.krossovochkin.fiberyunofficial.di.applist.AppListParentComponent
+import com.krossovochkin.fiberyunofficial.di.applist.AppListComponent
 import com.krossovochkin.fiberyunofficial.di.commentlist.CommentListParentComponent
 import com.krossovochkin.fiberyunofficial.di.entitycreate.EntityCreateParentComponent
 import com.krossovochkin.fiberyunofficial.di.entitydetails.EntityDetailsParentComponent
@@ -31,15 +31,21 @@ import com.krossovochkin.fiberyunofficial.di.pickermultiselect.PickerMultiSelect
 import com.krossovochkin.fiberyunofficial.di.pickersingleselect.PickerSingleSelectParentComponent
 import com.krossovochkin.fiberyunofficial.di.pickersort.PickerSortParentComponent
 import dagger.Component
+import dagger.Module
 import javax.inject.Scope
+
+@Module(
+    subcomponents = [AppListComponent::class]
+)
+object MainActivityModule
 
 @MainActivityScope
 @Component(
+    modules = [MainActivityModule::class],
     dependencies = [ApplicationComponent::class]
 )
 interface MainActivityComponent :
     LoginParentComponent,
-    AppListParentComponent,
     EntityTypeListParentComponent,
     EntityListParentComponent,
     EntityDetailsParentComponent,
@@ -51,6 +57,8 @@ interface MainActivityComponent :
     PickerSortParentComponent,
     FileListParentComponent,
     CommentListParentComponent {
+
+    fun appListComponentFactory(): AppListComponent.Factory
 
     @Component.Factory
     interface Factory {

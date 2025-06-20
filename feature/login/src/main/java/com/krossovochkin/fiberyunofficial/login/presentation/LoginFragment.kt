@@ -26,8 +26,10 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.login.R
 import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Provider
 
+@AndroidEntryPoint
 class LoginFragment(
     viewModelProvider: Provider<LoginViewModel>,
 ) : Fragment(R.layout.login_fragment) {

@@ -1,4 +1,7 @@
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'com.google.dagger.hilt.android'
 apply from: "$rootDir/feature_default.gradle"
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     resourcePrefix = "app_list_"
@@ -17,6 +20,7 @@ dependencies {
     api project(":core:presentation:list")
     api project(":core:presentation:ui:toolbar")
 
+    implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation project(":core:presentation:resources")
     implementation project(":core:presentation:result")
