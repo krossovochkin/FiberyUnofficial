@@ -34,7 +34,6 @@ import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragmentBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemAddBinding

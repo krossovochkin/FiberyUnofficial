@@ -35,7 +35,6 @@ import com.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Provider
 
 @AndroidEntryPoint
 class AppListFragment : Fragment(R.layout.app_list_fragment) {

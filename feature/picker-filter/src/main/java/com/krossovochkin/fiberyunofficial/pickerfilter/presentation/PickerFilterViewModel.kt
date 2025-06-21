@@ -19,7 +19,6 @@ package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
@@ -35,9 +34,6 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilterItemData
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
