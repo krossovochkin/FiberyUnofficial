@@ -31,7 +31,6 @@ import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.progress.initProgressBar
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding

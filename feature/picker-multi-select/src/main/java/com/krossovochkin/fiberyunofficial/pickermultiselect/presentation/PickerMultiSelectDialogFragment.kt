@@ -24,7 +24,6 @@ import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

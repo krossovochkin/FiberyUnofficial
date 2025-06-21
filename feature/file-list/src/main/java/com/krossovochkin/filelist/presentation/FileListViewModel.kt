@@ -19,7 +19,6 @@ package com.krossovochkin.filelist.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.core.presentation.list.ListItem
@@ -30,9 +29,6 @@ import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

@@ -18,16 +18,12 @@ package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

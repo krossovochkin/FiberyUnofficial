@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.core.presentation.list.ListItem
@@ -31,9 +30,6 @@ import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInterac
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

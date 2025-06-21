@@ -19,7 +19,6 @@ package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
@@ -32,9 +31,6 @@ import com.krossovochkin.fiberyunofficial.pickersort.domain.EmptySortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SelectedSortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortItemData
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

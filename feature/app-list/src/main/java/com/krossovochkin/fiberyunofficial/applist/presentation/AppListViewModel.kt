@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial.applist.presentation
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.list.ListViewModelDelegate
@@ -34,7 +33,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Provider
 
 @HiltViewModel
 class AppListViewModel @Inject constructor(

@@ -35,8 +35,6 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
