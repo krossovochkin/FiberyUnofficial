@@ -63,6 +63,9 @@ class EntityDetailsViewModel @Inject constructor(
     private val entityDetailsArgs: EntityDetailsFragmentArgs
         get() = EntityDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
+    val entityData: FiberyEntityData
+        get() = entityDetailsArgs.entity
+
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>

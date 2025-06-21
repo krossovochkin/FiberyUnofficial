@@ -94,11 +94,10 @@ class EntityDetailsFragment : Fragment(R.layout.entity_details_fragment) {
 
         initNavigation(
             navigationData = viewModel.navigation,
-            transitionName = "" // TODO
-               /* argsProvider.getEntityDetailsArgs().entityData.id
+            transitionName = viewModel.entityData.id
                 .let {
                     requireContext().getString(R.string.entity_details_root_transition_name, it)
-                }*/
+                }
         ) { event ->
             when (event) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
