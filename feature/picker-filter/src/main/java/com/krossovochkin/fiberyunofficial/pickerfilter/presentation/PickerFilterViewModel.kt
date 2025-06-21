@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -37,33 +38,22 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PickerFilterViewModel @AssistedInject constructor(
+@HiltViewModel
+class PickerFilterViewModel @Inject constructor(
     private val fiberyApiRepository: FiberyApiRepository,
-    @Assisted private val pickerFilterArgs: PickerFilterFragment.Args,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(args: PickerFilterFragment.Args): PickerFilterViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: PickerFilterFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val pickerFilterArgs: PickerFilterFragmentArgs
+        get() = PickerFilterFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val items = MutableStateFlow<List<ListItem>>(emptyList())
 

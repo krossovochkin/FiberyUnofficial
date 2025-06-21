@@ -33,16 +33,14 @@ import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Provider
 
-class AppListFragment(
-    private val viewModelProvider: Provider<AppListViewModel>
-) : Fragment(R.layout.app_list_fragment) {
+@AndroidEntryPoint
+class AppListFragment : Fragment(R.layout.app_list_fragment) {
 
-    private val viewModel: AppListViewModel by viewModels {
-        AppListViewModel.provideFactory(viewModelProvider)
-    }
+    private val viewModel: AppListViewModel by viewModels()
 
     private val parentListener: ParentListener by parentListener()
 

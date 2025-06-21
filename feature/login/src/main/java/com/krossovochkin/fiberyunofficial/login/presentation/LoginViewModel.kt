@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,20 +28,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginInteractor: LoginInteractor
 ) : ViewModel() {
-
-    companion object {
-        fun provideFactory(
-            viewModelProvider: Provider<LoginViewModel>
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return viewModelProvider.get() as T
-            }
-        }
-    }
 
     private val navigationChannel = Channel<LoginNavEvent>(Channel.BUFFERED)
     val navigation: Flow<LoginNavEvent>

@@ -37,17 +37,14 @@ import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class CommentListFragment(
-    viewModelFactory: CommentListViewModel.Factory,
-    argsProvider: ArgsProvider
-) : Fragment(R.layout.comment_list_fragment) {
+@AndroidEntryPoint
+class CommentListFragment : Fragment(R.layout.comment_list_fragment) {
 
-    private val viewModel: CommentListViewModel by viewModels {
-        CommentListViewModel.provideFactory(viewModelFactory, argsProvider.getCommentListArgs())
-    }
+    private val viewModel: CommentListViewModel by viewModels()
 
     private val binding by viewBinding(CommentListFragmentBinding::bind)
 
@@ -107,16 +104,6 @@ class CommentListFragment(
                 }
             }
         ) { error -> viewModel.onError(error) }
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val parentEntityData: ParentEntityData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getCommentListArgs(): Args
     }
 
     interface ParentListener {

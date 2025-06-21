@@ -24,6 +24,8 @@ okhttp3 = "4.12.0"
 
 androidx-navigation = "2.9.0"
 
+hilt-navigation = "1.2.0"
+
 androidx-paging = "3.3.6"
 
 androidx-recyclerview = "1.4.0"
@@ -117,6 +119,8 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidx-navigation" }
+
+navigation-hilt = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation" }
 
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx-security-crypto" }
 

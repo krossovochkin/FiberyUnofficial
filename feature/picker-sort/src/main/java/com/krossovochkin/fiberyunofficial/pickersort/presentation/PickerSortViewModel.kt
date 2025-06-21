@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -39,27 +40,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PickerSortViewModel @AssistedInject constructor(
-    @Assisted private val pickerSortArgs: PickerSortFragment.Args,
+class PickerSortViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(args: PickerSortFragment.Args): PickerSortViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: PickerSortFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val pickerSortArgs: PickerSortFragmentArgs
+        get() = PickerSortFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val items = MutableStateFlow<List<ListItem>>(emptyList())
 

@@ -36,19 +36,13 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class EntityTypeListFragment(
-    viewModelFactory: EntityTypeListViewModel.Factory,
-    argsProvider: ArgsProvider
-) : Fragment(R.layout.entity_type_list_fragment) {
+@AndroidEntryPoint
+class EntityTypeListFragment : Fragment(R.layout.entity_type_list_fragment) {
 
-    private val viewModel: EntityTypeListViewModel by viewModels {
-        EntityTypeListViewModel.provideFactory(
-            viewModelFactory,
-            argsProvider.getEntityTypeListArgs()
-        )
-    }
+    private val viewModel: EntityTypeListViewModel by viewModels()
 
     private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
@@ -111,15 +105,6 @@ class EntityTypeListFragment(
         )
 
         initErrorHandler(viewModel.error)
-    }
-
-    data class Args(
-        val fiberyAppData: FiberyAppData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getEntityTypeListArgs(): Args
     }
 
     interface ParentListener {

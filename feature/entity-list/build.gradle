@@ -21,6 +21,7 @@ dependencies {
     api project(":core:data:serialization")
     api project(":core:presentation:ui:toolbar")
     api project(":core:presentation:ui:fab")
+    implementation libs.navigation.hilt
     implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation project(":core:presentation:resources")

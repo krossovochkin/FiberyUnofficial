@@ -59,18 +59,12 @@ import com.krossovochkin.fiberyunofficial.entitydetails.databinding.EntityDetail
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.core.net.toUri
+import dagger.hilt.android.AndroidEntryPoint
 
-class EntityDetailsFragment(
-    viewModelFactory: EntityDetailsViewModel.Factory,
-    private val argsProvider: ArgsProvider
-) : Fragment(R.layout.entity_details_fragment) {
+@AndroidEntryPoint
+class EntityDetailsFragment : Fragment(R.layout.entity_details_fragment) {
 
-    private val viewModel: EntityDetailsViewModel by viewModels {
-        EntityDetailsViewModel.provideFactory(
-            viewModelFactory,
-            argsProvider.getEntityDetailsArgs()
-        )
-    }
+    private val viewModel: EntityDetailsViewModel by viewModels()
 
     private val binding by viewBinding(EntityDetailsFragmentBinding::bind)
 
@@ -100,10 +94,11 @@ class EntityDetailsFragment(
 
         initNavigation(
             navigationData = viewModel.navigation,
-            transitionName = argsProvider.getEntityDetailsArgs().entityData.id
+            transitionName = "" // TODO
+               /* argsProvider.getEntityDetailsArgs().entityData.id
                 .let {
                     requireContext().getString(R.string.entity_details_root_transition_name, it)
-                }
+                }*/
         ) { event ->
             when (event) {
                 is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
@@ -339,15 +334,6 @@ class EntityDetailsFragment(
         )
 
         initErrorHandler(viewModel.error)
-    }
-
-    data class Args(
-        val entityData: FiberyEntityData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getEntityDetailsArgs(): Args
     }
 
     interface ParentListener {
