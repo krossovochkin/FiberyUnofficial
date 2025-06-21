@@ -12,6 +12,7 @@ dependencies {
     api libs.dagger
     ksp libs.dagger.compiler
     api project(":core:domain")
+    implementation libs.navigation.hilt
     implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation libs.appcompat

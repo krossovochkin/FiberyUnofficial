@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.view.View
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -31,33 +32,22 @@ import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeLis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EntityTypeListViewModel @AssistedInject constructor(
+@HiltViewModel
+class EntityTypeListViewModel @Inject constructor(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
-    @Assisted private val args: EntityTypeListFragment.Args,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(args: EntityTypeListFragment.Args): EntityTypeListViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: EntityTypeListFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val args: EntityTypeListFragmentArgs
+        get() = EntityTypeListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)

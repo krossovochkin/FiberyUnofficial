@@ -42,19 +42,13 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterI
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemMergeTypeBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class PickerFilterFragment(
-    viewModelFactory: PickerFilterViewModel.Factory,
-    argsProvider: ArgsProvider
-) : Fragment(R.layout.picker_filter_fragment) {
+@AndroidEntryPoint
+class PickerFilterFragment : Fragment(R.layout.picker_filter_fragment) {
 
-    private val viewModel: PickerFilterViewModel by viewModels {
-        PickerFilterViewModel.provideFactory(
-            viewModelFactory,
-            argsProvider.getPickerFilterArgs()
-        )
-    }
+    private val viewModel: PickerFilterViewModel by viewModels()
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
@@ -222,16 +216,6 @@ class PickerFilterFragment(
     private fun Spinner.recycle() {
         this.onItemSelectedListener = null
         this.adapter = null
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val filter: FiberyEntityFilterData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getPickerFilterArgs(): Args
     }
 
     interface ParentListener {

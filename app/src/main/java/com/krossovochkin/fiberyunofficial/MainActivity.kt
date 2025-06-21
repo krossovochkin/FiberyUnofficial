@@ -68,18 +68,10 @@ import com.krossovochkin.filelist.R as FileListR
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityListener {
 
-    private val mainActivityComponent: MainActivityComponent by lazy {
-        DaggerMainActivityComponent.factory()
-            .create(
-                applicationComponent = (applicationContext as App).applicationComponent
-            )
-    }
-
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-        supportFragmentManager.fragmentFactory = MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContentView(binding.root)

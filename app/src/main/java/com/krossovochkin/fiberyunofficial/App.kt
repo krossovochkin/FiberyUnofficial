@@ -21,14 +21,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-open class App : Application() {
-
-    open val applicationComponent: ApplicationComponent by lazy {
-        DaggerApplicationComponent.factory()
-            .create(
-                context = this
-            )
-    }
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()

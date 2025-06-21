@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.view.View
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -41,6 +42,7 @@ import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelec
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,32 +52,20 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class EntityDetailsViewModel @AssistedInject constructor(
+@HiltViewModel
+class EntityDetailsViewModel @Inject constructor(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
-    @Assisted private val entityDetailsArgs: EntityDetailsFragment.Args
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(entityDetailsArgs: EntityDetailsFragment.Args): EntityDetailsViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: Factory,
-            entityDetailsArgs: EntityDetailsFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return assistedFactory.create(entityDetailsArgs) as T
-            }
-        }
-    }
+    private val entityDetailsArgs: EntityDetailsFragmentArgs
+        get() = EntityDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
@@ -90,7 +80,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
         progress = progress,
         errorChannel = errorChannel,
         load = {
-            mapItems(getEntityDetailsInteractor.execute(entityDetailsArgs.entityData))
+            mapItems(getEntityDetailsInteractor.execute(entityDetailsArgs.entity))
         }
     )
 
@@ -99,9 +89,9 @@ class EntityDetailsViewModel @AssistedInject constructor(
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(
-                "${entityDetailsArgs.entityData.schema.displayName} #${entityDetailsArgs.entityData.publicId}"
+                "${entityDetailsArgs.entity.schema.displayName} #${entityDetailsArgs.entity.publicId}"
             ),
-            bgColor = NativeColor.Hex(entityDetailsArgs.entityData.schema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(entityDetailsArgs.entity.schema.meta.uiColorHex),
             menuResId = R.menu.entity_details_menu,
             hasBackButton = true
         )
@@ -340,7 +330,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
                 EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
                     parentEntityData = ParentEntityData(
                         fieldSchema = item.fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
+                        parentEntity = entityDetailsArgs.entity
                     ),
                     singleSelectItem = item.singleSelectData
                 )
@@ -362,7 +352,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
             updateSingleSelectFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
                     fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
+                    parentEntity = entityDetailsArgs.entity
                 ),
                 singleSelectItem = selectedValue
             )
@@ -376,7 +366,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
                 EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
                     parentEntityData = ParentEntityData(
                         fieldSchema = item.fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
+                        parentEntity = entityDetailsArgs.entity
                     ),
                     multiSelectItem = item.multiSelectData
                 )
@@ -392,7 +382,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
             updateMultiSelectFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
                     fieldSchema = data.fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
+                    parentEntity = entityDetailsArgs.entity
                 ),
                 addedItems = data.addedItems,
                 removedItems = data.removedItems
@@ -411,7 +401,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
                 EntityDetailsNavEvent.OnEntityFieldEditEvent(
                     parentEntityData = ParentEntityData(
                         fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
+                        parentEntity = entityDetailsArgs.entity
                     ),
                     currentEntity = entityData,
                     itemView = itemView
@@ -436,7 +426,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
             updateEntityFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
                     fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entityData
+                    parentEntity = entityDetailsArgs.entity
                 ),
                 selectedEntity = entity
             )
@@ -455,7 +445,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
                     entityTypeSchema = entityTypeSchema,
                     parentEntityData = ParentEntityData(
                         fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entityData
+                        parentEntity = entityDetailsArgs.entity
                     ),
                     itemView = itemView
                 )
@@ -490,7 +480,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
             progress = progress,
             error = errorChannel
         ) {
-            deleteEntityInteractor.execute(entityDetailsArgs.entityData)
+            deleteEntityInteractor.execute(entityDetailsArgs.entity)
             onBackPressed()
         }
     }

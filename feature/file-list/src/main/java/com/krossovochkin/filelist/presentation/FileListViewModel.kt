@@ -17,6 +17,7 @@
 
 package com.krossovochkin.filelist.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -32,40 +33,29 @@ import com.krossovochkin.filelist.domain.GetFileListInteractor
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FileListViewModel @AssistedInject constructor(
+@HiltViewModel
+class FileListViewModel @Inject constructor(
     getFileListInteractor: GetFileListInteractor,
     private val downloadFileInteractor: DownloadFileInteractor,
-    @Assisted private val fileListArgs: FileListFragment.Args
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(args: FileListFragment.Args): FileListViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: FileListFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val fileListArgs: FileListFragmentArgs
+        get() = FileListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
         loadPage = { offset: Int, pageSize: Int ->
             getFileListInteractor
                 .execute(
-                    fileListArgs.entityTypeSchema,
+                    fileListArgs.entityType,
                     fileListArgs.parentEntityData,
                     offset,
                     pageSize
@@ -92,7 +82,7 @@ class FileListViewModel @AssistedInject constructor(
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(fileListArgs.parentEntityData.fieldSchema.displayName),
-            bgColor = NativeColor.Hex(fileListArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(fileListArgs.entityType.meta.uiColorHex),
             hasBackButton = true
         )
 

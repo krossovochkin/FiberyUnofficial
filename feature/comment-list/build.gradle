@@ -18,6 +18,7 @@ dependencies {
     api project(":core:data:api")
     api project(":core:domain")
     api project(":core:presentation:ui:toolbar")
+    implementation libs.navigation.hilt
     implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation libs.io.noties.markwon.core

@@ -30,13 +30,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class LoginFragment(
-    viewModelProvider: Provider<LoginViewModel>,
-) : Fragment(R.layout.login_fragment) {
+class LoginFragment : Fragment(R.layout.login_fragment) {
 
-    private val viewModel: LoginViewModel by viewModels {
-        LoginViewModel.provideFactory(viewModelProvider)
-    }
+    private val viewModel: LoginViewModel by viewModels()
 
     private val binding by viewBinding(LoginFragmentBinding::bind)
 

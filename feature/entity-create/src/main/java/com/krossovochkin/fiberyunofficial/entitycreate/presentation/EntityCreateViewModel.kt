@@ -16,6 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -27,32 +28,21 @@ import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInterac
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EntityCreateViewModel @AssistedInject constructor(
+@HiltViewModel
+class EntityCreateViewModel @Inject constructor(
     private val entityCreateInteractor: EntityCreateInteractor,
-    @Assisted private val entityCreateArgs: EntityCreateFragment.Args,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(entityCreateArgs: EntityCreateFragment.Args): EntityCreateViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: EntityCreateFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val entityCreateArgs: EntityCreateFragmentArgs
+        get() = EntityCreateFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>
@@ -65,9 +55,9 @@ class EntityCreateViewModel @AssistedInject constructor(
         get() = ToolbarViewState(
             title = NativeText.Arguments(
                 R.string.entity_create_toolbar_title,
-                entityCreateArgs.entityTypeSchema.displayName
+                entityCreateArgs.entityType.displayName
             ),
-            bgColor = NativeColor.Hex(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(entityCreateArgs.entityType.meta.uiColorHex),
             hasBackButton = true
         )
 
@@ -75,7 +65,7 @@ class EntityCreateViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 val createdEntity = entityCreateInteractor
-                    .execute(entityCreateArgs.entityTypeSchema, name)
+                    .execute(entityCreateArgs.entityType, name)
                 navigationChannel.send(
                     EntityCreateNavEvent.OnEntityCreateSuccessEvent(
                         createdEntity = createdEntity

@@ -38,18 +38,12 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitypicker.databinding.PickerEntityItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class EntityPickerFragment(
-    viewModelFactory: EntityPickerViewModel.Factory,
-    argsProvider: ArgsProvider
-) : Fragment(R.layout.picker_entity_fragment) {
+@AndroidEntryPoint
+class EntityPickerFragment : Fragment(R.layout.picker_entity_fragment) {
 
-    private val viewModel: EntityPickerViewModel by viewModels {
-        EntityPickerViewModel.provideFactory(
-            viewModelFactory,
-            argsProvider.getEntityPickerArgs()
-        )
-    }
+    private val viewModel: EntityPickerViewModel by viewModels()
 
     private val binding by viewBinding(PickerEntityFragmentBinding::bind)
 
@@ -123,16 +117,6 @@ class EntityPickerFragment(
         }
         binding.entityCreateAction.setOnClickListener { viewModel.createEntity() }
         binding.entityCreateAction.updateInsetMargins(bottom = true)
-    }
-
-    data class Args(
-        val parentEntityData: ParentEntityData,
-        val entity: FiberyEntityData?
-    )
-
-    fun interface ArgsProvider {
-
-        fun getEntityPickerArgs(): Args
     }
 
     interface ParentListener {

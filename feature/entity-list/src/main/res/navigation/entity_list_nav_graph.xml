@@ -13,5 +13,9 @@
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData"
+            app:nullable="true" />
     </fragment>
 </navigation>

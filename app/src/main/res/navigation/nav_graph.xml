@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/login_nav_graph">
 
@@ -54,10 +53,6 @@
     <action
         android:id="@+id/action_entityList_to_entityPickerFragment"
         app:destination="@id/entityPickerFragment" />
-    <argument
-        android:name="parentEntityData"
-        app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData"
-        app:nullable="true" />
     <action
         android:id="@+id/action_entityList_to_pickerFilterFragment"
         app:destination="@id/pickerFilterFragment" />

@@ -18,6 +18,7 @@
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.view.View
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -42,13 +43,16 @@ import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInt
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EntityListViewModel @AssistedInject constructor(
+@HiltViewModel
+class EntityListViewModel @Inject constructor(
     getEntityListInteractor: GetEntityListInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
@@ -56,25 +60,11 @@ class EntityListViewModel @AssistedInject constructor(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    @Assisted private val entityListArgs: EntityListFragment.Args
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    @AssistedFactory
-    interface Factory {
-        fun create(args: EntityListFragment.Args): EntityListViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            factory: Factory,
-            args: EntityListFragment.Args
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return factory.create(args) as T
-            }
-        }
-    }
+    private val entityListArgs: EntityListFragmentArgs
+        get() = EntityListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
@@ -89,7 +79,7 @@ class EntityListViewModel @AssistedInject constructor(
         loadPage = { offset: Int, pageSize: Int ->
             getEntityListInteractor
                 .execute(
-                    entityListArgs.entityTypeSchema,
+                    entityListArgs.entityType,
                     offset,
                     pageSize,
                     entityListArgs.parentEntityData
@@ -111,9 +101,9 @@ class EntityListViewModel @AssistedInject constructor(
         get() = ToolbarViewState(
             title = NativeText.Simple(
                 entityListArgs.parentEntityData?.fieldSchema?.displayName
-                    ?: entityListArgs.entityTypeSchema.displayName
+                    ?: entityListArgs.entityType.displayName
             ),
-            bgColor = NativeColor.Hex(entityListArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(entityListArgs.entityType.meta.uiColorHex),
             hasBackButton = true,
             menuResId = if (entityListArgs.parentEntityData == null) {
                 R.menu.entity_list_menu
@@ -162,14 +152,14 @@ class EntityListViewModel @AssistedInject constructor(
 
     fun onFilterSelected(filter: FiberyEntityFilterData) {
         viewModelScope.launch {
-            setEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema, filter)
+            setEntityListFilterInteractor.execute(entityListArgs.entityType, filter)
             paginatedListDelegate.invalidate()
         }
     }
 
     fun onSortSelected(sort: FiberyEntitySortData) {
         viewModelScope.launch {
-            setEntityListSortInteractor.execute(entityListArgs.entityTypeSchema, sort)
+            setEntityListSortInteractor.execute(entityListArgs.entityType, sort)
             paginatedListDelegate.invalidate()
         }
     }
@@ -178,8 +168,8 @@ class EntityListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnFilterSelectedEvent(
-                    entityTypeSchema = entityListArgs.entityTypeSchema,
-                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityTypeSchema),
+                    entityTypeSchema = entityListArgs.entityType,
+                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityType),
                     view = view
                 )
             )
@@ -190,8 +180,8 @@ class EntityListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnSortSelectedEvent(
-                    entityTypeSchema = entityListArgs.entityTypeSchema,
-                    sort = getEntityListSortInteractor.execute(entityListArgs.entityTypeSchema),
+                    entityTypeSchema = entityListArgs.entityType,
+                    sort = getEntityListSortInteractor.execute(entityListArgs.entityType),
                     view = view
                 )
             )
@@ -202,7 +192,7 @@ class EntityListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnCreateEntityEvent(
-                    entityListArgs.entityTypeSchema,
+                    entityListArgs.entityType,
                     entityListArgs.parentEntityData,
                     view
                 )
