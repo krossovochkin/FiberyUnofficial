@@ -26,12 +26,12 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.login.R
 import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class LoginFragment(
-    factoryProducer: () -> LoginViewModelFactory
-) : Fragment(R.layout.login_fragment) {
+@AndroidEntryPoint
+class LoginFragment : Fragment(R.layout.login_fragment) {
 
-    private val viewModel: LoginViewModel by viewModels { factoryProducer() }
+    private val viewModel: LoginViewModel by viewModels()
 
     private val binding by viewBinding(LoginFragmentBinding::bind)
 

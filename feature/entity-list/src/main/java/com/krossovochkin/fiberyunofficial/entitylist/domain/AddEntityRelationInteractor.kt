@@ -16,28 +16,42 @@
  */
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import javax.inject.Inject
 
-interface AddEntityRelationInteractor {
+class AddEntityRelationInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
         childEntity: FiberyEntityData
-    )
-}
-
-class AddEntityRelationInteractorImpl(
-    private val entityListRepository: EntityListRepository
-) : AddEntityRelationInteractor {
-
-    override suspend fun execute(
-        parentEntityData: ParentEntityData,
-        childEntity: FiberyEntityData
     ) {
-        entityListRepository.addRelation(
-            parentEntityData = parentEntityData,
-            childEntity = childEntity
-        )
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_ADD_COLLECTION_ITEM.value,
+                        args = FiberyCommandArgsDto(
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id
+                            ),
+                            field = parentEntityData.fieldSchema.name,
+                            type = parentEntityData.parentEntity.schema.name,
+                            items = listOf(
+                                mapOf(FiberyApiConstants.Field.ID.value to childEntity.id)
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
     }
 }

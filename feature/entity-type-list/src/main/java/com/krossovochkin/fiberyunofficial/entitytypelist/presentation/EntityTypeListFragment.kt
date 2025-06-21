@@ -31,18 +31,17 @@ import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.progress.initProgressBar
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
 import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class EntityTypeListFragment(
-    factoryProducer: () -> EntityTypeListViewModelFactory
-) : Fragment(R.layout.entity_type_list_fragment) {
+@AndroidEntryPoint
+class EntityTypeListFragment : Fragment(R.layout.entity_type_list_fragment) {
 
-    private val viewModel: EntityTypeListViewModel by viewModels { factoryProducer() }
+    private val viewModel: EntityTypeListViewModel by viewModels()
 
     private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
@@ -72,7 +71,7 @@ class EntityTypeListFragment(
 
         initToolbar(
             toolbar = binding.entityTypeListToolbar,
-            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext())),
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState()),
             onBackPressed = { viewModel.onBackPressed() }
         )
 
@@ -105,15 +104,6 @@ class EntityTypeListFragment(
         )
 
         initErrorHandler(viewModel.error)
-    }
-
-    data class Args(
-        val fiberyAppData: FiberyAppData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getEntityTypeListArgs(): Args
     }
 
     interface ParentListener {

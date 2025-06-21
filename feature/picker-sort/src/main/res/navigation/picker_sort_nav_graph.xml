@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/picker_sort_nav_graph"
+    app:startDestination="@id/pickerSortFragment">
+
+    <fragment
+        android:id="@+id/pickerSortFragment"
+        android:name="com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortFragment"
+        android:label="PickerSortFragment">
+        <argument
+            android:name="entityTypeSchema"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="sort"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData" />
+    </fragment>
+</navigation>

@@ -16,6 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.resources.NativeColor
@@ -23,49 +24,44 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class EntityCreateViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityCreateNavEvent>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun createEntity(name: String)
-}
-
-internal class EntityCreateViewModelImpl(
-    private val entityCreateArgs: EntityCreateFragment.Args,
+@HiltViewModel
+class EntityCreateViewModel @Inject constructor(
     private val entityCreateInteractor: EntityCreateInteractor,
-) : EntityCreateViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+
+    private val entityCreateArgs: EntityCreateFragmentArgs
+        get() = EntityCreateFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<EntityCreateNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityCreateNavEvent>
+    val navigation: Flow<EntityCreateNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Arguments(
                 R.string.entity_create_toolbar_title,
-                entityCreateArgs.entityTypeSchema.displayName
+                entityCreateArgs.entityType.displayName
             ),
-            bgColor = NativeColor.Hex(entityCreateArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(entityCreateArgs.entityType.meta.uiColorHex),
             hasBackButton = true
         )
 
-    override fun createEntity(name: String) {
+    fun createEntity(name: String) {
         viewModelScope.launch {
             try {
                 val createdEntity = entityCreateInteractor
-                    .execute(entityCreateArgs.entityTypeSchema, name)
+                    .execute(entityCreateArgs.entityType, name)
                 navigationChannel.send(
                     EntityCreateNavEvent.OnEntityCreateSuccessEvent(
                         createdEntity = createdEntity

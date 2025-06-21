@@ -18,19 +18,18 @@ package com.krossovochkin.fiberyunofficial.entitylist.domain
 
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
+import javax.inject.Inject
 
-interface GetEntityListFilterInteractor {
+class GetEntityListFilterInteractor @Inject constructor(
+    private val entityListFiltersSortStorage: EntityListFiltersSortStorage,
+) {
 
-    suspend fun execute(
-        entityTypeSchema: FiberyEntityTypeSchema
-    ): FiberyEntityFilterData
-}
-
-class GetEntityListFilterInteractorImpl(
-    private val entityListRepository: EntityListRepository
-) : GetEntityListFilterInteractor {
-
-    override suspend fun execute(entityTypeSchema: FiberyEntityTypeSchema): FiberyEntityFilterData {
-        return entityListRepository.getEntityListFilter(entityTypeSchema)
+    fun execute(entityType: FiberyEntityTypeSchema): FiberyEntityFilterData {
+        return entityListFiltersSortStorage.getFilter(entityType.name)
+            ?: FiberyEntityFilterData(
+                mergeType = FiberyEntityFilterData.MergeType.ALL,
+                items = emptyList()
+            )
     }
 }

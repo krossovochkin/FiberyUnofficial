@@ -28,16 +28,15 @@ import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class EntityCreateFragment(
-    factoryProducer: () -> EntityCreateViewModelFactory
-) : Fragment(R.layout.entity_create_fragment) {
+@AndroidEntryPoint
+class EntityCreateFragment : Fragment(R.layout.entity_create_fragment) {
 
-    private val viewModel: EntityCreateViewModel by viewModels { factoryProducer() }
+    private val viewModel: EntityCreateViewModel by viewModels()
 
     private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 
@@ -77,15 +76,6 @@ class EntityCreateFragment(
             viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
         }
         binding.entityCreateButton.updateInsetMargins(bottom = true)
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema
-    )
-
-    fun interface ArgsProvider {
-
-        fun getEntityCreateArgs(): Args
     }
 
     interface ParentListener {
