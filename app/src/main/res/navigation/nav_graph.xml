@@ -20,49 +20,139 @@
 
     <action
         android:id="@+id/action_appList_to_entityTypeList"
-        app:destination="@id/entityTypeList" />
+        app:destination="@id/entityTypeList">
+        <argument
+            android:name="fiberyApp"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyAppData" />
+    </action>
 
     <action
         android:id="@+id/action_entityDetails_self"
-        app:destination="@id/entityDetails" />
+        app:destination="@id/entityDetails">
+        <argument
+            android:name="entity"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_entityList"
-        app:destination="@id/entityList" />
+        app:destination="@id/entityList">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData"
+            app:nullable="true" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_entityPickerFragment"
-        app:destination="@id/entityPickerFragment" />
+        app:destination="@id/entityPickerFragment">
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+        <argument
+            android:name="currentEntity"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData"
+            app:nullable="true" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
-        app:destination="@id/pickerSingleSelectDialogFragment" />
+        app:destination="@id/pickerSingleSelectDialogFragment">
+        <argument
+            android:name="item"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FieldData$SingleSelectFieldData" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
-        app:destination="@id/pickerMultiSelectDialogFragment" />
+        app:destination="@id/pickerMultiSelectDialogFragment">
+        <argument
+            android:name="item"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FieldData$MultiSelectFieldData" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_fileListFragment"
-        app:destination="@id/fileListFragment" />
+        app:destination="@id/fileListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </action>
     <action
         android:id="@+id/action_entityDetails_to_commentListFragment"
-        app:destination="@id/commentListFragment" />
+        app:destination="@id/commentListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </action>
 
     <action
         android:id="@+id/action_entityList_to_entityDetails"
-        app:destination="@id/entityDetails" />
+        app:destination="@id/entityDetails">
+        <argument
+            android:name="entity"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData" />
+    </action>
     <action
         android:id="@+id/action_entityList_to_entityCreateFragment"
-        app:destination="@id/entityCreateFragment" />
+        app:destination="@id/entityCreateFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+    </action>
     <action
         android:id="@+id/action_entityList_to_entityPickerFragment"
-        app:destination="@id/entityPickerFragment" />
+        app:destination="@id/entityPickerFragment">
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+        <argument
+            android:name="currentEntity"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData"
+            app:nullable="true" />
+    </action>
     <action
         android:id="@+id/action_entityList_to_pickerFilterFragment"
-        app:destination="@id/pickerFilterFragment" />
+        app:destination="@id/pickerFilterFragment">
+        <argument
+            android:name="entityTypeSchema"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="filter"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData" />
+    </action>
     <action
         android:id="@+id/action_entityList_to_pickerSortFragment"
-        app:destination="@id/pickerSortFragment" />
+        app:destination="@id/pickerSortFragment">
+        <argument
+            android:name="entityTypeSchema"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="sort"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData" />
+    </action>
 
     <action
         android:id="@+id/action_entityTypeList_to_entityList"
-        app:destination="@id/entityList" />
+        app:destination="@id/entityList">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData"
+            app:nullable="true" />
+    </action>
 
     <action
         android:id="@+id/action_loginFragment_to_appList"

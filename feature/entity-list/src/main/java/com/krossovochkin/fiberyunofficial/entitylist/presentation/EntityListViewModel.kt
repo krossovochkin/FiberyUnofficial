@@ -127,14 +127,13 @@ class EntityListViewModel @Inject constructor(
     }
 
     fun removeRelation(item: EntityListItem) {
-        if (entityListArgs.parentEntityData == null) {
-            error("Can't remove relation from top-level entity list")
-        }
+        val parentEntityData = entityListArgs.parentEntityData
+            ?: error("Can't remove relation from top-level entity list")
 
         viewModelScope.launch {
             try {
                 removeEntityRelationInteractor.execute(
-                    parentEntityData = entityListArgs.parentEntityData,
+                    parentEntityData = parentEntityData,
                     childEntity = item.entityData
                 )
                 paginatedListDelegate.invalidate()
@@ -201,7 +200,8 @@ class EntityListViewModel @Inject constructor(
     }
 
     fun onEntityCreated(createdEntity: FiberyEntityData) {
-        if (entityListArgs.parentEntityData == null) {
+        val parentEntityData = entityListArgs.parentEntityData
+        if (parentEntityData == null) {
             paginatedListDelegate.invalidate()
             return
         }
@@ -210,7 +210,7 @@ class EntityListViewModel @Inject constructor(
             try {
                 addEntityRelationInteractor
                     .execute(
-                        parentEntityData = entityListArgs.parentEntityData,
+                        parentEntityData = parentEntityData,
                         childEntity = createdEntity
                     )
                 paginatedListDelegate.invalidate()
