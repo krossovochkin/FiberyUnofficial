@@ -6,6 +6,7 @@ import com.krossovochkin.fiberyunofficial.AuthStorageImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -17,7 +18,7 @@ object AuthModule {
     @JvmStatic
     @Provides
     fun authStorage(
-        context: Context
+        @ApplicationContext context: Context
     ): AuthStorage {
         return AuthStorageImpl(context.applicationContext)
     }
