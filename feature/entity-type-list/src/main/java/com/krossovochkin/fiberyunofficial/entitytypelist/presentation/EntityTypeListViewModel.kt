@@ -62,7 +62,7 @@ class EntityTypeListViewModel @Inject constructor(
         progress = progress,
         errorChannel = errorChannel,
         load = {
-            getEntityTypeListInteractor.execute(args.fiberyAppData)
+            getEntityTypeListInteractor.execute(args.fiberyApp)
                 .map { entityType ->
                     EntityTypeListItem(
                         title = entityType.displayName,
