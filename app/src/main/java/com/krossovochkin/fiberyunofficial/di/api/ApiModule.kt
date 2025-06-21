@@ -26,6 +26,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -51,7 +52,7 @@ object ApiModule {
     @JvmStatic
     @Provides
     fun fiberyApiRepository(
-        context: Context,
+        @ApplicationContext context: Context,
         serializer: com.krossovochkin.serialization.Serializer,
         fiberyServiceApi: FiberyServiceApi
     ): FiberyApiRepository {

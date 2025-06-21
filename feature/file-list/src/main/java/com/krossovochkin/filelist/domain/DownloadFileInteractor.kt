@@ -7,10 +7,11 @@ import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class DownloadFileInteractor @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val authStorage: AuthStorage,
 ) {
 

@@ -21,13 +21,14 @@ import androidx.core.content.edit
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.serialization.Serializer
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 private const val KEY_PREFS_FILTERS = "ENTITY_LIST_FILTERS"
 private const val KEY_PREFS_SORT = "ENTITY_LIST_SORT"
 
 class EntityListFiltersSortStorage @Inject constructor(
-    context: Context,
+    @ApplicationContext context: Context,
     private val serializer: Serializer
 ) {
 
