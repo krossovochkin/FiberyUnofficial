@@ -18,23 +18,14 @@ package com.krossovochkin.fiberyunofficial.entitylist.domain
 
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
+import javax.inject.Inject
 
-interface SetEntityListSortInteractor {
+class SetEntityListSortInteractor @Inject constructor(
+    private val entityListFiltersSortStorage: EntityListFiltersSortStorage,
+) {
 
-    suspend fun execute(
-        entityType: FiberyEntityTypeSchema,
-        sort: FiberyEntitySortData
-    )
-}
-
-class SetEntityListSortInteractorImpl(
-    private val entityListRepository: EntityListRepository
-) : SetEntityListSortInteractor {
-
-    override suspend fun execute(
-        entityType: FiberyEntityTypeSchema,
-        sort: FiberyEntitySortData
-    ) {
-        entityListRepository.setEntityListSort(entityType, sort)
+    fun execute(entityType: FiberyEntityTypeSchema, sort: FiberyEntitySortData) {
+        entityListFiltersSortStorage.setSort(entityType.name, sort)
     }
 }

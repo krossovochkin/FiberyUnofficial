@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/picker_multi_select_nav_graph"
+    app:startDestination="@id/pickerMultiSelectDialogFragment">
+
+    <dialog
+        android:id="@+id/pickerMultiSelectDialogFragment"
+        android:name="com.krossovochkin.fiberyunofficial.pickermultiselect.presentation.PickerMultiSelectDialogFragment"
+        android:label="PickerMultiSelectDialogFragment">
+        <argument
+            android:name="item"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FieldData$MultiSelectFieldData" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </dialog>
+</navigation>

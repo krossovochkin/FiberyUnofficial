@@ -16,29 +16,25 @@
  */
 package com.krossovochkin.fiberyunofficial.login.domain
 
-interface LoginInteractor {
+import com.krossovochkin.auth.AuthStorage
+import javax.inject.Inject
 
-    fun login(account: String, token: String): Boolean
+class LoginInteractor @Inject constructor(
+    private val authStorage: AuthStorage
+) {
 
-    fun isLoggedIn(): Boolean
-}
-
-class LoginInteractorImpl(
-    private val loginRepository: LoginRepository
-) : LoginInteractor {
-
-    override fun login(account: String, token: String): Boolean {
+    fun login(account: String, token: String): Boolean {
         if (account.isValidAccount() && !token.isValidToken()) {
             return false
         }
 
-        loginRepository.saveLogin(account, token)
+        authStorage.saveLogin(account = account, token = token)
 
         return true
     }
 
-    override fun isLoggedIn(): Boolean {
-        return loginRepository.getToken().isValidToken()
+    fun isLoggedIn(): Boolean {
+        return authStorage.getToken().isValidToken()
     }
 
     private fun String.isValidAccount(): Boolean {

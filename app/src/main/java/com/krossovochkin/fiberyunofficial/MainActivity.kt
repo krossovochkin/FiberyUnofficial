@@ -28,7 +28,6 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.krossovochkin.core.presentation.result.toResultBundle
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
-import com.krossovochkin.fiberyunofficial.applist.presentation.AppListFragmentDirections
 import com.krossovochkin.fiberyunofficial.databinding.ActivityMainBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
@@ -38,7 +37,6 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityDetailsFragmentDirections
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.EntityPickedData
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.MultiSelectPickedData
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_ENTITY_PICKED
@@ -46,14 +44,12 @@ import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.RESULT_KEY_SINGLE_SELECT_PICKED
 import com.krossovochkin.fiberyunofficial.entitydetails.presentation.SingleSelectPickedData
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityCreatedData
-import com.krossovochkin.fiberyunofficial.entitylist.presentation.EntityListFragmentDirections
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.FilterPickedData
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_ENTITY_CREATED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_FILTER_PICKED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SORT_PICKED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
-import com.krossovochkin.fiberyunofficial.entitytypelist.presentation.EntityTypeListFragmentDirections
-import com.krossovochkin.fiberyunofficial.login.presentation.LoginFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import com.krossovochkin.commentlist.R as CommentListR
 import com.krossovochkin.fiberyunofficial.entitycreate.R as EntityCreateR
 import com.krossovochkin.fiberyunofficial.entitydetails.R as EntityDetailsR
@@ -64,20 +60,13 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.R as PickerFilterR
 import com.krossovochkin.fiberyunofficial.pickersort.R as PickerSortR
 import com.krossovochkin.filelist.R as FileListR
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityListener {
-
-    private val mainActivityComponent: MainActivityComponent by lazy {
-        DaggerMainActivityComponent.factory()
-            .create(
-                applicationComponent = (applicationContext as App).applicationComponent
-            )
-    }
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-        supportFragmentManager.fragmentFactory = MainActivityFragmentFactory(mainActivityComponent)
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContentView(binding.root)
@@ -86,7 +75,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onAppSelected(fiberyAppData: FiberyAppData, itemView: View) {
         val key = getString(EntityTypeListR.string.entity_type_list_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
-            AppListFragmentDirections.actionAppListToEntityTypeList(fiberyAppData),
+            NavGraphDirections.actionAppListToEntityTypeList(fiberyAppData),
             FragmentNavigatorExtras(itemView to key)
         )
     }
@@ -95,10 +84,10 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: View) {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
-            R.id.entityTypeList -> {
+            com.krossovochkin.fiberyunofficial.entitytypelist.R.id.entityTypeList -> {
                 val key =
                     getString(EntityListR.string.entity_list_root_transition_name)
-                EntityTypeListFragmentDirections.actionEntityTypeListToEntityList(
+                NavGraphDirections.actionEntityTypeListToEntityList(
                     entityType = entityTypeSchema,
                     parentEntityData = null
                 ) to FragmentNavigatorExtras(itemView to key)
@@ -117,11 +106,11 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     ) {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
-            R.id.entityDetails -> {
+            com.krossovochkin.fiberyunofficial.entitydetails.R.id.entityDetails -> {
                 when (entityTypeSchema.name) {
                     FiberyApiConstants.Type.FILE.value -> {
                         val key = getString(FileListR.string.file_list_root_transition_name)
-                        EntityDetailsFragmentDirections.actionEntityDetailsToFileListFragment(
+                        NavGraphDirections.actionEntityDetailsToFileListFragment(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
                         ) to FragmentNavigatorExtras(itemView to key)
@@ -129,7 +118,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
                     FiberyApiConstants.Type.COMMENT.value -> {
                         val key = getString(CommentListR.string.comment_list_root_transition_name)
-                        EntityDetailsFragmentDirections.actionEntityDetailsToCommentListFragment(
+                        NavGraphDirections.actionEntityDetailsToCommentListFragment(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
                         ) to FragmentNavigatorExtras(itemView to key)
@@ -137,7 +126,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
                     else -> {
                         val key = getString(EntityListR.string.entity_list_root_transition_name)
-                        EntityDetailsFragmentDirections.actionEntityDetailsToEntityList(
+                        NavGraphDirections.actionEntityDetailsToEntityList(
                             entityType = entityTypeSchema,
                             parentEntityData = parentEntityData
                         ) to FragmentNavigatorExtras(itemView to key)
@@ -153,21 +142,21 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     override fun onEntitySelected(entity: FiberyEntityData, itemView: View) {
         val navController = binding.navHostFragment.findNavController()
         val (directions, extras) = when (val id = navController.currentDestination?.id) {
-            R.id.entityList -> {
+            com.krossovochkin.fiberyunofficial.entitylist.R.id.entityList -> {
                 val key = getString(
                     EntityDetailsR.string.entity_details_root_transition_name,
                     entity.id
                 )
-                EntityListFragmentDirections.actionEntityListToEntityDetails(entity) to
+                NavGraphDirections.actionEntityListToEntityDetails(entity) to
                     FragmentNavigatorExtras(itemView to key)
             }
 
-            R.id.entityDetails -> {
+            com.krossovochkin.fiberyunofficial.entitydetails.R.id.entityDetails -> {
                 val key = getString(
                     EntityDetailsR.string.entity_details_root_transition_name,
                     entity.id
                 )
-                EntityDetailsFragmentDirections.actionEntityDetailsSelf(entity) to
+                NavGraphDirections.actionEntityDetailsSelf(entity) to
                     FragmentNavigatorExtras(itemView to key)
             }
 
@@ -178,7 +167,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onLoginSuccess() {
         binding.navHostFragment.findNavController()
-            .navigate(LoginFragmentDirections.actionLoginFragmentToAppList())
+            .navigate(NavGraphDirections.actionLoginFragmentToAppList())
     }
 
     override fun onAddEntityRequested(
@@ -190,7 +179,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
             val key =
                 getString(EntityCreateR.string.entity_create_root_transition_name)
             binding.navHostFragment.findNavController().navigate(
-                EntityListFragmentDirections
+                NavGraphDirections
                     .actionEntityListToEntityCreateFragment(
                         entityType = entityType
                     ),
@@ -199,7 +188,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         } else {
             val key = getString(PickerEntityR.string.picker_entity_root_transition_name)
             binding.navHostFragment.findNavController().navigate(
-                EntityListFragmentDirections
+                NavGraphDirections
                     .actionEntityListToEntityPickerFragment(
                         parentEntityData = parentEntityData,
                         currentEntity = null
@@ -226,7 +215,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     ) {
         val key = getString(PickerEntityR.string.picker_entity_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
-            EntityDetailsFragmentDirections
+            NavGraphDirections
                 .actionEntityDetailsToEntityPickerFragment(
                     parentEntityData = parentEntityData,
                     currentEntity = entity
@@ -261,7 +250,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         item: FieldData.SingleSelectFieldData
     ) {
         binding.navHostFragment.findNavController().navigate(
-            EntityDetailsFragmentDirections
+            NavGraphDirections
                 .actionEntityDetailsToPickerSingleSelectDialogFragment(
                     item = item,
                     parentEntityData = parentEntityData
@@ -285,7 +274,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         item: FieldData.MultiSelectFieldData
     ) {
         binding.navHostFragment.findNavController().navigate(
-            EntityDetailsFragmentDirections
+            NavGraphDirections
                 .actionEntityDetailsToPickerMultiSelectDialogFragment(
                     parentEntityData = parentEntityData,
                     item = item
@@ -313,7 +302,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val key =
             getString(PickerFilterR.string.picker_filter_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
-            EntityListFragmentDirections
+            NavGraphDirections
                 .actionEntityListToPickerFilterFragment(
                     entityTypeSchema = entityTypeSchema,
                     filter = filter,
@@ -338,7 +327,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         val key =
             getString(PickerSortR.string.picker_sort_root_transition_name)
         binding.navHostFragment.findNavController().navigate(
-            EntityListFragmentDirections
+            NavGraphDirections
                 .actionEntityListToPickerSortFragment(
                     entityTypeSchema = entityTypeSchema,
                     sort = sort

@@ -24,13 +24,12 @@ import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import dagger.hilt.android.AndroidEntryPoint
 
-class PickerSingleSelectDialogFragment(
-    factoryProducer: () -> PickerSingleSelectViewModelFactory
-) : DialogFragment() {
+@AndroidEntryPoint
+class PickerSingleSelectDialogFragment : DialogFragment() {
 
-    private val viewModel: PickerSingleSelectViewModel by viewModels { factoryProducer() }
+    private val viewModel: PickerSingleSelectViewModel by viewModels()
 
     private val parentListener: ParentListener by parentListener()
 
@@ -49,16 +48,6 @@ class PickerSingleSelectDialogFragment(
                 parentListener.onSingleSelectPicked(fieldSchema, item.values[selectedIndex])
             }
             .create()
-    }
-
-    data class Args(
-        val parentEntityData: ParentEntityData,
-        val item: FieldData.SingleSelectFieldData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getPickerSingleSelectArgs(): Args
     }
 
     interface ParentListener {

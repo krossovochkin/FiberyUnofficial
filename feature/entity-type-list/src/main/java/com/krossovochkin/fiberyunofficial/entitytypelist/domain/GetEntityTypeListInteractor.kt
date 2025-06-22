@@ -16,19 +16,22 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import javax.inject.Inject
 
-interface GetEntityTypeListInteractor {
+class GetEntityTypeListInteractor @Inject constructor(
+    private val fiberyApiRepository: FiberyApiRepository,
+) {
 
-    suspend fun execute(appData: FiberyAppData): List<FiberyEntityTypeSchema>
-}
-
-class GetEntityTypeListInteractorImpl(
-    private val entityTypeListRepository: EntityTypeListRepository
-) : GetEntityTypeListInteractor {
-
-    override suspend fun execute(appData: FiberyAppData): List<FiberyEntityTypeSchema> {
-        return entityTypeListRepository.getEntityTypeList(appData)
+    suspend fun execute(appData: FiberyAppData): List<FiberyEntityTypeSchema> {
+        val typesDto = fiberyApiRepository.getTypeSchemas()
+            .filter { it.meta.isDomain && it.name != FiberyApiConstants.Type.USER.value }
+        return typesDto
+            .filter { typeDto ->
+                typeDto.name.startsWith(appData.name)
+            }
     }
 }

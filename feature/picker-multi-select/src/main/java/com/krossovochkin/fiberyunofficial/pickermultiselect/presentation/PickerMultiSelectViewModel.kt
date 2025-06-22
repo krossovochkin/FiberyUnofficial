@@ -16,13 +16,20 @@
  */
 package com.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PickerMultiSelectViewModel(
-    private val args: PickerMultiSelectDialogFragment.Args
+@HiltViewModel
+class PickerMultiSelectViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val args: PickerMultiSelectDialogFragmentArgs
+        get() = PickerMultiSelectDialogFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val item: FieldData.MultiSelectFieldData
         get() = args.item

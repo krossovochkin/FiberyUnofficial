@@ -5,8 +5,12 @@ import com.krossovochkin.auth.AuthStorage
 import com.krossovochkin.fiberyunofficial.AuthStorageImpl
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
 object AuthModule {
 
@@ -14,7 +18,7 @@ object AuthModule {
     @JvmStatic
     @Provides
     fun authStorage(
-        context: Context
+        @ApplicationContext context: Context
     ): AuthStorage {
         return AuthStorageImpl(context.applicationContext)
     }

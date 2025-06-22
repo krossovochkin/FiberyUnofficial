@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
-import android.content.Context
 import android.view.View
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.color.ColorUtils
@@ -28,40 +28,29 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
 import com.krossovochkin.fiberyunofficial.entitytypelist.domain.GetEntityTypeListInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class EntityTypeListViewModel : ViewModel() {
-
-    abstract val progress: Flow<Boolean>
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityTypeListNavEvent>
-
-    abstract val entityTypeItems: Flow<List<ListItem>>
-
-    abstract fun getToolbarViewState(context: Context): ToolbarViewState
-
-    abstract fun select(item: ListItem, itemView: View)
-
-    abstract fun onBackPressed()
-}
-
-internal class EntityTypeListViewModelImpl(
+@HiltViewModel
+class EntityTypeListViewModel @Inject constructor(
     private val getEntityTypeListInteractor: GetEntityTypeListInteractor,
-    private val args: EntityTypeListFragment.Args,
-) : EntityTypeListViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    override val progress = MutableStateFlow(false)
+    private val args: EntityTypeListFragmentArgs
+        get() = EntityTypeListFragmentArgs.fromSavedStateHandle(savedStateHandle)
+
+    val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<EntityTypeListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityTypeListNavEvent>
+    val navigation: Flow<EntityTypeListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
@@ -69,7 +58,7 @@ internal class EntityTypeListViewModelImpl(
         progress = progress,
         errorChannel = errorChannel,
         load = {
-            getEntityTypeListInteractor.execute(args.fiberyAppData)
+            getEntityTypeListInteractor.execute(args.fiberyApp)
                 .map { entityType ->
                     EntityTypeListItem(
                         title = entityType.displayName,
@@ -79,9 +68,9 @@ internal class EntityTypeListViewModelImpl(
                 }
         }
     )
-    override val entityTypeItems = listDelegate.items
+    val entityTypeItems = listDelegate.items
 
-    override fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem, itemView: View) {
         require(item is EntityTypeListItem)
         viewModelScope.launch {
             navigationChannel.send(
@@ -90,13 +79,13 @@ internal class EntityTypeListViewModelImpl(
         }
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(EntityTypeListNavEvent.BackEvent)
         }
     }
 
-    override fun getToolbarViewState(context: Context): ToolbarViewState =
+    fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.entity_type_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary),

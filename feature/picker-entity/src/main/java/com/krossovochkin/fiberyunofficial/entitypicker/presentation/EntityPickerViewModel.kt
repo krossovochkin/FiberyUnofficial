@@ -16,6 +16,7 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -29,42 +30,25 @@ import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInterac
 import com.krossovochkin.fiberyunofficial.entitypicker.R
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitypicker.domain.GetEntityTypeSchemaInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class EntityPickerViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<EntityPickerNavEvent>
-
-    abstract val entityCreateEnabled: Flow<Boolean>
-
-    abstract val entityItems: Flow<PagingData<ListItem>>
-
-    abstract val toolbarViewState: Flow<ToolbarViewState>
-
-    abstract fun select(item: ListItem)
-
-    abstract fun onBackPressed()
-
-    abstract fun onSearchQueryChanged(query: String)
-
-    abstract fun createEntity()
-
-    abstract fun onError(error: Exception)
-}
-
-internal class EntityPickerViewModelImpl(
+@HiltViewModel
+class EntityPickerViewModel @Inject constructor(
     private val getEntityTypeSchemaInteractor: GetEntityTypeSchemaInteractor,
     getEntityListInteractor: GetEntityListInteractor,
     private val entityCreateInteractor: EntityCreateInteractor,
-    private val entityPickerArgs: EntityPickerFragment.Args
-) : EntityPickerViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+
+    private val entityPickerArgs: EntityPickerFragmentArgs
+        get() = EntityPickerFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -86,21 +70,21 @@ internal class EntityPickerViewModelImpl(
     )
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
 
     private val navigationChannel = Channel<EntityPickerNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<EntityPickerNavEvent>
+    val navigation: Flow<EntityPickerNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val mutableSearchQuery = MutableStateFlow("")
 
-    override val entityCreateEnabled = MutableStateFlow(false)
+    val entityCreateEnabled = MutableStateFlow(false)
 
-    override val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    override val toolbarViewState = flow {
+    val toolbarViewState = flow {
         val entityType = getEntityTypeSchemaInteractor
             .execute(entityPickerArgs.parentEntityData.fieldSchema)
         emit(
@@ -114,12 +98,12 @@ internal class EntityPickerViewModelImpl(
         )
     }
 
-    override fun select(item: ListItem) {
+    fun select(item: ListItem) {
         require(item is EntityPickerItem)
         onEntityPicked(item.entityData)
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityPickerNavEvent.BackEvent
@@ -127,7 +111,7 @@ internal class EntityPickerViewModelImpl(
         }
     }
 
-    override fun onSearchQueryChanged(query: String) {
+    fun onSearchQueryChanged(query: String) {
         mutableSearchQuery.value = query
         viewModelScope.launch {
             entityCreateEnabled.emit(query.isNotEmpty())
@@ -135,7 +119,7 @@ internal class EntityPickerViewModelImpl(
         paginatedListDelegate.invalidate()
     }
 
-    override fun createEntity() {
+    fun createEntity() {
         val name = mutableSearchQuery.value
         require(name.isNotEmpty()) { "search query is empty" }
 
@@ -150,9 +134,9 @@ internal class EntityPickerViewModelImpl(
         }
     }
 
-    override fun onError(error: Exception) {
+    fun onError(error: Exception) {
         viewModelScope.launch {
-            this@EntityPickerViewModelImpl.errorChannel.send(error)
+            this@EntityPickerViewModel.errorChannel.send(error)
         }
     }
 

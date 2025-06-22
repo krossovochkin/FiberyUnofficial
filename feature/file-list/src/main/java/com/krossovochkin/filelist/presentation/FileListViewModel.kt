@@ -17,6 +17,7 @@
 
 package com.krossovochkin.filelist.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -28,40 +29,29 @@ import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class FileListViewModel : ViewModel() {
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<FileListNavEvent>
-
-    abstract val entityItems: Flow<PagingData<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun downloadFile(fileData: FiberyFileData)
-
-    abstract fun onBackPressed()
-
-    abstract fun onError(error: Exception)
-}
-
-internal class FileListViewModelImpl(
+@HiltViewModel
+class FileListViewModel @Inject constructor(
     getFileListInteractor: GetFileListInteractor,
     private val downloadFileInteractor: DownloadFileInteractor,
-    private val fileListArgs: FileListFragment.Args
-) : FileListViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+
+    private val fileListArgs: FileListFragmentArgs
+        get() = FileListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
         loadPage = { offset: Int, pageSize: Int ->
             getFileListInteractor
                 .execute(
-                    fileListArgs.entityTypeSchema,
+                    fileListArgs.entityType,
                     fileListArgs.parentEntityData,
                     offset,
                     pageSize
@@ -76,37 +66,37 @@ internal class FileListViewModelImpl(
     )
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error: Flow<Exception>
+    val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<FileListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<FileListNavEvent>
+    val navigation: Flow<FileListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
-    override val entityItems: Flow<PagingData<ListItem>>
+    val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Simple(fileListArgs.parentEntityData.fieldSchema.displayName),
-            bgColor = NativeColor.Hex(fileListArgs.entityTypeSchema.meta.uiColorHex),
+            bgColor = NativeColor.Hex(fileListArgs.entityType.meta.uiColorHex),
             hasBackButton = true
         )
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(FileListNavEvent.BackEvent)
         }
     }
 
-    override fun downloadFile(fileData: FiberyFileData) {
+    fun downloadFile(fileData: FiberyFileData) {
         viewModelScope.launch {
             downloadFileInteractor.execute(fileData)
         }
     }
 
-    override fun onError(error: Exception) {
+    fun onError(error: Exception) {
         viewModelScope.launch {
-            this@FileListViewModelImpl.errorChannel.send(error)
+            this@FileListViewModel.errorChannel.send(error)
         }
     }
 }
