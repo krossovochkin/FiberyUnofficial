@@ -24,9 +24,3 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew detektAll lintDebug testDebug #pixel2api30DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
-      - if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-health-report.txt
-          path: build/reports/dependency-analysis/build-health-report.txt
-          retention-days: 1
