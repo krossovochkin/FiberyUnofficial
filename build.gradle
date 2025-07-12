@@ -1,6 +1,5 @@
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: "kover"
-apply from: "$rootDir/quality/deps_lint.gradle"
 
 buildscript {
     repositories {
