@@ -62,8 +62,6 @@ androidx-lifecycle = "2.9.1"
 
 detekt = "1.23.8"
 
-gradle-plugin-dependency-analysis = "1.29.0"
-
 gradle-plugin-android = "8.10.1"
 
 kover = "0.6.1"
@@ -93,8 +91,6 @@ gradle-plugin-navigation-safe-args = { group = "androidx.navigation", name = "na
 gradle-hilt = { group = "com.google.dagger", name="hilt-android-gradle-plugin", version.ref="google-dagger" }
 
 gradle-plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-
-gradle-plugin-dependency-analysis = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "gradle-plugin-dependency-analysis" }
 
 hilt-android-compiler = { group = "com.google.dagger", name="hilt-android-compiler", version.ref = "google-dagger" }
 
