@@ -111,5 +111,6 @@ dependencies {
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.ext.junit
 	androidTestImplementation libs.okhttp3
-    kspAndroidTest libs.dagger.compiler
+    androidTestImplementation libs.hilt.android.testing
+    kspAndroidTest libs.hilt.android.compiler
 }
