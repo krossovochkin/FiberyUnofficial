@@ -34,19 +34,18 @@ import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragmentBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemAddBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemBinding
 import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemEmptyBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class PickerSortFragment(
-    factoryProvider: () -> PickerSortViewModelFactory
-) : Fragment(R.layout.picker_sort_fragment) {
+@AndroidEntryPoint
+class PickerSortFragment : Fragment(R.layout.picker_sort_fragment) {
 
-    private val viewModel: PickerSortViewModel by viewModels { factoryProvider() }
+    private val viewModel: PickerSortViewModel by viewModels()
 
     private val binding by viewBinding(PickerSortFragmentBinding::bind)
 
@@ -190,16 +189,6 @@ class PickerSortFragment(
     private fun Spinner.recycle() {
         this.onItemSelectedListener = null
         this.adapter = null
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val sort: FiberyEntitySortData,
-    )
-
-    fun interface ArgsProvider {
-
-        fun getPickerSortArgs(): Args
     }
 
     interface ParentListener {

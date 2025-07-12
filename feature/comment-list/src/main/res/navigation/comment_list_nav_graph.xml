@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/comment_list_nav_graph"
+    app:startDestination="@id/commentListFragment">
+
+    <fragment
+        android:id="@+id/commentListFragment"
+        android:name="com.krossovochkin.commentlist.presentation.CommentListFragment"
+        android:label="CommentListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </fragment>
+
+</navigation>

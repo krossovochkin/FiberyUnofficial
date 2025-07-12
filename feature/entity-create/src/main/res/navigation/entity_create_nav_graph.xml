@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/entity_create_nav_graph"
+    app:startDestination="@id/entityCreateFragment">
+
+    <fragment
+        android:id="@+id/entityCreateFragment"
+        android:name="com.krossovochkin.fiberyunofficial.entitycreate.presentation.EntityCreateFragment"
+        android:label="EntityCreateFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+    </fragment>
+
+</navigation>

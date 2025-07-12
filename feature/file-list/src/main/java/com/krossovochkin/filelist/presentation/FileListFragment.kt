@@ -34,18 +34,16 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.filelist.R
 import com.krossovochkin.filelist.databinding.FileListFragmentBinding
 import com.krossovochkin.filelist.databinding.FileListItemBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class FileListFragment(
-    factoryProducer: () -> FileListViewModelFactory
-) : Fragment(R.layout.file_list_fragment) {
+@AndroidEntryPoint
+class FileListFragment : Fragment(R.layout.file_list_fragment) {
 
-    private val viewModel: FileListViewModel by viewModels { factoryProducer() }
+    private val viewModel: FileListViewModel by viewModels()
 
     private val binding by viewBinding(FileListFragmentBinding::bind)
 
@@ -109,16 +107,6 @@ class FileListFragment(
                 }
             }
         ) { error -> viewModel.onError(error) }
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val parentEntityData: ParentEntityData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getFileListArgs(): Args
     }
 
     interface ParentListener {

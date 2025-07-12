@@ -24,6 +24,8 @@ okhttp3 = "4.12.0"
 
 androidx-navigation = "2.9.0"
 
+hilt-navigation = "1.2.0"
+
 androidx-paging = "3.3.6"
 
 androidx-recyclerview = "1.4.0"
@@ -60,8 +62,6 @@ androidx-lifecycle = "2.9.1"
 
 detekt = "1.23.8"
 
-gradle-plugin-dependency-analysis = "1.29.0"
-
 gradle-plugin-android = "8.10.1"
 
 kover = "0.6.1"
@@ -88,9 +88,13 @@ gradle-plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devt
 
 gradle-plugin-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
 
+gradle-hilt = { group = "com.google.dagger", name="hilt-android-gradle-plugin", version.ref="google-dagger" }
+
 gradle-plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 
-gradle-plugin-dependency-analysis = { group = "com.autonomousapps", name = "dependency-analysis-gradle-plugin", version.ref = "gradle-plugin-dependency-analysis" }
+hilt-android-compiler = { group = "com.google.dagger", name="hilt-android-compiler", version.ref = "google-dagger" }
+
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "google-dagger" }
 
 kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover" }
 
@@ -102,9 +106,9 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 
 adapterdelegates4-kotlin-dsl-viewbinding = { group = "com.hannesdorfmann", name = "adapterdelegates4-kotlin-dsl-viewbinding", version.ref = "adapter-delegates" }
 
-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "google-dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "google-dagger" }
 
-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "google-dagger" }
+dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
 
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit2" }
 
@@ -115,6 +119,8 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidx-navigation" }
+
+navigation-hilt = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation" }
 
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx-security-crypto" }
 

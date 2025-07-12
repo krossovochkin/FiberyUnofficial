@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
@@ -35,41 +36,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class PickerSortViewModel : ViewModel() {
+class PickerSortViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    abstract val navigation: Flow<PickerSortNavEvent>
+    private val pickerSortArgs: PickerSortFragmentArgs
+        get() = PickerSortFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
-    abstract val items: Flow<List<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun onFieldSelected(position: Int, field: FiberyFieldSchema?)
-
-    abstract fun onConditionSelected(position: Int, condition: SortCondition?)
-
-    abstract fun onAddSortClicked()
-
-    abstract fun applySort()
-
-    abstract fun onBackPressed()
-}
-
-class PickerSortViewModelImpl(
-    private val pickerSortArgs: PickerSortFragment.Args,
-) : PickerSortViewModel() {
-
-    override val items = MutableStateFlow<List<ListItem>>(emptyList())
+    val items = MutableStateFlow<List<ListItem>>(emptyList())
 
     private val navigationChannel = Channel<PickerSortNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<PickerSortNavEvent>
+    val navigation: Flow<PickerSortNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val data: MutableList<SortItemData> = mutableListOf()
 
     private var supportedFields = listOf<FiberyFieldSchema>()
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Resource(R.string.picker_sort_toolbar_title),
             bgColor = NativeColor.Hex(pickerSortArgs.entityTypeSchema.meta.uiColorHex),
@@ -101,7 +87,7 @@ class PickerSortViewModelImpl(
         }
     }
 
-    override fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
+    fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
         if (field == null) {
             data.removeAt(position)
             update()
@@ -127,7 +113,7 @@ class PickerSortViewModelImpl(
         }
     }
 
-    override fun onConditionSelected(position: Int, condition: SortCondition?) {
+    fun onConditionSelected(position: Int, condition: SortCondition?) {
         val item = data[position]
         data[position] = if (item is SelectedSortItemData) {
             item.copy(condition = condition)
@@ -137,12 +123,12 @@ class PickerSortViewModelImpl(
         update()
     }
 
-    override fun onAddSortClicked() {
+    fun onAddSortClicked() {
         data.add(EmptySortItemData)
         update()
     }
 
-    override fun applySort() {
+    fun applySort() {
         val sort = FiberyEntitySortData(
             items = data.mapNotNull { item ->
                 if (item is SelectedSortItemData) {
@@ -166,7 +152,7 @@ class PickerSortViewModelImpl(
         }
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(
                 PickerSortNavEvent.BackEvent

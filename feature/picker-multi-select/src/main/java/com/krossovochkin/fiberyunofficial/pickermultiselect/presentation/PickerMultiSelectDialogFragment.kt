@@ -24,12 +24,12 @@ import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-class PickerMultiSelectDialogFragment(
-    factoryProducer: () -> PickerMultiSelectViewModelFactory
-) : DialogFragment() {
+import dagger.hilt.android.AndroidEntryPoint
 
-    private val viewModel: PickerMultiSelectViewModel by viewModels { factoryProducer() }
+@AndroidEntryPoint
+class PickerMultiSelectDialogFragment : DialogFragment() {
+
+    private val viewModel: PickerMultiSelectViewModel by viewModels()
 
     private val parentListener: ParentListener by parentListener()
 
@@ -60,16 +60,6 @@ class PickerMultiSelectDialogFragment(
                 )
             }
             .create()
-    }
-
-    data class Args(
-        val parentEntityData: ParentEntityData,
-        val item: FieldData.MultiSelectFieldData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getPickerMultiSelectArgs(): Args
     }
 
     interface ParentListener {

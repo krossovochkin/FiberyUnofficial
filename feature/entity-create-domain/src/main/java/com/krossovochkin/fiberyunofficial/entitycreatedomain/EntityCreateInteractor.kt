@@ -16,25 +16,54 @@
  */
 package com.krossovochkin.fiberyunofficial.entitycreatedomain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
+import java.util.UUID
+import javax.inject.Inject
 
-interface EntityCreateInteractor {
+class EntityCreateInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
     suspend fun execute(
         entityTypeSchema: FiberyEntityTypeSchema,
         name: String
-    ): FiberyEntityData
-}
-
-class EntityCreateInteractorImpl(
-    private val entityCreateRepository: EntityCreateRepository
-) : EntityCreateInteractor {
-
-    override suspend fun execute(
-        entityTypeSchema: FiberyEntityTypeSchema,
-        name: String
     ): FiberyEntityData {
-        return entityCreateRepository.createEntity(entityTypeSchema, name)
+        require(name.isNotEmpty()) { "name should not be null" }
+
+        val titleFieldName = requireNotNull(
+            entityTypeSchema.fields.find { it.meta.isUiTitle }
+        ) { "title is missing" }.name
+        val id = UUID.randomUUID().toString()
+
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_CREATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = entityTypeSchema.name,
+                            entity = mapOf(
+                                titleFieldName to name,
+                                FiberyApiConstants.Field.ID.value to id
+                            )
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
+
+        return FiberyEntityData(
+            id = id,
+            publicId = "",
+            title = name,
+            schema = entityTypeSchema
+        )
     }
 }

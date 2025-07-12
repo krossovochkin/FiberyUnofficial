@@ -17,6 +17,7 @@
 
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
@@ -33,44 +34,27 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilterItemData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class PickerFilterViewModel : ViewModel() {
-
-    abstract val navigation: Flow<PickerFilterNavEvent>
-
-    abstract val items: Flow<List<ListItem>>
-
-    abstract val toolbarViewState: ToolbarViewState
-
-    abstract fun onMergeTypeSelected(type: FilterMergeType)
-
-    abstract fun onFieldSelected(position: Int, field: FiberyFieldSchema?)
-
-    abstract fun onConditionSelected(position: Int, condition: FilterCondition?)
-
-    abstract fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData?)
-
-    abstract fun onAddFilterClicked()
-
-    abstract fun applyFilter()
-
-    abstract fun onBackPressed()
-}
-
-class PickerFilterViewModelImpl(
-    private val pickerFilterArgs: PickerFilterFragment.Args,
+@HiltViewModel
+class PickerFilterViewModel @Inject constructor(
     private val fiberyApiRepository: FiberyApiRepository,
-) : PickerFilterViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    override val items = MutableStateFlow<List<ListItem>>(emptyList())
+    private val pickerFilterArgs: PickerFilterFragmentArgs
+        get() = PickerFilterFragmentArgs.fromSavedStateHandle(savedStateHandle)
+
+    val items = MutableStateFlow<List<ListItem>>(emptyList())
 
     private val navigationChannel = Channel<PickerFilterNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<PickerFilterNavEvent>
+    val navigation: Flow<PickerFilterNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private var mergeType: FilterMergeType = FilterMergeType.ALL
@@ -78,7 +62,7 @@ class PickerFilterViewModelImpl(
 
     private var supportedFields = listOf<FiberyFieldSchema>()
 
-    override val toolbarViewState: ToolbarViewState
+    val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
             title = NativeText.Resource(R.string.picker_filter_toolbar_title),
             bgColor = NativeColor.Hex(pickerFilterArgs.entityTypeSchema.meta.uiColorHex),
@@ -121,13 +105,13 @@ class PickerFilterViewModelImpl(
         }
     }
 
-    override fun onMergeTypeSelected(type: FilterMergeType) {
+    fun onMergeTypeSelected(type: FilterMergeType) {
         mergeType = type
 
         update()
     }
 
-    override fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
+    fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
         if (field == null) {
             data.removeAt(position)
             update()
@@ -157,7 +141,7 @@ class PickerFilterViewModelImpl(
         }
     }
 
-    override fun onConditionSelected(position: Int, condition: FilterCondition?) {
+    fun onConditionSelected(position: Int, condition: FilterCondition?) {
         val item = data[position]
         data[position] = if (item is SingleSelectFilterItemData) {
             item.copy(condition = condition)
@@ -167,18 +151,18 @@ class PickerFilterViewModelImpl(
         update()
     }
 
-    override fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData?) {
+    fun onSingleSelectValueSelected(position: Int, value: FieldData.EnumItemData?) {
         val item = data[position] as SingleSelectFilterItemData
         data[position] = item.copy(selectedItem = value)
         update()
     }
 
-    override fun onAddFilterClicked() {
+    fun onAddFilterClicked() {
         data.add(EmptyFilterItemData)
         update()
     }
 
-    override fun applyFilter() {
+    fun applyFilter() {
         val filter = FiberyEntityFilterData(
             mergeType = mergeType.value,
             items = data.mapNotNull { item ->
@@ -203,7 +187,7 @@ class PickerFilterViewModelImpl(
         }
     }
 
-    override fun onBackPressed() {
+    fun onBackPressed() {
         viewModelScope.launch {
             navigationChannel.send(
                 PickerFilterNavEvent.BackEvent

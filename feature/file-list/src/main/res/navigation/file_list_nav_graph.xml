@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/file_list_nav_graph"
+    app:startDestination="@id/fileListFragment">
+
+    <fragment
+        android:id="@+id/fileListFragment"
+        android:name="com.krossovochkin.filelist.presentation.FileListFragment"
+        android:label="FileListFragment">
+        <argument
+            android:name="entityType"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+    </fragment>
+</navigation>

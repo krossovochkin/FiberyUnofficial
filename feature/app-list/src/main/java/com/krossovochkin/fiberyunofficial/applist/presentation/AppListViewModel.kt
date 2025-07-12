@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,37 +26,25 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class AppListViewModel : ViewModel() {
-
-    abstract val progress: Flow<Boolean>
-
-    abstract val error: Flow<Exception>
-
-    abstract val navigation: Flow<AppListNavEvent>
-
-    abstract val appItems: Flow<List<ListItem>>
-
-    abstract fun getToolbarViewState(context: Context): ToolbarViewState
-
-    abstract fun select(item: ListItem, itemView: View)
-}
-
-internal class AppListViewModelImpl(
+@HiltViewModel
+class AppListViewModel @Inject constructor(
     private val getAppListInteractor: GetAppListInteractor,
-) : AppListViewModel() {
+) : ViewModel() {
 
-    override val progress = MutableStateFlow(false)
+    val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
-    override val error
+    val error
         get() = errorChannel.receiveAsFlow()
     private val navigationChannel = Channel<AppListNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<AppListNavEvent>
+    val navigation: Flow<AppListNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
@@ -74,16 +61,16 @@ internal class AppListViewModelImpl(
                 }
         }
     )
-    override val appItems: Flow<List<ListItem>> = listDelegate.items
+    val appItems: Flow<List<ListItem>> = listDelegate.items
 
-    override fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem, itemView: View) {
         require(item is AppListItem)
         viewModelScope.launch {
             navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
         }
     }
 
-    override fun getToolbarViewState(context: Context): ToolbarViewState =
+    fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.app_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)

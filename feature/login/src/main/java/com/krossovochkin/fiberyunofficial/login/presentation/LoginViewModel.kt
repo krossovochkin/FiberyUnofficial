@@ -19,24 +19,20 @@ package com.krossovochkin.fiberyunofficial.login.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-abstract class LoginViewModel : ViewModel() {
-
-    abstract val navigation: Flow<LoginNavEvent>
-
-    abstract fun login(account: String, token: String)
-}
-
-class LoginViewModelImpl(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val loginInteractor: LoginInteractor
-) : LoginViewModel() {
+) : ViewModel() {
 
     private val navigationChannel = Channel<LoginNavEvent>(Channel.BUFFERED)
-    override val navigation: Flow<LoginNavEvent>
+    val navigation: Flow<LoginNavEvent>
         get() = navigationChannel.receiveAsFlow()
 
     init {
@@ -45,7 +41,7 @@ class LoginViewModelImpl(
         }
     }
 
-    override fun login(account: String, token: String) {
+    fun login(account: String, token: String) {
         val isSuccessful = loginInteractor.login(account, token)
         if (isSuccessful) {
             onLoginSuccess()

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'com.google.dagger.hilt.android'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply from: '../quality/lint.gradle'
 
@@ -52,11 +53,12 @@ android {
         exclude 'META-INF/versions/9/previous-compilation-data.bin'
     }
 
+    /* TODO: enable tests
     testOptions {
         animationsDisabled = true
 
         managedDevices {
-            devices {
+            allDevices {
                 pixel2api30 (com.android.build.api.dsl.ManagedVirtualDevice) {
                     device = "Pixel 2"
                     apiLevel = 30
@@ -65,6 +67,7 @@ android {
             }
         }
     }
+     */
 
     namespace 'com.krossovochkin.fiberyunofficial'
 }
@@ -83,7 +86,6 @@ dependencies {
     implementation project(":feature:entity-list")
     implementation project(":feature:entity-details")
     implementation project(":feature:entity-create")
-    implementation project(":feature:entity-create-data")
     implementation project(":feature:entity-create-domain")
     implementation project(":feature:picker-entity")
     implementation project(":feature:picker-single-select")
@@ -109,5 +111,6 @@ dependencies {
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.ext.junit
 	androidTestImplementation libs.okhttp3
-    kspAndroidTest libs.dagger.compiler
+    androidTestImplementation libs.hilt.android.testing
+    kspAndroidTest libs.hilt.android.compiler
 }

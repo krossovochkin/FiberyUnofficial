@@ -34,7 +34,6 @@ import com.krossovochkin.core.presentation.system.updateInsetMargins
 import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterFragmentBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemAddBinding
@@ -42,13 +41,13 @@ import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterI
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemMergeTypeBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.databinding.PickerFilterItemSingleSelectBinding
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class PickerFilterFragment(
-    factoryProvider: () -> PickerFilterViewModelFactory
-) : Fragment(R.layout.picker_filter_fragment) {
+@AndroidEntryPoint
+class PickerFilterFragment : Fragment(R.layout.picker_filter_fragment) {
 
-    private val viewModel: PickerFilterViewModel by viewModels { factoryProvider() }
+    private val viewModel: PickerFilterViewModel by viewModels()
 
     private val binding by viewBinding(PickerFilterFragmentBinding::bind)
 
@@ -216,16 +215,6 @@ class PickerFilterFragment(
     private fun Spinner.recycle() {
         this.onItemSelectedListener = null
         this.adapter = null
-    }
-
-    data class Args(
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val filter: FiberyEntityFilterData
-    )
-
-    fun interface ArgsProvider {
-
-        fun getPickerFilterArgs(): Args
     }
 
     interface ParentListener {

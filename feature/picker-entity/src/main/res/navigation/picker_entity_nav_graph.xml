@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/picker_entity_nav_graph"
+    app:startDestination="@id/entityPickerFragment">
+
+    <fragment
+        android:id="@+id/entityPickerFragment"
+        android:name="com.krossovochkin.fiberyunofficial.entitypicker.presentation.EntityPickerFragment"
+        android:label="EntityPickerFragment">
+        <argument
+            android:name="parentEntityData"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
+        <argument
+            android:name="currentEntity"
+            app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData"
+            app:nullable="true" />
+    </fragment>
+</navigation>

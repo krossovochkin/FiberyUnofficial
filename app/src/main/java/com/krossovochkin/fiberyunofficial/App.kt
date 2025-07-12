@@ -18,15 +18,10 @@ package com.krossovochkin.fiberyunofficial
 
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
+import dagger.hilt.android.HiltAndroidApp
 
-open class App : Application() {
-
-    open val applicationComponent: ApplicationComponent by lazy {
-        DaggerApplicationComponent.factory()
-            .create(
-                context = this
-            )
-    }
+@HiltAndroidApp
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()

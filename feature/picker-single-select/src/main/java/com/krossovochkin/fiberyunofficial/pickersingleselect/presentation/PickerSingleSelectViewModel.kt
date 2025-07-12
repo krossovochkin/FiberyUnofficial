@@ -16,13 +16,20 @@
  */
 package com.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PickerSingleSelectViewModel(
-    private val args: PickerSingleSelectDialogFragment.Args
+@HiltViewModel
+class PickerSingleSelectViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val args: PickerSingleSelectDialogFragmentArgs
+        get() = PickerSingleSelectDialogFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val item: FieldData.SingleSelectFieldData
         get() = args.item

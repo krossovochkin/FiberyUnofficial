@@ -16,25 +16,42 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
+import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandBody
+import com.krossovochkin.fiberyunofficial.api.dto.checkResultSuccess
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import javax.inject.Inject
 
-interface UpdateSingleSelectFieldInteractor {
+class UpdateSingleSelectFieldInteractor @Inject constructor(
+    private val fiberyServiceApi: FiberyServiceApi,
+) {
 
     suspend fun execute(
         parentEntityData: ParentEntityData,
         singleSelectItem: FieldData.EnumItemData
-    )
-}
-
-class UpdateSingleSelectFieldInteractorImpl(
-    private val entityDetailsRepository: EntityDetailsRepository
-) : UpdateSingleSelectFieldInteractor {
-
-    override suspend fun execute(
-        parentEntityData: ParentEntityData,
-        singleSelectItem: FieldData.EnumItemData
     ) {
-        return entityDetailsRepository.updateSingleSelectField(parentEntityData, singleSelectItem)
+        fiberyServiceApi
+            .sendCommand(
+                body = listOf(
+                    FiberyCommandBody(
+                        command = FiberyCommand.QUERY_UPDATE.value,
+                        args = FiberyCommandArgsDto(
+                            type = parentEntityData.parentEntity.schema.name,
+                            entity = mapOf(
+                                FiberyApiConstants.Field.ID.value to parentEntityData.parentEntity.id,
+                                parentEntityData.fieldSchema.name to mapOf(
+                                    FiberyApiConstants.Field.ID.value to singleSelectItem.id
+                                )
+                            ),
+                            field = parentEntityData.fieldSchema.name
+                        )
+                    )
+                )
+            )
+            .checkResultSuccess()
     }
 }

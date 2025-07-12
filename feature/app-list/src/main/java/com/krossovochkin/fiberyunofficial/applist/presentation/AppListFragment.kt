@@ -33,14 +33,13 @@ import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListFragmentBinding
 import com.krossovochkin.fiberyunofficial.applist.databinding.AppListItemBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
-import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class AppListFragment(
-    factoryProducer: Lazy<AppListViewModelFactory>,
-) : Fragment(R.layout.app_list_fragment) {
+@AndroidEntryPoint
+class AppListFragment : Fragment(R.layout.app_list_fragment) {
 
-    private val viewModel: AppListViewModel by viewModels { factoryProducer.get() }
+    private val viewModel: AppListViewModel by viewModels()
 
     private val parentListener: ParentListener by parentListener()
 
@@ -61,7 +60,7 @@ class AppListFragment(
 
         initToolbar(
             toolbar = binding.appListToolbar,
-            toolbarData = MutableStateFlow(viewModel.getToolbarViewState(requireContext()))
+            toolbarData = MutableStateFlow(viewModel.getToolbarViewState())
         )
 
         initRecyclerView(
