@@ -1,6 +1,5 @@
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: "kover"
-apply from: "$rootDir/quality/deps_lint.gradle"
 
 buildscript {
     repositories {
@@ -15,7 +14,6 @@ buildscript {
         classpath libs.gradle.plugin.navigation.safe.args
         classpath libs.gradle.hilt
         classpath libs.gradle.plugin.detekt
-        classpath libs.gradle.plugin.dependency.analysis
         classpath libs.kover
     }
 }
