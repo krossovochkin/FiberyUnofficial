@@ -23,25 +23,11 @@ class LoginInteractor @Inject constructor(
     private val authStorage: AuthStorage
 ) {
 
-    fun login(account: String, token: String): Boolean {
-        if (account.isValidAccount() && !token.isValidToken()) {
-            return false
-        }
-
-        authStorage.saveLogin(account = account, token = token)
-
-        return true
+    suspend fun login(account: String, token: String): Boolean {
+        return authStorage.saveLogin(account = account, token = token)
     }
 
-    fun isLoggedIn(): Boolean {
-        return authStorage.getToken().isValidToken()
-    }
-
-    private fun String.isValidAccount(): Boolean {
-        return this.isNotEmpty()
-    }
-
-    private fun String.isValidToken(): Boolean {
-        return this.isNotEmpty()
+    suspend fun isLoggedIn(): Boolean {
+        return authStorage.loadLogin()
     }
 }

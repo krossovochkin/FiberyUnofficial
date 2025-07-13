@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -36,15 +37,19 @@ class LoginViewModel @Inject constructor(
         get() = navigationChannel.receiveAsFlow()
 
     init {
-        if (loginInteractor.isLoggedIn()) {
-            onLoginSuccess()
+        viewModelScope.launch {
+            if (loginInteractor.isLoggedIn()) {
+                onLoginSuccess()
+            }
         }
     }
 
     fun login(account: String, token: String) {
-        val isSuccessful = loginInteractor.login(account, token)
-        if (isSuccessful) {
-            onLoginSuccess()
+        viewModelScope.launch {
+            val isSuccessful = loginInteractor.login(account, token)
+            if (isSuccessful) {
+                onLoginSuccess()
+            }
         }
     }
 

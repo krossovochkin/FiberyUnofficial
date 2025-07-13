@@ -12,6 +12,7 @@ android-version-code = "36"
 
 android-version-name = "0.24.0"
 
+datastore-preferences = "1.1.0"
 kotlin = "2.1.21"
 
 ksp = "2.1.21-2.0.2"
@@ -35,8 +36,6 @@ androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
 
 androidx-fragment = "1.8.8"
-
-androidx-security-crypto = "1.1.0-beta01"
 
 androidx-core-splashscreen = "1.2.0-beta02"
 
@@ -70,6 +69,7 @@ adapter-delegates = "4.3.2"
 
 threetenabp = "1.4.9"
 
+tink-android = "1.11.0"
 truth = "1.4.4"
 
 mockito-kotlin = "5.4.0"
@@ -79,6 +79,8 @@ markwon = "4.6.2"
 insetter = "0.6.1"
 
 [libraries]
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences" }
 
 gradle-plugin-android = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-plugin-android" }
 
@@ -122,8 +124,6 @@ navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fr
 
 navigation-hilt = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation" }
 
-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidx-security-crypto" }
-
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-core-splashscreen" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
@@ -137,6 +137,8 @@ threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", ver
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 junit-junit = { group = "junit", name = "junit", version.ref = "junit-junit" }
+
+tink-android = { group = "com.google.crypto.tink", name="tink-android", version.ref = "tink-android" }
 
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
