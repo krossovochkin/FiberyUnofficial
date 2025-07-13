@@ -103,7 +103,6 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.fragment.ktx
     implementation libs.navigation.fragment.ktx
-    implementation libs.security.crypto
     implementation libs.core.splashscreen
 
     androidTestImplementation libs.espresso.core

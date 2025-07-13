@@ -1,4 +1,15 @@
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'com.google.dagger.hilt.android'
 apply from: "$rootDir/feature_default.gradle"
+
 android {
     namespace 'com.krossovochkin.auth'
+}
+
+dependencies {
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.tink.android)
+
+    implementation libs.dagger
+    ksp libs.dagger.compiler
 }
