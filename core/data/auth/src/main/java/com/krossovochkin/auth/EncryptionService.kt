@@ -15,7 +15,7 @@ private const val MASTER_KEY_URI = "android-keystore://auth_master_key"
 
 class EncryptionService @Inject constructor(
     @ApplicationContext context: Context
-){
+) {
 
     init {
         AeadConfig.register()
