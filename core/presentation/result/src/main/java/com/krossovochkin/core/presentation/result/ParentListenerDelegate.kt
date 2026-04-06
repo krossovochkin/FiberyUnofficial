@@ -10,7 +10,7 @@ class ParentListenerDelegate<T>(
 
     @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
-        return fragment.context as T
+        return thisRef.requireActivity() as T
     }
 }
 

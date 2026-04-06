@@ -156,7 +156,7 @@
 
     <action
         android:id="@+id/action_loginFragment_to_appList"
-        app:destination="@id/appList"
+        app:destination="@id/applist_nav"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
 
