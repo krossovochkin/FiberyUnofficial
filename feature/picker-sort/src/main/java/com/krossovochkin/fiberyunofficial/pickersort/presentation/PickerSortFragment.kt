@@ -18,177 +18,68 @@
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.list.initRecyclerView
-import com.krossovochkin.core.presentation.navigation.initNavigation
 import com.krossovochkin.core.presentation.result.parentListener
-import com.krossovochkin.core.presentation.system.updateInsetMargins
-import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
-import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.pickersort.R
-import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortFragmentBinding
-import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemAddBinding
-import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemBinding
-import com.krossovochkin.fiberyunofficial.pickersort.databinding.PickerSortItemEmptyBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PickerSortFragment : Fragment(R.layout.picker_sort_fragment) {
+class PickerSortFragment : Fragment() {
 
     private val viewModel: PickerSortViewModel by viewModels()
-
-    private val binding by viewBinding(PickerSortFragmentBinding::bind)
 
     private val parentListener: ParentListener by parentListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setupTransformEnterTransition()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): android.view.View {
+        return ComposeView(requireContext()).apply {
+            setBackgroundColor(android.graphics.Color.WHITE)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                PickerSortScreen(
+                    viewModel = viewModel,
+                    onBackPressed = { viewModel.onBackPressed() },
+                    onSortApply = { viewModel.applySort() }
+                )
+            }
+        }
+    }
+
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initNavigation(
-            navigationData = viewModel.navigation,
-            transitionName = requireContext()
-                .getString(R.string.picker_sort_root_transition_name)
-        ) { event ->
-            when (event) {
-                is PickerSortNavEvent.ApplySortEvent -> {
-                    parentListener.onSortSelected(sort = event.sort)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigation.collect { event ->
+                    when (event) {
+                        is PickerSortNavEvent.BackEvent -> {
+                            parentListener.onBackPressed()
+                        }
+                        is PickerSortNavEvent.ApplySortEvent -> {
+                            parentListener.onSortSelected(event.sort)
+                        }
+                    }
                 }
-                PickerSortNavEvent.BackEvent -> parentListener.onBackPressed()
             }
         }
-
-        initToolbar(
-            toolbar = binding.pickerSortToolbar,
-            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
-            onBackPressed = { viewModel.onBackPressed() }
-        )
-
-        initRecyclerView(
-            recyclerView = binding.recyclerView,
-            itemsFlow = viewModel.items,
-            adapterDelegateViewBinding<AddSortItem, ListItem, PickerSortItemAddBinding>(
-                viewBinding = { inflater, parent ->
-                    PickerSortItemAddBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    binding.addButton.setOnClickListener {
-                        viewModel.onAddSortClicked()
-                    }
-                }
-            },
-            adapterDelegateViewBinding<EmptySortItem, ListItem, PickerSortItemEmptyBinding>(
-                viewBinding = { inflater, parent ->
-                    PickerSortItemEmptyBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    binding.spinner.setup(
-                        items = item.fields.map { it.displayName }
-                    ) { position ->
-                        viewModel.onFieldSelected(
-                            absoluteAdapterPosition,
-                            item.fields.getOrNull(position)
-                        )
-                    }
-                }
-                onViewRecycled { binding.spinner.recycle() }
-            },
-            adapterDelegateViewBinding<SelectedSortItem, ListItem, PickerSortItemBinding>(
-                viewBinding = { inflater, parent ->
-                    PickerSortItemBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    binding.fieldTypeSpinner.setup(
-                        items = item.fields.map { it.displayName },
-                        selectedItem = item.field.displayName
-                    ) { position ->
-                        viewModel.onFieldSelected(
-                            absoluteAdapterPosition,
-                            item.fields.getOrNull(position)
-                        )
-                    }
-
-                    binding.conditionSpinner.setup(
-                        items = item.conditions.map { getString(it.displayNameResId) },
-                        selectedItem = item.condition?.let { getString(it.displayNameResId) }
-                    ) { position ->
-                        viewModel.onConditionSelected(
-                            absoluteAdapterPosition,
-                            item.conditions.getOrNull(position)
-                        )
-                    }
-                }
-
-                onViewRecycled {
-                    binding.fieldTypeSpinner.recycle()
-                    binding.conditionSpinner.recycle()
-                }
-            }
-        )
-
-        binding.applyAction.setOnClickListener { viewModel.applySort() }
-        binding.applyAction.updateInsetMargins(bottom = true)
-    }
-
-    private inline fun Spinner.setup(
-        items: List<String>,
-        selectedItem: String? = null,
-        crossinline onSelection: (Int) -> Unit
-    ) {
-        this.adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_list_item_1,
-            listOf("") + items
-        )
-
-        items.indexOf(selectedItem).let {
-            this.setSelection(
-                if (it == -1) 0 else it + 1,
-                false
-            )
-        }
-        this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-            var isInitial = true
-
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (isInitial) {
-                    isInitial = false
-                    return
-                }
-                onSelection(position - 1)
-            }
-        }
-    }
-
-    private fun Spinner.recycle() {
-        this.onItemSelectedListener = null
-        this.adapter = null
     }
 
     interface ParentListener {
