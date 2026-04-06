@@ -22,6 +22,11 @@ formatting:
   StringTemplate:
     active: false
 
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+
 style:
   ReturnCount:
     active: false
