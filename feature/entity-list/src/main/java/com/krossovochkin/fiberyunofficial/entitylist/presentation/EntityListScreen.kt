@@ -66,15 +66,15 @@ fun EntityListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         text = context.resolveNativeText(toolbarState.title).toString()
-                    ) 
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -121,7 +121,7 @@ fun EntityListItemRow(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { 
+            .clickable {
                 onClick(View(context))
             }
             .padding(16.dp)
@@ -140,7 +140,9 @@ fun EntityListItemRow(
             )
         }
     }
-    Divider(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp))
+    Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    )
 }

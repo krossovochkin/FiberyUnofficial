@@ -29,7 +29,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.entitycreate.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

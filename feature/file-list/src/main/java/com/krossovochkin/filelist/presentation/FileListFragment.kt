@@ -30,7 +30,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
-import com.krossovochkin.filelist.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

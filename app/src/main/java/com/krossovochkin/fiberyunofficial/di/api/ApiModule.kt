@@ -106,7 +106,7 @@ object ApiModule {
     ): Interceptor {
         return Interceptor { chain ->
             val request = chain.request()
-            
+
             // Dynamically build the correct URL with account subdomain
             val account = authStorage.getAccount()
             val originalUrl = request.url
@@ -117,7 +117,7 @@ object ApiModule {
             } else {
                 originalUrl
             }
-            
+
             val newRequest = request.newBuilder()
                 .url(newUrl)
                 .addHeader("Authorization", "Token ${authStorage.getToken()}")

@@ -17,7 +17,6 @@
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
 import android.view.View
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,8 +53,6 @@ import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
-import io.noties.markwon.Markwon
-import androidx.compose.material3.LocalTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -171,15 +168,34 @@ fun EntityDetailsScreen(
                         is FieldRelationItem -> {
                             FieldRelationRow(
                                 item = item,
-                                onFieldClicked = { onRelationFieldClicked(item.fieldSchema, item.entityData, View(android.view.ContextThemeWrapper())) },
-                                onOpenClicked = { item.entityData?.let { onRelationOpenClicked(it, View(android.view.ContextThemeWrapper())) } },
+                                onFieldClicked = {
+                                    onRelationFieldClicked(
+                                        item.fieldSchema,
+                                        item.entityData,
+                                        View(android.view.ContextThemeWrapper())
+                                    )
+                                },
+                                onOpenClicked = {
+                                    item.entityData?.let {
+                                        onRelationOpenClicked(
+                                            it,
+                                            View(android.view.ContextThemeWrapper())
+                                        )
+                                    }
+                                },
                                 onDeleteClicked = { onRelationDeleteClicked(item.fieldSchema) }
                             )
                         }
                         is FieldCollectionItem -> {
                             FieldCollectionRow(
                                 item = item,
-                                onClick = { onCollectionFieldClicked(item.entityTypeSchema, item.fieldSchema, View(android.view.ContextThemeWrapper())) }
+                                onClick = {
+                                    onCollectionFieldClicked(
+                                        item.entityTypeSchema,
+                                        item.fieldSchema,
+                                        View(android.view.ContextThemeWrapper())
+                                    )
+                                }
                             )
                         }
                         is FieldCheckboxItem -> {

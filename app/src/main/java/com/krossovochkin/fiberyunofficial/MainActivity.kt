@@ -50,15 +50,7 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_FIL
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SORT_PICKED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
 import dagger.hilt.android.AndroidEntryPoint
-import com.krossovochkin.commentlist.R as CommentListR
-import com.krossovochkin.fiberyunofficial.entitycreate.R as EntityCreateR
 import com.krossovochkin.fiberyunofficial.entitydetails.R as EntityDetailsR
-import com.krossovochkin.fiberyunofficial.entitylist.R as EntityListR
-import com.krossovochkin.fiberyunofficial.entitypicker.R as PickerEntityR
-import com.krossovochkin.fiberyunofficial.entitytypelist.R as EntityTypeListR
-import com.krossovochkin.fiberyunofficial.pickerfilter.R as PickerFilterR
-import com.krossovochkin.fiberyunofficial.pickersort.R as PickerSortR
-import com.krossovochkin.filelist.R as FileListR
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityListener {

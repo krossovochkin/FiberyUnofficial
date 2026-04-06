@@ -33,6 +33,7 @@ task detektAll(type: io.gitlab.arturbosch.detekt.Detekt) {
     exclude("**/build/**")
     buildUponDefaultConfig = true
     config.from(files("$rootDir/quality/detekt.yml"))
+    autoCorrect = true
     reports {
         html.enabled = false
         xml.enabled = false

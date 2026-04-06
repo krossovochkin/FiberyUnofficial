@@ -72,4 +72,3 @@ class LoginFragment : Fragment() {
         fun onLoginSuccess()
     }
 }
-

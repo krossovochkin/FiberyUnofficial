@@ -31,7 +31,6 @@ import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.entitypicker.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

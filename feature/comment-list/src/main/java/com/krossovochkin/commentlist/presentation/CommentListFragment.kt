@@ -27,7 +27,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.krossovochkin.commentlist.R
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
 import com.krossovochkin.core.presentation.result.parentListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,4 +81,3 @@ class CommentListFragment : Fragment() {
         fun onBackPressed()
     }
 }
-

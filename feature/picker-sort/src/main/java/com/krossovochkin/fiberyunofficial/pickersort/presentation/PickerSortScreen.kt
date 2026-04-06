@@ -41,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.resolveNativeText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,15 +57,15 @@ fun PickerSortScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         text = context.resolveNativeText(toolbarState.title).toString()
-                    ) 
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
