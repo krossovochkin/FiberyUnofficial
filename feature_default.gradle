@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/quality/lint.gradle"
 
 android {
@@ -25,9 +26,18 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true // Compose infrastructure available, can be used in individual modules
     }
 
     kotlin {
         jvmToolchain(21)
     }
+}
+
+dependencies {
+    // Compose (via BOM)
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.runtime
+    implementation libs.compose.ui
+    implementation libs.compose.material3
 }

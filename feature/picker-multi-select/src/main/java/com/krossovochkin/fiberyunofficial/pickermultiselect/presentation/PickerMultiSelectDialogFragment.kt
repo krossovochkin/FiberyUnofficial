@@ -16,9 +16,11 @@
  */
 package com.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
-import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
@@ -33,33 +35,28 @@ class PickerMultiSelectDialogFragment : DialogFragment() {
 
     private val parentListener: ParentListener by parentListener()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val fieldSchema = viewModel.fieldSchema
-        val item = viewModel.item
-        val selectedItemsIds = item.selectedValues.map { it.id }
-        val selectedItemIds = item.values
-            .mapIndexed { _, enumItemData -> enumItemData.id in selectedItemsIds }
-            .toBooleanArray()
-        return AlertDialog.Builder(requireContext())
-            .setMultiChoiceItems(
-                item.values.map { it.title }.toTypedArray(),
-                selectedItemIds
-            ) { _, index, isChecked ->
-                selectedItemIds[index] = isChecked
-            }
-            .setTitle(item.title)
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val selectedItems = item.values.filterIndexed { index, _ -> selectedItemIds[index] }
-                val addedItems = selectedItems.filter { value -> value !in item.selectedValues }
-                val removedItems = item.selectedValues.filter { value -> value !in selectedItems }
-                parentListener.onMultiSelectPicked(
-                    fieldSchema = fieldSchema,
-                    addedItems = addedItems,
-                    removedItems = removedItems
-                )
-            }
-            .create()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ) = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            PickerMultiSelectScreen(
+                item = viewModel.item,
+                onConfirm = { addedItems, removedItems ->
+                    parentListener.onMultiSelectPicked(
+                        fieldSchema = viewModel.fieldSchema,
+                        addedItems = addedItems,
+                        removedItems = removedItems
+                    )
+                    dismiss()
+                },
+                onDismiss = {
+                    dismiss()
+                }
+            )
+        }
     }
 
     interface ParentListener {

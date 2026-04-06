@@ -6,6 +6,10 @@ apply from: "$rootDir/feature_default.gradle"
 android {
     resourcePrefix = "login_"
     namespace 'com.krossovochkin.fiberyunofficial.login'
+    
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -22,4 +26,13 @@ dependencies {
     implementation project(":core:presentation:result")
     implementation project(":core:presentation:viewbinding")
     implementation project(":core:presentation:flow")
+    
+    // Compose
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.runtime
+    implementation libs.compose.ui
+    implementation libs.compose.material3
+    implementation libs.compose.foundation
+    implementation libs.hilt.navigation.compose
+    implementation libs.compose.lifecycle.viewmodel
 }

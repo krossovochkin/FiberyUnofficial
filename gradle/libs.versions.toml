@@ -27,6 +27,8 @@ androidx-navigation = "2.9.0"
 
 hilt-navigation = "1.2.0"
 
+hilt-navigation-compose = "1.2.0"
+
 androidx-paging = "3.3.6"
 
 androidx-recyclerview = "1.4.0"
@@ -78,6 +80,18 @@ markwon = "4.6.2"
 
 insetter = "0.6.1"
 
+compose-bom = "2024.12.01"
+
+androidx-compose-runtime = "1.8.0"
+
+androidx-compose-ui = "1.8.0"
+
+androidx-compose-material3 = "1.4.0-beta03"
+
+androidx-compose-navigation = "2.8.0-beta05"
+
+gradle-plugin-compose-compiler = "2.1.21"
+
 [libraries]
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences" }
@@ -88,7 +102,9 @@ gradle-plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-p
 
 gradle-plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
-gradle-plugin-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
+gradle-plugin-compose-compiler = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "gradle-plugin-compose-compiler" }
+
+gradle-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "androidx-navigation" }
 
 gradle-hilt = { group = "com.google.dagger", name="hilt-android-gradle-plugin", version.ref="google-dagger" }
 
@@ -103,6 +119,8 @@ kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover"
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx-paging" }
+
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 
@@ -169,3 +187,29 @@ lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtim
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 
 insetter = { group = "dev.chrisbanes.insetter", name = "insetter", version.ref = "insetter" }
+
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+
+compose-activity = { group = "androidx.activity", name = "activity-compose" }
+
+compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
+
+compose-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose" }
+
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-compose-navigation" }
+
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }

@@ -6,9 +6,21 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     resourcePrefix = "comment_list"
     namespace 'com.krossovochkin.commentlist'
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    
+    // Compose
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.runtime
+    implementation libs.compose.ui
+    implementation libs.compose.material3
+    implementation libs.compose.foundation
+    implementation libs.compose.lifecycle.viewmodel
     api libs.kotlinx.coroutines.core
     api libs.dagger
     ksp libs.dagger.compiler
@@ -22,6 +34,7 @@ dependencies {
     implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation libs.io.noties.markwon.core
+    implementation "androidx.paging:paging-compose:3.3.6"
     implementation project(":core:presentation:resources")
     implementation project(":core:presentation:paging")
     implementation project(":core:presentation:result")

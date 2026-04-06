@@ -17,28 +17,26 @@
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
-import com.krossovochkin.core.presentation.navigation.initNavigation
 import com.krossovochkin.core.presentation.result.parentListener
-import com.krossovochkin.core.presentation.system.updateInsetMargins
-import com.krossovochkin.core.presentation.ui.error.initErrorHandler
-import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
-import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.entitycreate.R
-import com.krossovochkin.fiberyunofficial.entitycreate.databinding.EntityCreateFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class EntityCreateFragment : Fragment(R.layout.entity_create_fragment) {
+class EntityCreateFragment : Fragment() {
 
     private val viewModel: EntityCreateViewModel by viewModels()
-
-    private val binding by viewBinding(EntityCreateFragmentBinding::bind)
 
     private val parentListener: ParentListener by parentListener()
 
@@ -47,35 +45,37 @@ class EntityCreateFragment : Fragment(R.layout.entity_create_fragment) {
         setupTransformEnterTransition()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ) = ComposeView(requireContext()).apply {
+        setBackgroundColor(android.graphics.Color.WHITE)
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            EntityCreateScreen(
+                viewModel = viewModel,
+                onEntityCreated = { }
+            )
+        }
+    }
+
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initNavigation(
-            navigationData = viewModel.navigation,
-            transitionName = requireContext()
-                .getString(R.string.entity_create_root_transition_name)
-        ) { event ->
-            when (event) {
-                is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
-                    parentListener.onEntityCreateSuccess(
-                        createdEntity = event.createdEntity
-                    )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigation.collect { event ->
+                    when (event) {
+                        is EntityCreateNavEvent.OnEntityCreateSuccessEvent -> {
+                            parentListener.onEntityCreateSuccess(
+                                createdEntity = event.createdEntity
+                            )
+                        }
+                    }
                 }
             }
         }
-
-        initToolbar(
-            toolbar = binding.entityCreateToolbar,
-            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
-            onBackPressed = { parentListener.onBackPressed() }
-        )
-
-        initErrorHandler(viewModel.error)
-
-        binding.entityCreateButton.setOnClickListener {
-            viewModel.createEntity(binding.entityCreateNameEditText.text.toString())
-        }
-        binding.entityCreateButton.updateInsetMargins(bottom = true)
     }
 
     interface ParentListener {

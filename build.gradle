@@ -11,7 +11,8 @@ buildscript {
         classpath libs.gradle.plugin.android
         classpath libs.gradle.plugin.kotlin
         classpath libs.gradle.plugin.ksp
-        classpath libs.gradle.plugin.navigation.safe.args
+        classpath libs.gradle.plugin.compose.compiler
+        classpath libs.gradle.navigation.safe.args
         classpath libs.gradle.hilt
         classpath libs.gradle.plugin.detekt
         classpath libs.kover

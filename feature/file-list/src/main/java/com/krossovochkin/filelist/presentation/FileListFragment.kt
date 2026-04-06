@@ -17,35 +17,27 @@
 
 package com.krossovochkin.filelist.presentation
 
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DiffUtil
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
-import com.krossovochkin.core.presentation.color.ColorUtils
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.navigation.initNavigation
-import com.krossovochkin.core.presentation.paging.initPaginatedRecyclerView
 import com.krossovochkin.core.presentation.result.parentListener
 import com.krossovochkin.core.presentation.ui.error.initErrorHandler
-import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
-import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.filelist.R
-import com.krossovochkin.filelist.databinding.FileListFragmentBinding
-import com.krossovochkin.filelist.databinding.FileListItemBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FileListFragment : Fragment(R.layout.file_list_fragment) {
+class FileListFragment : Fragment() {
 
     private val viewModel: FileListViewModel by viewModels()
-
-    private val binding by viewBinding(FileListFragmentBinding::bind)
 
     private val parentListener: ParentListener by parentListener()
 
@@ -54,59 +46,41 @@ class FileListFragment : Fragment(R.layout.file_list_fragment) {
         setupTransformEnterTransition()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initNavigation(
-            navigationData = viewModel.navigation,
-            transitionName = requireContext().getString(R.string.file_list_root_transition_name)
-        ) { event ->
-            when (event) {
-                FileListNavEvent.BackEvent -> parentListener.onBackPressed()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): android.view.View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                FileListScreen(
+                    itemsFlow = viewModel.entityItems,
+                    onDownloadClick = { item ->
+                        viewModel.downloadFile(item.fileData)
+                    },
+                    onError = { error ->
+                        viewModel.onError(error)
+                    }
+                )
             }
         }
+    }
 
-        initToolbar(
-            toolbar = binding.fileListToolbar,
-            toolbarData = MutableStateFlow(viewModel.toolbarViewState),
-            onBackPressed = { viewModel.onBackPressed() }
-        )
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initErrorHandler(viewModel.error)
 
-        initPaginatedRecyclerView(
-            recyclerView = binding.fileListRecyclerView,
-            itemsFlow = viewModel.entityItems,
-            diffCallback = object : DiffUtil.ItemCallback<ListItem>() {
-                override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                    return if (oldItem is FileListItem && newItem is FileListItem) {
-                        oldItem.fileData.id == newItem.fileData.id
-                    } else {
-                        oldItem === newItem
-                    }
-                }
-
-                @SuppressLint("DiffUtilEquals")
-                override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                    return oldItem.equals(newItem)
-                }
-            },
-            adapterDelegateViewBinding<FileListItem, ListItem, FileListItemBinding>(
-                viewBinding = { inflater, parent ->
-                    FileListItemBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    binding.fileTitleTextView.text = item.title
-
-                    binding.fileDownloadAction.imageTintList =
-                        ColorStateList.valueOf(ColorUtils.getDefaultContrastColor(requireContext()))
-                    binding.fileDownloadAction.setOnClickListener {
-                        viewModel.downloadFile(item.fileData)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigation.collect { event ->
+                    when (event) {
+                        FileListNavEvent.BackEvent -> parentListener.onBackPressed()
                     }
                 }
             }
-        ) { error -> viewModel.onError(error) }
+        }
     }
 
     interface ParentListener {

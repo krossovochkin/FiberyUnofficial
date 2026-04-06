@@ -17,33 +17,26 @@
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.animation.setupTransformEnterTransition
-import com.krossovochkin.core.presentation.color.ColorUtils
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.list.initRecyclerView
-import com.krossovochkin.core.presentation.navigation.initNavigation
 import com.krossovochkin.core.presentation.result.parentListener
-import com.krossovochkin.core.presentation.ui.error.initErrorHandler
-import com.krossovochkin.core.presentation.ui.progress.initProgressBar
-import com.krossovochkin.core.presentation.ui.toolbar.initToolbar
-import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.entitytypelist.R
-import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListFragmentBinding
-import com.krossovochkin.fiberyunofficial.entitytypelist.databinding.EntityTypeListItemBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class EntityTypeListFragment : Fragment(R.layout.entity_type_list_fragment) {
+class EntityTypeListFragment : Fragment() {
 
     private val viewModel: EntityTypeListViewModel by viewModels()
-
-    private val binding by viewBinding(EntityTypeListFragmentBinding::bind)
 
     private val parentListener: ParentListener by parentListener()
 
@@ -52,63 +45,45 @@ class EntityTypeListFragment : Fragment(R.layout.entity_type_list_fragment) {
         setupTransformEnterTransition()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ) = ComposeView(requireContext()).apply {
+        setBackgroundColor(android.graphics.Color.WHITE)
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            EntityTypeListScreen(
+                viewModel = viewModel,
+                onEntityTypeSelected = { item ->
+                    viewModel.select(item, this)
+                }
+            )
+        }
+    }
+
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initNavigation(
-            navigationData = viewModel.navigation,
-            transitionName = requireContext().getString(R.string.entity_type_list_root_transition_name)
-        ) { event ->
-            when (event) {
-                is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
-                    parentListener.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
-                }
-                is EntityTypeListNavEvent.BackEvent -> {
-                    parentListener.onBackPressed()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigation.collect { event ->
+                    when (event) {
+                        is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
+                            parentListener.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
+                        }
+                        is EntityTypeListNavEvent.BackEvent -> {
+                            parentListener.onBackPressed()
+                        }
+                    }
                 }
             }
         }
-
-        initToolbar(
-            toolbar = binding.entityTypeListToolbar,
-            toolbarData = MutableStateFlow(viewModel.getToolbarViewState()),
-            onBackPressed = { viewModel.onBackPressed() }
-        )
-
-        initRecyclerView(
-            recyclerView = binding.entityTypeListRecyclerView,
-            itemsFlow = viewModel.entityTypeItems,
-            adapterDelegateViewBinding<EntityTypeListItem, ListItem, EntityTypeListItemBinding>(
-                viewBinding = { inflater, parent ->
-                    EntityTypeListItemBinding.inflate(inflater, parent, false)
-                }
-            ) {
-                bind {
-                    itemView.setOnClickListener { viewModel.select(item, itemView) }
-                    binding.entityTypeTitleTextView.text = item.title
-                    binding.entityTypeBadgeView.setBackgroundColor(
-                        ColorUtils.getDesaturatedColorIfNeeded(requireContext(), item.badgeBgColor)
-                    )
-                    itemView.transitionName = requireContext()
-                        .getString(
-                            R.string.entity_type_list_list_transition_name,
-                            absoluteAdapterPosition
-                        )
-                }
-            }
-        )
-
-        initProgressBar(
-            progressBar = binding.progressBar,
-            progressVisibleData = viewModel.progress
-        )
-
-        initErrorHandler(viewModel.error)
     }
 
     interface ParentListener {
 
-        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: View)
+        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: android.view.View)
 
         fun onBackPressed()
     }

@@ -6,9 +6,21 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     resourcePrefix = "app_list_"
     namespace 'com.krossovochkin.fiberyunofficial.applist'
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    
+    // Compose
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.runtime
+    implementation libs.compose.ui
+    implementation libs.compose.material3
+    implementation libs.compose.foundation
+    implementation libs.compose.lifecycle.viewmodel
     api libs.kotlinx.coroutines.core
     api libs.appcompat
     api libs.recyclerview

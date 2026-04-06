@@ -16,9 +16,11 @@
  */
 package com.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
-import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.krossovochkin.core.presentation.result.parentListener
@@ -33,21 +35,24 @@ class PickerSingleSelectDialogFragment : DialogFragment() {
 
     private val parentListener: ParentListener by parentListener()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val fieldSchema = viewModel.fieldSchema
-        val item = viewModel.item
-        var selectedIndex: Int = item.values.indexOf(item.selectedValue)
-        return AlertDialog.Builder(requireContext())
-            .setSingleChoiceItems(
-                item.values.map { it.title }.toTypedArray(),
-                selectedIndex
-            ) { _, index -> selectedIndex = index }
-            .setTitle(item.title)
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                parentListener.onSingleSelectPicked(fieldSchema, item.values[selectedIndex])
-            }
-            .create()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ) = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            PickerSingleSelectScreen(
+                item = viewModel.item,
+                onConfirm = { selectedItem ->
+                    parentListener.onSingleSelectPicked(viewModel.fieldSchema, selectedItem)
+                    dismiss()
+                },
+                onDismiss = {
+                    dismiss()
+                }
+            )
+        }
     }
 
     interface ParentListener {

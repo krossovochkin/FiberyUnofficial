@@ -16,49 +16,60 @@
  */
 package com.krossovochkin.fiberyunofficial.login.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.krossovochkin.core.presentation.flow.collect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.krossovochkin.core.presentation.result.parentListener
-import com.krossovochkin.core.presentation.viewbinding.viewBinding
-import com.krossovochkin.fiberyunofficial.login.R
-import com.krossovochkin.fiberyunofficial.login.databinding.LoginFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(R.layout.login_fragment) {
+class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by viewModels()
-
-    private val binding by viewBinding(LoginFragmentBinding::bind)
-
     private val parentListener: ParentListener by parentListener()
 
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel.navigation.collect(this) { event ->
-            when (event) {
-                is LoginNavEvent.OnLoginSuccessEvent -> {
-                    parentListener.onLoginSuccess()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ) = ComposeView(requireContext()).apply {
+        setBackgroundColor(android.graphics.Color.WHITE)
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            LoginScreen(
+                onLogin = { account, token ->
+                    viewModel.login(account, token)
                 }
-            }
-        }
-
-        binding.loginButton.setOnClickListener {
-            viewModel.login(
-                binding.accountTextInput.editText?.text?.toString() ?: "",
-                binding.tokenTextInput.editText?.text?.toString() ?: "",
             )
         }
     }
 
-    interface ParentListener {
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigation.collect { event ->
+                    when (event) {
+                        is LoginNavEvent.OnLoginSuccessEvent -> {
+                            parentListener.onLoginSuccess()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    interface ParentListener {
         fun onLoginSuccess()
     }
 }
+
