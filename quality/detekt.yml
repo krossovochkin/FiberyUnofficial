@@ -25,7 +25,8 @@ formatting:
 naming:
   FunctionNaming:
     active: true
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated:
+      - 'Composable'
 
 style:
   ReturnCount:
