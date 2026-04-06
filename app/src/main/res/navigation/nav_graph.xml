@@ -20,7 +20,7 @@
 
     <action
         android:id="@+id/action_appList_to_entityTypeList"
-        app:destination="@id/entityTypeList">
+        app:destination="@id/entity_type_list_nav_graph">
         <argument
             android:name="fiberyApp"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyAppData" />
@@ -28,14 +28,14 @@
 
     <action
         android:id="@+id/action_entityDetails_self"
-        app:destination="@id/entityDetails">
+        app:destination="@id/entity_details_nav_graph">
         <argument
             android:name="entity"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData" />
     </action>
     <action
         android:id="@+id/action_entityDetails_to_entityList"
-        app:destination="@id/entityList">
+        app:destination="@id/entity_list_nav_graph">
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
@@ -46,7 +46,7 @@
     </action>
     <action
         android:id="@+id/action_entityDetails_to_entityPickerFragment"
-        app:destination="@id/entityPickerFragment">
+        app:destination="@id/picker_entity_nav_graph">
         <argument
             android:name="parentEntityData"
             app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
@@ -57,7 +57,7 @@
     </action>
     <action
         android:id="@+id/action_entityDetails_to_pickerSingleSelectDialogFragment"
-        app:destination="@id/pickerSingleSelectDialogFragment">
+        app:destination="@id/picker_single_select_nav_graph">
         <argument
             android:name="item"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FieldData$SingleSelectFieldData" />
@@ -67,7 +67,7 @@
     </action>
     <action
         android:id="@+id/action_entityDetails_to_pickerMultiSelectDialogFragment"
-        app:destination="@id/pickerMultiSelectDialogFragment">
+        app:destination="@id/picker_multi_select_nav_graph">
         <argument
             android:name="item"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FieldData$MultiSelectFieldData" />
@@ -77,7 +77,7 @@
     </action>
     <action
         android:id="@+id/action_entityDetails_to_fileListFragment"
-        app:destination="@id/fileListFragment">
+        app:destination="@id/file_list_nav_graph">
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
@@ -87,7 +87,7 @@
     </action>
     <action
         android:id="@+id/action_entityDetails_to_commentListFragment"
-        app:destination="@id/commentListFragment">
+        app:destination="@id/comment_list_nav_graph">
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
@@ -98,21 +98,21 @@
 
     <action
         android:id="@+id/action_entityList_to_entityDetails"
-        app:destination="@id/entityDetails">
+        app:destination="@id/entity_details_nav_graph">
         <argument
             android:name="entity"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityData" />
     </action>
     <action
         android:id="@+id/action_entityList_to_entityCreateFragment"
-        app:destination="@id/entityCreateFragment">
+        app:destination="@id/entity_create_nav_graph">
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
     </action>
     <action
         android:id="@+id/action_entityList_to_entityPickerFragment"
-        app:destination="@id/entityPickerFragment">
+        app:destination="@id/picker_entity_nav_graph">
         <argument
             android:name="parentEntityData"
             app:argType="com.krossovochkin.fiberyunofficial.domain.ParentEntityData" />
@@ -123,7 +123,7 @@
     </action>
     <action
         android:id="@+id/action_entityList_to_pickerFilterFragment"
-        app:destination="@id/pickerFilterFragment">
+        app:destination="@id/picker_filter_nav_graph">
         <argument
             android:name="entityTypeSchema"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
@@ -133,7 +133,7 @@
     </action>
     <action
         android:id="@+id/action_entityList_to_pickerSortFragment"
-        app:destination="@id/pickerSortFragment">
+        app:destination="@id/picker_sort_nav_graph">
         <argument
             android:name="entityTypeSchema"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />
@@ -144,7 +144,7 @@
 
     <action
         android:id="@+id/action_entityTypeList_to_entityList"
-        app:destination="@id/entityList">
+        app:destination="@id/entity_list_nav_graph">
         <argument
             android:name="entityType"
             app:argType="com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema" />

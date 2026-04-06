@@ -22,6 +22,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 private const val DATASTORE_NAME = "AUTH"
@@ -39,6 +40,13 @@ class AuthStorage @Inject constructor(
 
     private var account: String = ""
     private var token: String = ""
+
+    init {
+        // Load from DataStore immediately on creation
+        runBlocking {
+            loadLogin()
+        }
+    }
 
     suspend fun saveLogin(account: String, token: String): Boolean {
         if (!account.isValidAccount()) return false

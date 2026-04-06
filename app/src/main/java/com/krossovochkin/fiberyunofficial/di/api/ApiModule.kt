@@ -78,8 +78,10 @@ object ApiModule {
         okHttpClient: OkHttpClient,
         authStorage: AuthStorage
     ): Retrofit {
+        // Use a base URL that will be intercepted and replaced dynamically
+        // The actual URL is set by the auth interceptor at request time
         return Retrofit.Builder()
-            .baseUrl("https://${authStorage.getAccount()}.fibery.io/")
+            .baseUrl("https://fibery.io/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create().withNullSerialization())
             .build()
@@ -104,7 +106,20 @@ object ApiModule {
     ): Interceptor {
         return Interceptor { chain ->
             val request = chain.request()
+            
+            // Dynamically build the correct URL with account subdomain
+            val account = authStorage.getAccount()
+            val originalUrl = request.url
+            val newUrl = if (account != null) {
+                originalUrl.newBuilder()
+                    .host("$account.fibery.io")
+                    .build()
+            } else {
+                originalUrl
+            }
+            
             val newRequest = request.newBuilder()
+                .url(newUrl)
                 .addHeader("Authorization", "Token ${authStorage.getToken()}")
                 .addHeader("Content-Type", "application/json")
                 .build()
