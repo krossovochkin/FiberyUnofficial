@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import android.view.View
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -113,11 +112,11 @@ class EntityListViewModel @Inject constructor(
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
 
-    fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem) {
         require(item is EntityListItem)
         viewModelScope.launch {
             navigationChannel.send(
-                EntityListNavEvent.OnEntitySelectedEvent(item.entityData, itemView)
+                EntityListNavEvent.OnEntitySelectedEvent(item.entityData)
             )
         }
     }
@@ -159,37 +158,34 @@ class EntityListViewModel @Inject constructor(
         }
     }
 
-    fun onFilterClicked(view: View) {
+    fun onFilterClicked() {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnFilterSelectedEvent(
                     entityTypeSchema = entityListArgs.entityType,
-                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityType),
-                    view = view
+                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityType)
                 )
             )
         }
     }
 
-    fun onSortClicked(view: View) {
+    fun onSortClicked() {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnSortSelectedEvent(
                     entityTypeSchema = entityListArgs.entityType,
-                    sort = getEntityListSortInteractor.execute(entityListArgs.entityType),
-                    view = view
+                    sort = getEntityListSortInteractor.execute(entityListArgs.entityType)
                 )
             )
         }
     }
 
-    fun onCreateEntityClicked(view: View) {
+    fun onCreateEntityClicked() {
         viewModelScope.launch {
             navigationChannel.send(
                 EntityListNavEvent.OnCreateEntityEvent(
                     entityListArgs.entityType,
-                    entityListArgs.parentEntityData,
-                    view
+                    entityListArgs.parentEntityData
                 )
             )
         }

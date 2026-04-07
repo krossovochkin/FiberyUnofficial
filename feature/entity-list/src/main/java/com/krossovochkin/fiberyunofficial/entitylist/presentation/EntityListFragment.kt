@@ -18,7 +18,6 @@ package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -77,13 +76,23 @@ class EntityListFragment : Fragment() {
                 EntityListScreen(
                     viewModel = viewModel,
                     onBackPressed = { viewModel.onBackPressed() },
-                    onEntitySelected = { entity, itemView ->
-                        viewModel.select(entity as EntityListItem, itemView)
+                    onEntitySelected = { item ->
+                        viewModel.select(item)
                     },
-                    onFilterClicked = { view -> viewModel.onFilterClicked(view) },
-                    onSortClicked = { view -> viewModel.onSortClicked(view) },
-                    onAddEntityClicked = { entityType, parentEntityData, view ->
-                        viewModel.onCreateEntityClicked(view)
+                    onRemoveRelation = { item ->
+                        viewModel.removeRelation(item)
+                    },
+                    onCreateEntityClicked = {
+                        viewModel.onCreateEntityClicked()
+                    },
+                    onFilterClicked = {
+                        viewModel.onFilterClicked()
+                    },
+                    onSortClicked = {
+                        viewModel.onSortClicked()
+                    },
+                    onError = { error ->
+                        viewModel.onError(error)
                     }
                 )
             }
@@ -100,7 +109,7 @@ class EntityListFragment : Fragment() {
                 viewModel.navigation.collect { event ->
                     when (event) {
                         is EntityListNavEvent.OnEntitySelectedEvent -> {
-                            parentListener.onEntitySelected(event.entity, event.itemView)
+                            parentListener.onEntitySelected(event.entity)
                         }
                         is EntityListNavEvent.BackEvent -> {
                             parentListener.onBackPressed()
@@ -108,19 +117,17 @@ class EntityListFragment : Fragment() {
                         is EntityListNavEvent.OnFilterSelectedEvent -> {
                             parentListener.onFilterEdit(
                                 entityTypeSchema = event.entityTypeSchema,
-                                filter = event.filter,
-                                view = event.view
+                                filter = event.filter
                             )
                         }
                         is EntityListNavEvent.OnSortSelectedEvent -> {
                             parentListener.onSortEdit(
                                 entityTypeSchema = event.entityTypeSchema,
-                                sort = event.sort,
-                                view = event.view
+                                sort = event.sort
                             )
                         }
                         is EntityListNavEvent.OnCreateEntityEvent -> {
-                            parentListener.onAddEntityRequested(event.entityType, event.parentEntityData, event.view)
+                            parentListener.onAddEntityRequested(event.entityType, event.parentEntityData)
                         }
                     }
                 }
@@ -130,24 +137,21 @@ class EntityListFragment : Fragment() {
 
     interface ParentListener {
 
-        fun onEntitySelected(entity: FiberyEntityData, itemView: android.view.View)
+        fun onEntitySelected(entity: FiberyEntityData)
 
         fun onAddEntityRequested(
             entityType: FiberyEntityTypeSchema,
-            parentEntityData: ParentEntityData?,
-            view: android.view.View
+            parentEntityData: ParentEntityData?
         )
 
         fun onFilterEdit(
             entityTypeSchema: FiberyEntityTypeSchema,
-            filter: FiberyEntityFilterData,
-            view: android.view.View
+            filter: FiberyEntityFilterData
         )
 
         fun onSortEdit(
             entityTypeSchema: FiberyEntityTypeSchema,
-            sort: FiberyEntitySortData,
-            view: android.view.View
+            sort: FiberyEntitySortData
         )
 
         fun onBackPressed()

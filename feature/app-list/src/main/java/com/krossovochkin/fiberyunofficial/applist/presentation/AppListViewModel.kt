@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.core.presentation.list.ListItem
@@ -63,10 +62,10 @@ class AppListViewModel @Inject constructor(
     )
     val appItems: Flow<List<ListItem>> = listDelegate.items
 
-    fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem) {
         require(item is AppListItem)
         viewModelScope.launch {
-            navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
+            navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData))
         }
     }
 

@@ -16,20 +16,27 @@
  */
 package com.krossovochkin.fiberyunofficial.login.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.fiberyunofficial.login.R
 
@@ -40,41 +47,58 @@ fun LoginScreen(
     var account by remember { mutableStateOf("") }
     var token by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        OutlinedTextField(
-            value = account,
-            onValueChange = { account = it },
-            label = { Text(stringResource(R.string.login_account_hint)) },
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            maxLines = 1,
-            singleLine = true,
-        )
-
-        OutlinedTextField(
-            value = token,
-            onValueChange = { token = it },
-            label = { Text(stringResource(R.string.login_token_hint)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            maxLines = 1,
-            singleLine = true,
-            visualTransformation = VisualTransformation.None,
-        )
-
-        Button(
-            onClick = { onLogin(account, token) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.login_action))
+            OutlinedTextField(
+                value = account,
+                onValueChange = { account = it },
+                label = { Text(stringResource(R.string.login_account_hint)) },
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+            )
+
+            OutlinedTextField(
+                value = token,
+                onValueChange = { token = it },
+                label = { Text(stringResource(R.string.login_token_hint)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (account.isNotEmpty() && token.isNotEmpty()) {
+                            onLogin(account, token)
+                        }
+                    }
+                )
+            )
+
+            Button(
+                onClick = { onLogin(account, token) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                enabled = account.isNotEmpty() && token.isNotEmpty()
+            ) {
+                Text(stringResource(R.string.login_action))
+            }
         }
     }
 }

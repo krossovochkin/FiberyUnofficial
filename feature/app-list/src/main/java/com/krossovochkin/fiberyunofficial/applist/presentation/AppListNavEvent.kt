@@ -16,13 +16,11 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.view.View
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 
 sealed class AppListNavEvent {
 
     data class OnAppSelectedEvent(
-        val fiberyAppData: FiberyAppData,
-        val itemView: View
+        val fiberyAppData: FiberyAppData
     ) : AppListNavEvent()
 }

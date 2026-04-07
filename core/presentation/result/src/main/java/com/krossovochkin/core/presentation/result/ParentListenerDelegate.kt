@@ -4,9 +4,7 @@ import androidx.fragment.app.Fragment
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-class ParentListenerDelegate<T>(
-    private val fragment: Fragment
-) : ReadOnlyProperty<Fragment, T> {
+class ParentListenerDelegate<T> : ReadOnlyProperty<Fragment, T> {
 
     @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
@@ -14,4 +12,4 @@ class ParentListenerDelegate<T>(
     }
 }
 
-fun <T> Fragment.parentListener() = ParentListenerDelegate<T>(this)
+fun <T> Fragment.parentListener() = ParentListenerDelegate<T>()

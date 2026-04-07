@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import android.view.View
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -392,8 +391,7 @@ class EntityDetailsViewModel @Inject constructor(
 
     fun selectEntityField(
         fieldSchema: FiberyFieldSchema,
-        entityData: FiberyEntityData?,
-        itemView: View
+        entityData: FiberyEntityData?
     ) {
         viewModelScope.launch {
             navigationChannel.send(
@@ -402,17 +400,16 @@ class EntityDetailsViewModel @Inject constructor(
                         fieldSchema = fieldSchema,
                         parentEntity = entityDetailsArgs.entity
                     ),
-                    currentEntity = entityData,
-                    itemView = itemView
+                    currentEntity = entityData
                 )
             )
         }
     }
 
-    fun openEntity(entityData: FiberyEntityData, itemView: View) {
+    fun openEntity(entityData: FiberyEntityData) {
         viewModelScope.launch {
             navigationChannel.send(
-                EntityDetailsNavEvent.OnEntitySelectedEvent(entityData, itemView)
+                EntityDetailsNavEvent.OnEntitySelectedEvent(entityData)
             )
         }
     }
@@ -435,8 +432,7 @@ class EntityDetailsViewModel @Inject constructor(
 
     fun selectCollectionField(
         entityTypeSchema: FiberyEntityTypeSchema,
-        fieldSchema: FiberyFieldSchema,
-        itemView: View
+        fieldSchema: FiberyFieldSchema
     ) {
         viewModelScope.launch {
             navigationChannel.send(
@@ -445,8 +441,7 @@ class EntityDetailsViewModel @Inject constructor(
                     parentEntityData = ParentEntityData(
                         fieldSchema = fieldSchema,
                         parentEntity = entityDetailsArgs.entity
-                    ),
-                    itemView = itemView
+                    )
                 )
             )
         }

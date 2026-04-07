@@ -51,7 +51,7 @@ class AppListFragment : Fragment() {
                 AppListScreen(
                     viewModel = viewModel,
                     onAppSelected = { item ->
-                        viewModel.select(item, this)
+                        viewModel.select(item)
                     }
                 )
             }
@@ -68,7 +68,7 @@ class AppListFragment : Fragment() {
                 viewModel.navigation.collect { event ->
                     when (event) {
                         is AppListNavEvent.OnAppSelectedEvent -> {
-                            parentListener.onAppSelected(event.fiberyAppData, event.itemView)
+                            parentListener.onAppSelected(event.fiberyAppData)
                         }
                     }
                 }
@@ -78,6 +78,6 @@ class AppListFragment : Fragment() {
 
     interface ParentListener {
 
-        fun onAppSelected(fiberyAppData: FiberyAppData, itemView: android.view.View)
+        fun onAppSelected(fiberyAppData: FiberyAppData)
     }
 }

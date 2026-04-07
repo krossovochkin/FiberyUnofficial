@@ -63,7 +63,7 @@ androidx-lifecycle = "2.9.1"
 
 detekt = "1.23.8"
 
-gradle-plugin-android = "8.10.1"
+gradle-plugin-android = "8.13.2"
 
 kover = "0.6.1"
 

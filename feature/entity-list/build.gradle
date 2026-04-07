@@ -21,6 +21,7 @@ dependencies {
     implementation libs.compose.material3
     implementation libs.compose.foundation
     implementation libs.compose.lifecycle.viewmodel
+    implementation libs.paging.compose
     api libs.dagger
     ksp libs.dagger.compiler
     api libs.kotlinx.coroutines.core

@@ -76,7 +76,6 @@ object ApiModule {
     @Provides
     fun retrofit(
         okHttpClient: OkHttpClient,
-        authStorage: AuthStorage
     ): Retrofit {
         // Use a base URL that will be intercepted and replaced dynamically
         // The actual URL is set by the auth interceptor at request time

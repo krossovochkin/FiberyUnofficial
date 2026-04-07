@@ -24,15 +24,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.krossovochkin.core.presentation.resources.resolveNativeText
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppListScreen(
     viewModel: AppListViewModel,
@@ -40,24 +48,46 @@ fun AppListScreen(
 ) {
     val appItems by viewModel.appItems.collectAsState(emptyList())
     val isLoading by viewModel.progress.collectAsState(false)
+    val toolbarViewState = viewModel.getToolbarViewState()
+    val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(
-                items = appItems.filterIsInstance<AppListItem>(),
-                key = { it.appData.name }
-            ) { item ->
-                AppListItemRow(
-                    item = item,
-                    onClick = { onAppSelected(item) }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = context.resolveNativeText(toolbarViewState.title).toString()
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                )
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(
+                    items = appItems.filterIsInstance<AppListItem>(),
+                    key = { it.appData.name }
+                ) { item ->
+                    AppListItemRow(
+                        item = item,
+                        onClick = { onAppSelected(item) }
+                    )
+                }
+            }
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
-        }
-
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
         }
     }
 }
@@ -67,16 +97,17 @@ fun AppListItemRow(
     item: AppListItem,
     onClick: () -> Unit,
 ) {
-    Box(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp)
     ) {
         Text(
             text = item.title,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
     }
 }

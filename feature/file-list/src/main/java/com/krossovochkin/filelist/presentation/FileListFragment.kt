@@ -54,10 +54,12 @@ class FileListFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 FileListScreen(
+                    toolbarViewState = viewModel.toolbarViewState,
                     itemsFlow = viewModel.entityItems,
                     onDownloadClick = { item ->
                         viewModel.downloadFile(item.fileData)
                     },
+                    onBackPressed = { viewModel.onBackPressed() },
                     onError = { error ->
                         viewModel.onError(error)
                     }

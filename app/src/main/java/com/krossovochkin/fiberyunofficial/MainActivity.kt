@@ -18,13 +18,11 @@ package com.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.krossovochkin.core.presentation.result.toResultBundle
 import com.krossovochkin.core.presentation.viewbinding.viewBinding
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
@@ -50,8 +48,6 @@ import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_FIL
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.RESULT_KEY_SORT_PICKED
 import com.krossovochkin.fiberyunofficial.entitylist.presentation.SortPickedData
 import dagger.hilt.android.AndroidEntryPoint
-import com.krossovochkin.fiberyunofficial.entitydetails.R as EntityDetailsR
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActivityListener {
 
@@ -64,14 +60,14 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         setContentView(binding.root)
     }
 
-    override fun onAppSelected(fiberyAppData: FiberyAppData, itemView: View) {
+    override fun onAppSelected(fiberyAppData: FiberyAppData) {
         binding.navHostFragment.findNavController().navigate(
             NavGraphDirections.actionAppListToEntityTypeList(fiberyAppData)
         )
     }
 
     @Suppress("UseIfInsteadOfWhen")
-    override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: View) {
+    override fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema) {
         val navController = binding.navHostFragment.findNavController()
         when (val id = navController.currentDestination?.id) {
             com.krossovochkin.fiberyunofficial.entitytypelist.R.id.entityTypeList -> {
@@ -90,8 +86,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
     @Suppress("UseIfInsteadOfWhen")
     override fun onEntityTypeSelected(
         entityTypeSchema: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData,
-        itemView: View
+        parentEntityData: ParentEntityData
     ) {
         val navController = binding.navHostFragment.findNavController()
         when (val id = navController.currentDestination?.id) {
@@ -130,30 +125,20 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
         }
     }
 
-    override fun onEntitySelected(entity: FiberyEntityData, itemView: View) {
+    override fun onEntitySelected(entity: FiberyEntityData) {
         val navController = binding.navHostFragment.findNavController()
-        val (directions, extras) = when (val id = navController.currentDestination?.id) {
+        val directions = when (val id = navController.currentDestination?.id) {
             com.krossovochkin.fiberyunofficial.entitylist.R.id.entityList -> {
-                val key = getString(
-                    EntityDetailsR.string.entity_details_root_transition_name,
-                    entity.id
-                )
-                NavGraphDirections.actionEntityListToEntityDetails(entity) to
-                    FragmentNavigatorExtras(itemView to key)
+                NavGraphDirections.actionEntityListToEntityDetails(entity)
             }
 
             com.krossovochkin.fiberyunofficial.entitydetails.R.id.entityDetails -> {
-                val key = getString(
-                    EntityDetailsR.string.entity_details_root_transition_name,
-                    entity.id
-                )
-                NavGraphDirections.actionEntityDetailsSelf(entity) to
-                    FragmentNavigatorExtras(itemView to key)
+                NavGraphDirections.actionEntityDetailsSelf(entity)
             }
 
             else -> error("Unknown current direction: $id")
         }
-        navController.navigate(directions, extras)
+        navController.navigate(directions)
     }
 
     override fun onLoginSuccess() {
@@ -163,8 +148,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onAddEntityRequested(
         entityType: FiberyEntityTypeSchema,
-        parentEntityData: ParentEntityData?,
-        view: View
+        parentEntityData: ParentEntityData?
     ) {
         if (parentEntityData == null) {
             binding.navHostFragment.findNavController().navigate(
@@ -196,8 +180,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onEntityFieldEdit(
         parentEntityData: ParentEntityData,
-        entity: FiberyEntityData?,
-        itemView: View
+        entity: FiberyEntityData?
     ) {
         binding.navHostFragment.findNavController().navigate(
             NavGraphDirections
@@ -280,8 +263,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onFilterEdit(
         entityTypeSchema: FiberyEntityTypeSchema,
-        filter: FiberyEntityFilterData,
-        view: View
+        filter: FiberyEntityFilterData
     ) {
         binding.navHostFragment.findNavController().navigate(
             NavGraphDirections
@@ -302,8 +284,7 @@ class MainActivity : AppCompatActivity(), MainActivityListener {
 
     override fun onSortEdit(
         entityTypeSchema: FiberyEntityTypeSchema,
-        sort: FiberyEntitySortData,
-        view: View
+        sort: FiberyEntitySortData
     ) {
         binding.navHostFragment.findNavController().navigate(
             NavGraphDirections

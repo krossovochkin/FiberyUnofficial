@@ -17,7 +17,6 @@
 
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import android.view.View
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
@@ -30,24 +29,20 @@ sealed class EntityListNavEvent {
 
     data class OnEntitySelectedEvent(
         val entity: FiberyEntityData,
-        val itemView: View
     ) : EntityListNavEvent()
 
     data class OnFilterSelectedEvent(
         val entityTypeSchema: FiberyEntityTypeSchema,
         val filter: FiberyEntityFilterData,
-        val view: View
     ) : EntityListNavEvent()
 
     data class OnSortSelectedEvent(
         val entityTypeSchema: FiberyEntityTypeSchema,
         val sort: FiberyEntitySortData,
-        val view: View
     ) : EntityListNavEvent()
 
     data class OnCreateEntityEvent(
         val entityType: FiberyEntityTypeSchema,
         val parentEntityData: ParentEntityData?,
-        val view: View
     ) : EntityListNavEvent()
 }

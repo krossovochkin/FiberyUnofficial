@@ -56,12 +56,16 @@ class EntityPickerFragment : Fragment() {
             setContent {
                 EntityPickerScreen(
                     itemsFlow = viewModel.entityItems,
+                    toolbarViewState = viewModel.toolbarViewState,
                     entityCreateEnabled = viewModel.entityCreateEnabled,
                     onItemClick = { item ->
                         viewModel.select(item)
                     },
                     onCreateClick = {
                         viewModel.createEntity()
+                    },
+                    onBackPressed = {
+                        viewModel.onBackPressed()
                     },
                     onError = { error ->
                         viewModel.onError(error)

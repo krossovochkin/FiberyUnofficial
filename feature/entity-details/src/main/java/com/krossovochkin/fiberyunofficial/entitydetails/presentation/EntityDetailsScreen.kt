@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,8 +31,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
@@ -60,16 +60,14 @@ fun EntityDetailsScreen(
     viewModel: EntityDetailsViewModel,
     onBackPressed: () -> Unit,
     onDeleteClicked: () -> Unit,
-    onFieldHeaderClicked: (FieldHeaderItem) -> Unit,
-    onTextFieldClicked: (FieldTextItem) -> Unit,
     onUrlFieldClicked: (FieldUrlItem) -> Unit,
     onEmailFieldClicked: (FieldEmailItem) -> Unit,
     onSingleSelectClicked: (FieldSingleSelectItem) -> Unit,
     onMultiSelectClicked: (FieldMultiSelectItem) -> Unit,
-    onRelationFieldClicked: (FiberyFieldSchema, FiberyEntityData?, View) -> Unit,
-    onRelationOpenClicked: (FiberyEntityData, View) -> Unit,
+    onRelationFieldClicked: (FiberyFieldSchema, FiberyEntityData?) -> Unit,
+    onRelationOpenClicked: (FiberyEntityData) -> Unit,
     onRelationDeleteClicked: (FiberyFieldSchema) -> Unit,
-    onCollectionFieldClicked: (FiberyEntityTypeSchema, FiberyFieldSchema, View) -> Unit,
+    onCollectionFieldClicked: (FiberyEntityTypeSchema, FiberyFieldSchema) -> Unit,
 ) {
     val items by viewModel.items.collectAsState(emptyList())
     val isLoading by viewModel.progress.collectAsState(false)
@@ -104,14 +102,12 @@ fun EntityDetailsScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(
-                        android.graphics.Color.parseColor(
-                            toolbarState.bgColor.let {
-                                when (it) {
-                                    is com.krossovochkin.core.presentation.resources.NativeColor.Hex -> it.colorHex
-                                    else -> "#FFFFFF"
-                                }
+                        toolbarState.bgColor.let {
+                            when (it) {
+                                is com.krossovochkin.core.presentation.resources.NativeColor.Hex -> it.colorHex
+                                else -> "#FFFFFF"
                             }
-                        )
+                        }.toColorInt()
                     )
                 )
             )
@@ -129,82 +125,84 @@ fun EntityDetailsScreen(
                         is FieldHeaderItem -> {
                             FieldHeaderRow(
                                 item = item,
-                                onClick = { onFieldHeaderClicked(item) }
                             )
                         }
+
                         is FieldTextItem -> {
                             FieldTextRow(
                                 item = item,
-                                onClick = { onTextFieldClicked(item) }
                             )
                         }
+
                         is FieldUrlItem -> {
                             FieldUrlRow(
                                 item = item,
                                 onClick = { onUrlFieldClicked(item) }
                             )
                         }
+
                         is FieldEmailItem -> {
                             FieldEmailRow(
                                 item = item,
                                 onClick = { onEmailFieldClicked(item) }
                             )
                         }
+
                         is FieldSingleSelectItem -> {
                             FieldSingleSelectRow(
                                 item = item,
                                 onClick = { onSingleSelectClicked(item) }
                             )
                         }
+
                         is FieldMultiSelectItem -> {
                             FieldMultiSelectRow(
                                 item = item,
                                 onClick = { onMultiSelectClicked(item) }
                             )
                         }
+
                         is FieldRichTextItem -> {
                             FieldRichTextRow(item = item)
                         }
+
                         is FieldRelationItem -> {
                             FieldRelationRow(
                                 item = item,
                                 onFieldClicked = {
                                     onRelationFieldClicked(
                                         item.fieldSchema,
-                                        item.entityData,
-                                        View(android.view.ContextThemeWrapper())
+                                        item.entityData
                                     )
                                 },
                                 onOpenClicked = {
                                     item.entityData?.let {
-                                        onRelationOpenClicked(
-                                            it,
-                                            View(android.view.ContextThemeWrapper())
-                                        )
+                                        onRelationOpenClicked(it)
                                     }
                                 },
                                 onDeleteClicked = { onRelationDeleteClicked(item.fieldSchema) }
                             )
                         }
+
                         is FieldCollectionItem -> {
                             FieldCollectionRow(
                                 item = item,
                                 onClick = {
                                     onCollectionFieldClicked(
                                         item.entityTypeSchema,
-                                        item.fieldSchema,
-                                        View(android.view.ContextThemeWrapper())
+                                        item.fieldSchema
                                     )
                                 }
                             )
                         }
+
                         is FieldCheckboxItem -> {
                             FieldCheckboxRow(item = item)
                         }
                     }
 
                     if (index < items.size - 1) {
-                        Divider(modifier = Modifier.padding(vertical = 8.dp))
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     }
                 }
             }
@@ -221,7 +219,6 @@ fun EntityDetailsScreen(
 @Composable
 fun FieldHeaderRow(
     item: FieldHeaderItem,
-    onClick: () -> Unit,
 ) {
     Text(
         text = item.title,
@@ -235,7 +232,6 @@ fun FieldHeaderRow(
 @Composable
 fun FieldTextRow(
     item: FieldTextItem,
-    onClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -271,7 +267,11 @@ fun FieldUrlRow(
         Text(
             text = item.url,
             style = MaterialTheme.typography.bodyLarge,
-            color = if (item.isOpenAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            color = if (item.isOpenAvailable) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp)
@@ -297,7 +297,11 @@ fun FieldEmailRow(
         Text(
             text = item.email,
             style = MaterialTheme.typography.bodyLarge,
-            color = if (item.isOpenAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            color = if (item.isOpenAvailable) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp)

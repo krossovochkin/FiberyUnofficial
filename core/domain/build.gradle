@@ -3,6 +3,12 @@ apply plugin: 'com.google.devtools.ksp'
 
 android {
     namespace 'com.krossovochkin.fiberyunofficial.domain'
+    lint {
+        abortOnError true
+        htmlReport true
+        warningsAsErrors true
+        xmlReport false
+    }
 }
 
 dependencies {

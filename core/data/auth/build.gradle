@@ -4,6 +4,12 @@ apply from: "$rootDir/feature_default.gradle"
 
 android {
     namespace 'com.krossovochkin.auth'
+    lint {
+        abortOnError true
+        htmlReport true
+        warningsAsErrors true
+        xmlReport false
+    }
 }
 
 dependencies {

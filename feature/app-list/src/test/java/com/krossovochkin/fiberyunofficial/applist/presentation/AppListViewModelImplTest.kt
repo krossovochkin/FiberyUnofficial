@@ -1,6 +1,5 @@
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.view.View
 import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyfunofficial.test.domain.FiberyAppDataBuilder
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
@@ -126,7 +125,7 @@ internal class AppListViewModelImplTest {
             .assertError(count = 0)
             .assertNavigation(count = 0)
 
-        viewModel.select(APP_LIST_ITEM, APP_LIST_ITEM_VIEW)
+        viewModel.select(APP_LIST_ITEM)
 
         observers
             .assertProgress(count = 2, latestValue = false)
@@ -136,7 +135,6 @@ internal class AppListViewModelImplTest {
                 count = 1,
                 latestValue = AppListNavEvent.OnAppSelectedEvent(
                     fiberyAppData = APP_DATA,
-                    itemView = APP_LIST_ITEM_VIEW
                 )
             )
 
@@ -215,6 +213,5 @@ internal class AppListViewModelImplTest {
         private val APP_LIST_DATA = listOf(APP_DATA)
         private val APP_LIST_ITEMS = listOf(APP_LIST_ITEM)
         private val ERROR = Exception("load error")
-        private val APP_LIST_ITEM_VIEW: View = mock {}
     }
 }

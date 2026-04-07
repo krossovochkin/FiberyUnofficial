@@ -26,42 +26,86 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.krossovochkin.core.presentation.resources.resolveNativeText
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntityTypeListScreen(
     viewModel: EntityTypeListViewModel,
     onEntityTypeSelected: (EntityTypeListItem) -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     val entityTypeItems by viewModel.entityTypeItems.collectAsState(emptyList())
     val isLoading by viewModel.progress.collectAsState(false)
+    val toolbarViewState = viewModel.getToolbarViewState()
+    val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(
-                items = entityTypeItems.filterIsInstance<EntityTypeListItem>(),
-                key = { it.entityTypeData.name }
-            ) { item ->
-                EntityTypeListItemRow(
-                    item = item,
-                    onClick = { onEntityTypeSelected(item) }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = context.resolveNativeText(toolbarViewState.title).toString()
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(
+                    items = entityTypeItems.filterIsInstance<EntityTypeListItem>(),
+                    key = { it.entityTypeData.name }
+                ) { item ->
+                    EntityTypeListItemRow(
+                        item = item,
+                        onClick = { onEntityTypeSelected(item) }
+                    )
+                }
+            }
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
-        }
-
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
         }
     }
 }
@@ -71,26 +115,30 @@ fun EntityTypeListItemRow(
     item: EntityTypeListItem,
     onClick: () -> Unit,
 ) {
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .background(color = Color(item.badgeBgColor))
-                .padding(end = 16.dp)
-        )
-
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.bodyLarge,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp)
-        )
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .background(color = Color(item.badgeBgColor))
+            )
+
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp)
+            )
+        }
     }
 }

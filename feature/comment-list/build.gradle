@@ -34,7 +34,7 @@ dependencies {
     implementation libs.navigation.fragment.ktx
     implementation libs.fragment.ktx
     implementation libs.io.noties.markwon.core
-    implementation "androidx.paging:paging-compose:3.3.6"
+    implementation libs.paging.compose
     implementation project(":core:presentation:resources")
     implementation project(":core:presentation:paging")
     implementation project(":core:presentation:result")

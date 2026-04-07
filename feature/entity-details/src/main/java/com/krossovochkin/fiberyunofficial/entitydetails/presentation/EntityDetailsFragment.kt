@@ -16,11 +16,13 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -37,8 +39,6 @@ import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import android.content.Intent
-import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class EntityDetailsFragment : Fragment() {
@@ -70,7 +70,6 @@ class EntityDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): android.view.View {
-        val dummyView = android.view.View(requireContext())
         return ComposeView(requireContext()).apply {
             setBackgroundColor(android.graphics.Color.WHITE)
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -79,23 +78,21 @@ class EntityDetailsFragment : Fragment() {
                     viewModel = viewModel,
                     onBackPressed = { viewModel.onBackPressed() },
                     onDeleteClicked = { viewModel.deleteEntity() },
-                    onFieldHeaderClicked = { /* no-op */ },
-                    onTextFieldClicked = { /* no-op */ },
                     onUrlFieldClicked = { viewModel.selectUrl(it) },
                     onEmailFieldClicked = { viewModel.selectEmail(it) },
                     onSingleSelectClicked = { viewModel.selectSingleSelectField(it) },
                     onMultiSelectClicked = { viewModel.selectMultiSelectField(it) },
-                    onRelationFieldClicked = { fieldSchema, entityData, _ ->
-                        viewModel.selectEntityField(fieldSchema, entityData, dummyView)
+                    onRelationFieldClicked = { fieldSchema, entityData ->
+                        viewModel.selectEntityField(fieldSchema, entityData)
                     },
-                    onRelationOpenClicked = { entityData, _ ->
-                        viewModel.openEntity(entityData, dummyView)
+                    onRelationOpenClicked = { entityData ->
+                        viewModel.openEntity(entityData)
                     },
                     onRelationDeleteClicked = { fieldSchema ->
                         viewModel.updateEntityField(fieldSchema, null)
                     },
-                    onCollectionFieldClicked = { entityTypeSchema, fieldSchema, _ ->
-                        viewModel.selectCollectionField(entityTypeSchema, fieldSchema, dummyView)
+                    onCollectionFieldClicked = { entityTypeSchema, fieldSchema ->
+                        viewModel.selectCollectionField(entityTypeSchema, fieldSchema)
                     }
                 )
             }
@@ -112,49 +109,54 @@ class EntityDetailsFragment : Fragment() {
                 viewModel.navigation.collect { event ->
                     when (event) {
                         is EntityDetailsNavEvent.OnEntitySelectedEvent -> {
-                            parentListener.onEntitySelected(event.entity, event.itemView)
+                            parentListener.onEntitySelected(event.entity)
                         }
+
                         is EntityDetailsNavEvent.OnEntityTypeSelectedEvent -> {
                             parentListener.onEntityTypeSelected(
                                 entityTypeSchema = event.entityTypeSchema,
-                                parentEntityData = event.parentEntityData,
-                                itemView = event.itemView
+                                parentEntityData = event.parentEntityData
                             )
                         }
+
                         is EntityDetailsNavEvent.BackEvent -> {
                             parentListener.onBackPressed()
                         }
+
                         is EntityDetailsNavEvent.OnSingleSelectSelectedEvent -> {
                             parentListener.onSingleSelectFieldEdit(
                                 parentEntityData = event.parentEntityData,
                                 item = event.singleSelectItem
                             )
                         }
+
                         is EntityDetailsNavEvent.OnMultiSelectSelectedEvent -> {
                             parentListener.onMultiSelectFieldEdit(
                                 parentEntityData = event.parentEntityData,
                                 item = event.multiSelectItem
                             )
                         }
+
                         is EntityDetailsNavEvent.OnEntityFieldEditEvent -> {
                             parentListener.onEntityFieldEdit(
                                 parentEntityData = event.parentEntityData,
-                                entity = event.currentEntity,
-                                itemView = event.itemView
+                                entity = event.currentEntity
                             )
                         }
+
                         is EntityDetailsNavEvent.OpenUrlEvent -> {
                             Intent(Intent.ACTION_VIEW).setData(event.url.toUri()).let { intent ->
-                                intent.resolveActivity(requireContext().packageManager)?.let {
+                                runCatching {
                                     startActivity(intent)
                                 }
                             }
                         }
+
                         is EntityDetailsNavEvent.SendEmailEvent -> {
                             Intent(Intent.ACTION_SENDTO).setData("mailto://".toUri())
                                 .apply { putExtra(Intent.EXTRA_EMAIL, event.email) }
                                 .let { intent ->
-                                    intent.resolveActivity(requireContext().packageManager)?.let {
+                                    runCatching {
                                         startActivity(intent)
                                     }
                                 }
@@ -168,20 +170,17 @@ class EntityDetailsFragment : Fragment() {
     interface ParentListener {
 
         fun onEntitySelected(
-            entity: FiberyEntityData,
-            itemView: android.view.View
+            entity: FiberyEntityData
         )
 
         fun onEntityTypeSelected(
             entityTypeSchema: FiberyEntityTypeSchema,
-            parentEntityData: ParentEntityData,
-            itemView: android.view.View
+            parentEntityData: ParentEntityData
         )
 
         fun onEntityFieldEdit(
             parentEntityData: ParentEntityData,
-            entity: FiberyEntityData?,
-            itemView: android.view.View
+            entity: FiberyEntityData?
         )
 
         fun onSingleSelectFieldEdit(

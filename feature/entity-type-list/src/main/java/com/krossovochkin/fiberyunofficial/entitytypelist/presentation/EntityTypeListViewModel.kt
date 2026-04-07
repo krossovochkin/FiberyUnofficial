@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
-import android.view.View
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,11 +69,11 @@ class EntityTypeListViewModel @Inject constructor(
     )
     val entityTypeItems = listDelegate.items
 
-    fun select(item: ListItem, itemView: View) {
+    fun select(item: ListItem) {
         require(item is EntityTypeListItem)
         viewModelScope.launch {
             navigationChannel.send(
-                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData, itemView)
+                EntityTypeListNavEvent.OnEntityTypeSelectedEvent(item.entityTypeData)
             )
         }
     }

@@ -53,11 +53,13 @@ class CommentListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ) = ComposeView(requireContext()).apply {
-        setBackgroundColor(android.graphics.Color.WHITE)
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {
             CommentListScreen(
-                markwon = markwon
+                toolbarViewState = viewModel.toolbarViewState,
+                commentItemsFlow = viewModel.entityItems,
+                markwon = markwon,
+                onBackPressed = { viewModel.onBackPressed() }
             )
         }
     }

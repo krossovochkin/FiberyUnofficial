@@ -55,8 +55,9 @@ class EntityTypeListFragment : Fragment() {
             EntityTypeListScreen(
                 viewModel = viewModel,
                 onEntityTypeSelected = { item ->
-                    viewModel.select(item, this)
-                }
+                    viewModel.select(item)
+                },
+                onBackPressed = { viewModel.onBackPressed() }
             )
         }
     }
@@ -69,7 +70,7 @@ class EntityTypeListFragment : Fragment() {
                 viewModel.navigation.collect { event ->
                     when (event) {
                         is EntityTypeListNavEvent.OnEntityTypeSelectedEvent -> {
-                            parentListener.onEntityTypeSelected(event.entityTypeSchema, event.itemView)
+                            parentListener.onEntityTypeSelected(event.entityTypeSchema)
                         }
                         is EntityTypeListNavEvent.BackEvent -> {
                             parentListener.onBackPressed()
@@ -82,7 +83,7 @@ class EntityTypeListFragment : Fragment() {
 
     interface ParentListener {
 
-        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema, itemView: android.view.View)
+        fun onEntityTypeSelected(entityTypeSchema: FiberyEntityTypeSchema)
 
         fun onBackPressed()
     }

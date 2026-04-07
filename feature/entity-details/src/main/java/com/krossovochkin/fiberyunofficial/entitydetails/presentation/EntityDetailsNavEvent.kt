@@ -16,7 +16,6 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import android.view.View
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
@@ -27,20 +26,17 @@ sealed class EntityDetailsNavEvent {
     object BackEvent : EntityDetailsNavEvent()
 
     data class OnEntitySelectedEvent(
-        val entity: FiberyEntityData,
-        val itemView: View
+        val entity: FiberyEntityData
     ) : EntityDetailsNavEvent()
 
     data class OnEntityFieldEditEvent(
         val parentEntityData: ParentEntityData,
-        val currentEntity: FiberyEntityData?,
-        val itemView: View
+        val currentEntity: FiberyEntityData?
     ) : EntityDetailsNavEvent()
 
     data class OnEntityTypeSelectedEvent(
         val parentEntityData: ParentEntityData,
-        val entityTypeSchema: FiberyEntityTypeSchema,
-        val itemView: View
+        val entityTypeSchema: FiberyEntityTypeSchema
     ) : EntityDetailsNavEvent()
 
     data class OnSingleSelectSelectedEvent(

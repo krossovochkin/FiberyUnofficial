@@ -54,10 +54,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.runtime.get()
     }
-
     packagingOptions {
-        exclude 'META-INF/versions/9/previous-compilation-data.bin'
+        resources {
+            excludes += ['META-INF/versions/9/previous-compilation-data.bin']
+        }
     }
+
 
     /* TODO: enable tests
     testOptions {
@@ -76,6 +78,12 @@ android {
      */
 
     namespace 'com.krossovochkin.fiberyunofficial'
+    lint {
+        abortOnError true
+        htmlReport true
+        warningsAsErrors true
+        xmlReport false
+    }
 }
 
 dependencies {

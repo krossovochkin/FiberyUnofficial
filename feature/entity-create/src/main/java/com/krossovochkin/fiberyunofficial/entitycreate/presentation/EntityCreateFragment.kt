@@ -53,8 +53,9 @@ class EntityCreateFragment : Fragment() {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {
             EntityCreateScreen(
-                viewModel = viewModel,
-                onEntityCreated = { }
+                toolbarViewState = viewModel.toolbarViewState,
+                onBackPressed = { parentListener.onBackPressed() },
+                onCreateClick = { viewModel.createEntity(it) }
             )
         }
     }
