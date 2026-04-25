@@ -108,8 +108,18 @@ class FiberyEntryProvider(
                     onEntitySelected = { navigationViewModel.onEntitySelected(it) },
                     onEntityFieldEdit = { parent, entity -> navigationViewModel.onEntityFieldEdit(parent, entity) },
                     onEntityTypeSelected = { type, parent -> navigationViewModel.onEntityTypeSelected(type, parent) },
-                    onSingleSelectFieldEdit = { parent, item -> navigationViewModel.onSingleSelectFieldEdit(parent, item) },
-                    onMultiSelectFieldEdit = { parent, item -> navigationViewModel.onMultiSelectFieldEdit(parent, item) }
+                    onSingleSelectFieldEdit = { parent, item ->
+                        navigationViewModel.onSingleSelectFieldEdit(
+                            parent,
+                            item
+                        )
+                    },
+                    onMultiSelectFieldEdit = { parent, item ->
+                        navigationViewModel.onMultiSelectFieldEdit(
+                            parent,
+                            item
+                        )
+                    }
                 )
             }
         }
