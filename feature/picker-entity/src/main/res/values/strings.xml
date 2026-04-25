@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="picker_entity_action_search">Search</string>
     <string name="picker_entity_action_create">Create</string>
-    <string name="picker_entity_root_transition_name">picker_entity_root_transition_name</string>
 </resources>

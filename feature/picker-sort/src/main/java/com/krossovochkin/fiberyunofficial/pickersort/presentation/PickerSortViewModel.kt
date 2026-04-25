@@ -1,55 +1,49 @@
 /*
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the \"License\");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an \"AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
 
  */
-
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.navigation.PickerSortNavKey
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.domain.EmptySortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SelectedSortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortItemData
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class PickerSortViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = PickerSortViewModel.Factory::class)
+class PickerSortViewModel @AssistedInject constructor(
+    @Assisted private val pickerSortArgs: PickerSortNavKey,
 ) : ViewModel() {
 
-    private val pickerSortArgs: PickerSortFragmentArgs
-        get() = PickerSortFragmentArgs.fromSavedStateHandle(savedStateHandle)
-
     val items = MutableStateFlow<List<ListItem>>(emptyList())
-
-    private val navigationChannel = Channel<PickerSortNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<PickerSortNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     private val data: MutableList<SortItemData> = mutableListOf()
 
@@ -66,8 +60,8 @@ class PickerSortViewModel @Inject constructor(
         viewModelScope.launch {
             supportedFields = pickerSortArgs.entityTypeSchema.fields
 
-            pickerSortArgs.sort.items
-                .let { items ->
+            pickerSortArgs.sort?.items
+                ?.let { items ->
                     data.clear()
                     data.addAll(
                         items.map { item ->
@@ -128,7 +122,7 @@ class PickerSortViewModel @Inject constructor(
         update()
     }
 
-    fun applySort() {
+    fun applySort(onSortApply: (FiberyEntityTypeSchema, FiberyEntitySortData) -> Unit) {
         val sort = FiberyEntitySortData(
             items = data.mapNotNull { item ->
                 if (item is SelectedSortItemData) {
@@ -143,21 +137,7 @@ class PickerSortViewModel @Inject constructor(
             }
         )
 
-        viewModelScope.launch {
-            navigationChannel.send(
-                PickerSortNavEvent.ApplySortEvent(
-                    sort = sort
-                )
-            )
-        }
-    }
-
-    fun onBackPressed() {
-        viewModelScope.launch {
-            navigationChannel.send(
-                PickerSortNavEvent.BackEvent
-            )
-        }
+        onSortApply(pickerSortArgs.entityTypeSchema, sort)
     }
 
     private fun update() {
@@ -188,5 +168,12 @@ class PickerSortViewModel @Inject constructor(
                 TODO("implement")
             }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: PickerSortNavKey,
+        ): PickerSortViewModel
     }
 }

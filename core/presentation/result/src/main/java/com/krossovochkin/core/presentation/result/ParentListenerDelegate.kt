@@ -1,15 +1,3 @@
 package com.krossovochkin.core.presentation.result
 
-import androidx.fragment.app.Fragment
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
-
-class ParentListenerDelegate<T> : ReadOnlyProperty<Fragment, T> {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
-        return thisRef.requireActivity() as T
-    }
-}
-
-fun <T> Fragment.parentListener() = ParentListenerDelegate<T>()
+// Obsolete after Migration to Navigation 3

@@ -1,14 +1,14 @@
 /*
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the \"License\");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an \"AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -53,6 +53,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.pickersort.R
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
@@ -61,8 +63,8 @@ import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
 @Composable
 fun PickerSortScreen(
     viewModel: PickerSortViewModel,
-    onBackPressed: () -> Unit,
-    onSortApply: () -> Unit,
+    onBack: () -> Unit,
+    onSortApply: (FiberyEntityTypeSchema, FiberyEntitySortData) -> Unit,
 ) {
     val items by viewModel.items.collectAsState(emptyList())
     val toolbarState = viewModel.toolbarViewState
@@ -77,7 +79,7 @@ fun PickerSortScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -133,7 +135,7 @@ fun PickerSortScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                onClick = onSortApply
+                onClick = { viewModel.applySort(onSortApply) }
             ) {
                 Text(text = stringResource(id = R.string.picker_sort_apply_action))
             }

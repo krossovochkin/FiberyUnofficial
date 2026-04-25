@@ -18,19 +18,25 @@ package com.krossovochkin.fiberyunofficial.domain
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import com.krossovochkin.serialization.BigDecimalSerializer
+import com.krossovochkin.serialization.LocalDateSerializer
+import com.krossovochkin.serialization.LocalDateTimeSerializer
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.math.BigDecimal
 import java.util.Locale
 
+@Serializable
 @Parcelize
 data class FiberyAppData(
     val name: String
 ) : Parcelable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntityTypeSchema(
@@ -46,6 +52,7 @@ data class FiberyEntityTypeSchema(
     val displayName: String = name.substringAfterLast("/")
 }
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntityTypeMetaData(
@@ -55,12 +62,14 @@ data class FiberyEntityTypeMetaData(
     val isEnum: Boolean
 ) : Parcelable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntitySortData(
     val items: List<Item>
 ) : Parcelable {
 
+    @Serializable
     @JsonClass(generateAdapter = true)
     @Parcelize
     data class Item(
@@ -68,6 +77,7 @@ data class FiberyEntitySortData(
         val condition: Condition,
     ) : Parcelable {
 
+        @Serializable
         @JsonClass(generateAdapter = false)
         enum class Condition(
             val value: String
@@ -78,6 +88,7 @@ data class FiberyEntitySortData(
     }
 }
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyEntityFilterData(
@@ -85,6 +96,7 @@ data class FiberyEntityFilterData(
     val items: List<Item>
 ) : Parcelable {
 
+    @Serializable
     @JsonClass(generateAdapter = false)
     enum class MergeType(
         val value: String
@@ -93,17 +105,20 @@ data class FiberyEntityFilterData(
         ANY("or")
     }
 
+    @Serializable
     sealed class Item(
         val type: Type
     ) : Parcelable {
         abstract val field: FiberyFieldSchema
         abstract val condition: Condition
 
+        @Serializable
         @JsonClass(generateAdapter = false)
         enum class Type {
             SINGLE_SELECT
         }
 
+        @Serializable
         @JsonClass(generateAdapter = false)
         enum class Condition(
             val value: String
@@ -112,6 +127,7 @@ data class FiberyEntityFilterData(
             NOT_EQUALS("!=")
         }
 
+        @Serializable
         @JsonClass(generateAdapter = true)
         @Parcelize
         data class SingleSelectItem(
@@ -122,6 +138,7 @@ data class FiberyEntityFilterData(
     }
 }
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyFieldSchema(
@@ -142,6 +159,7 @@ data class FiberyFieldSchema(
             }
 }
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class FiberyFieldMetaData(
@@ -157,6 +175,7 @@ data class FiberyFieldMetaData(
     val isRelation: Boolean = relationId != null
 }
 
+@Serializable
 @Parcelize
 data class FiberyEntityData(
     val id: String,
@@ -165,6 +184,7 @@ data class FiberyEntityData(
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class FiberyFileData(
     val id: String,
@@ -173,15 +193,18 @@ data class FiberyFileData(
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class FiberyCommentData(
     val id: String,
     val authorName: String,
     val text: String,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createDate: LocalDateTime,
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class FiberyEntityDetailsData(
     val id: String,
@@ -191,16 +214,19 @@ data class FiberyEntityDetailsData(
     val schema: FiberyEntityTypeSchema
 ) : Parcelable
 
+@Serializable
 @Parcelize
 data class ParentEntityData(
     val fieldSchema: FiberyFieldSchema,
     val parentEntity: FiberyEntityData
 ) : Parcelable
 
+@Serializable
 sealed class FieldData : Parcelable {
 
     abstract val schema: FiberyFieldSchema
 
+    @Serializable
     @Parcelize
     data class TextFieldData(
         val title: String,
@@ -208,6 +234,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class UrlFieldData(
         val title: String,
@@ -215,6 +242,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class EmailFieldData(
         val title: String,
@@ -222,15 +250,18 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class NumberFieldData(
         val title: String,
+        @Serializable(with = BigDecimalSerializer::class)
         val value: BigDecimal?,
         val unit: String?,
         val precision: Int,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class CheckboxFieldData(
         val title: String,
@@ -238,36 +269,47 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class DateFieldData(
         val title: String,
+        @Serializable(with = LocalDateSerializer::class)
         val value: LocalDate?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class DateTimeFieldData(
         val title: String,
+        @Serializable(with = LocalDateTimeSerializer::class)
         val value: LocalDateTime?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class DateRangeFieldData(
         val title: String,
+        @Serializable(with = LocalDateSerializer::class)
         val start: LocalDate?,
+        @Serializable(with = LocalDateSerializer::class)
         val end: LocalDate?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class DateTimeRangeFieldData(
         val title: String,
+        @Serializable(with = LocalDateTimeSerializer::class)
         val start: LocalDateTime?,
+        @Serializable(with = LocalDateTimeSerializer::class)
         val end: LocalDateTime?,
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class SingleSelectFieldData(
         val title: String,
@@ -276,6 +318,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class MultiSelectFieldData(
         val title: String,
@@ -284,6 +327,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @JsonClass(generateAdapter = true)
     @Parcelize
     data class EnumItemData(
@@ -291,6 +335,7 @@ sealed class FieldData : Parcelable {
         val title: String
     ) : Parcelable
 
+    @Serializable
     @Parcelize
     data class RichTextFieldData(
         val title: String,
@@ -298,6 +343,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class RelationFieldData(
         val title: String,
@@ -305,6 +351,7 @@ sealed class FieldData : Parcelable {
         override val schema: FiberyFieldSchema
     ) : FieldData()
 
+    @Serializable
     @Parcelize
     data class CollectionFieldData(
         val title: String,

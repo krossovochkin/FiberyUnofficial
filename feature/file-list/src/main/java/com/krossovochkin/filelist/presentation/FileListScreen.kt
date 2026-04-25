@@ -31,10 +31,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,28 +47,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
-import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.filelist.R
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FileListScreen(
-    toolbarViewState: ToolbarViewState,
-    itemsFlow: Flow<PagingData<ListItem>>,
-    onDownloadClick: (FileListItem) -> Unit,
-    onBackPressed: () -> Unit,
-    onError: (Exception) -> Unit,
+    viewModel: FileListViewModel,
+    onBack: () -> Unit,
 ) {
-    val lazyItems = itemsFlow.collectAsLazyPagingItems()
+    val lazyItems = viewModel.entityItems.collectAsLazyPagingItems()
+    val toolbarViewState = viewModel.toolbarViewState
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(viewModel.error) {
+        viewModel.error.collectLatest { error ->
+            snackbarHostState.showSnackbar(message = error.message ?: "Unknown error")
+        }
+    }
+
+    LaunchedEffect(viewModel.navigation) {
+        viewModel.navigation.collectLatest { event ->
+            when (event) {
+                is FileListNavEvent.BackEvent -> onBack()
+            }
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -73,7 +88,7 @@ fun FileListScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(onClick = { viewModel.onBackPressed() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -106,7 +121,7 @@ fun FileListScreen(
                     if (item is FileListItem) {
                         FileListItemRow(
                             item = item,
-                            onDownloadClick = { onDownloadClick(item) }
+                            onDownloadClick = { viewModel.downloadFile(item.fileData) }
                         )
                         HorizontalDivider()
                     }
@@ -116,7 +131,7 @@ fun FileListScreen(
                     when (loadState.append) {
                         is LoadState.Error -> {
                             val error = (loadState.append as LoadState.Error).error
-                            onError(Exception(error.message, error))
+                            viewModel.onError(Exception(error.message, error))
                         }
                         is LoadState.Loading -> {
                             item {
@@ -133,7 +148,7 @@ fun FileListScreen(
                     when (loadState.refresh) {
                         is LoadState.Error -> {
                             val error = (loadState.refresh as LoadState.Error).error
-                            onError(Exception(error.message, error))
+                            viewModel.onError(Exception(error.message, error))
                         }
                         else -> {}
                     }

@@ -16,36 +16,34 @@
  */
 package com.krossovochkin.fiberyunofficial.entitycreate.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import com.krossovochkin.fiberyunofficial.entitycreatedomain.EntityCreateInteractor
+import com.krossovochkin.fiberyunofficial.navigation.EntityCreateNavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class EntityCreateViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = EntityCreateViewModel.Factory::class)
+class EntityCreateViewModel @AssistedInject constructor(
     private val entityCreateInteractor: EntityCreateInteractor,
-    private val savedStateHandle: SavedStateHandle,
+    @Assisted private val entityCreateArgs: EntityCreateNavKey,
 ) : ViewModel() {
-
-    private val entityCreateArgs: EntityCreateFragmentArgs
-        get() = EntityCreateFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
-    private val navigationChannel = Channel<EntityCreateNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<EntityCreateNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
@@ -57,19 +55,24 @@ class EntityCreateViewModel @Inject constructor(
             hasBackButton = true
         )
 
-    fun createEntity(name: String) {
+    fun createEntity(name: String, onSuccess: (FiberyEntityData) -> Unit) {
         viewModelScope.launch {
             try {
                 val createdEntity = entityCreateInteractor
                     .execute(entityCreateArgs.entityType, name)
-                navigationChannel.send(
-                    EntityCreateNavEvent.OnEntityCreateSuccessEvent(
-                        createdEntity = createdEntity
-                    )
-                )
+                onSuccess(createdEntity)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorChannel.send(e)
             }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: EntityCreateNavKey,
+        ): EntityCreateViewModel
     }
 }

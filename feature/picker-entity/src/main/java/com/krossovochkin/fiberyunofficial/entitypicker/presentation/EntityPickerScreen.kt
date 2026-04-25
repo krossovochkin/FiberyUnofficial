@@ -1,14 +1,14 @@
 /*
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the \"License\");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an \"AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -33,44 +33,51 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
-import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntityPickerScreen(
-    itemsFlow: Flow<PagingData<ListItem>>,
-    toolbarViewState: Flow<ToolbarViewState>,
-    entityCreateEnabled: Flow<Boolean>,
-    onItemClick: (EntityPickerItem) -> Unit,
-    onCreateClick: () -> Unit,
-    onBackPressed: () -> Unit,
-    onError: (Exception) -> Unit,
+    viewModel: EntityPickerViewModel,
+    onBack: () -> Unit,
+    onEntityPicked: (ParentEntityData, FiberyEntityData?) -> Unit,
 ) {
-    val lazyItems = itemsFlow.collectAsLazyPagingItems()
-    val isCreateEnabled by entityCreateEnabled.collectAsState(false)
-    val toolbarState by toolbarViewState.collectAsState(null)
+    val lazyItems = viewModel.entityItems.collectAsLazyPagingItems()
+    val isCreateEnabled by viewModel.entityCreateEnabled.collectAsState(false)
+    val toolbarState by viewModel.toolbarViewState.collectAsState(null)
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(viewModel.error) {
+        viewModel.error.collectLatest { error ->
+            snackbarHostState.showSnackbar(message = error.message ?: "Unknown error")
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             toolbarState?.let { state ->
                 TopAppBar(
@@ -80,7 +87,7 @@ fun EntityPickerScreen(
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBackPressed) {
+                        IconButton(onClick = onBack) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back"
@@ -117,7 +124,7 @@ fun EntityPickerScreen(
                     if (item is EntityPickerItem) {
                         EntityPickerItemRow(
                             item = item,
-                            onClick = { onItemClick(item) }
+                            onClick = { onEntityPicked(viewModel.getParentEntityData(), item.entityData) }
                         )
                     }
                 }
@@ -126,7 +133,7 @@ fun EntityPickerScreen(
                     when (loadState.append) {
                         is LoadState.Error -> {
                             val error = (loadState.append as LoadState.Error).error
-                            onError(Exception(error.message, error))
+                            viewModel.onError(Exception(error.message, error))
                         }
                         is LoadState.Loading -> {
                             item {
@@ -146,7 +153,7 @@ fun EntityPickerScreen(
                     when (loadState.refresh) {
                         is LoadState.Error -> {
                             val error = (loadState.refresh as LoadState.Error).error
-                            onError(Exception(error.message, error))
+                            viewModel.onError(Exception(error.message, error))
                         }
                         else -> {}
                     }
@@ -154,7 +161,7 @@ fun EntityPickerScreen(
             }
 
             Button(
-                onClick = onCreateClick,
+                onClick = { viewModel.createEntity(onEntityPicked) },
                 enabled = isCreateEnabled,
                 modifier = Modifier
                     .fillMaxWidth()

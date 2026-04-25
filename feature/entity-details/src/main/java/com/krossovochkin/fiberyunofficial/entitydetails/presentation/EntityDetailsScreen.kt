@@ -16,76 +16,90 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
+import androidx.compose.material.icons.filled.Delete
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
+import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
-import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
+import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntityDetailsScreen(
     viewModel: EntityDetailsViewModel,
-    onBackPressed: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    onUrlFieldClicked: (FieldUrlItem) -> Unit,
-    onEmailFieldClicked: (FieldEmailItem) -> Unit,
-    onSingleSelectClicked: (FieldSingleSelectItem) -> Unit,
-    onMultiSelectClicked: (FieldMultiSelectItem) -> Unit,
-    onRelationFieldClicked: (FiberyFieldSchema, FiberyEntityData?) -> Unit,
-    onRelationOpenClicked: (FiberyEntityData) -> Unit,
-    onRelationDeleteClicked: (FiberyFieldSchema) -> Unit,
-    onCollectionFieldClicked: (FiberyEntityTypeSchema, FiberyFieldSchema) -> Unit,
+    onBack: () -> Unit,
+    onEntitySelected: (FiberyEntityData) -> Unit,
+    onEntityFieldEdit: (ParentEntityData, FiberyEntityData?) -> Unit,
+    onEntityTypeSelected: (FiberyEntityTypeSchema, ParentEntityData) -> Unit,
+    onSingleSelectFieldEdit:
+    (ParentEntityData, com.krossovochkin.fiberyunofficial.domain.FieldData.SingleSelectFieldData) -> Unit,
+    onMultiSelectFieldEdit:
+    (ParentEntityData, com.krossovochkin.fiberyunofficial.domain.FieldData.MultiSelectFieldData) -> Unit,
 ) {
     val items by viewModel.items.collectAsState(emptyList())
     val isLoading by viewModel.progress.collectAsState(false)
     val toolbarState = viewModel.toolbarViewState
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(viewModel.error) {
+        viewModel.error.collectLatest { error ->
+            snackbarHostState.showSnackbar(message = error.message ?: "Unknown error")
+        }
+    }
+
+    LaunchedEffect(viewModel.navigation) {
+        viewModel.navigation.collectLatest { event ->
+            when (event) {
+                is EntityDetailsViewModel.EntityDetailsNavigation.Back -> onBack()
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = context.resolveNativeText(toolbarState.title).toString(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        text = context.resolveNativeText(toolbarState.title).toString()
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -93,391 +107,133 @@ fun EntityDetailsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onDeleteClicked) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete"
-                        )
+                    toolbarState.actions.forEach { action ->
+                        when (action) {
+                            ToolbarAction.DELETE -> {
+                                IconButton(onClick = { viewModel.deleteEntity() }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                }
+                            }
+                            else -> Unit
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(
-                        toolbarState.bgColor.let {
-                            when (it) {
-                                is com.krossovochkin.core.presentation.resources.NativeColor.Hex -> it.colorHex
-                                else -> "#FFFFFF"
-                            }
-                        }.toColorInt()
-                    )
+                    containerColor = Color(context.resolveNativeColor(toolbarState.bgColor)),
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
-
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(16.dp)
+                    .fillMaxSize()
             ) {
-                itemsIndexed(
-                    items = items.filterIsInstance<FieldHeaderItem>() + items.filter { it !is FieldHeaderItem }
-                ) { index, item ->
+                items(
+                    count = items.size,
+                    key = { index -> index }
+                ) { index ->
+                    val item = items[index]
                     when (item) {
-                        is FieldHeaderItem -> {
-                            FieldHeaderRow(
-                                item = item,
-                            )
-                        }
-
-                        is FieldTextItem -> {
-                            FieldTextRow(
-                                item = item,
-                            )
-                        }
-
-                        is FieldUrlItem -> {
-                            FieldUrlRow(
-                                item = item,
-                                onClick = { onUrlFieldClicked(item) }
-                            )
-                        }
-
-                        is FieldEmailItem -> {
-                            FieldEmailRow(
-                                item = item,
-                                onClick = { onEmailFieldClicked(item) }
-                            )
-                        }
-
-                        is FieldSingleSelectItem -> {
-                            FieldSingleSelectRow(
-                                item = item,
-                                onClick = { onSingleSelectClicked(item) }
-                            )
-                        }
-
-                        is FieldMultiSelectItem -> {
-                            FieldMultiSelectRow(
-                                item = item,
-                                onClick = { onMultiSelectClicked(item) }
-                            )
-                        }
-
-                        is FieldRichTextItem -> {
-                            FieldRichTextRow(item = item)
-                        }
-
-                        is FieldRelationItem -> {
-                            FieldRelationRow(
-                                item = item,
-                                onFieldClicked = {
-                                    onRelationFieldClicked(
-                                        item.fieldSchema,
-                                        item.entityData
-                                    )
-                                },
-                                onOpenClicked = {
-                                    item.entityData?.let {
-                                        onRelationOpenClicked(it)
-                                    }
-                                },
-                                onDeleteClicked = { onRelationDeleteClicked(item.fieldSchema) }
-                            )
-                        }
-
-                        is FieldCollectionItem -> {
-                            FieldCollectionRow(
-                                item = item,
-                                onClick = {
-                                    onCollectionFieldClicked(
-                                        item.entityTypeSchema,
-                                        item.fieldSchema
+                        is FieldHeaderItem -> Text(
+                            text = item.title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        is FieldTextItem -> Text(
+                            text = "${item.title}: ${item.text}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        is FieldSingleSelectItem -> Text(
+                            text = "${item.title}: ${item.text}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onSingleSelectFieldEdit(
+                                        ParentEntityData(item.fieldSchema, viewModel.entityData),
+                                        item.singleSelectData
                                     )
                                 }
+                                .padding(16.dp)
+                        )
+                        is FieldMultiSelectItem -> Text(
+                            text = "${item.title}: ${item.text}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onMultiSelectFieldEdit(
+                                        ParentEntityData(item.fieldSchema, viewModel.entityData),
+                                        item.multiSelectData
+                                    )
+                                }
+                                .padding(16.dp)
+                        )
+                        is FieldRelationItem -> Text(
+                            text = "${item.title}: ${item.entityName}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    item.entityData?.let(onEntitySelected)
+                                        ?: onEntityFieldEdit(
+                                            ParentEntityData(item.fieldSchema, viewModel.entityData),
+                                            null
+                                        )
+                                }
+                                .padding(16.dp)
+                        )
+                        is FieldCollectionItem -> Text(
+                            text = "${item.title}: ${item.countText}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onEntityTypeSelected(
+                                        item.entityTypeSchema,
+                                        ParentEntityData(item.fieldSchema, viewModel.entityData)
+                                    )
+                                }
+                                .padding(16.dp)
+                        )
+                        is FieldCheckboxItem -> Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = item.title,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Checkbox(
+                                checked = item.value,
+                                onCheckedChange = null,
+                                enabled = false
                             )
                         }
-
-                        is FieldCheckboxItem -> {
-                            FieldCheckboxRow(item = item)
-                        }
-                    }
-
-                    if (index < items.size - 1) {
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     }
                 }
             }
-        }
 
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
-}
-
-@Composable
-fun FieldHeaderRow(
-    item: FieldHeaderItem,
-) {
-    Text(
-        text = item.title,
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    )
-}
-
-@Composable
-fun FieldTextRow(
-    item: FieldTextItem,
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldUrlRow(
-    item: FieldUrlItem,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = item.isOpenAvailable) { onClick() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.url,
-            style = MaterialTheme.typography.bodyLarge,
-            color = if (item.isOpenAvailable) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldEmailRow(
-    item: FieldEmailItem,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = item.isOpenAvailable) { onClick() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.email,
-            style = MaterialTheme.typography.bodyLarge,
-            color = if (item.isOpenAvailable) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldSingleSelectRow(
-    item: FieldSingleSelectItem,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldMultiSelectRow(
-    item: FieldMultiSelectItem,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldRichTextRow(
-    item: FieldRichTextItem,
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        androidx.compose.material3.Text(
-            text = item.value,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldRelationRow(
-    item: FieldRelationItem,
-    onFieldClicked: () -> Unit,
-    onOpenClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-) {
-    val context = androidx.compose.ui.platform.LocalContext.current
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onFieldClicked() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = item.entityName,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                if (item.isOpenAvailable) {
-                    IconButton(onClick = onOpenClicked, modifier = Modifier.size(32.dp)) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Open",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-                if (item.isDeleteAvailable) {
-                    IconButton(onClick = onDeleteClicked, modifier = Modifier.size(32.dp)) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
-    }
-}
-
-@Composable
-fun FieldCollectionRow(
-    item: FieldCollectionItem,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = item.countText,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
-    }
-}
-
-@Composable
-fun FieldCheckboxRow(
-    item: FieldCheckboxItem,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = item.title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
-        )
-        androidx.compose.material3.Checkbox(
-            checked = item.value,
-            onCheckedChange = null,
-            enabled = false
-        )
     }
 }

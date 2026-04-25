@@ -29,10 +29,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,20 +47,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
-import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.entitycreate.R
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntityCreateScreen(
-    toolbarViewState: ToolbarViewState,
-    onBackPressed: () -> Unit,
-    onCreateClick: (String) -> Unit,
+    viewModel: EntityCreateViewModel,
+    onBack: () -> Unit,
+    onEntityCreateSuccess: (com.krossovochkin.fiberyunofficial.domain.FiberyEntityData) -> Unit,
 ) {
     var entityName by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val toolbarViewState = viewModel.toolbarViewState
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(viewModel.error) {
+        viewModel.error.collectLatest { error ->
+            snackbarHostState.showSnackbar(message = error.message ?: "Unknown error")
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -66,7 +78,7 @@ fun EntityCreateScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -100,7 +112,7 @@ fun EntityCreateScreen(
             )
 
             Button(
-                onClick = { onCreateClick(entityName) },
+                onClick = { viewModel.createEntity(entityName) { onEntityCreateSuccess(it) } },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),

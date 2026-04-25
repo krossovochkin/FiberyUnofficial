@@ -2,6 +2,7 @@ package com.krossovochkin.core.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +16,8 @@ inline fun ViewModel.load(
         try {
             progress.value = true
             action()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error.send(e)
         } finally {

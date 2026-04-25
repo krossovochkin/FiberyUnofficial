@@ -17,9 +17,9 @@
 
 package com.krossovochkin.fiberyunofficial.pickersort.presentation
 
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 
 object AddSortItem : ListItem
 

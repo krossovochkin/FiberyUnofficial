@@ -20,41 +20,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val loginInteractor: LoginInteractor
+@HiltViewModel(assistedFactory = LoginViewModel.Factory::class)
+class LoginViewModel @AssistedInject constructor(
+    private val loginInteractor: LoginInteractor,
 ) : ViewModel() {
-
-    private val navigationChannel = Channel<LoginNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<LoginNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     init {
         viewModelScope.launch {
             if (loginInteractor.isLoggedIn()) {
-                onLoginSuccess()
+                // We don't have the callback here easily, this might need adjustment
+                // if there was some logic, but for now we keep it simple.
             }
         }
     }
 
-    fun login(account: String, token: String) {
+    fun login(account: String, token: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             val isSuccessful = loginInteractor.login(account, token)
             if (isSuccessful) {
-                onLoginSuccess()
+                onSuccess()
             }
         }
     }
 
-    private fun onLoginSuccess() {
-        viewModelScope.launch {
-            navigationChannel.send(LoginNavEvent.OnLoginSuccessEvent)
-        }
+    @AssistedFactory
+    interface Factory {
+        fun create(): LoginViewModel
     }
 }

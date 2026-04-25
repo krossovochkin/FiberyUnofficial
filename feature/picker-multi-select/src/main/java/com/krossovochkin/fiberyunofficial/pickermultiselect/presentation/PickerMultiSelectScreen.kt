@@ -22,8 +22,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 
 @Composable
@@ -45,14 +51,23 @@ fun PickerMultiSelectScreen(
         mutableStateOf(item.values.map { it.id in selectedItemsIds }.toList())
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(item.title) },
-        text = {
+    Surface(
+        shape = MaterialTheme.shapes.extraLarge,
+        tonalElevation = 6.dp,
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
+                    .weight(1f, fill = false)
             ) {
                 item.values.forEachIndexed { index, enumItem ->
                     Row(
@@ -74,25 +89,28 @@ fun PickerMultiSelectScreen(
                     }
                 }
             }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text(android.R.string.cancel.toString())
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val selectedItems = item.values.filterIndexed { index, _ ->
-                        checkedStates.value[index]
-                    }
-                    val addedItems = selectedItems.filter { value -> value !in item.selectedValues }
-                    val removedItems = item.selectedValues.filter { value -> value !in selectedItems }
-                    onConfirm(addedItems, removedItems)
-                }
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
-                Text(android.R.string.ok.toString())
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                TextButton(
+                    onClick = {
+                        val selectedItems = item.values.filterIndexed { index, _ ->
+                            checkedStates.value[index]
+                        }
+                        val addedItems = selectedItems.filter { value -> value !in item.selectedValues }
+                        val removedItems = item.selectedValues.filter { value -> value !in selectedItems }
+                        onConfirm(addedItems, removedItems)
+                    }
+                ) {
+                    Text(stringResource(android.R.string.ok))
+                }
             }
         }
-    )
+    }
 }

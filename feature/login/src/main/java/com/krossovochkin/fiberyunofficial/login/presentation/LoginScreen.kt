@@ -42,7 +42,8 @@ import com.krossovochkin.fiberyunofficial.login.R
 
 @Composable
 fun LoginScreen(
-    onLogin: (account: String, token: String) -> Unit,
+    viewModel: LoginViewModel,
+    onLoginSuccess: () -> Unit,
 ) {
     var account by remember { mutableStateOf("") }
     var token by remember { mutableStateOf("") }
@@ -84,14 +85,14 @@ fun LoginScreen(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         if (account.isNotEmpty() && token.isNotEmpty()) {
-                            onLogin(account, token)
+                            viewModel.login(account, token, onLoginSuccess)
                         }
                     }
                 )
             )
 
             Button(
-                onClick = { onLogin(account, token) },
+                onClick = { viewModel.login(account, token, onLoginSuccess) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
