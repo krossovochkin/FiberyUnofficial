@@ -48,153 +48,179 @@ class FiberyEntryProvider(
     private val navigationViewModel: NavigationViewModel
 ) {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider<NavKey> {
-        entry<LoginNavKey> {
-            LoginScreen(
-                viewModel = hiltViewModel<LoginViewModel, LoginViewModel.Factory> {
-                        factory ->
-                    factory.create()
-                },
-                onLoginSuccess = { navigationViewModel.onLoginSuccess() }
-            )
+        entry<LoginNavKey> { key ->
+            NavEntry(key) {
+                LoginScreen(
+                    viewModel = hiltViewModel<LoginViewModel, LoginViewModel.Factory> {
+                            factory ->
+                        factory.create()
+                    },
+                    onLoginSuccess = { navigationViewModel.onLoginSuccess() }
+                )
+            }
         }
-        entry<AppListNavKey> {
-            AppListScreen(
-                viewModel = hiltViewModel<AppListViewModel, AppListViewModel.Factory> {
-                        factory ->
-                    factory.create()
-                },
-                onAppSelected = { navigationViewModel.onAppSelected(it) }
-            )
+        entry<AppListNavKey> { key ->
+            NavEntry(key) {
+                AppListScreen(
+                    viewModel = hiltViewModel<AppListViewModel, AppListViewModel.Factory> {
+                            factory ->
+                        factory.create()
+                    },
+                    onAppSelected = { navigationViewModel.onAppSelected(it) }
+                )
+            }
         }
         entry<EntityTypeListNavKey> { key ->
-            EntityTypeListScreen(
-                viewModel = hiltViewModel<EntityTypeListViewModel, EntityTypeListViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onEntityTypeSelected = { navigationViewModel.onEntityTypeSelected(it) }
-            )
+            NavEntry(key) {
+                EntityTypeListScreen(
+                    viewModel = hiltViewModel<EntityTypeListViewModel, EntityTypeListViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onEntityTypeSelected = { navigationViewModel.onEntityTypeSelected(it) }
+                )
+            }
         }
         entry<EntityListNavKey> { key ->
-            EntityListScreen(
-                viewModel = hiltViewModel<EntityListViewModel, EntityListViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onEntitySelected = { navigationViewModel.onEntitySelected(it) },
-                onFilterEdit = { type, filter -> navigationViewModel.onFilterEdit(type, filter) },
-                onSortEdit = { type, sort -> navigationViewModel.onSortEdit(type, sort) },
-                onCreateEntity = { type, parent -> navigationViewModel.onAddEntityRequested(type, parent) }
-            )
+            NavEntry(key) {
+                EntityListScreen(
+                    viewModel = hiltViewModel<EntityListViewModel, EntityListViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onEntitySelected = { navigationViewModel.onEntitySelected(it) },
+                    onFilterEdit = { type, filter -> navigationViewModel.onFilterEdit(type, filter) },
+                    onSortEdit = { type, sort -> navigationViewModel.onSortEdit(type, sort) },
+                    onCreateEntity = { type, parent -> navigationViewModel.onAddEntityRequested(type, parent) }
+                )
+            }
         }
         entry<EntityDetailsNavKey> { key ->
-            EntityDetailsScreen(
-                viewModel = hiltViewModel<EntityDetailsViewModel, EntityDetailsViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onEntitySelected = { navigationViewModel.onEntitySelected(it) },
-                onEntityFieldEdit = { parent, entity -> navigationViewModel.onEntityFieldEdit(parent, entity) },
-                onEntityTypeSelected = { type, parent -> navigationViewModel.onEntityTypeSelected(type, parent) },
-                onSingleSelectFieldEdit = { parent, item -> navigationViewModel.onSingleSelectFieldEdit(parent, item) },
-                onMultiSelectFieldEdit = { parent, item -> navigationViewModel.onMultiSelectFieldEdit(parent, item) }
-            )
+            NavEntry(key) {
+                EntityDetailsScreen(
+                    viewModel = hiltViewModel<EntityDetailsViewModel, EntityDetailsViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onEntitySelected = { navigationViewModel.onEntitySelected(it) },
+                    onEntityFieldEdit = { parent, entity -> navigationViewModel.onEntityFieldEdit(parent, entity) },
+                    onEntityTypeSelected = { type, parent -> navigationViewModel.onEntityTypeSelected(type, parent) },
+                    onSingleSelectFieldEdit = { parent, item -> navigationViewModel.onSingleSelectFieldEdit(parent, item) },
+                    onMultiSelectFieldEdit = { parent, item -> navigationViewModel.onMultiSelectFieldEdit(parent, item) }
+                )
+            }
         }
         entry<EntityCreateNavKey> { key ->
-            EntityCreateScreen(
-                viewModel = hiltViewModel<EntityCreateViewModel, EntityCreateViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onEntityCreateSuccess = { navigationViewModel.onEntityCreateSuccess() }
-            )
+            NavEntry(key) {
+                EntityCreateScreen(
+                    viewModel = hiltViewModel<EntityCreateViewModel, EntityCreateViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onEntityCreateSuccess = { navigationViewModel.onEntityCreateSuccess() }
+                )
+            }
         }
         entry<FileListNavKey> { key ->
-            FileListScreen(
-                viewModel = hiltViewModel<FileListViewModel, FileListViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() }
-            )
+            NavEntry(key) {
+                FileListScreen(
+                    viewModel = hiltViewModel<FileListViewModel, FileListViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() }
+                )
+            }
         }
         entry<CommentListNavKey> { key ->
-            CommentListScreen(
-                viewModel = hiltViewModel<CommentListViewModel, CommentListViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                markwon = null,
-                onBack = { navigationViewModel.pop() }
-            )
+            NavEntry(key) {
+                CommentListScreen(
+                    viewModel = hiltViewModel<CommentListViewModel, CommentListViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    markwon = null,
+                    onBack = { navigationViewModel.pop() }
+                )
+            }
         }
         entry<PickerFilterNavKey>(
             metadata = DialogSceneStrategy.dialog()
         ) { key ->
-            PickerFilterScreen(
-                viewModel = hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onFilterApply = { type, filter -> navigationViewModel.onFilterSelected(type, filter) }
-            )
+            NavEntry(key) {
+                PickerFilterScreen(
+                    viewModel = hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onFilterApply = { type, filter -> navigationViewModel.onFilterSelected(type, filter) }
+                )
+            }
         }
         entry<PickerSortNavKey>(
             metadata = DialogSceneStrategy.dialog()
         ) { key ->
-            PickerSortScreen(
-                viewModel = hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onSortApply = { type, sort -> navigationViewModel.onSortSelected(type, sort) }
-            )
+            NavEntry(key) {
+                PickerSortScreen(
+                    viewModel = hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onSortApply = { type, sort -> navigationViewModel.onSortSelected(type, sort) }
+                )
+            }
         }
         entry<EntityPickerNavKey>(
             metadata = DialogSceneStrategy.dialog()
         ) { key ->
-            EntityPickerScreen(
-                viewModel = hiltViewModel<EntityPickerViewModel, EntityPickerViewModel.Factory> {
-                        factory ->
-                    factory.create(key)
-                },
-                onBack = { navigationViewModel.pop() },
-                onEntityPicked = { parentEntityData, entity ->
-                    navigationViewModel.onEntityPicked(parentEntityData, entity)
-                }
-            )
+            NavEntry(key) {
+                EntityPickerScreen(
+                    viewModel = hiltViewModel<EntityPickerViewModel, EntityPickerViewModel.Factory> {
+                            factory ->
+                        factory.create(key)
+                    },
+                    onBack = { navigationViewModel.pop() },
+                    onEntityPicked = { parentEntityData, entity ->
+                        navigationViewModel.onEntityPicked(parentEntityData, entity)
+                    }
+                )
+            }
         }
         entry<PickerSingleSelectNavKey>(
             metadata = DialogSceneStrategy.dialog()
         ) { key ->
-            PickerSingleSelectScreen(
-                item = key.item,
-                onConfirm = { selectedValue ->
-                    navigationViewModel.onSingleSelectPicked(key.parentEntityData, selectedValue)
-                },
-                onDismiss = { navigationViewModel.pop() }
-            )
+            NavEntry(key) {
+                PickerSingleSelectScreen(
+                    item = key.item,
+                    onConfirm = { selectedValue ->
+                        navigationViewModel.onSingleSelectPicked(key.parentEntityData, selectedValue)
+                    },
+                    onDismiss = { navigationViewModel.pop() }
+                )
+            }
         }
         entry<PickerMultiSelectNavKey>(
             metadata = DialogSceneStrategy.dialog()
         ) { key ->
-            PickerMultiSelectScreen(
-                item = key.item,
-                onConfirm = { addedItems, removedItems ->
-                    navigationViewModel.onMultiSelectPicked(
-                        key.parentEntityData,
-                        addedItems,
-                        removedItems
-                    )
-                },
-                onDismiss = { navigationViewModel.pop() }
-            )
+            NavEntry(key) {
+                PickerMultiSelectScreen(
+                    item = key.item,
+                    onConfirm = { addedItems, removedItems ->
+                        navigationViewModel.onMultiSelectPicked(
+                            key.parentEntityData,
+                            addedItems,
+                            removedItems
+                        )
+                    },
+                    onDismiss = { navigationViewModel.pop() }
+                )
+            }
         }
     }
 }
