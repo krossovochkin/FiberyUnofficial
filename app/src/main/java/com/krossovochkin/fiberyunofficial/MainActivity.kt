@@ -29,7 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.DialogSceneStrategy
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.krossovochkin.fiberyunofficial.navigation.NavigationViewModel
 import com.krossovochkin.fiberyunofficial.ui.FiberyEntryProvider
