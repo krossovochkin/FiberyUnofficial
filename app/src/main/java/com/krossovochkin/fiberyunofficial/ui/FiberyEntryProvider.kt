@@ -4,7 +4,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.ui.DialogSceneStrategy
+import androidx.navigation3.scene.DialogSceneStrategy
 import com.krossovochkin.commentlist.presentation.CommentListScreen
 import com.krossovochkin.commentlist.presentation.CommentListViewModel
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListScreen
