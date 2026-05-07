@@ -34,7 +34,7 @@ extensions.configure<LibraryExtension> {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
 
             val proguard = file("proguard-rules.pro")
             if (proguard.exists()) {
