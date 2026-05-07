@@ -19,7 +19,7 @@ fun Project.configureLint() {
 
 private fun Lint.configure() {
     abortOnError = true
-    htmlReport = true
+    htmlReport = false
     warningsAsErrors = true
     xmlReport = false
     disable += listOf(
