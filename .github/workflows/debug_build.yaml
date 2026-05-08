@@ -1,0 +1,26 @@
+name: Debug Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Setup Gradle
+        run: chmod +x gradlew
+      - name: Build Debug APK
+        run: ./gradlew aDebug
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: ./app/build/outputs/apk/debug/app-debug.apk
