@@ -16,8 +16,8 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 
 data class AppListItem(
     val appData: FiberyAppData,

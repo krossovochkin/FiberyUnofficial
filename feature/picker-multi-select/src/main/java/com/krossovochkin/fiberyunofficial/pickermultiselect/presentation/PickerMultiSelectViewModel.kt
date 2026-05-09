@@ -16,24 +16,28 @@
  */
 package com.krossovochkin.fiberyunofficial.pickermultiselect.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.navigation.PickerMultiSelectNavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class PickerMultiSelectViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = PickerMultiSelectViewModel.Factory::class)
+class PickerMultiSelectViewModel @AssistedInject constructor(
+    @Assisted private val args: PickerMultiSelectNavKey,
 ) : ViewModel() {
-
-    private val args: PickerMultiSelectDialogFragmentArgs
-        get() = PickerMultiSelectDialogFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val item: FieldData.MultiSelectFieldData
         get() = args.item
 
     val fieldSchema: FiberyFieldSchema
         get() = args.parentEntityData.fieldSchema
+
+    @AssistedFactory
+    interface Factory {
+        fun create(args: PickerMultiSelectNavKey): PickerMultiSelectViewModel
+    }
 }

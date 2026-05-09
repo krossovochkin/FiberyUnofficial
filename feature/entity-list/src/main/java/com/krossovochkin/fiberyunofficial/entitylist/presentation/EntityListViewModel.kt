@@ -1,14 +1,14 @@
 /*
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the \"License\");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an \"AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -17,20 +17,21 @@
 
 package com.krossovochkin.fiberyunofficial.entitylist.presentation
 
-import android.view.View
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import androidx.paging.PagingData
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.core.presentation.result.ResultBus
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
+import com.krossovochkin.fiberyunofficial.domain.PickerFilterResultData
+import com.krossovochkin.fiberyunofficial.domain.PickerSortResultData
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
@@ -39,16 +40,21 @@ import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInt
 import com.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
+import com.krossovochkin.fiberyunofficial.navigation.EntityListNavKey
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import com.krossovochkin.fiberyunofficial.ui.paging.PaginatedListViewModelDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class EntityListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = EntityListViewModel.Factory::class)
+class EntityListViewModel @AssistedInject constructor(
     getEntityListInteractor: GetEntityListInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
@@ -56,19 +62,14 @@ class EntityListViewModel @Inject constructor(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val savedStateHandle: SavedStateHandle,
+    private val resultBus: ResultBus,
+    @Assisted private val entityListArgs: EntityListNavKey,
 ) : ViewModel() {
-
-    private val entityListArgs: EntityListFragmentArgs
-        get() = EntityListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
-    private val navigationChannel = Channel<EntityListNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<EntityListNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -101,26 +102,36 @@ class EntityListViewModel @Inject constructor(
             ),
             bgColor = NativeColor.Hex(entityListArgs.entityType.meta.uiColorHex),
             hasBackButton = true,
-            menuResId = if (entityListArgs.parentEntityData == null) {
-                R.menu.entity_list_menu
+            actions = if (entityListArgs.parentEntityData == null) {
+                listOf(ToolbarAction.FILTER, ToolbarAction.SORT)
             } else {
-                null
+                emptyList()
             }
         )
+
+    init {
+        viewModelScope.launch {
+            resultBus.results.collect { result ->
+                when (result) {
+                    is PickerFilterResultData -> {
+                        if (result.entityType == entityListArgs.entityType) {
+                            onFilterSelected(result.filter)
+                        }
+                    }
+                    is PickerSortResultData -> {
+                        if (result.entityType == entityListArgs.entityType) {
+                            onSortSelected(result.sort)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun getCreateFabViewState() =
         FabViewState(
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
-
-    fun select(item: ListItem, itemView: View) {
-        require(item is EntityListItem)
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityListNavEvent.OnEntitySelectedEvent(item.entityData, itemView)
-            )
-        }
-    }
 
     fun removeRelation(item: EntityListItem) {
         val parentEntityData = entityListArgs.parentEntityData
@@ -133,15 +144,11 @@ class EntityListViewModel @Inject constructor(
                     childEntity = item.entityData
                 )
                 paginatedListDelegate.invalidate()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorChannel.send(e)
             }
-        }
-    }
-
-    fun onBackPressed() {
-        viewModelScope.launch {
-            navigationChannel.send(EntityListNavEvent.BackEvent)
         }
     }
 
@@ -156,42 +163,6 @@ class EntityListViewModel @Inject constructor(
         viewModelScope.launch {
             setEntityListSortInteractor.execute(entityListArgs.entityType, sort)
             paginatedListDelegate.invalidate()
-        }
-    }
-
-    fun onFilterClicked(view: View) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityListNavEvent.OnFilterSelectedEvent(
-                    entityTypeSchema = entityListArgs.entityType,
-                    filter = getEntityListFilterInteractor.execute(entityListArgs.entityType),
-                    view = view
-                )
-            )
-        }
-    }
-
-    fun onSortClicked(view: View) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityListNavEvent.OnSortSelectedEvent(
-                    entityTypeSchema = entityListArgs.entityType,
-                    sort = getEntityListSortInteractor.execute(entityListArgs.entityType),
-                    view = view
-                )
-            )
-        }
-    }
-
-    fun onCreateEntityClicked(view: View) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityListNavEvent.OnCreateEntityEvent(
-                    entityListArgs.entityType,
-                    entityListArgs.parentEntityData,
-                    view
-                )
-            )
         }
     }
 
@@ -210,6 +181,8 @@ class EntityListViewModel @Inject constructor(
                         childEntity = createdEntity
                     )
                 paginatedListDelegate.invalidate()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 errorChannel.send(e)
             }
@@ -217,8 +190,23 @@ class EntityListViewModel @Inject constructor(
     }
 
     fun onError(error: Exception) {
+        if (error is CancellationException) {
+            return
+        }
         viewModelScope.launch {
             this@EntityListViewModel.errorChannel.send(error)
         }
+    }
+
+    fun getFilter() = getEntityListFilterInteractor.execute(entityListArgs.entityType)
+    fun getSort() = getEntityListSortInteractor.execute(entityListArgs.entityType)
+    fun getEntityType() = entityListArgs.entityType
+    fun getParentEntityData() = entityListArgs.parentEntityData
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: EntityListNavKey,
+        ): EntityListViewModel
     }
 }

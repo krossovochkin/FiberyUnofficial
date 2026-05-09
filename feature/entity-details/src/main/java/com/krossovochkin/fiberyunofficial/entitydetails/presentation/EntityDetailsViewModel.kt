@@ -1,14 +1,14 @@
 /*
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the \"License\");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an \"AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -16,52 +16,74 @@
  */
 package com.krossovochkin.fiberyunofficial.entitydetails.presentation
 
-import android.view.View
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.list.ListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
+import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.core.presentation.viewmodel.load
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityDetailsData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
-import com.krossovochkin.fiberyunofficial.entitydetails.R
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.navigation.EntityDetailsNavKey
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import com.krossovochkin.fiberyunofficial.ui.list.ListViewModelDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import java.text.DecimalFormat
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class EntityDetailsViewModel @Inject constructor(
+import androidx.lifecycle.viewModelScope
+import com.krossovochkin.core.presentation.result.ResultBus
+import com.krossovochkin.fiberyunofficial.domain.MultiSelectPickedData
+import com.krossovochkin.fiberyunofficial.domain.PickerEntityResultData
+import com.krossovochkin.fiberyunofficial.domain.PickerSingleSelectResultData
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+
+@HiltViewModel(assistedFactory = EntityDetailsViewModel.Factory::class)
+class EntityDetailsViewModel @AssistedInject constructor(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
-    private val savedStateHandle: SavedStateHandle,
+    private val resultBus: ResultBus,
+    @Assisted private val entityDetailsArgs: EntityDetailsNavKey,
 ) : ViewModel() {
 
-    private val entityDetailsArgs: EntityDetailsFragmentArgs
-        get() = EntityDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
+    init {
+        viewModelScope.launch {
+            resultBus.results.collect { result ->
+                when (result) {
+                    is PickerSingleSelectResultData -> {
+                        updateSingleSelectField(result.fieldSchema, result.selectedValue)
+                    }
+                    is MultiSelectPickedData -> {
+                        updateMultiSelectField(result)
+                    }
+                    is PickerEntityResultData -> {
+                        updateEntityField(result.fieldSchema, result.entity)
+                    }
+                }
+            }
+        }
+    }
 
     val entityData: FiberyEntityData
         get() = entityDetailsArgs.entity
@@ -70,8 +92,9 @@ class EntityDetailsViewModel @Inject constructor(
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
-    private val navigationChannel = Channel<EntityDetailsNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<EntityDetailsNavEvent>
+
+    private val navigationChannel = Channel<EntityDetailsNavigation>(Channel.BUFFERED)
+    val navigation: Flow<EntityDetailsNavigation>
         get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
@@ -91,8 +114,8 @@ class EntityDetailsViewModel @Inject constructor(
                 "${entityDetailsArgs.entity.schema.displayName} #${entityDetailsArgs.entity.publicId}"
             ),
             bgColor = NativeColor.Hex(entityDetailsArgs.entity.schema.meta.uiColorHex),
-            menuResId = R.menu.entity_details_menu,
-            hasBackButton = true
+            hasBackButton = true,
+            actions = listOf(ToolbarAction.DELETE)
         )
 
     private fun mapItems(entityData: FiberyEntityDetailsData): List<ListItem> {
@@ -323,20 +346,6 @@ class EntityDetailsViewModel @Inject constructor(
         )
     }
 
-    fun selectSingleSelectField(item: FieldSingleSelectItem) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OnSingleSelectSelectedEvent(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = item.fieldSchema,
-                        parentEntity = entityDetailsArgs.entity
-                    ),
-                    singleSelectItem = item.singleSelectData
-                )
-            )
-        }
-    }
-
     fun updateSingleSelectField(
         fieldSchema: FiberyFieldSchema,
         selectedValue: FieldData.EnumItemData?
@@ -359,20 +368,6 @@ class EntityDetailsViewModel @Inject constructor(
         }
     }
 
-    fun selectMultiSelectField(item: FieldMultiSelectItem) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OnMultiSelectSelectedEvent(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = item.fieldSchema,
-                        parentEntity = entityDetailsArgs.entity
-                    ),
-                    multiSelectItem = item.multiSelectData
-                )
-            )
-        }
-    }
-
     fun updateMultiSelectField(data: MultiSelectPickedData) {
         load(
             progress = progress,
@@ -387,33 +382,6 @@ class EntityDetailsViewModel @Inject constructor(
                 removedItems = data.removedItems
             )
             listDelegate.invalidate()
-        }
-    }
-
-    fun selectEntityField(
-        fieldSchema: FiberyFieldSchema,
-        entityData: FiberyEntityData?,
-        itemView: View
-    ) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OnEntityFieldEditEvent(
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entity
-                    ),
-                    currentEntity = entityData,
-                    itemView = itemView
-                )
-            )
-        }
-    }
-
-    fun openEntity(entityData: FiberyEntityData, itemView: View) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OnEntitySelectedEvent(entityData, itemView)
-            )
         }
     }
 
@@ -433,124 +401,24 @@ class EntityDetailsViewModel @Inject constructor(
         }
     }
 
-    fun selectCollectionField(
-        entityTypeSchema: FiberyEntityTypeSchema,
-        fieldSchema: FiberyFieldSchema,
-        itemView: View
-    ) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OnEntityTypeSelectedEvent(
-                    entityTypeSchema = entityTypeSchema,
-                    parentEntityData = ParentEntityData(
-                        fieldSchema = fieldSchema,
-                        parentEntity = entityDetailsArgs.entity
-                    ),
-                    itemView = itemView
-                )
-            )
-        }
-    }
-
-    fun onBackPressed() {
-        viewModelScope.launch {
-            navigationChannel.send(EntityDetailsNavEvent.BackEvent)
-        }
-    }
-
-    fun selectUrl(item: FieldUrlItem) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.OpenUrlEvent(url = item.url)
-            )
-        }
-    }
-
-    fun selectEmail(item: FieldEmailItem) {
-        viewModelScope.launch {
-            navigationChannel.send(
-                EntityDetailsNavEvent.SendEmailEvent(email = item.email)
-            )
-        }
-    }
-
     fun deleteEntity() {
         load(
             progress = progress,
             error = errorChannel
         ) {
             deleteEntityInteractor.execute(entityDetailsArgs.entity)
-            onBackPressed()
+            navigationChannel.send(EntityDetailsNavigation.Back)
         }
     }
+
+    sealed class EntityDetailsNavigation {
+        data object Back : EntityDetailsNavigation()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: EntityDetailsNavKey,
+        ): EntityDetailsViewModel
+    }
 }
-
-data class FieldHeaderItem(
-    val title: String
-) : ListItem
-
-data class FieldTextItem(
-    val title: String,
-    val text: String
-) : ListItem
-
-data class FieldUrlItem(
-    val title: String,
-    val url: String
-) : ListItem {
-
-    val isOpenAvailable: Boolean = url.isNotEmpty()
-}
-
-data class FieldEmailItem(
-    val title: String,
-    val email: String
-) : ListItem {
-
-    val isOpenAvailable: Boolean = email.isNotEmpty()
-}
-
-data class FieldSingleSelectItem(
-    val title: String,
-    val text: String,
-    val values: List<FieldData.EnumItemData>,
-    val fieldSchema: FiberyFieldSchema,
-    val singleSelectData: FieldData.SingleSelectFieldData
-) : ListItem
-
-data class FieldMultiSelectItem(
-    val title: String,
-    val text: String,
-    val values: List<FieldData.EnumItemData>,
-    val fieldSchema: FiberyFieldSchema,
-    val multiSelectData: FieldData.MultiSelectFieldData
-) : ListItem
-
-data class FieldRichTextItem(
-    val title: String,
-    val value: String
-) : ListItem
-
-data class FieldRelationItem(
-    val title: String,
-    val entityName: String,
-    val entityData: FiberyEntityData?,
-    val fieldSchema: FiberyFieldSchema
-) : ListItem {
-
-    val isDeleteAvailable: Boolean = entityData != null
-
-    val isOpenAvailable: Boolean = entityData != null
-}
-
-data class FieldCollectionItem(
-    val title: String,
-    val countText: String,
-    val entityTypeSchema: FiberyEntityTypeSchema,
-    val fieldSchema: FiberyFieldSchema
-) : ListItem
-
-data class FieldCheckboxItem(
-    val title: String,
-    val value: Boolean
-) : ListItem

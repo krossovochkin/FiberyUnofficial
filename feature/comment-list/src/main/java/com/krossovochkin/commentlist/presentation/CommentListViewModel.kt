@@ -14,20 +14,20 @@
    limitations under the License.
 
  */
-
 package com.krossovochkin.commentlist.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.krossovochkin.commentlist.domain.GetCommentListInteractor
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.navigation.CommentListNavKey
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import com.krossovochkin.fiberyunofficial.ui.paging.PaginatedListViewModelDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -35,16 +35,15 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class CommentListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CommentListViewModel.Factory::class)
+class CommentListViewModel @AssistedInject constructor(
     getCommentListInteractor: GetCommentListInteractor,
-    private val savedStateHandle: SavedStateHandle,
+    @Assisted private val commentListArgs: CommentListNavKey,
 ) : ViewModel() {
-
-    private val commentListArgs: CommentListFragmentArgs
-        get() = CommentListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -95,8 +94,18 @@ class CommentListViewModel @Inject constructor(
     }
 
     fun onError(error: Exception) {
+        if (error is CancellationException) {
+            return
+        }
         viewModelScope.launch {
             this@CommentListViewModel.errorChannel.send(error)
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: CommentListNavKey,
+        ): CommentListViewModel
     }
 }

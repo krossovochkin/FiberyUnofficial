@@ -16,26 +16,24 @@
  */
 package com.krossovochkin.fiberyunofficial.applist.presentation
 
-import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.list.ListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.applist.R
 import com.krossovochkin.fiberyunofficial.applist.domain.GetAppListInteractor
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import com.krossovochkin.fiberyunofficial.ui.list.ListViewModelDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class AppListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = AppListViewModel.Factory::class)
+class AppListViewModel @AssistedInject constructor(
     private val getAppListInteractor: GetAppListInteractor,
 ) : ViewModel() {
 
@@ -43,9 +41,6 @@ class AppListViewModel @Inject constructor(
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error
         get() = errorChannel.receiveAsFlow()
-    private val navigationChannel = Channel<AppListNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<AppListNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     private val listDelegate = ListViewModelDelegate(
         viewModel = this,
@@ -63,16 +58,14 @@ class AppListViewModel @Inject constructor(
     )
     val appItems: Flow<List<ListItem>> = listDelegate.items
 
-    fun select(item: ListItem, itemView: View) {
-        require(item is AppListItem)
-        viewModelScope.launch {
-            navigationChannel.send(AppListNavEvent.OnAppSelectedEvent(item.appData, itemView))
-        }
-    }
-
     fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.app_list_title),
             bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
         )
+
+    @AssistedFactory
+    interface Factory {
+        fun create(): AppListViewModel
+    }
 }

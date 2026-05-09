@@ -16,17 +16,18 @@
  */
 package com.krossovochkin.core.presentation.ui.toolbar
 
-import androidx.annotation.IdRes
-import androidx.annotation.MenuRes
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
+
+enum class ToolbarAction {
+    FILTER,
+    SORT,
+    DELETE
+}
 
 data class ToolbarViewState(
     val title: NativeText,
     val bgColor: NativeColor,
-    @MenuRes
-    val menuResId: Int? = null,
-    @IdRes
-    val searchActionItemId: Int? = null,
-    val hasBackButton: Boolean = false
+    val hasBackButton: Boolean = false,
+    val actions: List<ToolbarAction> = emptyList()
 )

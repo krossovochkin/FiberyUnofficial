@@ -14,48 +14,40 @@
    limitations under the License.
 
  */
-
 package com.krossovochkin.fiberyunofficial.pickerfilter.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.list.ListItem
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
+import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.navigation.PickerFilterNavKey
 import com.krossovochkin.fiberyunofficial.pickerfilter.R
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.EmptyFilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterCondition
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterItemData
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.FilterMergeType
 import com.krossovochkin.fiberyunofficial.pickerfilter.domain.SingleSelectFilterItemData
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class PickerFilterViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = PickerFilterViewModel.Factory::class)
+class PickerFilterViewModel @AssistedInject constructor(
     private val fiberyApiRepository: FiberyApiRepository,
-    private val savedStateHandle: SavedStateHandle,
+    @Assisted private val pickerFilterArgs: PickerFilterNavKey,
 ) : ViewModel() {
 
-    private val pickerFilterArgs: PickerFilterFragmentArgs
-        get() = PickerFilterFragmentArgs.fromSavedStateHandle(savedStateHandle)
-
     val items = MutableStateFlow<List<ListItem>>(emptyList())
-
-    private val navigationChannel = Channel<PickerFilterNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<PickerFilterNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     private var mergeType: FilterMergeType = FilterMergeType.ALL
     private val data: MutableList<FilterItemData> = mutableListOf()
@@ -77,25 +69,24 @@ class PickerFilterViewModel @Inject constructor(
                         !it.meta.isCollection
                 }
 
-            pickerFilterArgs.filter
-                .let { filter ->
-                    mergeType = FilterMergeType.fromMergeType(filter.mergeType)
-                    data.clear()
-                    data.addAll(
-                        filter.items.mapNotNull { item ->
-                            if (item is FiberyEntityFilterData.Item.SingleSelectItem) {
-                                SingleSelectFilterItemData(
-                                    field = item.field,
-                                    condition = FilterCondition.fromCondition(item.condition),
-                                    items = fiberyApiRepository.getEnumValues(item.field.type),
-                                    selectedItem = item.param
-                                )
-                            } else {
-                                null
-                            }
+            pickerFilterArgs.filter?.let { filter ->
+                mergeType = FilterMergeType.fromMergeType(filter.mergeType)
+                data.clear()
+                data.addAll(
+                    filter.items.mapNotNull { item ->
+                        if (item is FiberyEntityFilterData.Item.SingleSelectItem) {
+                            SingleSelectFilterItemData(
+                                field = item.field,
+                                condition = FilterCondition.fromCondition(item.condition),
+                                items = fiberyApiRepository.getEnumValues(item.field.type),
+                                selectedItem = item.param
+                            )
+                        } else {
+                            null
                         }
-                    )
-                }
+                    }
+                )
+            }
 
             if (data.isEmpty()) {
                 data.add(EmptyFilterItemData)
@@ -162,7 +153,7 @@ class PickerFilterViewModel @Inject constructor(
         update()
     }
 
-    fun applyFilter() {
+    fun applyFilter(onFilterApply: (FiberyEntityTypeSchema, FiberyEntityFilterData) -> Unit) {
         val filter = FiberyEntityFilterData(
             mergeType = mergeType.value,
             items = data.mapNotNull { item ->
@@ -179,20 +170,7 @@ class PickerFilterViewModel @Inject constructor(
                 }
             }
         )
-
-        viewModelScope.launch {
-            navigationChannel.send(
-                PickerFilterNavEvent.ApplyFilterEvent(filter = filter)
-            )
-        }
-    }
-
-    fun onBackPressed() {
-        viewModelScope.launch {
-            navigationChannel.send(
-                PickerFilterNavEvent.BackEvent
-            )
-        }
+        onFilterApply(pickerFilterArgs.entityTypeSchema, filter)
     }
 
     private fun update() {
@@ -226,5 +204,12 @@ class PickerFilterViewModel @Inject constructor(
                 TODO("implement")
             }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: PickerFilterNavKey,
+        ): PickerFilterViewModel
     }
 }

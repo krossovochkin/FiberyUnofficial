@@ -14,37 +14,36 @@
    limitations under the License.
 
  */
-
 package com.krossovochkin.filelist.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.krossovochkin.core.presentation.list.ListItem
-import com.krossovochkin.core.presentation.paging.PaginatedListViewModelDelegate
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.fiberyunofficial.domain.FiberyFileData
 import com.krossovochkin.filelist.domain.DownloadFileInteractor
 import com.krossovochkin.filelist.domain.GetFileListInteractor
+import com.krossovochkin.fiberyunofficial.navigation.FileListNavKey
+import com.krossovochkin.fiberyunofficial.ui.list.ListItem
+import com.krossovochkin.fiberyunofficial.ui.paging.PaginatedListViewModelDelegate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class FileListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = FileListViewModel.Factory::class)
+class FileListViewModel @AssistedInject constructor(
     getFileListInteractor: GetFileListInteractor,
     private val downloadFileInteractor: DownloadFileInteractor,
-    private val savedStateHandle: SavedStateHandle,
+    @Assisted private val fileListArgs: FileListNavKey,
 ) : ViewModel() {
-
-    private val fileListArgs: FileListFragmentArgs
-        get() = FileListFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val paginatedListDelegate = PaginatedListViewModelDelegate(
         viewModel = this,
@@ -95,8 +94,18 @@ class FileListViewModel @Inject constructor(
     }
 
     fun onError(error: Exception) {
+        if (error is CancellationException) {
+            return
+        }
         viewModelScope.launch {
             this@FileListViewModel.errorChannel.send(error)
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            args: FileListNavKey,
+        ): FileListViewModel
     }
 }

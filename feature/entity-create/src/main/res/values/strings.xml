@@ -2,5 +2,4 @@
     <string name="entity_create_create_action">Create</string>
     <string name="entity_create_title_hint">Title</string>
     <string name="entity_create_toolbar_title">Create %1$s</string>
-    <string name="entity_create_root_transition_name" translatable="false">entity_create_root_transition_name</string>
 </resources>

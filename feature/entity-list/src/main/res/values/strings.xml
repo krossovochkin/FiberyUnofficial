@@ -1,16 +1,6 @@
 <resources>
     <string name="entity_list_action_filter">Filter</string>
-    <string name="entity_list_dialog_filter_title">Filter</string>
     <string name="entity_list_action_sort">Sort</string>
-    <string name="entity_list_hint_filter">Filter</string>
-    <string name="entity_list_hint_params">Params</string>
-    <string name="entity_list_hint_sort">Sort</string>
-    <string name="entity_list_dialog_sort_title">Sort</string>
     <string name="entity_list_content_description_remove_relation">Remove relation</string>
     <string name="entity_list_entityList_create">Create</string>
-    <string name="entity_list_root_transition_name" translatable="false">entity_list_root_transition_name</string>
-    <string name="entity_list_list_transition_name" translatable="false">entity_list_list_transition_name_%1$d</string>
-    <string name="entity_list_create_fab_transition_name" translatable="false">entity_list_create_fab_transition_name</string>
-    <string name="entity_list_filter_transition_name" translatable="false">entity_list_filter_transition_name</string>
-    <string name="entity_list_sort_transition_name" translatable="false">entity_list_sort_transition_name</string>
 </resources>

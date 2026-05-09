@@ -1,0 +1,16 @@
+plugins {
+    id("fibery.android.library")
+}
+
+android {
+    namespace = "com.krossovochkin.core.presentation.ui.toolbar"
+}
+
+dependencies {
+    api(libs.appcompat)
+    api(libs.fragment.ktx)
+    api(libs.kotlinx.coroutines.core)
+    api(project(":core:presentation:resources"))
+    implementation(project(":core:presentation:system"))
+    implementation(project(":core:presentation:color"))
+}

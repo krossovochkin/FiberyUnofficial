@@ -16,24 +16,28 @@
  */
 package com.krossovochkin.fiberyunofficial.pickersingleselect.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
+import com.krossovochkin.fiberyunofficial.navigation.PickerSingleSelectNavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-@HiltViewModel
-class PickerSingleSelectViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = PickerSingleSelectViewModel.Factory::class)
+class PickerSingleSelectViewModel @AssistedInject constructor(
+    @Assisted private val args: PickerSingleSelectNavKey,
 ) : ViewModel() {
-
-    private val args: PickerSingleSelectDialogFragmentArgs
-        get() = PickerSingleSelectDialogFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     val item: FieldData.SingleSelectFieldData
         get() = args.item
 
     val fieldSchema: FiberyFieldSchema
         get() = args.parentEntityData.fieldSchema
+
+    @AssistedFactory
+    interface Factory {
+        fun create(args: PickerSingleSelectNavKey): PickerSingleSelectViewModel
+    }
 }
