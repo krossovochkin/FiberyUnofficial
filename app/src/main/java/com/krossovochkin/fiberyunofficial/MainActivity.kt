@@ -29,7 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.NavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.SceneStrategy
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.krossovochkin.fiberyunofficial.navigation.NavigationViewModel
 import com.krossovochkin.fiberyunofficial.ui.FiberyEntryProvider
@@ -42,8 +45,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-        super.onCreate(savedInstanceState)
         installSplashScreen()
+        super.onCreate(savedInstanceState)
 
         setContent {
             val backstack by navigationViewModel.backstack.collectAsState()
@@ -55,10 +58,10 @@ class MainActivity : AppCompatActivity() {
                 navigationViewModel.pop()
             }
 
-            val strategies = remember { listOf(DialogSceneStrategy()) }
+            val strategies = remember { listOf<SceneStrategy<NavKey>>(DialogSceneStrategy()) }
             val decorator1 = rememberSaveableStateHolderNavEntryDecorator()
             val decorator2 = rememberViewModelStoreNavEntryDecorator()
-            val decorators = remember(decorator1, decorator2) { listOf(decorator1, decorator2) }
+            val decorators = remember(decorator1, decorator2) { listOf<NavEntryDecorator<NavKey>>(decorator1, decorator2) }
 
             NavDisplay(
                 backStack = backstack,
