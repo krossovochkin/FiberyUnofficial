@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-        installSplashScreen()
         super.onCreate(savedInstanceState)
+        installSplashScreen()
 
         setContent {
             val backstack by navigationViewModel.backstack.collectAsState()
@@ -55,14 +55,16 @@ class MainActivity : AppCompatActivity() {
                 navigationViewModel.pop()
             }
 
+            val strategies = remember { listOf(DialogSceneStrategy()) }
+            val decorator1 = rememberSaveableStateHolderNavEntryDecorator()
+            val decorator2 = rememberViewModelStoreNavEntryDecorator()
+            val decorators = remember(decorator1, decorator2) { listOf(decorator1, decorator2) }
+
             NavDisplay(
                 backStack = backstack,
                 onBack = { navigationViewModel.pop() },
-                sceneStrategies = listOf(DialogSceneStrategy()),
-                entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator(),
-                ),
+                sceneStrategies = strategies,
+                entryDecorators = decorators,
                 entryProvider = entryProvider
             )
         }
