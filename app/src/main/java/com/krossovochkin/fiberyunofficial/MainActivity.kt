@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             NavDisplay(
                 backStack = backstack,
                 onBack = { navigationViewModel.pop() },
-                sceneStrategies = listOf(DialogSceneStrategy()),
+                //sceneStrategies = listOf(DialogSceneStrategy()),
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
