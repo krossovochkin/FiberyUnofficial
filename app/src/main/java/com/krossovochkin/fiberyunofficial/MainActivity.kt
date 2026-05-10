@@ -29,8 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.krossovochkin.fiberyunofficial.navigation.NavigationViewModel
 import com.krossovochkin.fiberyunofficial.ui.FiberyEntryProvider
@@ -60,11 +62,18 @@ class MainActivity : AppCompatActivity() {
             val decorator1 = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
             val decorator2 = rememberViewModelStoreNavEntryDecorator<NavKey>()
 
+            val strategies = remember<List<SceneStrategy<NavKey>>>(dialogStrategy) {
+                listOf<SceneStrategy<NavKey>>(dialogStrategy)
+            }
+            val decorators = remember<List<NavEntryDecorator<NavKey>>>(decorator1, decorator2) {
+                listOf<NavEntryDecorator<NavKey>>(decorator1, decorator2)
+            }
+
             NavDisplay(
                 backStack = backstack,
                 onBack = { navigationViewModel.pop() },
-                sceneStrategies = listOf(dialogStrategy),
-                entryDecorators = listOf(decorator1, decorator2),
+                sceneStrategies = strategies,
+                entryDecorators = decorators,
                 entryProvider = entryProvider
             )
         }
