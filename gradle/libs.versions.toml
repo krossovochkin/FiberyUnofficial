@@ -9,7 +9,7 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 android-compile-sdk = "37"
 
-android-min-sdk = "23"
+android-min-sdk = "24"
 
 android-target-sdk = "37"
 
