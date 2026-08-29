@@ -72,7 +72,7 @@ androidx-lifecycle = "2.11.0-alpha03"
 
 detekt = "1.23.8"
 
-gradle-plugin-android = "9.2.0-rc01"
+gradle-plugin-android = "9.4.0-alpha03"
 
 kover = "0.6.1"
 
@@ -107,7 +107,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 
 gradle-plugin-android = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle-plugin-android" }
 
-gradle-plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+gra"dle-plugin-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
 
 gradle-plugin-ksp = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
