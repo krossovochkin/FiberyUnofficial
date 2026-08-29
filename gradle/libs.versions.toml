@@ -78,7 +78,8 @@ detekt = "1.23.8"
 
 gradle-plugin-android = "9.5.0-alpha03"
 
-kover = "0.9.9"
+kover = "0.6.1"
+##  ⬆ = "0.9.9"
 
 threetenabp = "1.4.9"
 
