@@ -25,7 +25,6 @@ dependencies {
     implementation(libs.paging.compose)
     implementation(project(":core:presentation:resources"))
     implementation(project(":core:presentation:ui:paging"))
-    implementation(project(":core:presentation:result"))
     implementation(project(":core:presentation:color"))
 
     implementation(libs.compose.foundation)

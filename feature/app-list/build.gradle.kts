@@ -24,7 +24,6 @@ dependencies {
 
     implementation(libs.navigation.hilt)
     implementation(project(":core:presentation:resources"))
-    implementation(project(":core:presentation:result"))
 
     testImplementation(libs.junit.junit)
     testImplementation(libs.truth)

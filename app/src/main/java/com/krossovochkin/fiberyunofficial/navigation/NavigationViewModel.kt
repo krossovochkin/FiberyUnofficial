@@ -21,7 +21,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
     private val loginInteractor: com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor,
-    private val resultBus: com.krossovochkin.core.presentation.result.ResultBus
+    private val updateSingleSelectFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor,
+    private val updateMultiSelectFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor,
+    private val updateEntityFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor,
+    private val setEntityListFilterInteractor: com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor,
+    private val setEntityListSortInteractor: com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor,
 ) : ViewModel() {
 
     private val _backstack = MutableStateFlow<List<NavKey>>(listOf(LoginNavKey))
@@ -96,11 +100,9 @@ class NavigationViewModel @Inject constructor(
         entity: FiberyEntityData?
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerEntityResultData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    entity = entity
-                )
+            updateEntityFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                selectedEntity = entity
             )
         }
         pop()
@@ -117,13 +119,13 @@ class NavigationViewModel @Inject constructor(
         parentEntityData: ParentEntityData,
         selectedValue: FieldData.EnumItemData?
     ) {
-        viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerSingleSelectResultData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    selectedValue = selectedValue
+        if (selectedValue != null) {
+            viewModelScope.launch {
+                updateSingleSelectFieldInteractor.execute(
+                    parentEntityData = parentEntityData,
+                    singleSelectItem = selectedValue
                 )
-            )
+            }
         }
         pop()
     }
@@ -141,12 +143,10 @@ class NavigationViewModel @Inject constructor(
         removedItems: List<FieldData.EnumItemData>
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.MultiSelectPickedData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    addedItems = addedItems,
-                    removedItems = removedItems
-                )
+            updateMultiSelectFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                addedItems = addedItems,
+                removedItems = removedItems
             )
         }
         pop()
@@ -164,12 +164,7 @@ class NavigationViewModel @Inject constructor(
         filter: FiberyEntityFilterData
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerFilterResultData(
-                    entityType = entityType,
-                    filter = filter
-                )
-            )
+            setEntityListFilterInteractor.execute(entityType, filter)
         }
         pop()
     }
@@ -186,12 +181,7 @@ class NavigationViewModel @Inject constructor(
         sort: FiberyEntitySortData
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerSortResultData(
-                    entityType = entityType,
-                    sort = sort
-                )
-            )
+            setEntityListSortInteractor.execute(entityType, sort)
         }
         pop()
     }

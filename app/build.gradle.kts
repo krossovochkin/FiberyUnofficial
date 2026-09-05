@@ -53,7 +53,6 @@ dependencies {
     implementation(project(":core:data:auth"))
     implementation(project(":core:data:serialization"))
     implementation(project(":core:domain"))
-    implementation(project(":core:presentation:result"))
 
     implementation(project(":feature:login"))
     implementation(project(":feature:app-list"))

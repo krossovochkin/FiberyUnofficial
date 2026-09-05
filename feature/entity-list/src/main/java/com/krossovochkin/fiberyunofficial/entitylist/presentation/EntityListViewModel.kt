@@ -26,12 +26,9 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.core.presentation.result.ResultBus
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.domain.PickerFilterResultData
-import com.krossovochkin.fiberyunofficial.domain.PickerSortResultData
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
@@ -62,7 +59,6 @@ class EntityListViewModel @AssistedInject constructor(
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
     private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val resultBus: ResultBus,
     @Assisted private val entityListArgs: EntityListNavKey,
 ) : ViewModel() {
 
@@ -108,25 +104,6 @@ class EntityListViewModel @AssistedInject constructor(
                 emptyList()
             }
         )
-
-    init {
-        viewModelScope.launch {
-            resultBus.results.collect { result ->
-                when (result) {
-                    is PickerFilterResultData -> {
-                        if (result.entityType == entityListArgs.entityType) {
-                            onFilterSelected(result.filter)
-                        }
-                    }
-                    is PickerSortResultData -> {
-                        if (result.entityType == entityListArgs.entityType) {
-                            onSortSelected(result.sort)
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     fun getCreateFabViewState() =
         FabViewState(

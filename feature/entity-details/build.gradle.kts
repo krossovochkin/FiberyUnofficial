@@ -22,7 +22,6 @@ dependencies {
     implementation(libs.navigation.hilt)
     implementation(libs.io.noties.markwon.core)
     implementation(project(":core:presentation:resources"))
-    implementation(project(":core:presentation:result"))
     implementation(project(":core:presentation:color"))
     implementation(project(":core:presentation:viewmodel"))
 

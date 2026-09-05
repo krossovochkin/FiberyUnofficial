@@ -49,12 +49,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 import androidx.lifecycle.viewModelScope
-import com.krossovochkin.core.presentation.result.ResultBus
-import com.krossovochkin.fiberyunofficial.domain.MultiSelectPickedData
-import com.krossovochkin.fiberyunofficial.domain.PickerEntityResultData
-import com.krossovochkin.fiberyunofficial.domain.PickerSingleSelectResultData
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = EntityDetailsViewModel.Factory::class)
 class EntityDetailsViewModel @AssistedInject constructor(
@@ -63,27 +57,8 @@ class EntityDetailsViewModel @AssistedInject constructor(
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
-    private val resultBus: ResultBus,
     @Assisted private val entityDetailsArgs: EntityDetailsNavKey,
 ) : ViewModel() {
-
-    init {
-        viewModelScope.launch {
-            resultBus.results.collect { result ->
-                when (result) {
-                    is PickerSingleSelectResultData -> {
-                        updateSingleSelectField(result.fieldSchema, result.selectedValue)
-                    }
-                    is MultiSelectPickedData -> {
-                        updateMultiSelectField(result)
-                    }
-                    is PickerEntityResultData -> {
-                        updateEntityField(result.fieldSchema, result.entity)
-                    }
-                }
-            }
-        }
-    }
 
     val entityData: FiberyEntityData
         get() = entityDetailsArgs.entity
@@ -107,6 +82,10 @@ class EntityDetailsViewModel @AssistedInject constructor(
     )
 
     val items = listDelegate.items
+
+    fun refresh() {
+        listDelegate.invalidate()
+    }
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
@@ -368,18 +347,22 @@ class EntityDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    fun updateMultiSelectField(data: MultiSelectPickedData) {
+    fun updateMultiSelectField(
+        fieldSchema: FiberyFieldSchema,
+        addedItems: List<FieldData.EnumItemData>,
+        removedItems: List<FieldData.EnumItemData>
+    ) {
         load(
             progress = progress,
             error = errorChannel
         ) {
             updateMultiSelectFieldInteractor.execute(
                 parentEntityData = ParentEntityData(
-                    fieldSchema = data.fieldSchema,
+                    fieldSchema = fieldSchema,
                     parentEntity = entityDetailsArgs.entity
                 ),
-                addedItems = data.addedItems,
-                removedItems = data.removedItems
+                addedItems = addedItems,
+                removedItems = removedItems
             )
             listDelegate.invalidate()
         }

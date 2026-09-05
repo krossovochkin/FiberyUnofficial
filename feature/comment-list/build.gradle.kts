@@ -22,7 +22,6 @@ dependencies {
     implementation(libs.paging.compose)
     implementation(project(":core:presentation:resources"))
     implementation(project(":core:presentation:ui:paging"))
-    implementation(project(":core:presentation:result"))
 
     implementation(libs.compose.foundation)
     implementation(libs.compose.lifecycle.viewmodel)

@@ -21,7 +21,6 @@ dependencies {
 
     implementation(libs.navigation.hilt)
     implementation(project(":core:presentation:resources"))
-    implementation(project(":core:presentation:result"))
     implementation(project(":core:presentation:color"))
 
     implementation(libs.compose.foundation)

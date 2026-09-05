@@ -106,7 +106,10 @@ fun PickerSingleSelectScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 TextButton(
                     onClick = {
-                        onConfirm(item.values[selectedIndex.value])
+                        val index = selectedIndex.value
+                        if (index in item.values.indices) {
+                            onConfirm(item.values[index])
+                        }
                     }
                 ) {
                     Text(stringResource(android.R.string.ok))
