@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitylist.domain
 
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
@@ -28,6 +29,7 @@ import javax.inject.Inject
 
 class RemoveEntityRelationInteractor @Inject constructor(
     private val fiberyServiceApi: FiberyServiceApi,
+    private val fiberyApiRepository: FiberyApiRepository,
 ) {
 
     suspend fun execute(
@@ -51,5 +53,6 @@ class RemoveEntityRelationInteractor @Inject constructor(
                 )
             )
             .checkResultSuccess()
+        fiberyApiRepository.notifyEntityUpdated(parentEntityData.parentEntity.id)
     }
 }

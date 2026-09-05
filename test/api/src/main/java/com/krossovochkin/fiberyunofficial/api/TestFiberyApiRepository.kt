@@ -6,12 +6,22 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class TestFiberyApiRepository : FiberyApiRepository {
 
     private val mapper = FiberyEntityTypeMapper()
     private val serializer = Moshi.Builder().build()
     private var typeSchemas: List<FiberyEntityTypeSchema> = emptyList()
+
+    private val _entityUpdates = MutableSharedFlow<String>(extraBufferCapacity = 64)
+    override val entityUpdates: SharedFlow<String> = _entityUpdates.asSharedFlow()
+
+    override suspend fun notifyEntityUpdated(entityId: String) {
+        _entityUpdates.emit(entityId)
+    }
 
     override suspend fun getTypeSchemas(): List<FiberyEntityTypeSchema> {
         if (typeSchemas.isNotEmpty()) {

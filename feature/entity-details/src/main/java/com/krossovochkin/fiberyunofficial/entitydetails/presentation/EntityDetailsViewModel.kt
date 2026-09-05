@@ -29,6 +29,7 @@ import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.ObserveEntityUpdatesInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
@@ -39,7 +40,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
@@ -57,11 +61,20 @@ class EntityDetailsViewModel @AssistedInject constructor(
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
+    observeEntityUpdatesInteractor: ObserveEntityUpdatesInteractor,
     @Assisted private val entityDetailsArgs: EntityDetailsNavKey,
 ) : ViewModel() {
 
     val entityData: FiberyEntityData
         get() = entityDetailsArgs.entity
+
+    init {
+        viewModelScope.launch {
+            observeEntityUpdatesInteractor()
+                .filter { updatedId -> updatedId == entityData.id }
+                .collect { refresh() }
+        }
+    }
 
     val progress = MutableStateFlow(false)
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)

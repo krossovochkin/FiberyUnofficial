@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    api(libs.kotlinx.coroutines.core)
     api(libs.retrofit)
     api(project(":core:data:serialization"))
     api(project(":core:domain"))
