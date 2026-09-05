@@ -128,9 +128,7 @@ class FiberyEntryProvider(
                 onBack = { navigationViewModel.pop() }
             )
         }
-        entry<PickerFilterNavKey>(
-            metadata = DialogSceneStrategy.dialog()
-        ) { key ->
+        entry<PickerFilterNavKey> { key ->
             PickerFilterScreen(
                 viewModel = hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> { factory ->
                     factory.create(key)
@@ -139,9 +137,7 @@ class FiberyEntryProvider(
                 onFilterApply = { type, filter -> navigationViewModel.onFilterSelected(type, filter) }
             )
         }
-        entry<PickerSortNavKey>(
-            metadata = DialogSceneStrategy.dialog()
-        ) { key ->
+        entry<PickerSortNavKey> { key ->
             PickerSortScreen(
                 viewModel = hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> { factory ->
                     factory.create(key)
