@@ -150,9 +150,7 @@ class FiberyEntryProvider(
                 onSortApply = { type, sort -> navigationViewModel.onSortSelected(type, sort) }
             )
         }
-        entry<EntityPickerNavKey>(
-            metadata = DialogSceneStrategy.dialog()
-        ) { key ->
+        entry<EntityPickerNavKey> { key ->
             EntityPickerScreen(
                 viewModel = hiltViewModel<EntityPickerViewModel, EntityPickerViewModel.Factory> { factory ->
                     factory.create(key)
