@@ -16,7 +16,8 @@
  */
 package com.krossovochkin.commentlist.presentation
 
-import android.text.Spanned
+import android.util.TypedValue
+import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,8 +41,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
@@ -160,10 +163,17 @@ fun CommentListItemRow(
         )
 
         if (markwon != null) {
-            val markdown: Spanned = markwon.toMarkdown(item.text)
-            Text(
-                text = markdown.toString(),
-                style = MaterialTheme.typography.bodyMedium,
+            val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
+            AndroidView(
+                factory = { context ->
+                    TextView(context).apply {
+                        setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                    }
+                },
+                update = { textView ->
+                    textView.setTextColor(textColor)
+                    markwon.setMarkdown(textView, item.text)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         } else {

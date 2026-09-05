@@ -1,10 +1,13 @@
 package com.krossovochkin.fiberyunofficial.ui
 
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.DialogSceneStrategy
+import io.noties.markwon.Markwon
 import com.krossovochkin.commentlist.presentation.CommentListScreen
 import com.krossovochkin.commentlist.presentation.CommentListViewModel
 import com.krossovochkin.fiberyunofficial.applist.presentation.AppListScreen
@@ -120,11 +123,13 @@ class FiberyEntryProvider(
             )
         }
         entry<CommentListNavKey> { key ->
+            val context = LocalContext.current
+            val markwon = remember(context) { Markwon.create(context) }
             CommentListScreen(
                 viewModel = hiltViewModel<CommentListViewModel, CommentListViewModel.Factory> { factory ->
                     factory.create(key)
                 },
-                markwon = null,
+                markwon = markwon,
                 onBack = { navigationViewModel.pop() }
             )
         }

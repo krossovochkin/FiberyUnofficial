@@ -13,7 +13,6 @@ dependencies {
     api(libs.dagger)
     ksp(libs.dagger.compiler)
     api(libs.kotlinx.coroutines.core)
-    api(libs.appcompat)
     api(project(":core:data:api"))
     api(project(":core:domain"))
     api(project(":core:presentation:ui:toolbar"))

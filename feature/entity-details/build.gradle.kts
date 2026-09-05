@@ -12,15 +12,12 @@ android {
 dependencies {
     api(libs.dagger)
     ksp(libs.dagger.compiler)
-    api(libs.appcompat)
     api(libs.kotlinx.coroutines.core)
     api(project(":core:data:api"))
     api(project(":core:domain"))
     api(project(":core:presentation:ui:list"))
     api(project(":core:presentation:ui:toolbar"))
 
-    implementation(libs.navigation.hilt)
-    implementation(libs.io.noties.markwon.core)
     implementation(project(":core:presentation:resources"))
     implementation(project(":core:presentation:color"))
     implementation(project(":core:presentation:viewmodel"))

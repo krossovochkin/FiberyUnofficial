@@ -38,19 +38,9 @@ androidx-navigation3 = "1.2.0-beta01"
 
 lifecycle-viewmodel-navigation3 = "2.12.0-alpha02"
 
-hilt-navigation = "1.4.0"
-
 hilt-navigation-compose = "1.4.0"
 
 androidx-paging = "3.5.1"
-
-androidx-recyclerview = "1.4.0"
-
-androidx-appcompat = "1.8.0"
-
-androidx-constraintlayout = "2.2.1"
-
-androidx-fragment = "1.9.0"
 
 androidx-core-splashscreen = "1.2.0"
 
@@ -59,8 +49,6 @@ moshi = "1.15.2"
 kotlinx-coroutines = "1.11.0"
 
 junit-junit = "4.13.2"
-
-google-android-material = "1.14.0"
 
 androidx-test-ext-junit = "1.3.0"
 
@@ -90,8 +78,6 @@ truth = "1.4.5"
 mockito-kotlin = "6.3.0"
 
 markwon = "4.6.2"
-
-insetter = "0.6.1"
 
 compose-bom = "2026.08.00"
 
@@ -136,27 +122,16 @@ paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", v
 
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 
-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
-
 dagger-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "google-dagger" }
 
 dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
 
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit2" }
 
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
-
-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
-
-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
-
-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidx-navigation" }
 navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "androidx-navigation3" }
 navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "androidx-navigation3" }
 lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycle-viewmodel-navigation3" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization" }
-
-navigation-hilt = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation" }
 
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-core-splashscreen" }
 
@@ -182,8 +157,6 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 
 io-noties-markwon-core = { group = "io.noties.markwon", name = "core", version.ref = "markwon" }
 
-material = { group = "com.google.android.material", name = "material", version.ref = "google-android-material" }
-
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
@@ -201,8 +174,6 @@ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-
-insetter = { group = "dev.chrisbanes.insetter", name = "insetter", version.ref = "insetter" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 

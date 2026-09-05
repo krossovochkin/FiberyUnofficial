@@ -92,7 +92,6 @@ dependencies {
     implementation(libs.compose.lifecycle.viewmodel)
     implementation(libs.hilt.navigation.compose)
 
-    implementation(libs.appcompat)
     implementation(libs.core.splashscreen)
 
     androidTestImplementation(libs.espresso.core)

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import androidx.paging.PagingData
+import com.krossovochkin.core.presentation.resources.FIBERY_PRIMARY_HEX
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
@@ -107,7 +108,7 @@ class EntityListViewModel @AssistedInject constructor(
 
     fun getCreateFabViewState() =
         FabViewState(
-            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
+            bgColor = NativeColor.Hex(FIBERY_PRIMARY_HEX)
         )
 
     fun removeRelation(item: EntityListItem) {
