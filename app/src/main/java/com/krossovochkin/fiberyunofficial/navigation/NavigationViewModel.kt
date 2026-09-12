@@ -31,8 +31,7 @@ class NavigationViewModel @Inject constructor(
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
-    private val setEntityListSortInteractor: c
-    SetEntityListSortInteractor,
+    private val setEntityListSortInteractor: SetEntityListSortInteractor,
 ) : ViewModel() {
 
     private val _backstack = MutableStateFlow<List<NavKey>>(listOf(LoginNavKey))
