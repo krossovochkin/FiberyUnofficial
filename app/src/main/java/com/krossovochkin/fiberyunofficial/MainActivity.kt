@@ -36,6 +36,9 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.krossovochkin.fiberyunofficial.navigation.NavigationViewModel
 import com.krossovochkin.fiberyunofficial.ui.FiberyEntryProvider
 import com.krossovochkin.fiberyunofficial.ui.FiberyTheme
+import com.krossovochkin.fiberyunofficial.ui.fiberyForwardTransition
+import com.krossovochkin.fiberyunofficial.ui.fiberyPopTransition
+import com.krossovochkin.fiberyunofficial.ui.fiberyPredictivePopTransition
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,6 +78,9 @@ class MainActivity : ComponentActivity() {
                     onBack = { navigationViewModel.pop() },
                     sceneStrategies = strategies,
                     entryDecorators = decorators,
+                    transitionSpec = { fiberyForwardTransition() },
+                    popTransitionSpec = { fiberyPopTransition() },
+                    predictivePopTransitionSpec = { fiberyPredictivePopTransition() },
                     entryProvider = entryProvider
                 )
             }

@@ -6,7 +6,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.metadata
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import io.noties.markwon.Markwon
 import com.krossovochkin.commentlist.presentation.CommentListScreen
 import com.krossovochkin.commentlist.presentation.CommentListViewModel
@@ -51,7 +53,13 @@ class FiberyEntryProvider(
     private val navigationViewModel: NavigationViewModel
 ) {
     val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider<NavKey> {
-        entry<LoginNavKey> {
+        entry<LoginNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyFadeTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyFadeTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyFadeTransition() }
+            }
+        ) {
             LoginScreen(
                 viewModel = hiltViewModel<LoginViewModel, LoginViewModel.Factory> { factory ->
                     factory.create()
@@ -59,7 +67,13 @@ class FiberyEntryProvider(
                 onLoginSuccess = { navigationViewModel.onLoginSuccess() }
             )
         }
-        entry<AppListNavKey> {
+        entry<AppListNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyFadeTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyFadeTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyFadeTransition() }
+            }
+        ) {
             AppListScreen(
                 viewModel = hiltViewModel<AppListViewModel, AppListViewModel.Factory> { factory ->
                     factory.create()
@@ -105,7 +119,13 @@ class FiberyEntryProvider(
                 }
             )
         }
-        entry<EntityCreateNavKey> { key ->
+        entry<EntityCreateNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyModalForwardTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyModalPopTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
+            }
+        ) { key ->
             EntityCreateScreen(
                 viewModel = hiltViewModel<EntityCreateViewModel, EntityCreateViewModel.Factory> { factory ->
                     factory.create(key)
@@ -133,7 +153,13 @@ class FiberyEntryProvider(
                 onBack = { navigationViewModel.pop() }
             )
         }
-        entry<PickerFilterNavKey> { key ->
+        entry<PickerFilterNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyModalForwardTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyModalPopTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
+            }
+        ) { key ->
             PickerFilterScreen(
                 viewModel = hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> { factory ->
                     factory.create(key)
@@ -142,7 +168,13 @@ class FiberyEntryProvider(
                 onFilterApply = { type, filter -> navigationViewModel.onFilterSelected(type, filter) }
             )
         }
-        entry<PickerSortNavKey> { key ->
+        entry<PickerSortNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyModalForwardTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyModalPopTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
+            }
+        ) { key ->
             PickerSortScreen(
                 viewModel = hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> { factory ->
                     factory.create(key)
@@ -151,7 +183,13 @@ class FiberyEntryProvider(
                 onSortApply = { type, sort -> navigationViewModel.onSortSelected(type, sort) }
             )
         }
-        entry<EntityPickerNavKey> { key ->
+        entry<EntityPickerNavKey>(
+            metadata = metadata {
+                put(NavDisplay.TransitionKey) { fiberyModalForwardTransition() }
+                put(NavDisplay.PopTransitionKey) { fiberyModalPopTransition() }
+                put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
+            }
+        ) { key ->
             EntityPickerScreen(
                 viewModel = hiltViewModel<EntityPickerViewModel, EntityPickerViewModel.Factory> { factory ->
                     factory.create(key)
