@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 
@@ -62,18 +61,14 @@ fun NativeText.resolve(): String {
     return when (this) {
         is NativeText.Simple -> text
         is NativeText.Resource -> stringResource(id)
-        is NativeText.Arguments -> {
-            val context = LocalContext.current
-            context.getString(id, *args.toTypedArray())
-        }
+        is NativeText.Arguments -> stringResource(id, *args.toTypedArray())
         is NativeText.Plural -> pluralStringResource(id, number, *args.toTypedArray())
         is NativeText.Multi -> {
-            val context = LocalContext.current
-            buildString {
-                texts.forEach {
-                    append(context.resolveNativeText(it))
-                }
+            val builder = StringBuilder()
+            for (text in texts) {
+                builder.append(text.resolve())
             }
+            builder.toString()
         }
     }
 }

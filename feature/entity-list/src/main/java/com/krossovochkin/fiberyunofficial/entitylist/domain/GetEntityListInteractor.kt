@@ -59,7 +59,8 @@ class GetEntityListInteractor @Inject constructor(
         offset: Int,
         pageSize: Int,
     ): List<FiberyEntityData> {
-        val uiTitleType = entityType.getUiTitle()
+        val isComment = entityType.name == FiberyApiConstants.Type.COMMENT.value
+        val uiTitleType = if (isComment) null else entityType.getUiTitle()
         val idType = FiberyApiConstants.Field.ID.value
         val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
 
@@ -70,7 +71,7 @@ class GetEntityListInteractor @Inject constructor(
                     args = FiberyCommandArgsDto(
                         FiberyCommandArgsQueryDto(
                             from = entityType.name,
-                            select = listOf(
+                            select = listOfNotNull(
                                 uiTitleType,
                                 idType,
                                 publicIdType
@@ -93,7 +94,11 @@ class GetEntityListInteractor @Inject constructor(
         ).first()
 
         return dto.result.map {
-            val title = requireNotNull(it[uiTitleType]) { "title is missing" } as String
+            val title = if (isComment) {
+                ""
+            } else {
+                requireNotNull(it[uiTitleType]) { "title is missing" } as String
+            }
             val id = requireNotNull(it[idType]) { "id is missing" } as String
             val publicId = requireNotNull(it[publicIdType]) { "publicId is missing" } as String
             FiberyEntityData(
@@ -111,7 +116,8 @@ class GetEntityListInteractor @Inject constructor(
         pageSize: Int
     ): List<FiberyEntityData> {
         val entityType = fiberyApiRepository.getTypeSchema(parentEntityData.fieldSchema.type)
-        val uiTitleType = entityType.getUiTitle()
+        val isComment = entityType.name == FiberyApiConstants.Type.COMMENT.value
+        val uiTitleType = if (isComment) null else entityType.getUiTitle()
         val idType = FiberyApiConstants.Field.ID.value
         val publicIdType = FiberyApiConstants.Field.PUBLIC_ID.value
 
@@ -125,7 +131,7 @@ class GetEntityListInteractor @Inject constructor(
                             select = mapOf(
                                 parentEntityData.fieldSchema.name to FiberyCommandArgsQueryDto(
                                     from = parentEntityData.fieldSchema.name,
-                                    select = listOf(
+                                    select = listOfNotNull(
                                         uiTitleType,
                                         idType,
                                         publicIdType
@@ -153,7 +159,11 @@ class GetEntityListInteractor @Inject constructor(
             .flatMap { it.value }
             .map {
                 val map = it
-                val title = requireNotNull(map[uiTitleType]) { "title is missing" } as String
+                val title = if (isComment) {
+                    ""
+                } else {
+                    requireNotNull(map[uiTitleType]) { "title is missing" } as String
+                }
                 val id = requireNotNull(map[idType]) { "id is missing" } as String
                 val publicId = requireNotNull(map[publicIdType]) { "publicId is missing" } as String
                 FiberyEntityData(
