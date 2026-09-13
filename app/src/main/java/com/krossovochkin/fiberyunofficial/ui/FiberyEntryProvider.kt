@@ -269,12 +269,14 @@ class FiberyEntryProvider(
  * Matches status bar icons to the toolbar behind them: dark icons on light
  * backgrounds and vice versa, same contrast rule as the toolbar content.
  */
+private const val LIGHT_BACKGROUND_LUMINANCE_THRESHOLD = 0.5f
+
 @Composable
 private fun StatusBarContrastEffect(backgroundColor: Color) {
     val context = LocalContext.current
     SideEffect {
         val window = (context as? Activity)?.window ?: return@SideEffect
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-            backgroundColor.luminance() > 0.5f
+            backgroundColor.luminance() > LIGHT_BACKGROUND_LUMINANCE_THRESHOLD
     }
 }

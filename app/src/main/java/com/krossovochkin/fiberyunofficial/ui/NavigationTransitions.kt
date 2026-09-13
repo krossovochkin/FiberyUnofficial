@@ -24,24 +24,32 @@ private const val FADE_DURATION_MS = 200
  * - back: new screen slides in from the left, old slides out to the right
  */
 fun AnimatedContentTransitionScope<*>.fiberyForwardTransition(): ContentTransform =
-    (slideInHorizontally(
-        initialOffsetX = { it },
-        animationSpec = tween(MOVE_DURATION_MS)
-    ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))) togetherWith
-        (slideOutHorizontally(
-            targetOffsetX = { -it },
+    (
+        slideInHorizontally(
+            initialOffsetX = { it },
             animationSpec = tween(MOVE_DURATION_MS)
-        ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
+        ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))
+        ) togetherWith
+        (
+            slideOutHorizontally(
+                targetOffsetX = { -it },
+                animationSpec = tween(MOVE_DURATION_MS)
+            ) + fadeOut(animationSpec = tween(FADE_DURATION_MS))
+            )
 
 fun AnimatedContentTransitionScope<*>.fiberyPopTransition(): ContentTransform =
-    (slideInHorizontally(
-        initialOffsetX = { -it },
-        animationSpec = tween(MOVE_DURATION_MS)
-    ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))) togetherWith
-        (slideOutHorizontally(
-            targetOffsetX = { it },
+    (
+        slideInHorizontally(
+            initialOffsetX = { -it },
             animationSpec = tween(MOVE_DURATION_MS)
-        ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
+        ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))
+        ) togetherWith
+        (
+            slideOutHorizontally(
+                targetOffsetX = { it },
+                animationSpec = tween(MOVE_DURATION_MS)
+            ) + fadeOut(animationSpec = tween(FADE_DURATION_MS))
+            )
 
 fun AnimatedContentTransitionScope<*>.fiberyPredictivePopTransition(): ContentTransform =
     fiberyPopTransition()
@@ -54,18 +62,22 @@ fun AnimatedContentTransitionScope<*>.fiberyPredictivePopTransition(): ContentTr
  * - back: top screen slides down, revealing the one underneath
  */
 fun AnimatedContentTransitionScope<*>.fiberyModalForwardTransition(): ContentTransform =
-    (slideInVertically(
-        initialOffsetY = { it },
-        animationSpec = tween(MOVE_DURATION_MS)
-    ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))) togetherWith
+    (
+        slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = tween(MOVE_DURATION_MS)
+        ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))
+        ) togetherWith
         ExitTransition.KeepUntilTransitionsFinished
 
 fun AnimatedContentTransitionScope<*>.fiberyModalPopTransition(): ContentTransform =
     EnterTransition.None togetherWith
-        (slideOutVertically(
-            targetOffsetY = { it },
-            animationSpec = tween(MOVE_DURATION_MS)
-        ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
+        (
+            slideOutVertically(
+                targetOffsetY = { it },
+                animationSpec = tween(MOVE_DURATION_MS)
+            ) + fadeOut(animationSpec = tween(FADE_DURATION_MS))
+            )
 
 fun AnimatedContentTransitionScope<*>.fiberyModalPredictivePopTransition(): ContentTransform =
     fiberyModalPopTransition()

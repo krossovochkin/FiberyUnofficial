@@ -52,6 +52,8 @@ import com.krossovochkin.core.presentation.resources.resolveNativeText
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.collectLatest
 
+private const val MARKDOWN_TEXT_SIZE_SP = 14f
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentListScreen(
@@ -167,7 +169,7 @@ fun CommentListItemRow(
             AndroidView(
                 factory = { context ->
                     TextView(context).apply {
-                        setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                        setTextSize(TypedValue.COMPLEX_UNIT_SP, MARKDOWN_TEXT_SIZE_SP)
                     }
                 },
                 update = { textView ->

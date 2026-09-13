@@ -7,8 +7,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val FiberyPrimary = Color(0xFFFDD965)
-private val FiberyPrimaryVariant = Color(0xFFFDD965)
+private const val FIBERY_YELLOW_HEX = 0xFFFDD965
+
+private val FiberyPrimary = Color(FIBERY_YELLOW_HEX)
+private val FiberyPrimaryVariant = Color(FIBERY_YELLOW_HEX)
 
 private val FiberyLightColorScheme = lightColorScheme(
     primary = FiberyPrimary,
