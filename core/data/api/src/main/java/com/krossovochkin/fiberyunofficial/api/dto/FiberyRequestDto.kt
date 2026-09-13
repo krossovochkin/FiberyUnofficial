@@ -16,39 +16,40 @@
  */
 package com.krossovochkin.fiberyunofficial.api.dto
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyCommandBody(
     val command: String,
     val args: FiberyCommandArgsDto? = null
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyCommandArgsDto(
     val query: FiberyCommandArgsQueryDto? = null,
-    val params: Map<String, Any>? = null,
+    val params: Map<String, @Contextual Any>? = null,
     val type: String? = null,
-    val entity: Map<String, Any?>? = null,
+    val entity: Map<String, @Contextual Any?>? = null,
     val field: String? = null,
-    val items: List<Any>? = null
+    val items: List<@Contextual Any>? = null
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyCommandArgsQueryDto(
-    @Json(name = "q/from")
+    @SerialName("q/from")
     val from: String,
-    @Json(name = "q/select")
-    val select: Any,
-    @Json(name = "q/where")
-    val where: List<Any>? = null,
-    @Json(name = "q/order-by")
-    val orderBy: List<Any>? = null,
-    @Json(name = "q/offset")
-    val offset: Any? = null,
-    @Json(name = "q/limit")
-    val limit: Any? = null
+    @SerialName("q/select")
+    val select: @Contextual Any,
+    @SerialName("q/where")
+    val where: List<@Contextual Any>? = null,
+    @SerialName("q/order-by")
+    val orderBy: List<@Contextual Any>? = null,
+    @SerialName("q/offset")
+    val offset: @Contextual Any? = null,
+    @SerialName("q/limit")
+    val limit: @Contextual Any? = null
 )
 
 enum class FiberyCommand(val value: String) {

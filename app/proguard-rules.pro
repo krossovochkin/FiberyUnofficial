@@ -22,23 +22,16 @@
 
 -keep class com.krossovochkin.fiberyunofficial.domain.** { *; }
 
-### MOSHI
+### KOTLINX SERIALIZATION
 
-# JSR 305 annotations are for embedding nullability information.
--dontwarn javax.annotation.**
+# Keep generated serializers and @Serializable classes.
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.AnnotationsKt
+-keepclassmembers class kotlinx.serialization.json.** { *; }
 
+# Serializer for classes annotated with @Serializable is looked up at runtime.
 -keepclasseswithmembers class * {
-    @com.squareup.moshi.* <methods>;
-}
-
--keep @com.squareup.moshi.JsonQualifier interface *
-
-# Enum field names are used by the integrated EnumJsonAdapter.
-# values() is synthesized by the Kotlin compiler and is used by EnumJsonAdapter indirectly
-# Annotate enums with @JsonClass(generateAdapter = false) to use them with Moshi.
--keepclassmembers @com.squareup.moshi.JsonClass class * extends java.lang.Enum {
-    <fields>;
-    **[] values();
+    kotlinx.serialization.KSerializer serializer(...);
 }
 
 # https://issuetracker.google.com/issues/154315507

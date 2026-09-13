@@ -1,6 +1,6 @@
 plugins {
     id("fibery.android.library")
-    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -9,9 +9,8 @@ android {
 
 dependencies {
     api(libs.kotlinx.coroutines.core)
+    api(libs.kotlinx.serialization.json)
     api(libs.retrofit)
     api(project(":core:data:serialization"))
     api(project(":core:domain"))
-    api(libs.converter.moshi)
-    ksp(libs.moshi.kotlin.codegen)
 }

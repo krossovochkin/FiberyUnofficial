@@ -16,103 +16,104 @@
  */
 package com.krossovochkin.fiberyunofficial.api.dto
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberySchemaResponseDto(
-    @Json(name = "success")
+    @SerialName("success")
     val isSuccess: Boolean,
-    @Json(name = "result")
+    @SerialName("result")
     val result: FiberySchemaResultDto
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberySchemaResultDto(
-    @Json(name = "fibery/types")
+    @SerialName("fibery/types")
     val fiberyTypes: List<FiberyTypeDto>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyTypeDto(
-    @Json(name = "fibery/name")
+    @SerialName("fibery/name")
     val name: String,
-    @Json(name = "fibery/meta")
+    @SerialName("fibery/meta")
     val meta: FiberyTypeMetaDto,
-    @Json(name = "fibery/fields")
+    @SerialName("fibery/fields")
     val fields: List<FiberyFieldDto>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyFieldDto(
-    @Json(name = "fibery/name")
+    @SerialName("fibery/name")
     val name: String,
-    @Json(name = "fibery/type")
+    @SerialName("fibery/type")
     val type: String,
-    @Json(name = "fibery/meta")
+    @SerialName("fibery/meta")
     val meta: FiberyFieldMetaDto
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyFieldMetaDto(
-    @Json(name = "ui/title?")
-    val isUiTitle: Boolean?,
-    @Json(name = "fibery/collection?")
-    val isCollection: Boolean?,
-    @Json(name = "fibery/relation")
-    val relationId: String?,
-    @Json(name = "ui/object-editor-order")
-    val uiOrder: Int?,
-    @Json(name = "ui/number-unit")
-    val numberUnit: String?,
-    @Json(name = "ui/number-precision")
-    val numberPrecision: Int?
+    @SerialName("ui/title?")
+    val isUiTitle: Boolean? = null,
+    @SerialName("fibery/collection?")
+    val isCollection: Boolean? = null,
+    @SerialName("fibery/relation")
+    val relationId: String? = null,
+    @SerialName("ui/object-editor-order")
+    val uiOrder: Int? = null,
+    @SerialName("ui/number-unit")
+    val numberUnit: String? = null,
+    @SerialName("ui/number-precision")
+    val numberPrecision: Int? = null
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyTypeMetaDto(
-    @Json(name = "fibery/domain?")
-    val isDomain: Boolean?,
-    @Json(name = "ui/color")
-    val uiColorHex: String?,
-    @Json(name = "fibery/primitive?")
-    val isPrimitive: Boolean?,
-    @Json(name = "fibery/enum?")
-    val isEnum: Boolean?
+    @SerialName("fibery/domain?")
+    val isDomain: Boolean? = null,
+    @SerialName("ui/color")
+    val uiColorHex: String? = null,
+    @SerialName("fibery/primitive?")
+    val isPrimitive: Boolean? = null,
+    @SerialName("fibery/enum?")
+    val isEnum: Boolean? = null
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyEntityResponseDto(
-    @Json(name = "success")
+    @SerialName("success")
     val isSuccess: Boolean,
-    @Json(name = "result")
-    val result: List<Map<String, Any>>
+    @SerialName("result")
+    val result: List<Map<String, @Contextual Any>>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyDocumentResponse(
-    @Json(name = "content")
+    @SerialName("content")
     val content: String
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyCreatedEntityResponseDto(
-    @Json(name = "success")
+    @SerialName("success")
     val isSuccess: Boolean,
-    @Json(name = "result")
+    @SerialName("result")
     val result: Result
 ) {
 
-    @JsonClass(generateAdapter = true)
+    @Serializable
     data class Result(
-        @Json(name = "fibery/id")
+        @SerialName("fibery/id")
         val id: String
     )
 }
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class FiberyCommandResponseDto(
-    @Json(name = "success")
+    @SerialName("success")
     val isSuccess: Boolean
 )
 

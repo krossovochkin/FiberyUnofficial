@@ -8,5 +8,6 @@ android {
 
 dependencies {
     api(project(":core:data:api"))
+    api(project(":core:data:serialization"))
     api(project(":core:domain"))
 }
