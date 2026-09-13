@@ -12,8 +12,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.scene.Scene
 
 private const val MOVE_DURATION_MS = 300
 private const val FADE_DURATION_MS = 200
@@ -25,7 +23,7 @@ private const val FADE_DURATION_MS = 200
  * - forward: new screen slides in from the right, old slides out to the left
  * - back: new screen slides in from the left, old slides out to the right
  */
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyForwardTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyForwardTransition(): ContentTransform =
     (slideInHorizontally(
         initialOffsetX = { it },
         animationSpec = tween(MOVE_DURATION_MS)
@@ -35,7 +33,7 @@ fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyForwardTransition(): Con
             animationSpec = tween(MOVE_DURATION_MS)
         ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
 
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyPopTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyPopTransition(): ContentTransform =
     (slideInHorizontally(
         initialOffsetX = { -it },
         animationSpec = tween(MOVE_DURATION_MS)
@@ -45,7 +43,7 @@ fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyPopTransition(): Content
             animationSpec = tween(MOVE_DURATION_MS)
         ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
 
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyPredictivePopTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyPredictivePopTransition(): ContentTransform =
     fiberyPopTransition()
 
 /**
@@ -55,27 +53,27 @@ fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyPredictivePopTransition(
  * - forward: new screen slides up over the old one, old stays underneath
  * - back: top screen slides down, revealing the one underneath
  */
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyModalForwardTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyModalForwardTransition(): ContentTransform =
     (slideInVertically(
         initialOffsetY = { it },
         animationSpec = tween(MOVE_DURATION_MS)
     ) + fadeIn(animationSpec = tween(FADE_DURATION_MS))) togetherWith
         ExitTransition.KeepUntilTransitionsFinished
 
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyModalPopTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyModalPopTransition(): ContentTransform =
     EnterTransition.None togetherWith
         (slideOutVertically(
             targetOffsetY = { it },
             animationSpec = tween(MOVE_DURATION_MS)
         ) + fadeOut(animationSpec = tween(FADE_DURATION_MS)))
 
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyModalPredictivePopTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyModalPredictivePopTransition(): ContentTransform =
     fiberyModalPopTransition()
 
 /**
  * Crossfade for root replacements (e.g. Login <-> AppList) where
  * a directional slide would imply a false hierarchy.
  */
-fun AnimatedContentTransitionScope<Scene<NavKey>>.fiberyFadeTransition(): ContentTransform =
+fun AnimatedContentTransitionScope<*>.fiberyFadeTransition(): ContentTransform =
     fadeIn(animationSpec = tween(FADE_DURATION_MS)) togetherWith
         fadeOut(animationSpec = tween(FADE_DURATION_MS))
