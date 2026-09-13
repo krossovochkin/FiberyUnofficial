@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -47,6 +48,8 @@ class MainActivity : ComponentActivity() {
     private val navigationViewModel: NavigationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Toolbars are drawn by Compose screens, never show the framework title/action bar.
+        window.requestFeature(Window.FEATURE_NO_TITLE)
         enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
