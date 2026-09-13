@@ -3,6 +3,9 @@ package com.krossovochkin.core.presentation.resources
 import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 
 sealed class NativeText {
     data class Simple(
@@ -50,5 +53,22 @@ fun Context.resolveNativeText(nativeText: NativeText): CharSequence {
         )
         is NativeText.Resource -> getString(nativeText.id)
         is NativeText.Simple -> nativeText.text
+    }
+}
+
+@Composable
+fun NativeText.resolve(): String {
+    return when (this) {
+        is NativeText.Simple -> text
+        is NativeText.Resource -> stringResource(id)
+        is NativeText.Arguments -> stringResource(id, *args.toTypedArray())
+        is NativeText.Plural -> pluralStringResource(id, number, *args.toTypedArray())
+        is NativeText.Multi -> {
+            val builder = StringBuilder()
+            for (text in texts) {
+                builder.append(text.resolve())
+            }
+            builder.toString()
+        }
     }
 }

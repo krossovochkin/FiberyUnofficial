@@ -22,16 +22,18 @@ import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyApiRepositoryImpl
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.api.mapper.FiberyEntityTypeMapper
-import com.squareup.moshi.Moshi
+import com.krossovochkin.serialization.FiberyJson
+import com.krossovochkin.serialization.KotlinxSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
@@ -68,7 +70,7 @@ object ApiModule {
     @JvmStatic
     @Provides
     fun serializer(): com.krossovochkin.serialization.Serializer {
-        return com.krossovochkin.serialization.MoshiSerializer(Moshi.Builder().build())
+        return KotlinxSerializer(FiberyJson.json)
     }
 
     @Singleton
@@ -82,7 +84,7 @@ object ApiModule {
         return Retrofit.Builder()
             .baseUrl("https://fibery.io/")
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create().withNullSerialization())
+            .addConverterFactory(FiberyJson.json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 

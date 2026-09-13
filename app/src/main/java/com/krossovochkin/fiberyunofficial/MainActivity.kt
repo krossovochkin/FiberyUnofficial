@@ -17,12 +17,12 @@
 package com.krossovochkin.fiberyunofficial
 
 import android.os.Bundle
+import android.view.Window
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,46 +36,57 @@ import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import com.krossovochkin.fiberyunofficial.navigation.NavigationViewModel
 import com.krossovochkin.fiberyunofficial.ui.FiberyEntryProvider
+import com.krossovochkin.fiberyunofficial.ui.FiberyTheme
+import com.krossovochkin.fiberyunofficial.ui.fiberyForwardTransition
+import com.krossovochkin.fiberyunofficial.ui.fiberyPopTransition
+import com.krossovochkin.fiberyunofficial.ui.fiberyPredictivePopTransition
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private val navigationViewModel: NavigationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+        // Toolbars are drawn by Compose screens, never show the framework title/action bar.
+        window.requestFeature(Window.FEATURE_NO_TITLE)
+        enableEdgeToEdge()
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
         setContent {
-            val backstack by navigationViewModel.backstack.collectAsState()
-            val entryProvider = remember(navigationViewModel) {
-                FiberyEntryProvider(navigationViewModel).entryProvider
-            }
+            FiberyTheme {
+                val backstack by navigationViewModel.backstack.collectAsState()
+                val entryProvider = remember(navigationViewModel) {
+                    FiberyEntryProvider(navigationViewModel).entryProvider
+                }
 
-            BackHandler(enabled = backstack.size > 1) {
-                navigationViewModel.pop()
-            }
+                BackHandler(enabled = backstack.size > 1) {
+                    navigationViewModel.pop()
+                }
 
-            val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
-            val decorator1 = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
-            val decorator2 = rememberViewModelStoreNavEntryDecorator<NavKey>()
+                val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
+                val decorator1 = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
+                val decorator2 = rememberViewModelStoreNavEntryDecorator<NavKey>()
 
-            val strategies = remember<List<SceneStrategy<NavKey>>>(dialogStrategy) {
-                listOf<SceneStrategy<NavKey>>(dialogStrategy)
-            }
-            val decorators = remember<List<NavEntryDecorator<NavKey>>>(decorator1, decorator2) {
-                listOf<NavEntryDecorator<NavKey>>(decorator1, decorator2)
-            }
+                val strategies = remember<List<SceneStrategy<NavKey>>>(dialogStrategy) {
+                    listOf<SceneStrategy<NavKey>>(dialogStrategy)
+                }
+                val decorators = remember<List<NavEntryDecorator<NavKey>>>(decorator1, decorator2) {
+                    listOf<NavEntryDecorator<NavKey>>(decorator1, decorator2)
+                }
 
-            NavDisplay(
-                backStack = backstack,
-                onBack = { navigationViewModel.pop() },
-                sceneStrategies = strategies,
-                entryDecorators = decorators,
-                entryProvider = entryProvider
-            )
+                NavDisplay(
+                    backStack = backstack,
+                    onBack = { navigationViewModel.pop() },
+                    sceneStrategies = strategies,
+                    entryDecorators = decorators,
+                    transitionSpec = { fiberyForwardTransition() },
+                    popTransitionSpec = { fiberyPopTransition() },
+                    predictivePopTransitionSpec = { fiberyPredictivePopTransition() },
+                    entryProvider = entryProvider
+                )
+            }
         }
     }
 }

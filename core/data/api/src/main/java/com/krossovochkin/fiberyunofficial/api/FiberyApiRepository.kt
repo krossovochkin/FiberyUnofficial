@@ -25,8 +25,15 @@ import com.krossovochkin.fiberyunofficial.api.mapper.FiberyEntityTypeMapper
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import java.io.File
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 interface FiberyApiRepository {
+
+    val entityUpdates: SharedFlow<String>
+
+    suspend fun notifyEntityUpdated(entityId: String)
 
     suspend fun getTypeSchemas(): List<FiberyEntityTypeSchema>
 
@@ -49,6 +56,13 @@ class FiberyApiRepositoryImpl(
         get() = File(context.cacheDir, FILE_NAME_TYPE_SCHEMAS)
 
     private val singleSelectValues = mutableMapOf<String, List<FieldData.EnumItemData>>()
+
+    private val _entityUpdates = MutableSharedFlow<String>(extraBufferCapacity = 64)
+    override val entityUpdates: SharedFlow<String> = _entityUpdates.asSharedFlow()
+
+    override suspend fun notifyEntityUpdated(entityId: String) {
+        _entityUpdates.emit(entityId)
+    }
 
     override suspend fun getTypeSchemas(): List<FiberyEntityTypeSchema> {
         if (typeSchemas.isNotEmpty()) {

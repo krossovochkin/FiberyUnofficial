@@ -10,7 +10,4 @@ android {
 dependencies {
     api(libs.kotlinx.serialization.json)
     api(libs.threetenabp)
-    api(libs.converter.moshi)
-    api(libs.moshi)
-    implementation(libs.moshi.adapters)
 }

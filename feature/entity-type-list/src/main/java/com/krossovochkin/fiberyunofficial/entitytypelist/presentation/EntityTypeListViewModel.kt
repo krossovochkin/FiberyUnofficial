@@ -18,6 +18,7 @@ package com.krossovochkin.fiberyunofficial.entitytypelist.presentation
 
 import androidx.lifecycle.ViewModel
 import com.krossovochkin.core.presentation.color.ColorUtils
+import com.krossovochkin.core.presentation.resources.FIBERY_PRIMARY_HEX
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
@@ -65,7 +66,7 @@ class EntityTypeListViewModel @AssistedInject constructor(
     fun getToolbarViewState(): ToolbarViewState =
         ToolbarViewState(
             title = NativeText.Resource(R.string.entity_type_list_title),
-            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary),
+            bgColor = NativeColor.Hex(FIBERY_PRIMARY_HEX),
             hasBackButton = true
         )
 

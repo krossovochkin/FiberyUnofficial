@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitydetails.domain
 
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
@@ -28,6 +29,7 @@ import javax.inject.Inject
 
 class UpdateMultiSelectFieldInteractor @Inject constructor(
     private val fiberyServiceApi: FiberyServiceApi,
+    private val fiberyApiRepository: FiberyApiRepository,
 ) {
 
     suspend fun execute(
@@ -72,5 +74,6 @@ class UpdateMultiSelectFieldInteractor @Inject constructor(
         }
 
         fiberyServiceApi.sendCommand(body = commands).checkResultSuccess()
+        fiberyApiRepository.notifyEntityUpdated(parentEntityData.parentEntity.id)
     }
 }

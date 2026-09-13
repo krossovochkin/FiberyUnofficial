@@ -13,9 +13,6 @@ dependencies {
     api(libs.dagger)
     ksp(libs.dagger.compiler)
     api(project(":core:domain"))
-    implementation(libs.navigation.hilt)
-    implementation(libs.appcompat)
-    implementation(project(":core:presentation:result"))
     implementation(libs.compose.foundation)
     implementation(libs.compose.lifecycle.viewmodel)
 }

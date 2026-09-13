@@ -3,6 +3,7 @@ package com.krossovochkin.fiberyunofficial.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
@@ -10,6 +11,12 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
+import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
+import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,8 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    private val loginInteractor: com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor,
-    private val resultBus: com.krossovochkin.core.presentation.result.ResultBus
+    private val loginInteractor: LoginInteractor,
+    private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+    private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
+    private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+    private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
+    private val setEntityListSortInteractor: SetEntityListSortInteractor,
 ) : ViewModel() {
 
     private val _backstack = MutableStateFlow<List<NavKey>>(listOf(LoginNavKey))
@@ -53,8 +64,8 @@ class NavigationViewModel @Inject constructor(
         parentEntityData: ParentEntityData
     ) {
         val key = when (entityTypeSchema.name) {
-            "fibery/file" -> FileListNavKey(entityTypeSchema, parentEntityData)
-            "fibery/comment" -> CommentListNavKey(entityTypeSchema, parentEntityData)
+            FiberyApiConstants.Type.FILE.value -> FileListNavKey(entityTypeSchema, parentEntityData)
+            FiberyApiConstants.Type.COMMENT.value -> CommentListNavKey(entityTypeSchema, parentEntityData)
             else -> EntityListNavKey(entityTypeSchema, parentEntityData)
         }
         _backstack.update { it + key }
@@ -96,14 +107,23 @@ class NavigationViewModel @Inject constructor(
         entity: FiberyEntityData?
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerEntityResultData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    entity = entity
-                )
+            updateEntityFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                selectedEntity = entity
             )
         }
         pop()
+    }
+
+    fun onEntityFieldCleared(
+        parentEntityData: ParentEntityData,
+    ) {
+        viewModelScope.launch {
+            updateEntityFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                selectedEntity = null
+            )
+        }
     }
 
     fun onSingleSelectFieldEdit(
@@ -117,13 +137,13 @@ class NavigationViewModel @Inject constructor(
         parentEntityData: ParentEntityData,
         selectedValue: FieldData.EnumItemData?
     ) {
-        viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerSingleSelectResultData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    selectedValue = selectedValue
+        if (selectedValue != null) {
+            viewModelScope.launch {
+                updateSingleSelectFieldInteractor.execute(
+                    parentEntityData = parentEntityData,
+                    singleSelectItem = selectedValue
                 )
-            )
+            }
         }
         pop()
     }
@@ -141,12 +161,10 @@ class NavigationViewModel @Inject constructor(
         removedItems: List<FieldData.EnumItemData>
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.MultiSelectPickedData(
-                    fieldSchema = parentEntityData.fieldSchema,
-                    addedItems = addedItems,
-                    removedItems = removedItems
-                )
+            updateMultiSelectFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                addedItems = addedItems,
+                removedItems = removedItems
             )
         }
         pop()
@@ -164,12 +182,7 @@ class NavigationViewModel @Inject constructor(
         filter: FiberyEntityFilterData
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerFilterResultData(
-                    entityType = entityType,
-                    filter = filter
-                )
-            )
+            setEntityListFilterInteractor.execute(entityType, filter)
         }
         pop()
     }
@@ -186,12 +199,7 @@ class NavigationViewModel @Inject constructor(
         sort: FiberyEntitySortData
     ) {
         viewModelScope.launch {
-            resultBus.sendResult(
-                com.krossovochkin.fiberyunofficial.domain.PickerSortResultData(
-                    entityType = entityType,
-                    sort = sort
-                )
-            )
+            setEntityListSortInteractor.execute(entityType, sort)
         }
         pop()
     }

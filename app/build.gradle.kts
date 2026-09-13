@@ -53,7 +53,6 @@ dependencies {
     implementation(project(":core:data:auth"))
     implementation(project(":core:data:serialization"))
     implementation(project(":core:domain"))
-    implementation(project(":core:presentation:result"))
 
     implementation(project(":feature:login"))
     implementation(project(":feature:app-list"))
@@ -74,7 +73,9 @@ dependencies {
     implementation(libs.paging.compose)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
-    implementation(libs.converter.moshi)
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp3)
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
     implementation(libs.lifecycle.viewmodel.navigation3)
@@ -92,8 +93,8 @@ dependencies {
     implementation(libs.compose.lifecycle.runtime)
     implementation(libs.compose.lifecycle.viewmodel)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.core.ktx)
 
-    implementation(libs.appcompat)
     implementation(libs.core.splashscreen)
 
     androidTestImplementation(libs.espresso.core)

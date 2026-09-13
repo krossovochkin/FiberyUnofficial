@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
@@ -68,6 +69,7 @@ fun EntityDetailsScreen(
     (ParentEntityData, com.krossovochkin.fiberyunofficial.domain.FieldData.SingleSelectFieldData) -> Unit,
     onMultiSelectFieldEdit:
     (ParentEntityData, com.krossovochkin.fiberyunofficial.domain.FieldData.MultiSelectFieldData) -> Unit,
+    onEntityFieldClear: (ParentEntityData) -> Unit,
 ) {
     val items by viewModel.items.collectAsState(emptyList())
     val isLoading by viewModel.progress.collectAsState(false)
@@ -181,9 +183,7 @@ fun EntityDetailsScreen(
                                 }
                                 .padding(16.dp)
                         )
-                        is FieldRelationItem -> Text(
-                            text = "${item.title}: ${item.entityName}",
-                            style = MaterialTheme.typography.bodyLarge,
+                        is FieldRelationItem -> Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -193,8 +193,29 @@ fun EntityDetailsScreen(
                                             null
                                         )
                                 }
-                                .padding(16.dp)
-                        )
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "${item.title}: ${item.entityName}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f)
+                            )
+                            if (item.isDeleteAvailable) {
+                                IconButton(
+                                    onClick = {
+                                        onEntityFieldClear(
+                                            ParentEntityData(item.fieldSchema, viewModel.entityData)
+                                        )
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = "Clear"
+                                    )
+                                }
+                            }
+                        }
                         is FieldCollectionItem -> Text(
                             text = "${item.title}: ${item.countText}",
                             style = MaterialTheme.typography.bodyLarge,

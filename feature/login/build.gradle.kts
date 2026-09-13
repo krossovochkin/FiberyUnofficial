@@ -15,7 +15,6 @@ dependencies {
     api(libs.kotlinx.coroutines.core)
     api(project(":core:data:auth"))
     implementation(project(":core:presentation:resources"))
-    implementation(project(":core:presentation:result"))
 
     implementation(libs.compose.foundation)
     implementation(libs.hilt.navigation.compose)

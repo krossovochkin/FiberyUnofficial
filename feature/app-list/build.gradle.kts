@@ -14,7 +14,6 @@ dependencies {
     implementation(libs.compose.lifecycle.viewmodel)
 
     api(libs.kotlinx.coroutines.core)
-    api(libs.appcompat)
     api(libs.dagger)
     ksp(libs.dagger.compiler)
     api(project(":core:data:api"))
@@ -22,9 +21,7 @@ dependencies {
     api(project(":core:presentation:ui:list"))
     api(project(":core:presentation:ui:toolbar"))
 
-    implementation(libs.navigation.hilt)
     implementation(project(":core:presentation:resources"))
-    implementation(project(":core:presentation:result"))
 
     testImplementation(libs.junit.junit)
     testImplementation(libs.truth)

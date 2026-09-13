@@ -21,25 +21,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import androidx.paging.PagingData
+import com.krossovochkin.core.presentation.resources.FIBERY_PRIMARY_HEX
 import com.krossovochkin.core.presentation.resources.NativeColor
 import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.core.presentation.result.ResultBus
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.domain.PickerFilterResultData
-import com.krossovochkin.fiberyunofficial.domain.PickerSortResultData
-import com.krossovochkin.fiberyunofficial.entitylist.R
-import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
-import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
-import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import com.krossovochkin.fiberyunofficial.navigation.EntityListNavKey
 import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 import com.krossovochkin.fiberyunofficial.ui.paging.PaginatedListViewModelDelegate
@@ -56,13 +47,9 @@ import dagger.assisted.AssistedInject
 @HiltViewModel(assistedFactory = EntityListViewModel.Factory::class)
 class EntityListViewModel @AssistedInject constructor(
     getEntityListInteractor: GetEntityListInteractor,
-    private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
-    private val setEntityListSortInteractor: SetEntityListSortInteractor,
     private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
-    private val addEntityRelationInteractor: AddEntityRelationInteractor,
-    private val resultBus: ResultBus,
     @Assisted private val entityListArgs: EntityListNavKey,
 ) : ViewModel() {
 
@@ -109,28 +96,9 @@ class EntityListViewModel @AssistedInject constructor(
             }
         )
 
-    init {
-        viewModelScope.launch {
-            resultBus.results.collect { result ->
-                when (result) {
-                    is PickerFilterResultData -> {
-                        if (result.entityType == entityListArgs.entityType) {
-                            onFilterSelected(result.filter)
-                        }
-                    }
-                    is PickerSortResultData -> {
-                        if (result.entityType == entityListArgs.entityType) {
-                            onSortSelected(result.sort)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     fun getCreateFabViewState() =
         FabViewState(
-            bgColor = NativeColor.Attribute(androidx.appcompat.R.attr.colorPrimary)
+            bgColor = NativeColor.Hex(FIBERY_PRIMARY_HEX)
         )
 
     fun removeRelation(item: EntityListItem) {
@@ -143,43 +111,6 @@ class EntityListViewModel @AssistedInject constructor(
                     parentEntityData = parentEntityData,
                     childEntity = item.entityData
                 )
-                paginatedListDelegate.invalidate()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                errorChannel.send(e)
-            }
-        }
-    }
-
-    fun onFilterSelected(filter: FiberyEntityFilterData) {
-        viewModelScope.launch {
-            setEntityListFilterInteractor.execute(entityListArgs.entityType, filter)
-            paginatedListDelegate.invalidate()
-        }
-    }
-
-    fun onSortSelected(sort: FiberyEntitySortData) {
-        viewModelScope.launch {
-            setEntityListSortInteractor.execute(entityListArgs.entityType, sort)
-            paginatedListDelegate.invalidate()
-        }
-    }
-
-    fun onEntityCreated(createdEntity: FiberyEntityData) {
-        val parentEntityData = entityListArgs.parentEntityData
-        if (parentEntityData == null) {
-            paginatedListDelegate.invalidate()
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                addEntityRelationInteractor
-                    .execute(
-                        parentEntityData = parentEntityData,
-                        childEntity = createdEntity
-                    )
                 paginatedListDelegate.invalidate()
             } catch (e: CancellationException) {
                 throw e

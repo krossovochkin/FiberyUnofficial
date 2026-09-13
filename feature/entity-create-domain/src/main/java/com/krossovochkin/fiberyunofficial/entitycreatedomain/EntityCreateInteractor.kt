@@ -17,6 +17,7 @@
 package com.krossovochkin.fiberyunofficial.entitycreatedomain
 
 import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.api.FiberyServiceApi
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommand
 import com.krossovochkin.fiberyunofficial.api.dto.FiberyCommandArgsDto
@@ -29,6 +30,7 @@ import javax.inject.Inject
 
 class EntityCreateInteractor @Inject constructor(
     private val fiberyServiceApi: FiberyServiceApi,
+    private val fiberyApiRepository: FiberyApiRepository,
 ) {
 
     suspend fun execute(
@@ -58,6 +60,8 @@ class EntityCreateInteractor @Inject constructor(
                 )
             )
             .checkResultSuccess()
+
+        fiberyApiRepository.notifyEntityUpdated(id)
 
         return FiberyEntityData(
             id = id,

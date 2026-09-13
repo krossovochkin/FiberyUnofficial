@@ -19,8 +19,6 @@ package com.krossovochkin.core.presentation.color
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
-import android.util.TypedValue
-import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
@@ -29,14 +27,6 @@ private const val DARKEN_COLOR_RATIO = 0.8f
 private const val DESATURATE_COLOR_RATIO = 0.6f
 
 object ColorUtils {
-
-    @ColorInt
-    fun getColor(context: Context, @AttrRes attributeResId: Int): Int {
-        val typedValue = TypedValue()
-        val theme = context.theme
-        theme.resolveAttribute(attributeResId, typedValue, true)
-        return typedValue.data
-    }
 
     @ColorInt
     fun getColor(colorHex: String): Int {
