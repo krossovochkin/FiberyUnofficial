@@ -3,6 +3,7 @@ package com.krossovochkin.fiberyunofficial.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
+import com.krossovochkin.fiberyunofficial.api.FiberyApiConstants
 import com.krossovochkin.fiberyunofficial.domain.FiberyAppData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
@@ -63,8 +64,8 @@ class NavigationViewModel @Inject constructor(
         parentEntityData: ParentEntityData
     ) {
         val key = when (entityTypeSchema.name) {
-            "fibery/file" -> FileListNavKey(entityTypeSchema, parentEntityData)
-            "fibery/comment" -> CommentListNavKey(entityTypeSchema, parentEntityData)
+            FiberyApiConstants.Type.FILE.value -> FileListNavKey(entityTypeSchema, parentEntityData)
+            FiberyApiConstants.Type.COMMENT.value -> CommentListNavKey(entityTypeSchema, parentEntityData)
             else -> EntityListNavKey(entityTypeSchema, parentEntityData)
         }
         _backstack.update { it + key }
