@@ -10,6 +10,12 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
+import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
+import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,12 +26,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    private val loginInteractor: com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor,
-    private val updateSingleSelectFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor,
-    private val updateMultiSelectFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor,
-    private val updateEntityFieldInteractor: com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor,
-    private val setEntityListFilterInteractor: com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor,
-    private val setEntityListSortInteractor: com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor,
+    private val loginInteractor: LoginInteractor,
+    private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
+    private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
+    private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+    private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
+    private val setEntityListSortInteractor: SetEntityListSortInteractor,
 ) : ViewModel() {
 
     private val _backstack = MutableStateFlow<List<NavKey>>(listOf(LoginNavKey))
