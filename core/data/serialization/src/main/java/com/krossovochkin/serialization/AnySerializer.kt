@@ -42,8 +42,8 @@ object AnySerializer : KSerializer<Any> {
 
     override fun deserialize(decoder: Decoder): Any {
         require(decoder is JsonDecoder) { "AnySerializer supports JSON only" }
-        @Suppress("UNCHECKED_CAST")
-        return decoder.decodeJsonElement().toAny() as Any
+        // Null stays null, like Moshi's Object adapter. A plain `as Any` would throw here.
+        return uncheckedCast(decoder.decodeJsonElement().toAny())
     }
 
     private fun Any?.toJsonElement(encoder: JsonEncoder): JsonElement {
@@ -95,4 +95,8 @@ object AnySerializer : KSerializer<Any> {
             }
         }
     }
+
+    // Cast without the null check: erases to Object so null passes through.
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> uncheckedCast(value: Any?): T = value as T
 }
