@@ -137,6 +137,9 @@ class FiberyEntryProvider(
                 },
                 onMultiSelectFieldEdit = { parent, item ->
                     navigationViewModel.onMultiSelectFieldEdit(parent, item)
+                },
+                onEntityFieldClear = { parent ->
+                    navigationViewModel.onEntityFieldCleared(parent)
                 }
             )
         }

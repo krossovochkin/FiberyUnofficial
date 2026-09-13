@@ -23,8 +23,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,17 +42,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -66,9 +80,18 @@ fun EntityPickerScreen(
 ) {
     val lazyItems = viewModel.entityItems.collectAsLazyPagingItems()
     val isCreateEnabled by viewModel.entityCreateEnabled.collectAsState(false)
+    val searchQuery by viewModel.searchQuery.collectAsState()
     val toolbarState by viewModel.toolbarViewState.collectAsState(null)
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    var isSearchExpanded by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(isSearchExpanded) {
+        if (isSearchExpanded) {
+            focusRequester.requestFocus()
+        }
+    }
 
     LaunchedEffect(viewModel.error) {
         viewModel.error.collectLatest { error ->
@@ -82,32 +105,102 @@ fun EntityPickerScreen(
             toolbarState?.let { state ->
                 TopAppBar(
                     title = {
-                        Text(
-                            text = context.resolveNativeText(state.title).toString()
-                        )
+                        if (isSearchExpanded) {
+                            TextField(
+                                value = searchQuery,
+                                onValueChange = { viewModel.onSearchQueryChanged(it) },
+                                placeholder = {
+                                    Text(
+                                        text = stringResource(id = R.string.picker_entity_search_hint),
+                                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .focusRequester(focusRequester),
+                                singleLine = true,
+                                maxLines = 1,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                                keyboardActions = KeyboardActions.Default,
+                                trailingIcon = {
+                                    if (searchQuery.isNotEmpty()) {
+                                        IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Clear,
+                                                contentDescription = "Clear search"
+                                            )
+                                        }
+                                    }
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color.Transparent,
+                                    unfocusedContainerColor = Color.Transparent,
+                                    disabledContainerColor = Color.Transparent,
+                                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+                                    focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
+                                    focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                )
+                            )
+                        } else {
+                            Text(
+                                text = context.resolveNativeText(state.title).toString()
+                            )
+                        }
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
+                        if (isSearchExpanded) {
+                            IconButton(onClick = {
+                                viewModel.onSearchQueryChanged("")
+                                isSearchExpanded = false
+                            }) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Close search"
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = onBack) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (!isSearchExpanded) {
+                            IconButton(onClick = { isSearchExpanded = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = stringResource(id = R.string.picker_entity_search_hint)
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = androidx.compose.ui.graphics.Color(context.resolveNativeColor(state.bgColor)),
                         titleContentColor = MaterialTheme.colorScheme.onPrimary,
                         navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 )
             }
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -160,21 +253,20 @@ fun EntityPickerScreen(
                 }
             }
 
-            Button(
-                onClick = { viewModel.createEntity(onEntityPicked) },
-                enabled = isCreateEnabled,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(stringResource(id = R.string.picker_entity_action_create))
+                Button(
+                    onClick = { viewModel.createEntity(onEntityPicked) },
+                    enabled = isCreateEnabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(stringResource(id = R.string.picker_entity_action_create))
+                }
             }
 
-            if (lazyItems.loadState.refresh is LoadState.Loading) {
+            if (lazyItems.loadState.refresh is LoadState.Loading && lazyItems.itemCount == 0) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

@@ -74,9 +74,6 @@ class CommentListViewModel @AssistedInject constructor(
     private val errorChannel = Channel<Exception>(Channel.BUFFERED)
     val error: Flow<Exception>
         get() = errorChannel.receiveAsFlow()
-    private val navigationChannel = Channel<CommentListNavEvent>(Channel.BUFFERED)
-    val navigation: Flow<CommentListNavEvent>
-        get() = navigationChannel.receiveAsFlow()
 
     val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
@@ -87,12 +84,6 @@ class CommentListViewModel @AssistedInject constructor(
             bgColor = NativeColor.Hex(commentListArgs.entityType.meta.uiColorHex),
             hasBackButton = true
         )
-
-    fun onBackPressed() {
-        viewModelScope.launch {
-            navigationChannel.send(CommentListNavEvent.BackEvent)
-        }
-    }
 
     fun onError(error: Exception) {
         if (error is CancellationException) {

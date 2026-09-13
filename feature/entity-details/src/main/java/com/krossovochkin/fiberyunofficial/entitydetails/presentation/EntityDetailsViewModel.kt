@@ -24,15 +24,10 @@ import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
 import com.krossovochkin.core.presentation.viewmodel.load
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityDetailsData
-import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
 import com.krossovochkin.fiberyunofficial.domain.FieldData
-import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.DeleteEntityInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.GetEntityDetailsInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.ObserveEntityUpdatesInteractor
-import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
-import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
-import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
 import com.krossovochkin.fiberyunofficial.navigation.EntityDetailsNavKey
 import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 import com.krossovochkin.fiberyunofficial.ui.list.ListViewModelDelegate
@@ -57,9 +52,6 @@ import androidx.lifecycle.viewModelScope
 @HiltViewModel(assistedFactory = EntityDetailsViewModel.Factory::class)
 class EntityDetailsViewModel @AssistedInject constructor(
     private val getEntityDetailsInteractor: GetEntityDetailsInteractor,
-    private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
-    private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
-    private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
     private val deleteEntityInteractor: DeleteEntityInteractor,
     observeEntityUpdatesInteractor: ObserveEntityUpdatesInteractor,
     @Assisted private val entityDetailsArgs: EntityDetailsNavKey,
@@ -96,7 +88,7 @@ class EntityDetailsViewModel @AssistedInject constructor(
 
     val items = listDelegate.items
 
-    fun refresh() {
+    private fun refresh() {
         listDelegate.invalidate()
     }
 
@@ -336,65 +328,6 @@ class EntityDetailsViewModel @AssistedInject constructor(
                 value = field.value ?: false
             )
         )
-    }
-
-    fun updateSingleSelectField(
-        fieldSchema: FiberyFieldSchema,
-        selectedValue: FieldData.EnumItemData?
-    ) {
-        if (selectedValue == null) {
-            return
-        }
-        load(
-            progress = progress,
-            error = errorChannel
-        ) {
-            updateSingleSelectFieldInteractor.execute(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entity
-                ),
-                singleSelectItem = selectedValue
-            )
-            listDelegate.invalidate()
-        }
-    }
-
-    fun updateMultiSelectField(
-        fieldSchema: FiberyFieldSchema,
-        addedItems: List<FieldData.EnumItemData>,
-        removedItems: List<FieldData.EnumItemData>
-    ) {
-        load(
-            progress = progress,
-            error = errorChannel
-        ) {
-            updateMultiSelectFieldInteractor.execute(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entity
-                ),
-                addedItems = addedItems,
-                removedItems = removedItems
-            )
-            listDelegate.invalidate()
-        }
-    }
-
-    fun updateEntityField(fieldSchema: FiberyFieldSchema, entity: FiberyEntityData?) {
-        load(
-            progress = progress,
-            error = errorChannel
-        ) {
-            updateEntityFieldInteractor.execute(
-                parentEntityData = ParentEntityData(
-                    fieldSchema = fieldSchema,
-                    parentEntity = entityDetailsArgs.entity
-                ),
-                selectedEntity = entity
-            )
-            listDelegate.invalidate()
-        }
     }
 
     fun deleteEntity() {

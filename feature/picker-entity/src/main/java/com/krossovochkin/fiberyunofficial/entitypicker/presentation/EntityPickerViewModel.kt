@@ -35,6 +35,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -74,6 +76,7 @@ class EntityPickerViewModel @AssistedInject constructor(
         get() = errorChannel.receiveAsFlow()
 
     private val mutableSearchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = mutableSearchQuery.asStateFlow()
 
     val entityCreateEnabled = MutableStateFlow(false)
 
@@ -91,10 +94,6 @@ class EntityPickerViewModel @AssistedInject constructor(
             )
 
         )
-    }
-
-    fun select(item: ListItem) {
-        require(item is EntityPickerItem)
     }
 
     fun onSearchQueryChanged(query: String) {

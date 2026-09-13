@@ -115,6 +115,17 @@ class NavigationViewModel @Inject constructor(
         pop()
     }
 
+    fun onEntityFieldCleared(
+        parentEntityData: ParentEntityData,
+    ) {
+        viewModelScope.launch {
+            updateEntityFieldInteractor.execute(
+                parentEntityData = parentEntityData,
+                selectedEntity = null
+            )
+        }
+    }
+
     fun onSingleSelectFieldEdit(
         parentEntityData: ParentEntityData,
         item: FieldData.SingleSelectFieldData

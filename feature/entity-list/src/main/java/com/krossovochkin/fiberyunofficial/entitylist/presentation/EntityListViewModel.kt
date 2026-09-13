@@ -27,16 +27,10 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
-import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
-import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.RemoveEntityRelationInteractor
-import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
-import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import com.krossovochkin.fiberyunofficial.navigation.EntityListNavKey
 import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 import com.krossovochkin.fiberyunofficial.ui.paging.PaginatedListViewModelDelegate
@@ -53,12 +47,9 @@ import dagger.assisted.AssistedInject
 @HiltViewModel(assistedFactory = EntityListViewModel.Factory::class)
 class EntityListViewModel @AssistedInject constructor(
     getEntityListInteractor: GetEntityListInteractor,
-    private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
-    private val setEntityListSortInteractor: SetEntityListSortInteractor,
     private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
-    private val addEntityRelationInteractor: AddEntityRelationInteractor,
     @Assisted private val entityListArgs: EntityListNavKey,
 ) : ViewModel() {
 
@@ -120,43 +111,6 @@ class EntityListViewModel @AssistedInject constructor(
                     parentEntityData = parentEntityData,
                     childEntity = item.entityData
                 )
-                paginatedListDelegate.invalidate()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                errorChannel.send(e)
-            }
-        }
-    }
-
-    fun onFilterSelected(filter: FiberyEntityFilterData) {
-        viewModelScope.launch {
-            setEntityListFilterInteractor.execute(entityListArgs.entityType, filter)
-            paginatedListDelegate.invalidate()
-        }
-    }
-
-    fun onSortSelected(sort: FiberyEntitySortData) {
-        viewModelScope.launch {
-            setEntityListSortInteractor.execute(entityListArgs.entityType, sort)
-            paginatedListDelegate.invalidate()
-        }
-    }
-
-    fun onEntityCreated(createdEntity: FiberyEntityData) {
-        val parentEntityData = entityListArgs.parentEntityData
-        if (parentEntityData == null) {
-            paginatedListDelegate.invalidate()
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                addEntityRelationInteractor
-                    .execute(
-                        parentEntityData = parentEntityData,
-                        childEntity = createdEntity
-                    )
                 paginatedListDelegate.invalidate()
             } catch (e: CancellationException) {
                 throw e
