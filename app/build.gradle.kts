@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.compose.lifecycle.runtime)
     implementation(libs.compose.lifecycle.viewmodel)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.core.ktx)
 
     implementation(libs.core.splashscreen)
 

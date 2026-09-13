@@ -1,7 +1,14 @@
 package com.krossovochkin.fiberyunofficial.ui
 
+import android.app.Activity
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -48,6 +55,7 @@ import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortScre
 import com.krossovochkin.fiberyunofficial.pickersort.presentation.PickerSortViewModel
 import com.krossovochkin.filelist.presentation.FileListScreen
 import com.krossovochkin.filelist.presentation.FileListViewModel
+import com.krossovochkin.core.presentation.resources.toComposeColor
 
 class FiberyEntryProvider(
     private val navigationViewModel: NavigationViewModel
@@ -60,6 +68,7 @@ class FiberyEntryProvider(
                 put(NavDisplay.PredictivePopTransitionKey) { fiberyFadeTransition() }
             }
         ) {
+            StatusBarContrastEffect(MaterialTheme.colorScheme.surface)
             LoginScreen(
                 viewModel = hiltViewModel<LoginViewModel, LoginViewModel.Factory> { factory ->
                     factory.create()
@@ -74,27 +83,36 @@ class FiberyEntryProvider(
                 put(NavDisplay.PredictivePopTransitionKey) { fiberyFadeTransition() }
             }
         ) {
-            AppListScreen(
-                viewModel = hiltViewModel<AppListViewModel, AppListViewModel.Factory> { factory ->
+            val appListViewModel =
+                hiltViewModel<AppListViewModel, AppListViewModel.Factory> { factory ->
                     factory.create()
-                },
+                }
+            StatusBarContrastEffect(appListViewModel.getToolbarViewState().bgColor.toComposeColor())
+            AppListScreen(
+                viewModel = appListViewModel,
                 onAppSelected = { navigationViewModel.onAppSelected(it) }
             )
         }
         entry<EntityTypeListNavKey> { key ->
-            EntityTypeListScreen(
-                viewModel = hiltViewModel<EntityTypeListViewModel, EntityTypeListViewModel.Factory> { factory ->
+            val entityTypeListViewModel =
+                hiltViewModel<EntityTypeListViewModel, EntityTypeListViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(entityTypeListViewModel.getToolbarViewState().bgColor.toComposeColor())
+            EntityTypeListScreen(
+                viewModel = entityTypeListViewModel,
                 onBack = { navigationViewModel.pop() },
                 onEntityTypeSelected = { navigationViewModel.onEntityTypeSelected(it) }
             )
         }
         entry<EntityListNavKey> { key ->
-            EntityListScreen(
-                viewModel = hiltViewModel<EntityListViewModel, EntityListViewModel.Factory> { factory ->
+            val entityListViewModel =
+                hiltViewModel<EntityListViewModel, EntityListViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(entityListViewModel.toolbarViewState.bgColor.toComposeColor())
+            EntityListScreen(
+                viewModel = entityListViewModel,
                 onBack = { navigationViewModel.pop() },
                 onEntitySelected = { navigationViewModel.onEntitySelected(it) },
                 onFilterEdit = { type, filter -> navigationViewModel.onFilterEdit(type, filter) },
@@ -103,10 +121,13 @@ class FiberyEntryProvider(
             )
         }
         entry<EntityDetailsNavKey> { key ->
-            EntityDetailsScreen(
-                viewModel = hiltViewModel<EntityDetailsViewModel, EntityDetailsViewModel.Factory> { factory ->
+            val entityDetailsViewModel =
+                hiltViewModel<EntityDetailsViewModel, EntityDetailsViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(entityDetailsViewModel.toolbarViewState.bgColor.toComposeColor())
+            EntityDetailsScreen(
+                viewModel = entityDetailsViewModel,
                 onBack = { navigationViewModel.pop() },
                 onEntitySelected = { navigationViewModel.onEntitySelected(it) },
                 onEntityFieldEdit = { parent, entity -> navigationViewModel.onEntityFieldEdit(parent, entity) },
@@ -126,29 +147,38 @@ class FiberyEntryProvider(
                 put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
             }
         ) { key ->
-            EntityCreateScreen(
-                viewModel = hiltViewModel<EntityCreateViewModel, EntityCreateViewModel.Factory> { factory ->
+            val entityCreateViewModel =
+                hiltViewModel<EntityCreateViewModel, EntityCreateViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(entityCreateViewModel.toolbarViewState.bgColor.toComposeColor())
+            EntityCreateScreen(
+                viewModel = entityCreateViewModel,
                 onBack = { navigationViewModel.pop() },
                 onEntityCreateSuccess = { navigationViewModel.onEntityCreateSuccess() }
             )
         }
         entry<FileListNavKey> { key ->
-            FileListScreen(
-                viewModel = hiltViewModel<FileListViewModel, FileListViewModel.Factory> { factory ->
+            val fileListViewModel =
+                hiltViewModel<FileListViewModel, FileListViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(fileListViewModel.toolbarViewState.bgColor.toComposeColor())
+            FileListScreen(
+                viewModel = fileListViewModel,
                 onBack = { navigationViewModel.pop() }
             )
         }
         entry<CommentListNavKey> { key ->
             val context = LocalContext.current
             val markwon = remember(context) { Markwon.create(context) }
-            CommentListScreen(
-                viewModel = hiltViewModel<CommentListViewModel, CommentListViewModel.Factory> { factory ->
+            val commentListViewModel =
+                hiltViewModel<CommentListViewModel, CommentListViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(commentListViewModel.toolbarViewState.bgColor.toComposeColor())
+            CommentListScreen(
+                viewModel = commentListViewModel,
                 markwon = markwon,
                 onBack = { navigationViewModel.pop() }
             )
@@ -160,10 +190,13 @@ class FiberyEntryProvider(
                 put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
             }
         ) { key ->
-            PickerFilterScreen(
-                viewModel = hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> { factory ->
+            val pickerFilterViewModel =
+                hiltViewModel<PickerFilterViewModel, PickerFilterViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(pickerFilterViewModel.toolbarViewState.bgColor.toComposeColor())
+            PickerFilterScreen(
+                viewModel = pickerFilterViewModel,
                 onBack = { navigationViewModel.pop() },
                 onFilterApply = { type, filter -> navigationViewModel.onFilterSelected(type, filter) }
             )
@@ -175,10 +208,13 @@ class FiberyEntryProvider(
                 put(NavDisplay.PredictivePopTransitionKey) { fiberyModalPredictivePopTransition() }
             }
         ) { key ->
-            PickerSortScreen(
-                viewModel = hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> { factory ->
+            val pickerSortViewModel =
+                hiltViewModel<PickerSortViewModel, PickerSortViewModel.Factory> { factory ->
                     factory.create(key)
-                },
+                }
+            StatusBarContrastEffect(pickerSortViewModel.toolbarViewState.bgColor.toComposeColor())
+            PickerSortScreen(
+                viewModel = pickerSortViewModel,
                 onBack = { navigationViewModel.pop() },
                 onSortApply = { type, sort -> navigationViewModel.onSortSelected(type, sort) }
             )
@@ -226,5 +262,19 @@ class FiberyEntryProvider(
                 onDismiss = { navigationViewModel.pop() }
             )
         }
+    }
+}
+
+/**
+ * Matches status bar icons to the toolbar behind them: dark icons on light
+ * backgrounds and vice versa, same contrast rule as the toolbar content.
+ */
+@Composable
+private fun StatusBarContrastEffect(backgroundColor: Color) {
+    val context = LocalContext.current
+    SideEffect {
+        val window = (context as? Activity)?.window ?: return@SideEffect
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
+            backgroundColor.luminance() > 0.5f
     }
 }
