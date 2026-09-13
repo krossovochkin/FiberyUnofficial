@@ -16,14 +16,12 @@
  */
 package com.krossovochkin.fiberyunofficial.entitypicker.presentation
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -201,57 +199,57 @@ fun EntityPickerScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
-                items(
-                    count = lazyItems.itemCount,
-                    key = { index ->
-                        val item = lazyItems[index]
-                        if (item is EntityPickerItem) item.entityData.id else index
-                    }
-                ) { index ->
-                    val item = lazyItems[index]
-                    if (item is EntityPickerItem) {
-                        EntityPickerItemRow(
-                            item = item,
-                            onClick = { onEntityPicked(viewModel.getParentEntityData(), item.entityData) }
-                        )
-                    }
-                }
-
-                lazyItems.apply {
-                    when (loadState.append) {
-                        is LoadState.Error -> {
-                            val error = (loadState.append as LoadState.Error).error
-                            viewModel.onError(Exception(error.message, error))
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    items(
+                        count = lazyItems.itemCount,
+                        key = { index ->
+                            val item = lazyItems[index]
+                            if (item is EntityPickerItem) item.entityData.id else index
                         }
-                        is LoadState.Loading -> {
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
+                    ) { index ->
+                        val item = lazyItems[index]
+                        if (item is EntityPickerItem) {
+                            EntityPickerItemRow(
+                                item = item,
+                                onClick = { onEntityPicked(viewModel.getParentEntityData(), item.entityData) }
+                            )
+                        }
+                    }
+
+                    lazyItems.apply {
+                        when (loadState.append) {
+                            is LoadState.Error -> {
+                                val error = (loadState.append as LoadState.Error).error
+                                viewModel.onError(Exception(error.message, error))
+                            }
+                            is LoadState.Loading -> {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator()
+                                    }
                                 }
                             }
+                            is LoadState.NotLoading -> {}
                         }
-                        is LoadState.NotLoading -> {}
-                    }
 
-                    when (loadState.refresh) {
-                        is LoadState.Error -> {
-                            val error = (loadState.refresh as LoadState.Error).error
-                            viewModel.onError(Exception(error.message, error))
+                        when (loadState.refresh) {
+                            is LoadState.Error -> {
+                                val error = (loadState.refresh as LoadState.Error).error
+                                viewModel.onError(Exception(error.message, error))
+                            }
+                            else -> {}
                         }
-                        else -> {}
                     }
                 }
-            }
 
                 Button(
                     onClick = { viewModel.createEntity(onEntityPicked) },
