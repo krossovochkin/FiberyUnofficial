@@ -8,7 +8,7 @@ object FiberyJson {
 
     val json: Json = Json {
         ignoreUnknownKeys = true
-        explicitNulls = true
+        explicitNulls = false
         encodeDefaults = true
         coerceInputValues = true
         // Stored filters use "type" as the discriminator key, keep it.

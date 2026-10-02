@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +76,8 @@ fun EntityTypeListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
+            val toolbarContainerColor = MaterialTheme.colorScheme.primary
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -90,9 +93,9 @@ fun EntityTypeListScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor
                 )
             )
         }

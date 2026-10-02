@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowInsetsControllerCompat
+import com.krossovochkin.core.presentation.ui.toolbar.isLightStatusBars
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -270,16 +270,15 @@ class FiberyEntryProvider(
 
 /**
  * Matches status bar icons to the toolbar behind them: dark icons on light
- * backgrounds and vice versa, same contrast rule as the toolbar content.
+ * backgrounds and vice versa, same contrast rule as the toolbar content
+ * (see toolbarContentColor).
  */
-private const val LIGHT_BACKGROUND_LUMINANCE_THRESHOLD = 0.5f
-
 @Composable
 private fun StatusBarContrastEffect(backgroundColor: Color) {
     val context = LocalContext.current
     SideEffect {
         val window = (context as? Activity)?.window ?: return@SideEffect
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-            backgroundColor.luminance() > LIGHT_BACKGROUND_LUMINANCE_THRESHOLD
+            backgroundColor.isLightStatusBars()
     }
 }

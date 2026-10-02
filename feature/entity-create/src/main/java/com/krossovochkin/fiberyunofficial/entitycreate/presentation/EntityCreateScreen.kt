@@ -26,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -47,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.fiberyunofficial.entitycreate.R
 import kotlinx.coroutines.flow.collectLatest
 
@@ -71,6 +71,9 @@ fun EntityCreateScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
+            val toolbarContainerColor =
+                Color(context.resolveNativeColor(toolbarViewState.bgColor))
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -86,10 +89,10 @@ fun EntityCreateScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(context.resolveNativeColor(toolbarViewState.bgColor)),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor,
+                    actionIconContentColor = toolbarContentColor
                 )
             )
         }

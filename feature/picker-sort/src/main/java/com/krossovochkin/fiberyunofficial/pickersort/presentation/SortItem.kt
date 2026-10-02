@@ -1,4 +1,5 @@
 /*
+
    Copyright 2020 Vasya Drobushkov
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +25,24 @@ import com.krossovochkin.fiberyunofficial.ui.list.ListItem
 object AddSortItem : ListItem
 
 data class EmptySortItem(
+    val key: Long,
     val fields: List<FiberyFieldSchema>
 ) : ListItem
 
 data class SelectedSortItem(
+    val key: Long,
+    val order: Int,
     val fields: List<FiberyFieldSchema>,
     val field: FiberyFieldSchema,
     val conditions: List<SortCondition>,
     val condition: SortCondition?,
+    val isDuplicateField: Boolean,
+    val showConditionError: Boolean,
 ) : ListItem
+
+data class PickerSortUiState(
+    val rows: List<ListItem> = emptyList(),
+    val validSortCount: Int = 0,
+    val hasIncompleteRows: Boolean = false,
+    val isApplyEnabled: Boolean = false,
+)
