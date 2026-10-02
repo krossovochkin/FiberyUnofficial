@@ -53,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyFieldSchema
@@ -72,6 +73,9 @@ fun PickerSortScreen(
 
     Scaffold(
         topBar = {
+            val toolbarContainerColor =
+                Color(context.resolveNativeColor(toolbarState.bgColor))
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -87,9 +91,9 @@ fun PickerSortScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(context.resolveNativeColor(toolbarState.bgColor)),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor,
                 )
             )
         }

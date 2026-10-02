@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
@@ -94,6 +95,9 @@ fun EntityDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
+            val toolbarContainerColor =
+                Color(context.resolveNativeColor(toolbarState.bgColor))
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -124,10 +128,10 @@ fun EntityDetailsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(context.resolveNativeColor(toolbarState.bgColor)),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor,
+                    actionIconContentColor = toolbarContentColor
                 )
             )
         }

@@ -65,6 +65,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitypicker.R
@@ -102,6 +103,9 @@ fun EntityPickerScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             toolbarState?.let { state ->
+                val toolbarContainerColor =
+                    Color(context.resolveNativeColor(state.bgColor))
+                val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
                 TopAppBar(
                     title = {
                         if (isSearchExpanded) {
@@ -111,7 +115,7 @@ fun EntityPickerScreen(
                                 placeholder = {
                                     Text(
                                         text = stringResource(id = R.string.picker_entity_search_hint),
-                                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+                                        color = toolbarContentColor.copy(alpha = 0.7f)
                                     )
                                 },
                                 modifier = Modifier
@@ -135,13 +139,13 @@ fun EntityPickerScreen(
                                     focusedContainerColor = Color.Transparent,
                                     unfocusedContainerColor = Color.Transparent,
                                     disabledContainerColor = Color.Transparent,
-                                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                                    cursorColor = MaterialTheme.colorScheme.onPrimary,
-                                    focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
-                                    unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
-                                    focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
-                                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                                    focusedTextColor = toolbarContentColor,
+                                    unfocusedTextColor = toolbarContentColor,
+                                    cursorColor = toolbarContentColor,
+                                    focusedTrailingIconColor = toolbarContentColor,
+                                    unfocusedTrailingIconColor = toolbarContentColor,
+                                    focusedPlaceholderColor = toolbarContentColor.copy(alpha = 0.7f),
+                                    unfocusedPlaceholderColor = toolbarContentColor.copy(alpha = 0.7f),
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedIndicatorColor = Color.Transparent,
                                 )
@@ -183,10 +187,10 @@ fun EntityPickerScreen(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = androidx.compose.ui.graphics.Color(context.resolveNativeColor(state.bgColor)),
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = toolbarContainerColor,
+                        titleContentColor = toolbarContentColor,
+                        navigationIconContentColor = toolbarContentColor,
+                        actionIconContentColor = toolbarContentColor
                     )
                 )
             }
