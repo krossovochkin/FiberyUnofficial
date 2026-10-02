@@ -190,19 +190,15 @@ class PickerSortViewModel @AssistedInject constructor(
 
         val selectedRows = uiRows.filterIsInstance<SelectedSortItem>()
         val validCount = selectedRows.count { it.condition != null && !it.isDuplicateField }
-        val hasIncomplete = uiRows.any { row ->
-            when (row) {
-                is EmptySortItem -> true
-                is SelectedSortItem -> row.condition == null || row.isDuplicateField
-                else -> false
-            }
-        }
+        // Untouched empty slots are just the add affordance and never block;
+        // only half-filled rows (or duplicate fields) do.
+        val hasIncomplete = selectedRows.any { it.condition == null || it.isDuplicateField }
 
         _uiState.value = PickerSortUiState(
             rows = uiRows + AddSortItem,
             validSortCount = validCount,
             hasIncompleteRows = hasIncomplete,
-            isApplyEnabled = validCount > 0 && !hasIncomplete,
+            isApplyEnabled = !hasIncomplete,
         )
     }
 

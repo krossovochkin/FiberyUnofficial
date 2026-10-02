@@ -221,9 +221,8 @@ fun PickerSortScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val hintText = when {
-                        uiState.isApplyEnabled -> null
-                        uiState.validSortCount == 0 -> stringResource(id = R.string.picker_sort_apply_hint_empty)
-                        uiState.hasIncompleteRows -> stringResource(id = R.string.picker_sort_apply_hint_incomplete)
+                        !uiState.isApplyEnabled -> stringResource(id = R.string.picker_sort_apply_hint_incomplete)
+                        uiState.validSortCount == 0 -> stringResource(id = R.string.picker_sort_apply_hint_clear)
                         else -> null
                     }
                     if (hintText != null) {

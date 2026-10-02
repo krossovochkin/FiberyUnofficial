@@ -228,9 +228,8 @@ fun PickerFilterScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val hintText = when {
-                        uiState.isApplyEnabled -> null
-                        uiState.validFilterCount == 0 -> stringResource(id = R.string.picker_filter_apply_hint_empty)
-                        uiState.hasIncompleteRows -> stringResource(id = R.string.picker_filter_apply_hint_incomplete)
+                        !uiState.isApplyEnabled -> stringResource(id = R.string.picker_filter_apply_hint_incomplete)
+                        uiState.validFilterCount == 0 -> stringResource(id = R.string.picker_filter_apply_hint_clear)
                         else -> null
                     }
                     if (hintText != null) {

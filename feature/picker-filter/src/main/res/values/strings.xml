@@ -21,7 +21,7 @@
     <string name="picker_filter_empty_title">No filters yet</string>
     <string name="picker_filter_empty_subtitle">Add your first filter to narrow entities down</string>
     <string name="picker_filter_hint_order">Filters combine with the match above — numbers show evaluation order</string>
-    <string name="picker_filter_apply_hint_empty">Add at least one filter to apply</string>
+    <string name="picker_filter_apply_hint_clear">No filters — applying clears filtering</string>
     <string name="picker_filter_apply_hint_incomplete">Complete or remove incomplete filters to apply</string>
     <string name="picker_filter_delete_content_description">Remove filter</string>
 </resources>

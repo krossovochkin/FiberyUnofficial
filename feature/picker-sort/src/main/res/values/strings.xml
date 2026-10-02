@@ -15,7 +15,7 @@
     <string name="picker_sort_empty_title">No sorts yet</string>
     <string name="picker_sort_empty_subtitle">Add your first sort to order entities</string>
     <string name="picker_sort_hint_order">Sorts apply in order — 1 has the highest priority</string>
-    <string name="picker_sort_apply_hint_empty">Add at least one sort to apply</string>
+    <string name="picker_sort_apply_hint_clear">No sorts — applying clears sorting</string>
     <string name="picker_sort_apply_hint_incomplete">Complete or remove incomplete sorts to apply</string>
     <string name="picker_sort_delete_content_description">Remove sort</string>
 </resources>

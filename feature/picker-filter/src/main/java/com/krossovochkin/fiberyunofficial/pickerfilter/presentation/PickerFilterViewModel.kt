@@ -220,20 +220,16 @@ class PickerFilterViewModel @AssistedInject constructor(
 
         val selectedRows = uiRows.filterIsInstance<SingleSelectFilterItem>()
         val validCount = selectedRows.count { it.condition != null && it.selectedValue != null }
-        val hasIncomplete = uiRows.any { row ->
-            when (row) {
-                is EmptyFilterItem -> true
-                is SingleSelectFilterItem -> row.condition == null || row.selectedValue == null
-                else -> false
-            }
-        }
+        // Untouched empty slots are just the add affordance and never block;
+        // only half-filled rows (missing condition or value) do.
+        val hasIncomplete = selectedRows.any { it.condition == null || it.selectedValue == null }
 
         _uiState.value = PickerFilterUiState(
             mergeType = mergeType,
             rows = listOf(FilterMergeTypeItem(mergeType)) + uiRows + AddFilterItem,
             validFilterCount = validCount,
             hasIncompleteRows = hasIncomplete,
-            isApplyEnabled = validCount > 0 && !hasIncomplete,
+            isApplyEnabled = !hasIncomplete,
         )
     }
 
