@@ -1,4 +1,5 @@
 /*
+
    Copyright 2020 Vasya Drobushkov
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,14 +31,27 @@ data class FilterMergeTypeItem(
 ) : ListItem
 
 data class EmptyFilterItem(
+    val key: Long,
     val fields: List<FiberyFieldSchema>
 ) : ListItem
 
 data class SingleSelectFilterItem(
+    val key: Long,
+    val order: Int,
     val fields: List<FiberyFieldSchema>,
     val field: FiberyFieldSchema,
     val conditions: List<FilterCondition>,
     val condition: FilterCondition?,
     val values: List<FieldData.EnumItemData>,
-    val selectedValue: FieldData.EnumItemData?
+    val selectedValue: FieldData.EnumItemData?,
+    val showConditionError: Boolean,
+    val showValueError: Boolean,
 ) : ListItem
+
+data class PickerFilterUiState(
+    val mergeType: FilterMergeType = FilterMergeType.ALL,
+    val rows: List<ListItem> = emptyList(),
+    val validFilterCount: Int = 0,
+    val hasIncompleteRows: Boolean = false,
+    val isApplyEnabled: Boolean = false,
+)

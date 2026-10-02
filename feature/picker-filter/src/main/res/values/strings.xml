@@ -1,8 +1,27 @@
 <resources>
     <string name="picker_filter_apply_action">Apply</string>
+    <string name="picker_filter_apply_action_count">Apply (%1$d)</string>
     <string name="picker_filter_toolbar_title">Filter</string>
     <string name="picker_filter_all">all</string>
     <string name="picker_filter_any">any</string>
     <string name="picker_filter_equals">is</string>
     <string name="picker_filter_not_equals">is not</string>
+    <string name="picker_filter_match_label">Match</string>
+    <string name="picker_filter_match_title">Match %1$s of the following</string>
+    <string name="picker_filter_field_label">Field</string>
+    <string name="picker_filter_field_placeholder">Select field</string>
+    <string name="picker_filter_condition_label">Condition</string>
+    <string name="picker_filter_condition_placeholder">Select condition</string>
+    <string name="picker_filter_condition_required">Select a condition</string>
+    <string name="picker_filter_value_label">Value</string>
+    <string name="picker_filter_value_placeholder">Select value</string>
+    <string name="picker_filter_value_required">Select a value</string>
+    <string name="picker_filter_add_action">Add filter</string>
+    <string name="picker_filter_title">Filter %1$d</string>
+    <string name="picker_filter_empty_title">No filters yet</string>
+    <string name="picker_filter_empty_subtitle">Add your first filter to narrow entities down</string>
+    <string name="picker_filter_hint_order">Filters combine with the match above — numbers show evaluation order</string>
+    <string name="picker_filter_apply_hint_empty">Add at least one filter to apply</string>
+    <string name="picker_filter_apply_hint_incomplete">Complete or remove incomplete filters to apply</string>
+    <string name="picker_filter_delete_content_description">Remove filter</string>
 </resources>
