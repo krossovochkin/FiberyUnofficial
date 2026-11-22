@@ -29,7 +29,6 @@ import com.krossovochkin.fiberyunofficial.domain.FiberyEntitySortData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitylist.data.EntityListFiltersSortStorage
-import com.krossovochkin.serialization.Serializer
 import javax.inject.Inject
 
 private const val PARAM_ID = "\$id"
@@ -38,7 +37,6 @@ class GetEntityListInteractor @Inject constructor(
     private val fiberyServiceApi: FiberyServiceApi,
     private val fiberyApiRepository: FiberyApiRepository,
     private val entityListFiltersSortStorage: EntityListFiltersSortStorage,
-    private val serializer: Serializer,
 ) {
 
     suspend fun execute(
@@ -76,17 +74,14 @@ class GetEntityListInteractor @Inject constructor(
                                 publicIdType
                             ),
                             where = entityListFiltersSortStorage.getFilter(entityType.name)
-                                ?.toFilterJson()
-                                ?.let { serializer.jsonToList(it, Any::class.java) },
+                                ?.toWhereClause(),
                             orderBy = entityListFiltersSortStorage.getSort(entityType.name)
-                                ?.toJson()
-                                ?.let { serializer.jsonToList(it, Any::class.java) },
+                                ?.toOrderBy(),
                             offset = offset,
                             limit = pageSize
                         ),
                         params = entityListFiltersSortStorage.getFilter(entityType.name)
-                            ?.toParamsJson()
-                            ?.let { serializer.jsonToMap(it, String::class.java, Any::class.java) }
+                            ?.toParams()
                     )
                 )
             )
@@ -171,57 +166,54 @@ class GetEntityListInteractor @Inject constructor(
         ) { "title field name is missing: $this" }.name
     }
 
-    private fun FiberyEntitySortData.toJson(): String {
+    private fun FiberyEntitySortData.toOrderBy(): List<Any>? {
         if (this.items.isEmpty()) {
-            return ""
+            return null
         }
 
-        val itemsJsons = this.items.map { data -> data.toJson() }
-
-        return "[${itemsJsons.joinToString()}]"
+        return this.items.map { data -> data.toOrderBy() }
     }
 
-    private fun FiberyEntitySortData.Item.toJson(): String {
-        val itemCondition = this.condition.value
-        val itemFieldName = this.field.name
-
-        return "[[\"$itemFieldName\"], \"$itemCondition\"]"
+    private fun FiberyEntitySortData.Item.toOrderBy(): List<Any> {
+        return listOf(listOf(this.field.name), this.condition.value)
     }
 
-    private fun FiberyEntityFilterData.toFilterJson(): String {
+    private fun FiberyEntityFilterData.toWhereClause(): List<Any>? {
+        if (this.items.isEmpty()) {
+            return null
+        }
+        if (this.items.size == 1) {
+            return this.items.single().toClause(1)
+        }
         val (mergeType, items) = this
-        val itemsJsons = items.mapIndexed { index, data -> data.toFilterJson(index + 1) }
-
-        return "[\"${mergeType.value}\", ${itemsJsons.joinToString()}]"
+        return listOf(mergeType.value) +
+            items.mapIndexed { index, data -> data.toClause(index + 1) }
     }
 
-    private fun FiberyEntityFilterData.Item.toFilterJson(index: Int): String {
+    private fun FiberyEntityFilterData.Item.toClause(index: Int): List<Any> {
         return if (this is FiberyEntityFilterData.Item.SingleSelectItem) {
-            val itemCondition = this.condition.value
-            val itemFieldName = this.field.name
-
-            val filter =
-                "[\"$itemCondition\",[\"$itemFieldName\", \"${FiberyApiConstants.Field.ID.value}\"],\"\$where$index\"]"
-            filter
+            listOf(
+                this.condition.value,
+                listOf(this.field.name, FiberyApiConstants.Field.ENUM_NAME.value),
+                "\$where$index"
+            )
         } else {
             TODO("implement")
         }
     }
 
-    private fun FiberyEntityFilterData.toParamsJson(): String {
-        val (_, items) = this
-        val itemsJsons = items.mapIndexed { index, data -> data.toParamsJson(index + 1) }
-
-        return "{${itemsJsons.joinToString()}}"
+    private fun FiberyEntityFilterData.toParams(): Map<String, Any>? {
+        if (this.items.isEmpty()) {
+            return null
+        }
+        return this.items.mapIndexed { index, data ->
+            "\$where${index + 1}" to data.toParamValue()
+        }.toMap()
     }
 
-    private fun FiberyEntityFilterData.Item.toParamsJson(index: Int): String {
+    private fun FiberyEntityFilterData.Item.toParamValue(): Any {
         return if (this is FiberyEntityFilterData.Item.SingleSelectItem) {
-            val itemId = this.param.id
-
-            val params = "\"\$where$index\": \"$itemId\""
-
-            params
+            this.param.title
         } else {
             TODO("implement")
         }

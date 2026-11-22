@@ -46,6 +46,10 @@ class EntityListFiltersSortStorage @Inject constructor(
     )
 
     fun setFilter(entityType: String, filter: FiberyEntityFilterData) {
+        if (filter.items.isEmpty()) {
+            filterPrefs.edit { remove(entityType) }
+            return
+        }
         filterPrefs.edit {
             putString(
                 entityType,
@@ -59,6 +63,10 @@ class EntityListFiltersSortStorage @Inject constructor(
     }
 
     fun setSort(entityType: String, sort: FiberyEntitySortData) {
+        if (sort.items.isEmpty()) {
+            sortPrefs.edit { remove(entityType) }
+            return
+        }
         sortPrefs.edit {
             putString(
                 entityType,

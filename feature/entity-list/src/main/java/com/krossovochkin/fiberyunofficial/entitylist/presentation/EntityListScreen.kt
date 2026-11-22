@@ -57,6 +57,7 @@ import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
 import com.krossovochkin.fiberyunofficial.entitylist.R
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityData
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityTypeSchema
 import com.krossovochkin.fiberyunofficial.domain.FiberyEntityFilterData
@@ -88,6 +89,9 @@ fun EntityListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
+            val toolbarContainerColor =
+                Color(context.resolveNativeColor(toolbarViewState.bgColor))
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -132,10 +136,10 @@ fun EntityListScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(context.resolveNativeColor(toolbarViewState.bgColor)),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor,
+                    actionIconContentColor = toolbarContentColor
                 )
             )
         },

@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":core:data:auth"))
     implementation(project(":core:data:serialization"))
     implementation(project(":core:domain"))
+    implementation(project(":core:presentation:ui:toolbar"))
 
     implementation(project(":feature:login"))
     implementation(project(":feature:app-list"))

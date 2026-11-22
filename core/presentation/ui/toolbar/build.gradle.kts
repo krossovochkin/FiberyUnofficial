@@ -8,4 +8,5 @@ android {
 
 dependencies {
     api(project(":core:presentation:resources"))
+    implementation(libs.core.ktx)
 }

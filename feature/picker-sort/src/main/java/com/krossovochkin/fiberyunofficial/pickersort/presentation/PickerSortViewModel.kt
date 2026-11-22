@@ -1,14 +1,15 @@
 /*
+
    Copyright 2020 Vasya Drobushkov
 
-   Licensed under the Apache License, Version 2.0 (the \"License\");
+   Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an \"AS IS\" BASIS,
+   distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -30,22 +31,30 @@ import com.krossovochkin.fiberyunofficial.pickersort.domain.EmptySortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SelectedSortItemData
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortCondition
 import com.krossovochkin.fiberyunofficial.pickersort.domain.SortItemData
-import com.krossovochkin.fiberyunofficial.ui.list.ListItem
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = PickerSortViewModel.Factory::class)
 class PickerSortViewModel @AssistedInject constructor(
     @Assisted private val pickerSortArgs: PickerSortNavKey,
 ) : ViewModel() {
 
-    val items = MutableStateFlow<List<ListItem>>(emptyList())
+    private val _uiState = MutableStateFlow(PickerSortUiState())
+    val uiState: StateFlow<PickerSortUiState> = _uiState.asStateFlow()
 
-    private val data: MutableList<SortItemData> = mutableListOf()
+    private data class RowEntry(
+        val id: Long,
+        var data: SortItemData,
+    )
+
+    private val rows: MutableList<RowEntry> = mutableListOf()
+    private var nextId: Long = 0L
 
     private var supportedFields = listOf<FiberyFieldSchema>()
 
@@ -60,71 +69,80 @@ class PickerSortViewModel @AssistedInject constructor(
         viewModelScope.launch {
             supportedFields = pickerSortArgs.entityTypeSchema.fields
 
+            rows.clear()
             pickerSortArgs.sort?.items
-                ?.let { items ->
-                    data.clear()
-                    data.addAll(
-                        items.map { item ->
-                            SelectedSortItemData(
+                ?.forEach { item ->
+                    rows.add(
+                        RowEntry(
+                            id = nextId++,
+                            data = SelectedSortItemData(
                                 field = item.field,
                                 condition = SortCondition.fromCondition(item.condition)
                             )
-                        }
+                        )
                     )
                 }
 
-            if (data.isEmpty()) {
-                data.add(EmptySortItemData)
+            if (rows.isEmpty()) {
+                rows.add(RowEntry(id = nextId++, data = EmptySortItemData))
             }
 
-            update()
+            refresh()
         }
     }
 
     fun onFieldSelected(position: Int, field: FiberyFieldSchema?) {
+        if (position !in rows.indices) return
         if (field == null) {
-            data.removeAt(position)
-            update()
+            rows.removeAt(position)
+            if (rows.isEmpty()) {
+                rows.add(RowEntry(id = nextId++, data = EmptySortItemData))
+            }
+            refresh()
             return
         }
 
         viewModelScope.launch {
-            if (position >= data.size) {
-                data.add(
-                    SelectedSortItemData(
-                        field = field,
-                        condition = null,
-                    )
-                )
-            } else {
-                data[position] = SelectedSortItemData(
-                    field = field,
-                    condition = null,
-                )
-            }
-
-            update()
+            val entry = rows.getOrNull(position) ?: return@launch
+            entry.data = SelectedSortItemData(
+                field = field,
+                condition = null,
+            )
+            refresh()
         }
     }
 
     fun onConditionSelected(position: Int, condition: SortCondition?) {
-        val item = data[position]
-        data[position] = if (item is SelectedSortItemData) {
+        val entry = rows.getOrNull(position) ?: return
+        val item = entry.data
+        entry.data = if (item is SelectedSortItemData) {
             item.copy(condition = condition)
         } else {
-            TODO("implement")
+            return
         }
-        update()
+        refresh()
+    }
+
+    fun onDeleteClicked(position: Int) {
+        if (position !in rows.indices) return
+        rows.removeAt(position)
+        if (rows.isEmpty()) {
+            rows.add(RowEntry(id = nextId++, data = EmptySortItemData))
+        }
+        refresh()
     }
 
     fun onAddSortClicked() {
-        data.add(EmptySortItemData)
-        update()
+        if (rows.any { it.data === EmptySortItemData }) return
+        rows.add(RowEntry(id = nextId++, data = EmptySortItemData))
+        refresh()
     }
 
     fun applySort(onSortApply: (FiberyEntityTypeSchema, FiberyEntitySortData) -> Unit) {
+        if (!_uiState.value.isApplyEnabled) return
         val sort = FiberyEntitySortData(
-            items = data.mapNotNull { item ->
+            items = rows.mapNotNull { entry ->
+                val item = entry.data
                 if (item is SelectedSortItemData) {
                     val condition = item.condition?.value ?: return@mapNotNull null
                     FiberyEntitySortData.Item(
@@ -140,34 +158,48 @@ class PickerSortViewModel @AssistedInject constructor(
         onSortApply(pickerSortArgs.entityTypeSchema, sort)
     }
 
-    private fun update() {
-        viewModelScope.launch {
-            items.emit(
-                data.map(::map) +
-                    AddSortItem
-            )
-        }
-    }
+    private fun refresh() {
+        val fieldUsage = rows.mapNotNull { entry ->
+            (entry.data as? SelectedSortItemData)?.field?.name
+        }.groupingBy { it }.eachCount()
 
-    private fun map(data: SortItemData): ListItem {
-        return when {
-            data is SelectedSortItemData -> {
-                SelectedSortItem(
-                    fields = supportedFields,
-                    field = data.field,
-                    conditions = SortCondition.values().toList(),
-                    condition = data.condition,
-                )
-            }
-            data === EmptySortItemData -> {
-                EmptySortItem(
-                    fields = supportedFields
-                )
-            }
-            else -> {
-                TODO("implement")
+        var order = 0
+        val uiRows = rows.map { entry ->
+            when (val data = entry.data) {
+                is SelectedSortItemData -> {
+                    order++
+                    SelectedSortItem(
+                        key = entry.id,
+                        order = order,
+                        fields = supportedFields,
+                        field = data.field,
+                        conditions = SortCondition.entries.toList(),
+                        condition = data.condition,
+                        isDuplicateField = (fieldUsage[data.field.name] ?: 0) > 1,
+                        showConditionError = data.condition == null,
+                    )
+                }
+                else -> {
+                    EmptySortItem(
+                        key = entry.id,
+                        fields = supportedFields
+                    )
+                }
             }
         }
+
+        val selectedRows = uiRows.filterIsInstance<SelectedSortItem>()
+        val validCount = selectedRows.count { it.condition != null && !it.isDuplicateField }
+        // Untouched empty slots are just the add affordance and never block;
+        // only half-filled rows (or duplicate fields) do.
+        val hasIncomplete = selectedRows.any { it.condition == null || it.isDuplicateField }
+
+        _uiState.value = PickerSortUiState(
+            rows = uiRows + AddSortItem,
+            validSortCount = validCount,
+            hasIncompleteRows = hasIncomplete,
+            isApplyEnabled = !hasIncomplete,
+        )
     }
 
     @AssistedFactory

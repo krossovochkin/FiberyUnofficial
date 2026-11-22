@@ -95,8 +95,8 @@ data class FiberyEntityFilterData(
     enum class MergeType(
         val value: String
     ) {
-        ALL("and"),
-        ANY("or")
+        ALL("q/and"),
+        ANY("q/or")
     }
 
     @Serializable

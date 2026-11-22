@@ -50,6 +50,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.krossovochkin.core.presentation.resources.resolveNativeColor
 import com.krossovochkin.core.presentation.resources.resolveNativeText
+import com.krossovochkin.core.presentation.ui.toolbar.toolbarContentColor
 import com.krossovochkin.filelist.R
 import kotlinx.coroutines.flow.collectLatest
 
@@ -81,6 +82,9 @@ fun FileListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
+            val toolbarContainerColor =
+                Color(context.resolveNativeColor(toolbarViewState.bgColor))
+            val toolbarContentColor = toolbarContainerColor.toolbarContentColor()
             TopAppBar(
                 title = {
                     Text(
@@ -96,10 +100,10 @@ fun FileListScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(context.resolveNativeColor(toolbarViewState.bgColor)),
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = toolbarContainerColor,
+                    titleContentColor = toolbarContentColor,
+                    navigationIconContentColor = toolbarContentColor,
+                    actionIconContentColor = toolbarContentColor
                 )
             )
         }
