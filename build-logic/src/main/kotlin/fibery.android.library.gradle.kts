@@ -34,14 +34,7 @@ extensions.configure<LibraryExtension> {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
-
-            val proguard = file("proguard-rules.pro")
-            if (proguard.exists()) {
-                proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), proguard)
-            } else {
-                proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
-            }
+            isMinifyEnabled = false
         }
     }
 
