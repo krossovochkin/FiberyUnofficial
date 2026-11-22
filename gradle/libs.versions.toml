@@ -13,7 +13,7 @@ android-min-sdk = "24"
 
 android-target-sdk = "37"
 
-android-version-code = "37"
+android-version-code = "38"
 
 android-version-name = "0.25.0"
 
