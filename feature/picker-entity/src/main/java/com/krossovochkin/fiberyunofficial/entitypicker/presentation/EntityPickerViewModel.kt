@@ -109,13 +109,19 @@ class EntityPickerViewModel @AssistedInject constructor(
         require(name.isNotEmpty()) { "search query is empty" }
 
         viewModelScope.launch {
-            val entityType = getEntityTypeSchemaInteractor
-                .execute(entityPickerArgs.parentEntityData.fieldSchema)
-            val entity = entityCreateInteractor.execute(
-                entityTypeSchema = entityType,
-                name = name
-            )
-            onEntityPicked(entityPickerArgs.parentEntityData, entity)
+            try {
+                val entityType = getEntityTypeSchemaInteractor
+                    .execute(entityPickerArgs.parentEntityData.fieldSchema)
+                val entity = entityCreateInteractor.execute(
+                    entityTypeSchema = entityType,
+                    name = name
+                )
+                onEntityPicked(entityPickerArgs.parentEntityData, entity)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                errorChannel.send(e)
+            }
         }
     }
 
