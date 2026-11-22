@@ -275,7 +275,6 @@ fun EntityPickerScreen(
                         }
                     }
                 }
-
             }
 
             if (lazyItems.loadState.refresh is LoadState.Loading && lazyItems.itemCount == 0) {
