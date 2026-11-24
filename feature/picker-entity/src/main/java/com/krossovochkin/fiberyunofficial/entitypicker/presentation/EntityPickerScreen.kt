@@ -30,7 +30,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -79,12 +78,11 @@ fun EntityPickerScreen(
     onEntityPicked: (ParentEntityData, FiberyEntityData?) -> Unit,
 ) {
     val lazyItems = viewModel.entityItems.collectAsLazyPagingItems()
-    val isCreateEnabled by viewModel.entityCreateEnabled.collectAsState(false)
     val searchQuery by viewModel.searchQuery.collectAsState()
     val toolbarState by viewModel.toolbarViewState.collectAsState(null)
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
-    var isSearchExpanded by remember { mutableStateOf(false) }
+    var isSearchExpanded by remember { mutableStateOf(true) }
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(isSearchExpanded) {
@@ -209,6 +207,28 @@ fun EntityPickerScreen(
                         .weight(1f)
                         .fillMaxWidth()
                 ) {
+                    if (searchQuery.isNotBlank()) {
+                        item(key = "create-entity") {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { viewModel.createEntity(onEntityPicked) }
+                            ) {
+                                Box(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = stringResource(
+                                            id = R.string.picker_entity_action_create_named,
+                                            searchQuery
+                                        ),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                                HorizontalDivider()
+                            }
+                        }
+                    }
+
                     items(
                         count = lazyItems.itemCount,
                         key = { index ->
@@ -254,16 +274,6 @@ fun EntityPickerScreen(
                             else -> {}
                         }
                     }
-                }
-
-                Button(
-                    onClick = { viewModel.createEntity(onEntityPicked) },
-                    enabled = isCreateEnabled,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(stringResource(id = R.string.picker_entity_action_create))
                 }
             }
 

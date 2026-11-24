@@ -14,6 +14,7 @@ import com.krossovochkin.fiberyunofficial.domain.ParentEntityData
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateEntityFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateMultiSelectFieldInteractor
 import com.krossovochkin.fiberyunofficial.entitydetails.domain.UpdateSingleSelectFieldInteractor
+import com.krossovochkin.fiberyunofficial.entitylist.domain.AddEntityRelationInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.SetEntityListSortInteractor
 import com.krossovochkin.fiberyunofficial.login.domain.LoginInteractor
@@ -31,6 +32,7 @@ class NavigationViewModel @Inject constructor(
     private val updateSingleSelectFieldInteractor: UpdateSingleSelectFieldInteractor,
     private val updateMultiSelectFieldInteractor: UpdateMultiSelectFieldInteractor,
     private val updateEntityFieldInteractor: UpdateEntityFieldInteractor,
+    private val addEntityRelationInteractor: AddEntityRelationInteractor,
     private val setEntityListFilterInteractor: SetEntityListFilterInteractor,
     private val setEntityListSortInteractor: SetEntityListSortInteractor,
 ) : ViewModel() {
@@ -107,10 +109,18 @@ class NavigationViewModel @Inject constructor(
         entity: FiberyEntityData?
     ) {
         viewModelScope.launch {
-            updateEntityFieldInteractor.execute(
-                parentEntityData = parentEntityData,
-                selectedEntity = entity
-            )
+            if (parentEntityData.fieldSchema.meta.isCollection && entity != null) {
+                // to-many relation (children list): add item, don't overwrite a single value
+                addEntityRelationInteractor.execute(
+                    parentEntityData = parentEntityData,
+                    childEntity = entity
+                )
+            } else {
+                updateEntityFieldInteractor.execute(
+                    parentEntityData = parentEntityData,
+                    selectedEntity = entity
+                )
+            }
         }
         pop()
     }

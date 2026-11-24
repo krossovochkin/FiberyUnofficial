@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="picker_entity_action_create">Create</string>
+    <string name="picker_entity_action_create_named">Create “%1$s”</string>
     <string name="picker_entity_search_hint">Search</string>
 </resources>

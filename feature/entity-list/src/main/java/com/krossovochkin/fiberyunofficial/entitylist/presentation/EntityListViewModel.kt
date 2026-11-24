@@ -27,6 +27,7 @@ import com.krossovochkin.core.presentation.resources.NativeText
 import com.krossovochkin.core.presentation.ui.fab.FabViewState
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarAction
 import com.krossovochkin.core.presentation.ui.toolbar.ToolbarViewState
+import com.krossovochkin.fiberyunofficial.api.FiberyApiRepository
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListFilterInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListInteractor
 import com.krossovochkin.fiberyunofficial.entitylist.domain.GetEntityListSortInteractor
@@ -38,6 +39,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import dagger.assisted.Assisted
@@ -50,6 +52,7 @@ class EntityListViewModel @AssistedInject constructor(
     private val getEntityListFilterInteractor: GetEntityListFilterInteractor,
     private val getEntityListSortInteractor: GetEntityListSortInteractor,
     private val removeEntityRelationInteractor: RemoveEntityRelationInteractor,
+    private val fiberyApiRepository: FiberyApiRepository,
     @Assisted private val entityListArgs: EntityListNavKey,
 ) : ViewModel() {
 
@@ -80,6 +83,17 @@ class EntityListViewModel @AssistedInject constructor(
 
     val entityItems: Flow<PagingData<ListItem>>
         get() = paginatedListDelegate.items
+
+    init {
+        // inner list (children): refresh when relation was added/removed elsewhere (e.g. picker)
+        entityListArgs.parentEntityData?.let { parent ->
+            viewModelScope.launch {
+                fiberyApiRepository.entityUpdates
+                    .filter { it == parent.parentEntity.id }
+                    .collect { paginatedListDelegate.invalidate() }
+            }
+        }
+    }
 
     val toolbarViewState: ToolbarViewState
         get() = ToolbarViewState(
