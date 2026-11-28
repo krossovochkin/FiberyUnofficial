@@ -108,7 +108,7 @@ hilt-android-compiler = { group = "com.google.dagger", name="hilt-android-compil
 
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "google-dagger" }
 
-kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover" }
+kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
