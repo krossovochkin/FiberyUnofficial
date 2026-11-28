@@ -76,7 +76,6 @@ dependencies {
     ksp(libs.dagger.compiler)
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okhttp3)
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
     implementation(libs.lifecycle.viewmodel.navigation3)
@@ -102,7 +101,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.okhttp3)
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
 }
